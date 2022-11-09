@@ -12,9 +12,7 @@ const withAdminLayout = (WrappedComponent: any) => {
     <>
       <AdminHeader />
       <AdminSideMenu>
-        <Container pt={LAYOUT.HEADER.HEIGHT}>
-          <WrappedComponent {...props} />
-        </Container>
+      <WrappedComponent {...props} />
       </AdminSideMenu>
     </>
   );

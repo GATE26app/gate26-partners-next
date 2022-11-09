@@ -20,9 +20,11 @@ import styled from '@emotion/styled';
 
 import { MenuRouter } from './AdminSideMenu.data';
 
-interface AdminSideMenuProps {}
+interface AdminSideMenuProps {
+  children: any;
+}
 
-const AdminSideMenu = ({}: AdminSideMenuProps) => {
+const AdminSideMenu = ({ children }: AdminSideMenuProps) => {
   const router = useRouter();
 
   const getActiveRow = () => {
@@ -67,13 +69,20 @@ const AdminSideMenu = ({}: AdminSideMenuProps) => {
     });
   };
   return (
-    <SideMenu className="admin-sidemenu">
-      <Accordion w={'100%'} defaultIndex={getActiveRow()} allowMultiple>
-        {renderMenu()}
-      </Accordion>
-    </SideMenu>
+    <WrapperSideMenu>
+      <SideMenu className="admin-sidemenu">
+        <Accordion w={'100%'} defaultIndex={getActiveRow()} allowMultiple>
+          {renderMenu()}
+        </Accordion>
+      </SideMenu>
+      {children}
+    </WrapperSideMenu>
   );
 };
+
+const WrapperSideMenu = styled.div`
+  display: flex;
+`;
 
 const SideMenu = styled(Flex)`
   &.admin-sidemenu {

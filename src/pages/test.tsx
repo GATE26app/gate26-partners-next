@@ -29,11 +29,11 @@ function Test({ Component, pageProps }: any) {
     openCustomModal();
   };
   return (
-    <>
+    <div style={{ width: '100%' }}>
       <Button h="140px" w="100%" colorScheme="blue" onClick={handleClick}>
         모달 테스트
       </Button>
-    </>
+    </div>
   );
 }
 
