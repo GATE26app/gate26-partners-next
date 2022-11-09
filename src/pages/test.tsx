@@ -1,16 +1,15 @@
 import { useDispatch } from 'react-redux';
 
-import { Button } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useAppStore from '@features/useAppStore';
 
-import AdminLayout from '@components/common/@Layout/AdminLayout';
+import Button from '@components/Button';
+import IconButton from '@components/IconButton';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
-import AlertModal from '@components/common/ModalContainer';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
-import { useGlobalModalHandlerContext } from 'contexts/modal/useGlobalModalHandler.context';
 
 function Test({ Component, pageProps }: any) {
   const dispatch = useDispatch();
@@ -30,9 +29,118 @@ function Test({ Component, pageProps }: any) {
   };
   return (
     <div style={{ width: '100%' }}>
-      <Button h="140px" w="100%" colorScheme="blue" onClick={handleClick}>
-        모달 테스트
-      </Button>
+      <Flex flexDirection="column" rowGap={'10px'}>
+        <Button
+          width="120px"
+          height="50px"
+          size="sm"
+          onClick={handleClick}
+          text="모달 테스트"
+        />
+        <Flex columnGap={'10px'} alignItems="center">
+          <Button width="69px" height="50px" size="md" text="로그인" />
+          <Button width="61px" height="40px" size="sm" text="로그인" />
+        </Flex>
+        <Flex columnGap={'10px'} alignItems="center">
+          <Button
+            width="69px"
+            height="50px"
+            size="md"
+            type="square-outline"
+            text="로그인"
+          />
+          <Button
+            width="61px"
+            height="40px"
+            size="sm"
+            type="square-outline"
+            text="로그인"
+          />
+        </Flex>
+        <Flex columnGap={'10px'} alignItems="center">
+          <Button
+            width="69px"
+            height="50px"
+            size="md"
+            type="square-grayscale"
+            text="로그인"
+          />
+          <Button
+            width="61px"
+            height="40px"
+            size="sm"
+            type="square-grayscale"
+            text="로그인"
+          />
+        </Flex>
+        <Flex columnGap={'10px'} alignItems="center">
+          <Button
+            width="69px"
+            height="50px"
+            size="md"
+            type="round"
+            text="로그인"
+          />
+          <Button
+            width="61px"
+            height="40px"
+            size="sm"
+            type="round"
+            text="로그인"
+          />
+        </Flex>
+        <Flex columnGap={'10px'} alignItems="center">
+          <Button
+            width="69px"
+            height="50px"
+            size="md"
+            type="round-outline"
+            text="로그인"
+          />
+          <Button
+            width="61px"
+            height="40px"
+            size="sm"
+            type="round-outline"
+            text="로그인"
+          />
+        </Flex>
+      </Flex>
+
+      <Flex flexDirection="column" rowGap={'10px'}>
+        <Flex columnGap={'10px'} alignItems="center">
+          <IconButton
+            type="download"
+            width="110px"
+            height="50px"
+            size="md"
+            text="내보내기"
+          />
+          <IconButton
+            type="download"
+            width="94px"
+            height="40px"
+            size="sm"
+            text="내보내기"
+          />
+        </Flex>
+        <Flex columnGap={'10px'} alignItems="center">
+          <IconButton
+            type="add"
+            width="110px"
+            height="50px"
+            size="md"
+            text="메뉴추가"
+          />
+          <IconButton
+            type="add"
+            width="94px"
+            height="40px"
+            size="sm"
+            text="메뉴추가"
+          />
+        </Flex>
+      </Flex>
     </div>
   );
 }

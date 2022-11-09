@@ -48,7 +48,7 @@ function AlertModal({ onClose, ...props }: AlertModalProps) {
             취소
           </div>
           <div className="button highlight" onClick={handleClickOK}>
-            {okButtonName || "확인"}
+            {okButtonName || '확인'}
           </div>
         </>
       );
@@ -59,7 +59,7 @@ function AlertModal({ onClose, ...props }: AlertModalProps) {
     <Modal onClose={onClose} isCentered {...props}>
       <ModalOverlay />
       <Content maxW={300} maxH={186}>
-        <Header>{title || "Alert"}</Header>
+        <Header>{title || 'Alert'}</Header>
         <ModalBody>{message}</ModalBody>
 
         <ModalFooter>{renderFooter()}</ModalFooter>
