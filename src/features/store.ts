@@ -4,6 +4,7 @@ import modalSlice from '@features/modal/modalSlice';
 import userSlice from '@features/user/userSlice';
 
 import { configureStore } from '@reduxjs/toolkit';
+import customModalSlice from './customModal/customModalSlice';
 
 export function makeStore() {
   return configureStore({
@@ -12,7 +13,9 @@ export function makeStore() {
       [counterSlice.name]: counterSlice.reducer,
       [userSlice.name]: userSlice.reducer,
       [modalSlice.name]: modalSlice.reducer,
+      [customModalSlice.name]: customModalSlice.reducer
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
   });
 }
 
