@@ -5,6 +5,8 @@ import { Button } from '@chakra-ui/react';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useAppStore from '@features/useAppStore';
 
+import AdminLayout from '@components/common/@Layout/AdminLayout';
+import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import AlertModal from '@components/common/ModalContainer';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
@@ -35,4 +37,4 @@ function Test({ Component, pageProps }: any) {
   );
 }
 
-export default Test;
+export default withAdminLayout(Test);
