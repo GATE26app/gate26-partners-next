@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 
 import {
   Accordion,
@@ -7,18 +7,13 @@ import {
   AccordionItem,
   AccordionPanel,
   Flex,
-  IconButton,
-  Image,
 } from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react';
 
 import ArrowRightIcon from '@components/common/@Icons/Admin/ArrowRight';
-import MenuIcon from '@components/common/@Icons/System/Menu';
 
-import { LAYOUT } from '@constants/layout';
 import styled from '@emotion/styled';
 
-import { MenuRouter } from './AdminSideMenu.data';
+import { MenuRouter, MenuType } from './AdminSideMenu.data';
 
 interface AdminSideMenuProps {
   children: any;
@@ -35,31 +30,45 @@ const AdminSideMenu = ({ children }: AdminSideMenuProps) => {
         activeArr.push(index);
       }
     });
-
     return activeArr;
   };
+
+  const handleClickMenu = (route: MenuType) => {
+    if (route.subMenus) return;
+    router.push(route.path);
+  };
+
   const renderMenu = () => {
     return MenuRouter.map((route) => {
       const isActive = router.pathname.includes(route.path);
       return (
-        <AccodionRow>
+        <AccodionRow key={`${route.name}_${route.path}`}>
           <AccordionButton>
-            <div className={`sidemenu-item ${isActive ? 'active' : ''}`}>
+            <div
+              className={`sidemenu-item ${isActive ? 'active' : ''}`}
+              onClick={() => handleClickMenu(route)}
+            >
               <img src={isActive ? route.iconOn : route.iconOff} />
               <span>{route.name}</span>
             </div>
           </AccordionButton>
+
           {route.subMenus && (
             <AccordionPanel>
               {route.subMenus.map((subRoute) => {
                 const isActive = subRoute.path === router.pathname;
                 return (
-                  <div
-                    className={`sidemenu-sub-item ${isActive ? 'active' : ''}`}
+                  <Link
+                    key={`${subRoute.name}_${subRoute.path}`}
+                    href={subRoute.path}
                   >
-                    <span>{subRoute.name}</span>
-                    {isActive && <ArrowRightIcon />}
-                  </div>
+                    <div
+                      className={`sidemenu-sub-item ${isActive && 'active'}`}
+                    >
+                      <span>{subRoute.name}</span>
+                      {isActive && <ArrowRightIcon />}
+                    </div>
+                  </Link>
                 );
               })}
             </AccordionPanel>
@@ -68,6 +77,7 @@ const AdminSideMenu = ({ children }: AdminSideMenuProps) => {
       );
     });
   };
+
   return (
     <WrapperSideMenu>
       <SideMenu className="admin-sidemenu">

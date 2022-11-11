@@ -1,4 +1,4 @@
-type MenuType = {
+export type MenuType = {
   name: string;
   iconOn: string;
   iconOff: string;
