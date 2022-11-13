@@ -6,9 +6,9 @@ import { Flex } from '@chakra-ui/react';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useAppStore from '@features/useAppStore';
 
-import Button from '@components/Button';
-import IconButton from '@components/IconButton';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
+import Button from '@components/common/Button';
+import IconButton from '@components/common/IconButton';
 import Pagination from '@components/common/Pagination';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';

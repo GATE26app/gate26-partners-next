@@ -2,8 +2,8 @@ import { Button as ChakraButton, Flex } from '@chakra-ui/react';
 
 import styled from '@emotion/styled';
 
-import DownloadIcon from './common/@Icons/Admin/Download';
-import PlusIcon from './common/@Icons/Admin/Plus';
+import DownloadIcon from './@Icons/Admin/Download';
+import PlusIcon from './@Icons/Admin/Plus';
 
 type ButtonType = 'add' | 'download';
 export interface IconButtonProps {
