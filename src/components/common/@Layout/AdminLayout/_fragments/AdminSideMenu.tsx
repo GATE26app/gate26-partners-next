@@ -48,7 +48,10 @@ const AdminSideMenu = ({ children }: AdminSideMenuProps) => {
               className={`sidemenu-item ${isActive ? 'active' : ''}`}
               onClick={() => handleClickMenu(route)}
             >
-              <img src={isActive ? route.iconOn : route.iconOff} />
+              <img
+                src={isActive ? route.iconOn : route.iconOff}
+                alt={route.alt}
+              />
               <span>{route.name}</span>
             </div>
           </AccordionButton>
