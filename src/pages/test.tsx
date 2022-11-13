@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
@@ -8,12 +9,14 @@ import useAppStore from '@features/useAppStore';
 import Button from '@components/Button';
 import IconButton from '@components/IconButton';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
+import Pagination from '@components/common/Pagination';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 function Test({ Component, pageProps }: any) {
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
+  const [currentPage, setCurretPage] = useState<number>(0);
   const handleClick = () => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -138,6 +141,16 @@ function Test({ Component, pageProps }: any) {
             height="40px"
             size="sm"
             text="메뉴추가"
+          />
+        </Flex>
+        <Flex alignItems="center" columnGap={'10px'}>
+          <Pagination
+            currentPage={currentPage}
+            limit={2}
+            total={10}
+            onNextPageClicked={(page: number) => setCurretPage(page)}
+            onPreviousPageClicked={(page: number) => setCurretPage(page)}
+            onPageNumberClicked={(page: number) => setCurretPage(page)}
           />
         </Flex>
       </Flex>
