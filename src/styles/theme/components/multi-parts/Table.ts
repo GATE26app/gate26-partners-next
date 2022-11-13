@@ -59,6 +59,7 @@ const variantSimple: StyleObjectOrFn = (props) => {
     },
     tfoot: {
       tr: {
+        height: '70px',
         '&:last-of-type': {
           th: { borderBottomWidth: 0 },
         },
