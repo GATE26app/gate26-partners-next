@@ -1,6 +1,6 @@
 import { Icon, IconProps } from '@chakra-ui/react';
 
-const ArrowDownIcon = ({ ...props }: IconProps) => {
+const ArrowDownIcon = ({ color, ...props }: IconProps) => {
   return (
     <Icon
       maxW={'8px'}
@@ -10,15 +10,9 @@ const ArrowDownIcon = ({ ...props }: IconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M4 5L0 0H8L4 5Z" fill="white" />
+      <path d="M4 5L0 0H8L4 5Z" fill={'currentColor'} />
     </Icon>
   );
 };
 
 export default ArrowDownIcon;
-
-{
-  /* <svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 5L0 0H8L4 5Z" fill="white"/>
-</svg> */
-}

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import {
-  Flex,
   Accordion,
   AccordionButton,
-  AccordionPanel,
-  AccordionItem,
   AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
-  useTheme
+  Flex,
+  useTheme,
 } from '@chakra-ui/react';
 
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
@@ -17,16 +17,22 @@ import useAppStore from '@features/useAppStore';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import Button from '@components/common/Button';
+import CustomSelect from '@components/common/CustomSelect';
+import DataTable, {
+  DataTableColumnType,
+  DataTableRowType,
+} from '@components/common/DataTable';
 import IconButton from '@components/common/IconButton';
 import Pagination from '@components/common/Pagination';
+import RoundImage from '@components/common/RoundImage';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface AccodianProps {
-  title: string,
-  Pannel: JSX.Element
+  title: string;
+  Pannel: JSX.Element;
 }
 
 function AccoianWrap({ title, Pannel }: AccodianProps) {
@@ -34,17 +40,17 @@ function AccoianWrap({ title, Pannel }: AccodianProps) {
     <AccordionItem>
       <h2>
         <AccordionButton>
-          <Box flex='1' textAlign='left'>
+          <Box flex="1" textAlign="left">
             {title}
           </Box>
           <AccordionIcon />
         </AccordionButton>
       </h2>
-      <AccordionPanel style={{ backgroundColor: "#efefef" }} pb={4}>
+      <AccordionPanel style={{ backgroundColor: '#efefef' }} pb={4}>
         {Pannel}
       </AccordionPanel>
     </AccordionItem>
-  )
+  );
 }
 
 function Test({ Component, pageProps }: any) {
@@ -52,12 +58,72 @@ function Test({ Component, pageProps }: any) {
   const { openCustomModal } = useCustomModalHandlerContext();
 
   const theme = useTheme();
-  const {
-    colors,
-    textStyles,
-  } = theme;
+  const { colors, textStyles } = theme;
 
   const [currentPage, setCurretPage] = useState<number>(0);
+
+  const columns: DataTableColumnType[] = [
+    {
+      key: 'title',
+      name: '제목',
+      width: '100px',
+    },
+    {
+      key: 'event_content',
+      name: '이벤트내용',
+    },
+    {
+      key: 'type',
+      name: '타입',
+    },
+    {
+      key: 'start',
+      name: '시작일자',
+    },
+    {
+      key: 'end',
+      name: '종료일자',
+    },
+    {
+      key: 'banner',
+      name: '배너이미지',
+      render: (value: DataTableRowType) => (
+        <RoundImage src={value.banner} width={'187px'} height="100px" />
+      ),
+    },
+    {
+      key: 'main',
+      name: '메인이미지',
+      width: '200px',
+      render: (value: DataTableRowType) => (
+        <RoundImage src={value.banner} width={'94px'} height="100px" />
+      ),
+    },
+  ];
+
+  const rows: DataTableRowType[] = [
+    {
+      title: '123',
+      event_content: '232323',
+      type: 123,
+      start: '2022-10-10',
+      end: '2022-10-10',
+      banner:
+        'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      main: 'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    },
+    {
+      title: '111111111111111111111111111',
+      event_content: '232323',
+      type: 123,
+      start: '2022-10-10',
+      end: '2022-10-10',
+      banner:
+        'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      main: 'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    },
+  ];
+
   const handleClick = () => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -74,9 +140,9 @@ function Test({ Component, pageProps }: any) {
   return (
     <div style={{ width: '100%' }}>
       <Flex>
-        <Accordion style={{ width: "100%" }} defaultIndex={[0]} allowMultiple>
+        <Accordion style={{ width: '100%' }} defaultIndex={[0]} allowMultiple>
           <AccoianWrap
-            title='Button'
+            title="Button"
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <Flex columnGap={'10px'} alignItems="center">
@@ -151,7 +217,7 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
-            title='Icon Button'
+            title="Icon Button"
             Pannel={
               <Flex flexDirection="column" rowGap={'10px'}>
                 <Flex columnGap={'10px'} alignItems="center">
@@ -190,7 +256,7 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
-            title='Modal'
+            title="Modal"
             Pannel={
               <Flex alignItems="center" columnGap={'10px'}>
                 <Button
@@ -204,7 +270,7 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
-            title='Pagination'
+            title="Pagination"
             Pannel={
               <Flex alignItems="center" columnGap={'10px'}>
                 <Pagination
@@ -219,20 +285,81 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
-            title='Colors'
+            title="Colors"
+            Pannel={<ColorSection colors={colors} />}
+          />
+          <AccoianWrap
+            title="Typography"
+            Pannel={<TextStyleSection textStyles={textStyles} />}
+          />
+          <AccoianWrap
+            title="DataTable"
             Pannel={
-              <ColorSection colors={colors} />
+              <Flex alignItems="center" columnGap={'10px'}>
+                <DataTable
+                  columns={columns}
+                  rows={rows}
+                  onEdit={(row: DataTableRowType) => console.log('edit: ', row)}
+                  onDelete={(row: DataTableRowType) =>
+                    console.log('delete: ', row)
+                  }
+                  isMenu
+                  paginationProps={{
+                    currentPage: 0,
+                    limit: 0,
+                    total: 0,
+                    onPageNumberClicked: (page: number) => {},
+                    onPreviousPageClicked: (page: number) => {},
+                    onNextPageClicked: (page: number) => {},
+                  }}
+                />
+              </Flex>
             }
           />
           <AccoianWrap
-            title='Typography'
+            title="Select"
             Pannel={
-              <TextStyleSection textStyles={textStyles} />
+              <Flex alignItems="flex-start" columnGap={'10px'} height={'250px'}>
+                <CustomSelect
+                  width={'100px'}
+                  placeholder={'Type'}
+                  items={[
+                    { value: 1, label: 'Option1' },
+                    { value: 2, label: 'Option2' },
+                    { value: 3, label: 'Option3' },
+                    { value: 4, label: 'Option4' },
+                  ]}
+                />
+                <CustomSelect
+                  disabled
+                  width={'100px'}
+                  placeholder={'Type'}
+                  items={[
+                    { value: 1, label: 'Option1' },
+                    { value: 2, label: 'Option2' },
+                    { value: 3, label: 'Option3' },
+                    { value: 4, label: 'Option4' },
+                  ]}
+                />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="Round Image"
+            Pannel={
+              <Flex alignItems="center" columnGap={'10px'}>
+                <RoundImage
+                  src={
+                    'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+                  }
+                  width={'187px'}
+                  height="100px"
+                />
+              </Flex>
             }
           />
         </Accordion>
       </Flex>
-
     </div>
   );
 }
