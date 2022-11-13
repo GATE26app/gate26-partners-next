@@ -6,6 +6,8 @@ interface MoreIconProps extends IconProps {
 const MoreIcon = ({ strokeColor = '#1A1A1A', ...props }: MoreIconProps) => {
   return (
     <Icon
+      w={'24px'}
+      h={'24px'}
       maxW={'24px'}
       maxH={'24px'}
       viewBox="0 0 24 24"
