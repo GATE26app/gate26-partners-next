@@ -25,6 +25,7 @@ import DataTable, {
 import IconButton from '@components/common/IconButton';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
+import SearchInput from '@components/common/SearchInput';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -46,7 +47,7 @@ function AccoianWrap({ title, Pannel }: AccodianProps) {
           <AccordionIcon />
         </AccordionButton>
       </h2>
-      <AccordionPanel style={{ backgroundColor: '#efefef' }} pb={4}>
+      <AccordionPanel style={{ backgroundColor: '#ffffff' }} pb={4}>
         {Pannel}
       </AccordionPanel>
     </AccordionItem>
@@ -355,6 +356,14 @@ function Test({ Component, pageProps }: any) {
                   width={'187px'}
                   height="100px"
                 />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="SearchInput"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <SearchInput />
               </Flex>
             }
           />
