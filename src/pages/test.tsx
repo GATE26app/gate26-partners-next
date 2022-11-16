@@ -15,6 +15,7 @@ import {
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useAppStore from '@features/useAppStore';
 
+import Toggle from '@components/Toggle';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -384,6 +385,14 @@ function Test({ Component, pageProps }: any) {
                 <CheckBox checked={checkbox} onClick={toggleCheckbox}>
                   {'체크박스'}
                 </CheckBox>
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="Toggle"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <Toggle option text1="챌린지" text2="국가" text3="항공사" />
               </Flex>
             }
           />
