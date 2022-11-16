@@ -7,7 +7,8 @@ type ButtonType =
   | 'round'
   | 'square-outline'
   | 'square-grayscale'
-  | 'round-outline';
+  | 'round-outline'
+  | 'toggleOff';
 export interface ButtonProps {
   type?: ButtonType;
   width?: string;
@@ -15,6 +16,7 @@ export interface ButtonProps {
   size: 'md' | 'sm';
   text: string;
   onClick?: () => void;
+  toggle?: boolean;
 }
 
 const Button = ({
@@ -24,6 +26,7 @@ const Button = ({
   size,
   text,
   onClick,
+  toggle = false,
 }: ButtonProps) => {
   return (
     <CustomButton
@@ -32,7 +35,9 @@ const Button = ({
       size={size}
       buttonType={type}
       onClick={onClick}
-      borderRadius={type.startsWith('round') ? '25px' : '5px'}
+      borderRadius={
+        type.startsWith('round') && !toggle ? '25px' : toggle ? '10px' : '5px'
+      }
     >
       <Flex alignItems="center" justifyContent="center">
         <div>{text}</div>
@@ -53,12 +58,16 @@ const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
         ? 'rgba(255, 255, 255, 0)'
         : buttonType?.endsWith('-grayscale')
         ? '#ffffff'
+        : buttonType === 'toggleOff'
+        ? 'unset'
         : '#ff5942'};
     border: ${({ buttonType }) =>
       buttonType?.endsWith('-outline')
         ? '1px solid #ff5942'
         : buttonType?.endsWith('-grayscale')
         ? '1px solid #E5E7EC'
+        : buttonType === 'toggleOff'
+        ? 'unset'
         : 0};
     font-family: 'Pretendard';
     font-style: normal;
@@ -71,6 +80,8 @@ const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
         ? '#FF5942'
         : buttonType?.endsWith('-grayscale')
         ? '#8C919F'
+        : buttonType === 'toggleOff'
+        ? '#B8BCC8'
         : '#ffffff'};
   }
 `;

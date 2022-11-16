@@ -15,6 +15,7 @@ import {
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useAppStore from '@features/useAppStore';
 
+import Toggle from '@components/Toggle';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -28,6 +29,7 @@ import InputBox from '@components/common/Input';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
+import SmallButton from '@components/common/SmallButton';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -219,6 +221,10 @@ function Test({ Component, pageProps }: any) {
                     text="로그인"
                   />
                 </Flex>
+                <Flex columnGap={'10px'} alignItems="center">
+                  <SmallButton text="답변하기" color="blue" />
+                  <SmallButton text="답변하기" color="normal" />
+                </Flex>
               </Flex>
             }
           />
@@ -390,6 +396,20 @@ function Test({ Component, pageProps }: any) {
                 <InputBox placeholder="Nomal input" />
                 <InputBox isInvalid={true} placeholder="Error" />
                 <InputBox placeholder="Disabled" isDisabled={true} />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="Toggle"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <Toggle
+                  text1="챌린지"
+                  text2="국가"
+                  text3="항공사"
+                  toggleOption
+                />
+                <Toggle text1="챌린지" text2="국가" toggleOption={false} />
               </Flex>
             }
           />
