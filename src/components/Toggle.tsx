@@ -8,10 +8,10 @@ export interface ToogleOption {
   width?: string;
   height?: string;
   onClick?: (data: string) => void;
-  option: boolean;
   text1: string;
   text2: string;
   text3?: string;
+  toggleOption?: boolean;
 }
 
 const Toggle = ({
@@ -21,7 +21,7 @@ const Toggle = ({
   text2,
   text3,
   onClick,
-  option,
+  toggleOption,
 }: ToogleOption) => {
   const [isToggle, setIsToggle] = useState<string>('1');
 
@@ -53,7 +53,7 @@ const Toggle = ({
           toggle
           onClick={() => toggleHandler('2')}
         />
-        {option ? (
+        {toggleOption ? (
           <Button
             width={width}
             height={height}

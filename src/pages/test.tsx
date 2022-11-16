@@ -392,7 +392,13 @@ function Test({ Component, pageProps }: any) {
             title="Toggle"
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
-                <Toggle option text1="챌린지" text2="국가" text3="항공사" />
+                <Toggle
+                  text1="챌린지"
+                  text2="국가"
+                  text3="항공사"
+                  toggleOption
+                />
+                <Toggle text1="챌린지" text2="국가" toggleOption={false} />
               </Flex>
             }
           />
