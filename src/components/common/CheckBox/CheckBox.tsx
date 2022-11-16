@@ -2,20 +2,37 @@ import React from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
 
-import { CheckedOffIcon, CheckedOnIcon } from '@icons/System';
-
 import { CheckBoxProps } from './CheckBox.type';
 
-const CheckBox = ({ checked, children, ...props }: CheckBoxProps) => {
+import {
+  CheckedDisableIcon,
+  CheckedOffIcon,
+  CheckedOnIcon,
+} from 'components/common/@Icons/Admin';
+
+const CheckBox = ({
+  checked,
+  disabled,
+  children,
+  onClick,
+  ...props
+}: CheckBoxProps) => {
   return (
-    <Flex cursor="pointer" alignItems="center" {...props}>
-      {checked ? (
-        <CheckedOnIcon w="20px" h="20px" color="primary" />
+    <Flex
+      cursor="pointer"
+      alignItems="center"
+      {...props}
+      onClick={() => onClick && onClick()}
+    >
+      {disabled ? (
+        <CheckedDisableIcon />
+      ) : checked ? (
+        <CheckedOnIcon />
       ) : (
-        <CheckedOffIcon w="20px" h="20px" color="primary" />
+        <CheckedOffIcon />
       )}
       {typeof children === 'string' ? (
-        <Text textStyle="md" ml="5px" color="gray3">
+        <Text fontSize={'15px'} ml="8px" color="black">
           {children}
         </Text>
       ) : (

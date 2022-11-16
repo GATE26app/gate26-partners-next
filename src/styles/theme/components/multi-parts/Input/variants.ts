@@ -10,9 +10,9 @@ export const variants: InputThemeType['variants'] = {
     return {
       field: {
         border: '1px solid',
-        borderColor: 'inherit',
-        borderRadius: 0,
-        bg: 'inherit',
+        borderColor: 'gray.300',
+        borderRadius: '5px',
+        bg: 'white',
         _hover: {
           borderColor: mode('gray.300', 'whiteAlpha.400')(props),
         },

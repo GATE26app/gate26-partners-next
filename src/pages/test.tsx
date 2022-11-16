@@ -17,6 +17,7 @@ import useAppStore from '@features/useAppStore';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import Button from '@components/common/Button';
+import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
 import DataTable, {
   DataTableColumnType,
@@ -25,6 +26,7 @@ import DataTable, {
 import IconButton from '@components/common/IconButton';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
+import SearchInput from '@components/common/SearchInput';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -46,7 +48,7 @@ function AccoianWrap({ title, Pannel }: AccodianProps) {
           <AccordionIcon />
         </AccordionButton>
       </h2>
-      <AccordionPanel style={{ backgroundColor: '#efefef' }} pb={4}>
+      <AccordionPanel style={{ backgroundColor: '#ffffff' }} pb={4}>
         {Pannel}
       </AccordionPanel>
     </AccordionItem>
@@ -137,6 +139,9 @@ function Test({ Component, pageProps }: any) {
     );
     openCustomModal();
   };
+
+  const [checkbox, setCheckbox] = useState<boolean>(false);
+  const toggleCheckbox = () => setCheckbox(!checkbox);
   return (
     <div style={{ width: '100%' }}>
       <Flex>
@@ -308,9 +313,9 @@ function Test({ Component, pageProps }: any) {
                     currentPage: 0,
                     limit: 0,
                     total: 0,
-                    onPageNumberClicked: (page: number) => {},
-                    onPreviousPageClicked: (page: number) => {},
-                    onNextPageClicked: (page: number) => {},
+                    onPageNumberClicked: (page: number) => console.log('a'),
+                    onPreviousPageClicked: (page: number) => console.log('a'),
+                    onNextPageClicked: (page: number) => console.log('a'),
                   }}
                 />
               </Flex>
@@ -355,6 +360,25 @@ function Test({ Component, pageProps }: any) {
                   width={'187px'}
                   height="100px"
                 />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="SearchInput"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <SearchInput />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="CheckBox"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <CheckBox disabled onClick={toggleCheckbox} />
+                <CheckBox checked={checkbox} onClick={toggleCheckbox}>
+                  {'체크박스'}
+                </CheckBox>
               </Flex>
             }
           />

@@ -11,16 +11,16 @@ const Light = {
     600: '#FF3E23',
     700: '#FF2305',
     800: '#E51C00',
-    900: '#C71800'
+    900: '#C71800',
   },
   secondary: getColorSchema('#7B61FF'),
   warning: {
     100: '#FFE2E2',
-    500: '#FF6060'
+    500: '#FF6060',
   },
   success: {
     100: '#CBDFFF',
-    500: '#4850FF'
+    500: '#4850FF',
   },
   gray: {
     50: '#FAFAFA',
