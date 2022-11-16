@@ -221,7 +221,7 @@ function Test({ Component, pageProps }: any) {
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
                   <SmallButton text="답변하기" color="blue" />
-                  <SmallButton text="답변하기" color="blue" />
+                  <SmallButton text="답변하기" color="normal" />
                 </Flex>
               </Flex>
             }
