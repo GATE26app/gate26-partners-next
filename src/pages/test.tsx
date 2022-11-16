@@ -24,6 +24,7 @@ import DataTable, {
   DataTableRowType,
 } from '@components/common/DataTable';
 import IconButton from '@components/common/IconButton';
+import InputBox from '@components/common/Input';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
@@ -379,6 +380,16 @@ function Test({ Component, pageProps }: any) {
                 <CheckBox checked={checkbox} onClick={toggleCheckbox}>
                   {'체크박스'}
                 </CheckBox>
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="InputBox(개발중)"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <InputBox placeholder="Nomal input" />
+                <InputBox isInvalid={true} placeholder="Error" />
+                <InputBox placeholder="Disabled" isDisabled={true} />
               </Flex>
             }
           />

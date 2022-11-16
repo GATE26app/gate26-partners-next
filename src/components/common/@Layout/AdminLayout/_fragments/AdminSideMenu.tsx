@@ -23,7 +23,7 @@ const AdminSideMenu = ({ children }: AdminSideMenuProps) => {
   const router = useRouter();
 
   const getActiveRow = () => {
-    let activeArr: number[] = [];
+    const activeArr: number[] = [];
     MenuRouter.forEach((route, index: number) => {
       const isActive = router.pathname.includes(route.path);
       if (isActive) {

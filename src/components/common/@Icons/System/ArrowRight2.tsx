@@ -10,7 +10,6 @@ const ArrowRight2Icon = ({ ...props }: IconProps) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-
     </Icon>
   );
 };

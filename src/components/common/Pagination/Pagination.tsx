@@ -21,10 +21,10 @@ function Pagination({
   const renderNumbers = () => {
     const pagesLength = Math.ceil(total / limit);
 
-    let start,
-      end,
-      ceiling = Math.ceil(pageRangeDisplayed / 2),
-      floor = Math.floor(pageRangeDisplayed / 2);
+    let start;
+    let end;
+    const ceiling = Math.ceil(pageRangeDisplayed / 2);
+    const floor = Math.floor(pageRangeDisplayed / 2);
 
     if (pagesLength < pageRangeDisplayed) {
       start = 0;
