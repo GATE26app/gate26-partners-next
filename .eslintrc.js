@@ -33,7 +33,7 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-namespace': 'off',
     'prettier/prettier': [
-      'errror',
+      'error',
       {
         endOfLine: 'auto',
       },
