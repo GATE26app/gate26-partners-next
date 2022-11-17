@@ -16,6 +16,7 @@ const customDateInput = ({ value, onClick, onChange }: any, ref: any) => (
 );
 customDateInput.displayName = 'DateInput';
 
+// 사용하지 않음 2022-11-17
 const CustomInput = forwardRef(customDateInput);
 
 interface Props {
@@ -28,7 +29,7 @@ interface Props {
 const DatePicker2 = ({ selectedDate, onChange, ...props }: Props) => {
   return (
     <>
-      <InputGroup>
+      {/* <InputGroup>
         <ReactDatePicker
           selected={selectedDate}
           onChange={onChange}
@@ -37,7 +38,7 @@ const DatePicker2 = ({ selectedDate, onChange, ...props }: Props) => {
           dateFormat="yyyy년 MM월 dd일"
           {...props}
         />
-      </InputGroup>
+      </InputGroup> */}
     </>
   );
 };

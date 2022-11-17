@@ -7,20 +7,24 @@ import { Center, Flex, Text } from '@chakra-ui/react';
 import ArrowLeftIcon from '@icons/System/ArrowLeft';
 import ArrowRightIcon from '@icons/System/ArrowRight';
 
-interface CalendarHeaderProps {
+interface PickerHeaderProps {
   date: dayjs.Dayjs;
   setDate: (val: dayjs.Dayjs) => void;
 }
 
-const CalendarHeader = ({ date, setDate }: CalendarHeaderProps) => {
-  // const returnToday = () => setDate(moment());
+const PickerHeader = ({ date, setDate }: PickerHeaderProps) => {
   const jumpToMonth = (num: number) =>
     num
       ? setDate(date.clone().add(1, 'month'))
       : setDate(date.clone().subtract(1, 'month'));
 
   return (
-    <Flex w="100%" alignItems="center" justifyContent="space-between">
+    <Flex
+      w="100%"
+      alignItems="center"
+      justifyContent="center"
+      padding={'20px 0'}
+    >
       <Center
         w="30px"
         h="30px"
@@ -32,8 +36,13 @@ const CalendarHeader = ({ date, setDate }: CalendarHeaderProps) => {
         <ArrowLeftIcon />
       </Center>
 
-      <Text fontWeight="bold" fontSize="20px" color="custom.primary">
-        {date.format('YYYY.MM')}
+      <Text
+        fontWeight="bold"
+        fontSize="15px"
+        color="primary.500"
+        margin={'0 21px'}
+      >
+        {date?.format('YYYY년 MM월')}
       </Text>
 
       <Center
@@ -50,4 +59,4 @@ const CalendarHeader = ({ date, setDate }: CalendarHeaderProps) => {
   );
 };
 
-export default CalendarHeader;
+export default PickerHeader;

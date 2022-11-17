@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import dayjs from 'dayjs';
+
 import {
   Accordion,
   AccordionButton,
@@ -13,7 +15,6 @@ import {
 } from '@chakra-ui/react';
 
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
-import useAppStore from '@features/useAppStore';
 
 import Toggle from '@components/Toggle';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -24,6 +25,7 @@ import DataTable, {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
+import DatePicker from '@components/common/DatePicker';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
 import Pagination from '@components/common/Pagination';
@@ -145,10 +147,14 @@ function Test({ Component, pageProps }: any) {
 
   const [checkbox, setCheckbox] = useState<boolean>(false);
   const toggleCheckbox = () => setCheckbox(!checkbox);
+
+  const [keyword, setKeyword] = useState<string>('');
+  const [curDay, setCurDay] = useState<dayjs.Dayjs>(() => dayjs('2022-10-20'));
+
   return (
     <div style={{ width: '100%' }}>
       <Flex>
-        <Accordion style={{ width: '100%' }} defaultIndex={[0]} allowMultiple>
+        <Accordion style={{ width: '100%' }} defaultIndex={[]} allowMultiple>
           <AccoianWrap
             title="Button"
             Pannel={
@@ -374,7 +380,12 @@ function Test({ Component, pageProps }: any) {
             title="SearchInput"
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
-                <SearchInput />
+                <SearchInput
+                  placeholder="Search"
+                  text={keyword}
+                  onChange={(text: string) => setKeyword(text)}
+                  onSearch={() => console.log('검색')}
+                />
               </Flex>
             }
           />
@@ -410,6 +421,30 @@ function Test({ Component, pageProps }: any) {
                   toggleOption
                 />
                 <Toggle text1="챌린지" text2="국가" toggleOption={false} />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="DatePicker"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column" height={'1200px'}>
+                <DatePicker
+                  type={'date'}
+                  width={'250px'}
+                  curDate={curDay}
+                  onApply={(date) => {
+                    setCurDay(date);
+                    console.log(date);
+                  }}
+                />
+                <DatePicker
+                  type={'datetime'}
+                  curDate={curDay}
+                  onApply={(date) => {
+                    setCurDay(date);
+                    console.log(date);
+                  }}
+                />
               </Flex>
             }
           />
