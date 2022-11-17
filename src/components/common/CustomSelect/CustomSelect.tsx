@@ -16,6 +16,7 @@ interface CustomSelectProps {
     value: string | number;
     label: string;
   }[];
+  onChange?: (value: string | number) => void;
 }
 
 const CustomSelect = ({
@@ -23,10 +24,15 @@ const CustomSelect = ({
   placeholder,
   items,
   disabled,
+  onChange,
   ...props
 }: CustomSelectProps & ReactSelectProps) => {
   const theme = useTheme();
-  const handleChange = (e: any) => {};
+  const handleChange = (e: any) => {
+    if (onChange) {
+      onChange(e.value);
+    }
+  };
 
   return (
     <Wrap width={width}>
@@ -40,6 +46,7 @@ const CustomSelect = ({
         classNamePrefix={'Select'}
         onChange={handleChange}
         options={items}
+        defaultValue={items[0].value}
         styles={{
           dropdownIndicator: (provided, state) => ({
             ...provided,

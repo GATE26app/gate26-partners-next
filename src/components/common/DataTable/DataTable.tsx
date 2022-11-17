@@ -68,7 +68,7 @@ const DataTable = ({
   return (
     <TableContainer
       style={{
-        boxShadow: '0 0 0 1px ' + Light['gray'][300],
+        boxShadow: '0 0 0 1px ' + Light.gray[300],
         borderRadius: '5px',
       }}
     >

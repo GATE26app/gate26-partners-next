@@ -22,7 +22,7 @@ const SearchInput = ({
     }
   };
   return (
-    <InputGroup h={'40px'}>
+    <InputGroup w={'315px'} h={'40px'}>
       <Input
         h={'100%'}
         variant={'outline'}
