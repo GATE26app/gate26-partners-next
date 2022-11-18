@@ -1,4 +1,6 @@
 export interface CheckBoxProps {
-  checked: boolean;
+  disabled?: boolean;
+  checked?: boolean;
   children?: string | JSX.Element;
+  onClick?: () => void;
 }

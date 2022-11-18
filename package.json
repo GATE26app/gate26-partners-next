@@ -106,7 +106,7 @@
   },
   "os": [
     "darwin",
-    "win64",
+    "win32",
     "linux"
   ],
   "engineStrict": true
