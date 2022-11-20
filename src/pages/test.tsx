@@ -371,6 +371,29 @@ function Test({ Component, pageProps }: any) {
                     { value: 4, label: 'Option4' },
                   ]}
                 />
+                <CustomSelect
+                  width={'100px'}
+                  placeholder={'Type'}
+                  items={[
+                    { value: 1, label: 'Option1' },
+                    { value: 2, label: 'Option2' },
+                    { value: 3, label: 'Option3' },
+                    { value: 4, label: 'Option4' },
+                  ]}
+                  noBorder
+                />
+                <CustomSelect
+                  width={'100px'}
+                  size={'xs'}
+                  placeholder={'Type'}
+                  items={[
+                    { value: 1, label: 'Option1' },
+                    { value: 2, label: 'Option2' },
+                    { value: 3, label: 'Option3' },
+                    { value: 4, label: 'Option4' },
+                  ]}
+                  noBorder
+                />
               </Flex>
             }
           />
