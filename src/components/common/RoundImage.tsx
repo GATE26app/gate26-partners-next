@@ -7,12 +7,13 @@ interface RoundImageProps {
   height?: string;
   src: string;
   alt?: string;
+  isCircle?: boolean;
 }
 
-const RoundImage = ({ width, height, src, alt }: RoundImageProps) => {
+const RoundImage = ({ width, height, src, alt, isCircle }: RoundImageProps) => {
   return (
     <Image
-      borderRadius="5px"
+      borderRadius={isCircle ? 'full' : '5px'}
       w={width}
       h={height}
       objectFit="cover"
