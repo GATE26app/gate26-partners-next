@@ -2,7 +2,7 @@ import { Icon, IconProps } from '@chakra-ui/react';
 
 interface DownloadIconProps extends IconProps {
   strokeColor?: string;
-  size: 'md' | 'sm';
+  size: 'md' | 'sm' | 'xs';
 }
 const DownloadIcon = ({
   strokeColor = '#1A1A1A',

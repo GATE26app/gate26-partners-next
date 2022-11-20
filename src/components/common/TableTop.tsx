@@ -21,6 +21,7 @@ interface SearchProps {
 }
 interface ButtonProps {
   title: string;
+  width?: string;
   onClickCreate?: () => void;
 }
 interface TableTopProps {
@@ -37,6 +38,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
     onChangeKeyword,
     onClickSearch,
   } = search;
+  const buttonWidth = createButton?.width;
   const buttonTitle = createButton?.title;
   const onClickCreate = createButton?.onClickCreate;
   return (
@@ -51,7 +53,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </EmphasisText>
         <CustomSelect
           width={'110px'}
-          size={'sm'}
+          size={'xs'}
           items={[
             { value: 10, label: '10개씩 보기' },
             { value: 25, label: '25개씩 보기' },
@@ -63,8 +65,8 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         {createButton && (
           <IconButton
             type={'add'}
-            size={'md'}
-            width={'120px'}
+            size={'xs'}
+            width={buttonWidth ? buttonWidth : undefined}
             text={buttonTitle ? buttonTitle : ''}
             onClick={onClickCreate}
           />
@@ -76,6 +78,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </Text>
         <CustomSelect
           width={'100px'}
+          size={'sm'}
           items={searchTypes}
           onChange={(value) => onChangeSearchType(value as number)}
         />

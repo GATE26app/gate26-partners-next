@@ -12,8 +12,7 @@ type ButtonType =
 export interface ButtonProps {
   type?: ButtonType;
   width?: string;
-  height?: string;
-  size: 'md' | 'sm';
+  size: 'md' | 'sm' | 'xs';
   text: string;
   onClick?: () => void;
   toggle?: boolean;
@@ -22,8 +21,7 @@ export interface ButtonProps {
 const Button = ({
   type = 'square',
   width = '69px',
-  height = '50px',
-  size,
+  size = 'md',
   text,
   onClick,
   toggle = false,
@@ -31,7 +29,7 @@ const Button = ({
   return (
     <CustomButton
       w={width}
-      h={height}
+      h={size === 'md' ? '50px' : size === 'sm' ? '40px' : '30px'}
       size={size}
       buttonType={type}
       onClick={onClick}
@@ -48,7 +46,7 @@ const Button = ({
 
 interface ButtonOptionProps {
   buttonType?: ButtonType;
-  size?: 'md' | 'sm';
+  size?: 'md' | 'sm' | 'xs';
 }
 const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
   & {

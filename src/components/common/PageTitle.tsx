@@ -27,9 +27,8 @@ const PageTitle = ({ title, isDownload, onClickDownload }: PageTitleProps) => {
       {isDownload && (
         <IconButton
           type="download"
-          size="md"
+          size="sm"
           width="120px"
-          height="40px"
           text="내보내기"
           onClick={onClickDownload}
         />

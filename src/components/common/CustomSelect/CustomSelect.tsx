@@ -10,7 +10,7 @@ import DropdownIndicator from './_fragments/DropdownIndicator';
 
 interface CustomSelectProps {
   width?: string;
-  size?: 'md' | 'sm';
+  size?: 'md' | 'sm' | 'xs';
   placeholder?: string;
   disabled?: boolean;
   items: {
@@ -37,7 +37,10 @@ const CustomSelect = ({
   };
 
   return (
-    <Wrap width={width} height={size === 'md' ? '40px' : '30px'}>
+    <Wrap
+      width={width}
+      height={size === 'md' ? '50px' : size === 'sm' ? '40px' : '30px'}
+    >
       <StyledReactSelect
         className="select-container"
         {...props}
@@ -78,7 +81,7 @@ const Wrap = styled.div<WrapStyleProps>`
 
 interface StyledReactSelectProps {
   customTheme: any;
-  size: 'md' | 'sm';
+  size: 'md' | 'sm' | 'xs';
 }
 
 const StyledReactSelect = styled(Select)<StyledReactSelectProps>`

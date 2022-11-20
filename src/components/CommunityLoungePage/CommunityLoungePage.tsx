@@ -1,19 +1,27 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
 
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
+
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
-import DataTable, {
-  DataTableColumnType,
-  DataTableRowType,
-} from '@components/common/DataTable';
+import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
-import RoundImage from '@components/common/RoundImage';
-import SmallButton from '@components/common/SmallButton';
 import TableTop from '@components/common/TableTop';
 
+import { LOUNGE_COLUMNS } from './CommunityLoungePage.data';
+import CreateLoungeModal from './_fragments/LoungeDetailModal';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+
+interface ModalProps {
+  isOpen: boolean;
+  type?: 'create' | 'modify';
+  targetId?: number;
+}
 interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
@@ -21,50 +29,24 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const columns: DataTableColumnType[] = [
-  {
-    key: 'title',
-    name: '라운지명',
-    width: '25.8%',
-  },
-  {
-    key: 'banner',
-    name: '배너 이미지',
-    width: '28.3%',
-    render: (value: DataTableRowType) => (
-      <RoundImage src={value.banner} width={'187px'} height="100px" />
-    ),
-  },
-  {
-    key: 'home',
-    name: '홈 이미지',
-    width: '26.6%',
-    render: (value: DataTableRowType) => (
-      <RoundImage src={value.home} width={'94px'} height="100px" />
-    ),
-  },
-  {
-    key: 'manageBtn',
-    name: '이벤트 배너 관리',
-    width: '12.5%',
-    render: (value: DataTableRowType) => (
-      <SmallButton width="87px" text="이벤트 배너 관리" color="normal" />
-    ),
-  },
-];
-
 const rows: DataTableRowType[] = [
   {
+    id: 1,
     title: '유럽',
     banner:
       'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
     home: 'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    order: 1,
+    enable: true,
   },
   {
+    id: 2,
     title: '유럽',
     banner:
       'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
     home: 'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    order: 2,
+    enable: false,
   },
 ];
 
@@ -74,6 +56,10 @@ function CommunityLoungePage() {
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
+  const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
@@ -83,9 +69,31 @@ function CommunityLoungePage() {
     setRequest(newRequest);
   };
 
-  useEffect(() => {
-    console.log(request);
-  }, [request]);
+  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
+
+  const handleEditRow = (row: DataTableRowType) => {
+    if (!row.id) {
+      return;
+    }
+    setModal({ isOpen: true, type: 'modify', targetId: row.id });
+  };
+
+  const handleCloseModal = () => setModal({ isOpen: false });
+
+  const handleDeleteRow = (row: DataTableRowType) => {
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '라운지',
+        message: '라운지를 삭제 하시겠습니까?',
+        type: 'confirm',
+        okButtonName: '삭제',
+        cbOk: () => {
+          console.log('삭제 처리:', row);
+        },
+      }),
+    );
+    openCustomModal();
+  };
   return (
     <>
       <Head>
@@ -121,12 +129,17 @@ function CommunityLoungePage() {
             },
             onClickSearch: () => console.log('검색'),
           }}
+          createButton={{
+            title: '라운지 추가',
+            width: '93px',
+            onClickCreate: handleCreateRow,
+          }}
         />
         <DataTable
-          columns={columns}
+          columns={LOUNGE_COLUMNS}
           rows={rows}
-          onEdit={(row: DataTableRowType) => console.log('edit: ', row)}
-          onDelete={(row: DataTableRowType) => console.log('delete: ', row)}
+          onEdit={handleEditRow}
+          onDelete={handleDeleteRow}
           isMenu
           paginationProps={{
             currentPage: request.page,
@@ -141,6 +154,13 @@ function CommunityLoungePage() {
           }}
         />
       </Flex>
+      <CreateLoungeModal
+        isOpen={modal.isOpen && modal.type !== undefined}
+        type={modal.type}
+        targetId={modal.targetId}
+        onClose={handleCloseModal}
+        onComplete={() => console.log('데이터 생성 후 처리')}
+      />
     </>
   );
 }

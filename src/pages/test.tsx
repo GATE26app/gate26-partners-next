@@ -163,21 +163,26 @@ function Test({ Component, pageProps }: any) {
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <Flex columnGap={'10px'} alignItems="center">
-                  <Button width="69px" height="50px" size="md" text="로그인" />
-                  <Button width="61px" height="40px" size="sm" text="로그인" />
+                  <Button width="69px" size="md" text="로그인" />
+                  <Button width="61px" size="sm" text="로그인" />
+                  <Button width="61px" size="xs" text="로그인" />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="square-outline"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="square-outline"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="square-outline"
                     text="로그인"
                   />
@@ -185,47 +190,44 @@ function Test({ Component, pageProps }: any) {
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="square-grayscale"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="square-grayscale"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="square-grayscale"
                     text="로그인"
                   />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
-                  <Button
-                    width="69px"
-                    height="50px"
-                    size="md"
-                    type="round"
-                    text="로그인"
-                  />
-                  <Button
-                    width="61px"
-                    height="40px"
-                    size="sm"
-                    type="round"
-                    text="로그인"
-                  />
+                  <Button width="69px" size="md" type="round" text="로그인" />
+                  <Button width="61px" size="sm" type="round" text="로그인" />
+                  <Button width="61px" size="xs" type="round" text="로그인" />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="round-outline"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="round-outline"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="round-outline"
                     text="로그인"
                   />
@@ -245,15 +247,19 @@ function Test({ Component, pageProps }: any) {
                   <IconButton
                     type="download"
                     width="110px"
-                    height="50px"
                     size="md"
                     text="내보내기"
                   />
                   <IconButton
                     type="download"
                     width="94px"
-                    height="40px"
                     size="sm"
+                    text="내보내기"
+                  />
+                  <IconButton
+                    type="download"
+                    width="94px"
+                    size="xs"
                     text="내보내기"
                   />
                 </Flex>
@@ -261,15 +267,19 @@ function Test({ Component, pageProps }: any) {
                   <IconButton
                     type="add"
                     width="110px"
-                    height="50px"
                     size="md"
                     text="메뉴추가"
                   />
                   <IconButton
                     type="add"
                     width="94px"
-                    height="40px"
                     size="sm"
+                    text="메뉴추가"
+                  />
+                  <IconButton
+                    type="add"
+                    width="94px"
+                    size="xs"
                     text="메뉴추가"
                   />
                 </Flex>
@@ -282,7 +292,6 @@ function Test({ Component, pageProps }: any) {
               <Flex alignItems="center" columnGap={'10px'}>
                 <Button
                   width="120px"
-                  height="50px"
                   size="sm"
                   onClick={handleClick}
                   text="모달 테스트"

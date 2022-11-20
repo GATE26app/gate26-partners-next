@@ -55,7 +55,7 @@ function AlertModal({ onClose, ...props }: AlertModalProps) {
     return <></>;
   };
   return (
-    <Modal onClose={onClose} isCentered {...props}>
+    <Modal onClose={onClose} isCentered variant={'alert'} {...props}>
       <ModalOverlay />
       <Content maxW={300} maxH={186}>
         <Header>{title || 'Alert'}</Header>
