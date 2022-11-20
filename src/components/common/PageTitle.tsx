@@ -5,7 +5,7 @@ import IconButton from './IconButton';
 interface PageTitleProps {
   title: string;
   isDownload?: boolean;
-  onClickDownload: () => void;
+  onClickDownload?: () => void;
 }
 const PageTitle = ({ title, isDownload, onClickDownload }: PageTitleProps) => {
   return (

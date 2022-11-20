@@ -17,6 +17,7 @@ const RoundImage = ({ width, height, src, alt }: RoundImageProps) => {
       h={height}
       objectFit="cover"
       src={src}
+      margin={'0 auto'}
       alt={alt}
     />
   );

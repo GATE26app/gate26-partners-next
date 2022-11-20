@@ -18,6 +18,7 @@ import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Toggle from '@components/Toggle';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
+import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
@@ -28,10 +29,12 @@ import DataTable, {
 import DatePicker from '@components/common/DatePicker';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
+import PageTitle from '@components/common/PageTitle';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
+import TableTop from '@components/common/TableTop';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -446,6 +449,43 @@ function Test({ Component, pageProps }: any) {
                   }}
                 />
               </Flex>
+            }
+          />
+          <AccoianWrap
+            title="페이지 공통 컴포넌트"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <BreadCrumb depth={['커뮤니티', '라운지 관리']} />
+                </Flex>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  {/* <PageTitle title="~~~ 관리" /> */}
+                  <PageTitle
+                    title="라운지 관리"
+                    onClickDownload={() => console.log('다운로드 클릭')}
+                    isDownload
+                  />
+                </Flex>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <TableTop
+                    total={100}
+                    search={{
+                      searchTypes: [
+                        { value: 0, label: '전체' },
+                        { value: 1, label: '조건1' },
+                      ],
+                      keyword: '',
+                      onChangeLimit: (value: number) =>
+                        console.log(value + '씩 보기'),
+                      onChangeSearchType: (type: number) =>
+                        console.log('검색조건: ', type),
+                      onChangeKeyword: (keyword: string) =>
+                        console.log('키워드: ' + keyword),
+                      onClickSearch: () => console.log('검색'),
+                    }}
+                  />
+                </Flex>
+              </>
             }
           />
         </Accordion>

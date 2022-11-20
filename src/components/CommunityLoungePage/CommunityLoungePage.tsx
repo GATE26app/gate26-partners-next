@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -10,70 +11,81 @@ import DataTable, {
 } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import RoundImage from '@components/common/RoundImage';
+import SmallButton from '@components/common/SmallButton';
 import TableTop from '@components/common/TableTop';
 
-function CommunityLoungePage() {
-  const columns: DataTableColumnType[] = [
-    {
-      key: 'title',
-      name: '제목',
-      width: '100px',
-    },
-    {
-      key: 'event_content',
-      name: '이벤트내용',
-    },
-    {
-      key: 'type',
-      name: '타입',
-    },
-    {
-      key: 'start',
-      name: '시작일자',
-    },
-    {
-      key: 'end',
-      name: '종료일자',
-    },
-    {
-      key: 'banner',
-      name: '배너이미지',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.banner} width={'187px'} height="100px" />
-      ),
-    },
-    {
-      key: 'main',
-      name: '메인이미지',
-      width: '200px',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.banner} width={'94px'} height="100px" />
-      ),
-    },
-  ];
+interface ReqLoungeProps {
+  keyword?: string;
+  searchType?: number;
+  page: number;
+  limit: number;
+}
 
-  const rows: DataTableRowType[] = [
-    {
-      title: '123',
-      event_content: '232323',
-      type: 123,
-      start: '2022-10-10',
-      end: '2022-10-10',
-      banner:
-        'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      main: 'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    },
-    {
-      title: '111111111111111111111111111',
-      event_content: '232323',
-      type: 123,
-      start: '2022-10-10',
-      end: '2022-10-10',
-      banner:
-        'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      main: 'https://images.pexels.com/photos/1303090/pexels-photo-1303090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    },
-  ];
+const columns: DataTableColumnType[] = [
+  {
+    key: 'title',
+    name: '라운지명',
+    width: '25.8%',
+  },
+  {
+    key: 'banner',
+    name: '배너 이미지',
+    width: '28.3%',
+    render: (value: DataTableRowType) => (
+      <RoundImage src={value.banner} width={'187px'} height="100px" />
+    ),
+  },
+  {
+    key: 'home',
+    name: '홈 이미지',
+    width: '26.6%',
+    render: (value: DataTableRowType) => (
+      <RoundImage src={value.home} width={'94px'} height="100px" />
+    ),
+  },
+  {
+    key: 'manageBtn',
+    name: '이벤트 배너 관리',
+    width: '12.5%',
+    render: (value: DataTableRowType) => (
+      <SmallButton width="87px" text="이벤트 배너 관리" color="normal" />
+    ),
+  },
+];
+
+const rows: DataTableRowType[] = [
+  {
+    title: '유럽',
+    banner:
+      'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    home: 'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+  },
+  {
+    title: '유럽',
+    banner:
+      'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    home: 'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+  },
+];
+
+function CommunityLoungePage() {
+  const [request, setRequest] = useState<ReqLoungeProps>({
+    page: 1,
+    limit: 10,
+  });
+  const [total, setTotal] = useState<number>(100);
+
+  const handleChangeInput = (key: string, value: string | number) => {
+    const newRequest = { ...request, [key]: value };
+    if (key === 'limit') {
+      newRequest.page = 1;
+    }
+    setRequest(newRequest);
+  };
+
+  useEffect(() => {
+    console.log(request);
+  }, [request]);
   return (
     <>
       <Head>
@@ -93,13 +105,14 @@ function CommunityLoungePage() {
         />
 
         <TableTop
-          total={65}
+          total={total}
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '조건1' },
             ],
             keyword: '',
+            onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
               console.log('타입');
             },
@@ -116,12 +129,15 @@ function CommunityLoungePage() {
           onDelete={(row: DataTableRowType) => console.log('delete: ', row)}
           isMenu
           paginationProps={{
-            currentPage: 0,
-            limit: 0,
-            total: 0,
-            onPageNumberClicked: (page: number) => console.log('a'),
-            onPreviousPageClicked: (page: number) => console.log('a'),
-            onNextPageClicked: (page: number) => console.log('a'),
+            currentPage: request.page,
+            limit: request.limit,
+            total: total,
+            onPageNumberClicked: (page: number) =>
+              handleChangeInput('page', page),
+            onPreviousPageClicked: (page: number) =>
+              handleChangeInput('page', page),
+            onNextPageClicked: (page: number) =>
+              handleChangeInput('page', page),
           }}
         />
       </Flex>
