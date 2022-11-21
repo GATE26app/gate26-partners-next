@@ -6,6 +6,7 @@ export type DataTableColumnType<T extends string> = {
   key: string;
   name: string;
   width?: string;
+  align?: 'left' | 'center' | 'right';
   render?: (value: DataTableRowType<T>) => JSX.Element;
 };
 export type DataTableRowType<T extends string> = {

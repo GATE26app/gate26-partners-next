@@ -54,6 +54,9 @@ const variantSimple: StyleObjectOrFn = (props) => {
       textAlign: 'center',
       ...numericStyles,
     },
+    tr: {
+      height: '70px',
+    },
     caption: {
       color: 'gray.600',
     },

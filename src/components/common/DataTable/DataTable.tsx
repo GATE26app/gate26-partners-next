@@ -1,6 +1,9 @@
 import React from 'react';
 
+import dayjs from 'dayjs';
+
 import {
+  Flex,
   Table,
   TableContainer,
   Tbody,
@@ -12,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Light } from '@theme/foundations/colors';
+import { formatDate } from '@utils/format';
 
 import Pagination from '../Pagination';
 import {
@@ -33,7 +37,10 @@ const DataTable = <T extends string>({
     return (
       <Tr>
         {columns.map((col: DataTableColumnType<T>, index: number) => (
-          <Th key={`${col.key}_${index}`} w={col.width ? col.width : undefined}>
+          <Th
+            key={`${col.key}_${index}`}
+            maxW={col.width ? col.width : undefined}
+          >
             {col.name}
           </Th>
         ))}
@@ -48,9 +55,35 @@ const DataTable = <T extends string>({
         <Tr key={`${Object.keys(row)[index]}_${index}`}>
           {columns.map((col: DataTableColumnType<T>, index: number) =>
             col.render ? (
-              <Td key={`${col.key}_${index}`}>{col.render(row)}</Td>
+              <Td
+                key={`${col.key}_${index}`}
+                textAlign={col.align}
+                maxW={col.width ? col.width : undefined}
+              >
+                <Flex
+                  justifyContent={
+                    col.align === 'left'
+                      ? 'flex-start'
+                      : col.align === 'center'
+                      ? 'center'
+                      : 'flex-end'
+                  }
+                >
+                  {col.render(row)}
+                </Flex>
+              </Td>
             ) : (
-              <Td key={`${col.key}_${index}`}>{row[col.key as T]}</Td>
+              <Td
+                key={`${col.key}_${index}`}
+                textAlign={col.align}
+                maxW={col.width ? col.width : undefined}
+              >
+                <span>
+                  {row[col.key as T] instanceof dayjs
+                    ? formatDate(row[col.key as T] as dayjs.Dayjs)
+                    : row[col.key as T]}
+                </span>
+              </Td>
             ),
           )}
           {isMenu && (

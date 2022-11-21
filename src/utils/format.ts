@@ -1,18 +1,15 @@
+import dayjs from 'dayjs';
+
 export const intComma = (x: number | string) => {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-export const formatDate = (d: any) => {
-  let date = null;
-  if (d instanceof Date) {
-    date = d;
-  }
-  date = new Date(d);
-  const day = date.getDate();
-  const monthIndex = date.getMonth() + 1;
-  const year = date.getFullYear();
+export const formatDate = (date: dayjs.Dayjs) => {
+  const yyyymmdd = date?.format('YYYY-MM-DD');
+  const ampm = date?.format('a');
+  const hhmm = date?.format('HH:mm');
 
-  return `${year}.${`0${monthIndex}`.slice(-2)}.${`0${day}`.slice(-2)}`;
+  return [yyyymmdd, ampm === 'am' ? '오전' : '오후', hhmm].join(' ');
 };
 
 export const formatDateDash = (d: any) => {
