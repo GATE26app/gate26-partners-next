@@ -1,21 +1,23 @@
+import dayjs from 'dayjs';
+
 import { PaginationProps } from 'components/common/Pagination';
 
-export type DataTableColumnType = {
+export type DataTableColumnType<T extends string> = {
   key: string;
   name: string;
   width?: string;
-  render?: (value: DataTableRowType) => JSX.Element;
+  render?: (value: DataTableRowType<T>) => JSX.Element;
 };
-export type DataTableRowType = {
-  [key: string]: any;
+export type DataTableRowType<T extends string> = {
+  [key in T]: string | number | boolean | dayjs.Dayjs;
 };
 
-export interface DataTableProps {
+export interface DataTableProps<T extends string> {
   children?: string | JSX.Element;
-  columns: DataTableColumnType[];
-  rows?: DataTableRowType[];
+  columns: DataTableColumnType<T>[];
+  rows?: DataTableRowType<T>[];
   isMenu?: boolean;
   paginationProps: PaginationProps;
-  onEdit?: (row: DataTableRowType) => void;
-  onDelete?: (row: DataTableRowType) => void;
+  onEdit?: (row: DataTableRowType<T>) => void;
+  onDelete?: (row: DataTableRowType<T>) => void;
 }

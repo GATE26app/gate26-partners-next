@@ -21,18 +21,18 @@ import {
 } from './DataTable.type';
 import MenuSelect from './_fragments/MenuSelect';
 
-const DataTable = ({
+const DataTable = <T extends string>({
   columns,
   rows,
   isMenu,
   paginationProps,
   onEdit,
   onDelete,
-}: DataTableProps) => {
+}: DataTableProps<T>) => {
   const renderHead = () => {
     return (
       <Tr>
-        {columns.map((col: DataTableColumnType, index: number) => (
+        {columns.map((col: DataTableColumnType<T>, index: number) => (
           <Th key={`${col.key}_${index}`} w={col.width ? col.width : undefined}>
             {col.name}
           </Th>
@@ -43,14 +43,14 @@ const DataTable = ({
   };
 
   const renderBody = () => {
-    return rows?.map((row: DataTableRowType, index: number) => {
+    return rows?.map((row: DataTableRowType<T>, index: number) => {
       return (
         <Tr key={`${Object.keys(row)[index]}_${index}`}>
-          {columns.map((col: DataTableColumnType, index: number) =>
+          {columns.map((col: DataTableColumnType<T>, index: number) =>
             col.render ? (
               <Td key={`${col.key}_${index}`}>{col.render(row)}</Td>
             ) : (
-              <Td key={`${col.key}_${index}`}>{row[col.key]}</Td>
+              <Td key={`${col.key}_${index}`}>{row[col.key as T]}</Td>
             ),
           )}
           {isMenu && (

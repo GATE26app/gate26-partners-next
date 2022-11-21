@@ -17,6 +17,7 @@ interface CustomSelectProps {
     value: string | number;
     label: string;
   }[];
+  noBorder?: boolean;
   onChange?: (value: string | number) => void;
 }
 
@@ -26,6 +27,8 @@ const CustomSelect = ({
   placeholder,
   items,
   disabled,
+  defaultValue,
+  noBorder,
   onChange,
   ...props
 }: CustomSelectProps & ReactSelectProps) => {
@@ -52,8 +55,13 @@ const CustomSelect = ({
         classNamePrefix={'Select'}
         onChange={handleChange}
         options={items}
-        defaultValue={items[0]}
+        defaultValue={
+          defaultValue !== undefined
+            ? items.find((item) => item.value === defaultValue)
+            : items[0]
+        }
         size={size}
+        noBorder={noBorder}
         styles={{
           dropdownIndicator: (provided, state) => ({
             ...provided,
@@ -82,6 +90,7 @@ const Wrap = styled.div<WrapStyleProps>`
 interface StyledReactSelectProps {
   customTheme: any;
   size: 'md' | 'sm' | 'xs';
+  noBorder?: boolean;
 }
 
 const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
@@ -104,6 +113,7 @@ const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
       height: 100%;
       border-radius: 5px;
       box-shadow: none !important;
+      border-width: ${(props) => (props.noBorder ? 0 : '1px')};
       &--menu-is-open {
         border-color: #ff5942;
       }
@@ -121,7 +131,7 @@ const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
       border-width: 0px;
       background-color: ${(props) => props.customTheme.colors.white};
       color: ${(props) => props.customTheme.colors.black};
-      padding: 10px;
+      padding: ${(props) => (props.noBorder ? '0px' : '10px')};
       &-list {
         padding: 0;
         text-align: center;
@@ -151,6 +161,7 @@ const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
       width: 100%;
       display: flex;
       align-items: center;
+      padding: ${(props) => (props.noBorder ? 0 : '2px 8px')};
     }
     &__single-value {
       color: ${(props) =>

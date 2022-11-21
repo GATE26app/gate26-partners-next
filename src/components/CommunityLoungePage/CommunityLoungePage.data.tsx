@@ -4,7 +4,15 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export const LOUNGE_COLUMNS: DataTableColumnType[] = [
+export type LoungeColumnType =
+  | 'id'
+  | 'title'
+  | 'home'
+  | 'banner'
+  | 'order'
+  | 'enable';
+
+export const LOUNGE_COLUMNS: DataTableColumnType<LoungeColumnType>[] = [
   {
     key: 'title',
     name: '라운지명',
@@ -14,16 +22,16 @@ export const LOUNGE_COLUMNS: DataTableColumnType[] = [
     key: 'banner',
     name: '배너 이미지',
     width: '28.3%',
-    render: (value: DataTableRowType) => (
-      <RoundImage src={value.banner} width={'187px'} height="100px" />
+    render: (value: DataTableRowType<LoungeColumnType>) => (
+      <RoundImage src={value.banner as string} width={'187px'} height="100px" />
     ),
   },
   {
     key: 'home',
     name: '홈 이미지',
     width: '26.6%',
-    render: (value: DataTableRowType) => (
-      <RoundImage src={value.home} width={'94px'} height="100px" />
+    render: (value: DataTableRowType<LoungeColumnType>) => (
+      <RoundImage src={value.home as string} width={'94px'} height="100px" />
     ),
   },
   {
@@ -35,7 +43,7 @@ export const LOUNGE_COLUMNS: DataTableColumnType[] = [
     key: 'enable',
     name: '활성화 여부',
     width: '12.5%',
-    render: (value: DataTableRowType) => (
+    render: (value: DataTableRowType<LoungeColumnType>) => (
       <span>{value.enable ? '활성화' : '비활성화'}</span>
     ),
   },
