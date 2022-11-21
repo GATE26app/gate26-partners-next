@@ -106,8 +106,8 @@ function UserListPage() {
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 1, label: '출발지' },
+              { value: 1, label: '도착지 ' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
