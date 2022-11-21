@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -12,6 +13,7 @@ import {
 
 import Button from '@components/common/Button';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
+import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
 import {
@@ -85,6 +87,7 @@ const EventParticipantModal = ({
           }}
         />
         <DataTable
+          variant={'gray'}
           columns={PARTICIPANT_COLUMNS}
           rows={rows}
           paginationProps={{
@@ -117,7 +120,18 @@ const EventParticipantModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>참가자 목록</ModalHeader>
+        <ModalHeader>
+          <Flex justifyContent={'space-between'}>
+            <span>참가자 목록</span>
+            <IconButton
+              type="download"
+              size="sm"
+              width="120px"
+              text="내보내기"
+              onClick={() => console.log('내보내기')}
+            />
+          </Flex>
+        </ModalHeader>
         <ModalBody>{renderContent()}</ModalBody>
         <ModalFooter>
           <Button

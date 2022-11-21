@@ -30,6 +30,7 @@ const DataTable = <T extends string>({
   rows,
   isMenu,
   paginationProps,
+  variant = 'simple',
   onEdit,
   onDelete,
 }: DataTableProps<T>) => {
@@ -108,7 +109,7 @@ const DataTable = <T extends string>({
         borderRadius: '5px',
       }}
     >
-      <Table variant="simple" colorScheme={'gray'}>
+      <Table variant={variant} colorScheme={'gray'}>
         <Thead>{renderHead()}</Thead>
         <Tbody>{renderBody()}</Tbody>
         <Tfoot>

@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 
+import { TableProps } from '@chakra-ui/react';
+
 import { PaginationProps } from 'components/common/Pagination';
 
 export type DataTableColumnType<T extends string> = {
@@ -13,7 +15,7 @@ export type DataTableRowType<T extends string> = {
   [key in T]: string | number | boolean | dayjs.Dayjs;
 };
 
-export interface DataTableProps<T extends string> {
+export interface DataTableProps<T extends string> extends TableProps {
   children?: string | JSX.Element;
   columns: DataTableColumnType<T>[];
   rows?: DataTableRowType<T>[];

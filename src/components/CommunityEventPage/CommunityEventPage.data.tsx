@@ -133,6 +133,7 @@ class CommunityEvent {
       render: (value: DataTableRowType<EventColumnType>) => (
         <SmallButton
           text="참가자 목록"
+          width="64px"
           onClick={() => (this.onClick ? this.onClick(value) : undefined)}
           color={'normal'}
         />

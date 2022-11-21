@@ -27,6 +27,11 @@ const variantSimple: StyleObjectOrFn = (props) => {
       backgroundColor: 'white',
       borderRadius: '5px',
     },
+    thead: {
+      tr: {
+        height: '50px',
+      },
+    },
     th: {
       position: 'relative',
       color: 'gray.500',
@@ -71,6 +76,20 @@ const variantSimple: StyleObjectOrFn = (props) => {
   };
 };
 
+const variantGray: StyleObjectOrFn = (props) => {
+  const simple = variantSimple(props);
+
+  return {
+    ...simple,
+    thead: {
+      tr: {
+        height: '50px',
+        backgroundColor: 'gray.50',
+      },
+    },
+  };
+};
+
 export const Table: ChakraMultiPartComponentType<typeof parts> = {
   parts,
   baseStyle: {},
@@ -78,5 +97,6 @@ export const Table: ChakraMultiPartComponentType<typeof parts> = {
   sizes: {},
   variants: {
     simple: variantSimple,
+    gray: variantGray,
   },
 };

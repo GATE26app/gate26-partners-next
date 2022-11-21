@@ -5,14 +5,20 @@ import IconButton from './IconButton';
 interface PageTitleProps {
   title: string;
   isDownload?: boolean;
+  noMargin?: boolean;
   onClickDownload?: () => void;
 }
-const PageTitle = ({ title, isDownload, onClickDownload }: PageTitleProps) => {
+const PageTitle = ({
+  title,
+  isDownload,
+  noMargin,
+  onClickDownload,
+}: PageTitleProps) => {
   return (
     <Flex
       justifyContent={'space-between'}
       alignItems={'center'}
-      marginBottom={'30px'}
+      marginBottom={noMargin ? '0' : '30px'}
     >
       <Text
         fontSize="26px"
