@@ -1,26 +1,27 @@
-import typography from "@theme/foundations/typography";
+import typography from '@theme/foundations/typography';
+
 const textTypography = {
   xl: {
-    fontSize: "35px",
-    lineHeight: "52px",
-    letterSpacing: "-0.02em"
+    fontSize: '35px',
+    lineHeight: '52px',
+    letterSpacing: '-0.02em',
   },
   lg: {
-    fontSize: "26px",
-    lineHeight: "42px",
-    letterSpacing: "-0.02em"
+    fontSize: '26px',
+    lineHeight: '42px',
+    letterSpacing: '-0.02em',
   },
   md: {
-    fontSize: "15px",
-    lineHeight: "27px",
-    letterSpacing: "-0.02em"
+    fontSize: '15px',
+    lineHeight: '27px',
+    letterSpacing: '-0.02em',
   },
   sm: {
-    fontSize: "12px",
-    lineHeight: "18px",
-    letterSpacing: "-0.02em"
-  }
-}
+    fontSize: '12px',
+    lineHeight: '18px',
+    letterSpacing: '-0.02em',
+  },
+};
 const textStyles = {
   sm: {
     fontSize: ['12px', '10px', '12px'],
@@ -81,13 +82,13 @@ const textStyles = {
   textActive: {
     ...textTypography.md,
     fontWeight: typography.fontWeights.regular,
-    textDecorationLine: "underline"
+    textDecorationLine: 'underline',
   },
   textActiveSm: {
     ...textTypography.sm,
     fontWeight: typography.fontWeights.regular,
-    textDecorationLine: "underline"
-  }
+    textDecorationLine: 'underline',
+  },
 };
 
 export default textStyles;

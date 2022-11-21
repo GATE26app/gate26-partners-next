@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import styled from '@emotion/styled';
 
-import Button from './common/Button';
+import Button from './Button';
 
 export interface ToogleOption {
   width?: string;

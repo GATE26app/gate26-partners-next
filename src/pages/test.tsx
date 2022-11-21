@@ -16,7 +16,6 @@ import {
 
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
-import Toggle from '@components/Toggle';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -32,6 +31,7 @@ import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
+import Toggle from '@components/common/Toggle';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
