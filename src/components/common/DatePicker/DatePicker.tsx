@@ -11,6 +11,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { formatDate } from '@utils/format';
+
 import { PickerGrid } from './_fragments/DatePicker.style';
 import DateTimePicker from './_fragments/DateTimePicker';
 import Picker from './_fragments/Picker';
@@ -56,13 +58,6 @@ const DatePicker = ({
     }
   };
 
-  const parseDate = (date: dayjs.Dayjs) => {
-    const yyyymmdd = date?.format('YYYY-MM-DD');
-    const ampm = date?.format('a');
-    const hhmm = date?.format('HH:mm');
-
-    return [yyyymmdd, ampm === 'am' ? '오전' : '오후', hhmm].join(' ');
-  };
   return (
     <>
       <Popover
@@ -74,7 +69,7 @@ const DatePicker = ({
       >
         <PopoverTrigger>
           <Box w={width}>
-            <PickerInput disabled={disabled} text={parseDate(date)} />
+            <PickerInput disabled={disabled} text={formatDate(date)} />
           </Box>
         </PopoverTrigger>
         <PopoverContent bg={'white'} w={'100%'} maxH={'430px'}>

@@ -101,6 +101,7 @@ const SideMenu = styled(Flex)`
   &.admin-sidemenu {
     padding: 15px;
     width: 200px;
+    min-width: 200px;
     height: 100vh;
     background-color: #ffffff;
     border-right: 1px solid #e5e7ec;
