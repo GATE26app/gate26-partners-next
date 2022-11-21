@@ -2,11 +2,12 @@
   "",
   "/test",
   "/oneQuestion/main",
-  "/user",
   "/admin/account",
   "/admin/menu",
-  "/community/event",
   "/community/chat",
+  "/community/event",
   "/community/lounge",
-  "/community/tip"
+  "/community/tip",
+  "/user/list",
+  "/user/manage"
 ]
