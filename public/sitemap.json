@@ -1,11 +1,1 @@
-[
-  "",
-  "/test",
-  "/oneQuestion/main",
-  "/user",
-  "/admin/account",
-  "/admin/menu",
-  "/community/chat",
-  "/community/lounge",
-  "/community/tip"
-]
+["","/test","/oneQuestion/main","/admin/account","/admin/menu","/community/chat","/community/lounge","/community/tip","/user/list"]
