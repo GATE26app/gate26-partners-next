@@ -28,9 +28,16 @@ interface CalendarProps {
   curDate: dayjs.Dayjs;
   width?: string;
   onApply?: (val: dayjs.Dayjs) => void;
+  disabled?: boolean;
 }
 
-const DatePicker = ({ type, curDate, width, onApply }: CalendarProps) => {
+const DatePicker = ({
+  type,
+  curDate,
+  width,
+  onApply,
+  disabled,
+}: CalendarProps) => {
   const originDate = curDate?.clone();
   const [date, setDate] = useState<dayjs.Dayjs>(curDate);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,14 +62,14 @@ const DatePicker = ({ type, curDate, width, onApply }: CalendarProps) => {
     <>
       <Popover
         initialFocusRef={initRef}
-        isOpen={isOpen}
+        isOpen={!disabled && isOpen}
         onOpen={onOpen}
         onClose={onClose}
         closeOnBlur={false}
       >
         <PopoverTrigger>
           <Box w={width}>
-            <PickerInput text={formatDate(date)} />
+            <PickerInput disabled={disabled} text={formatDate(date)} />
           </Box>
         </PopoverTrigger>
         <PopoverContent bg={'white'} w={'100%'} maxH={'430px'}>

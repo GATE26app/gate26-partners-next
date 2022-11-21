@@ -52,7 +52,10 @@ const DataTable = <T extends string>({
   const renderBody = () => {
     return rows?.map((row: DataTableRowType<T>, index: number) => {
       return (
-        <Tr key={`${Object.keys(row)[index]}_${index}`}>
+        <Tr
+          key={`${Object.keys(row)[index]}_${index}`}
+          _hover={{ backgroundColor: 'gray.50' }}
+        >
           {columns.map((col: DataTableColumnType<T>, index: number) =>
             col.render ? (
               <Td
