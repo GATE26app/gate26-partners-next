@@ -6,7 +6,7 @@ import Button from './Button';
 
 export interface ToogleOption {
   width?: string;
-  height?: string;
+  size?: 'md' | 'sm' | 'xs';
   onClick?: (data: string) => void;
   text1: string;
   text2: string;
@@ -16,7 +16,7 @@ export interface ToogleOption {
 
 const Toggle = ({
   width = '166.67px',
-  height = '50px',
+  size = 'md',
   text1,
   text2,
   text3,
@@ -37,8 +37,7 @@ const Toggle = ({
       <ToggleForm>
         <Button
           width={width}
-          height={height}
-          size="md"
+          size={size}
           type={isToggle === '1' ? 'square-outline' : 'toggleOff'}
           text={text1}
           toggle
@@ -46,8 +45,7 @@ const Toggle = ({
         />
         <Button
           width={width}
-          height={height}
-          size="md"
+          size={size}
           type={isToggle === '2' ? 'square-outline' : 'toggleOff'}
           text={text2}
           toggle
@@ -56,8 +54,7 @@ const Toggle = ({
         {toggleOption ? (
           <Button
             width={width}
-            height={height}
-            size="md"
+            size={size}
             type={isToggle === '3' ? 'square-outline' : 'toggleOff'}
             text={text3 ? text3 : ''}
             toggle

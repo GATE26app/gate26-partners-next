@@ -10,6 +10,7 @@ import DropdownIndicator from './_fragments/DropdownIndicator';
 
 interface CustomSelectProps {
   width?: string;
+  size?: 'md' | 'sm' | 'xs';
   placeholder?: string;
   disabled?: boolean;
   items: {
@@ -21,6 +22,7 @@ interface CustomSelectProps {
 
 const CustomSelect = ({
   width,
+  size = 'md',
   placeholder,
   items,
   disabled,
@@ -35,8 +37,12 @@ const CustomSelect = ({
   };
 
   return (
-    <Wrap width={width}>
+    <Wrap
+      width={width}
+      height={size === 'md' ? '50px' : size === 'sm' ? '40px' : '30px'}
+    >
       <StyledReactSelect
+        className="select-container"
         {...props}
         isDisabled={disabled}
         placeholder={placeholder}
@@ -46,7 +52,8 @@ const CustomSelect = ({
         classNamePrefix={'Select'}
         onChange={handleChange}
         options={items}
-        defaultValue={items[0].value}
+        defaultValue={items[0]}
+        size={size}
         styles={{
           dropdownIndicator: (provided, state) => ({
             ...provided,
@@ -64,13 +71,21 @@ export default CustomSelect;
 
 interface WrapStyleProps {
   width?: string;
+  height?: string;
 }
 
 const Wrap = styled.div<WrapStyleProps>`
   width: ${({ width }) => (width ? width : '100%')};
+  height: ${({ height }) => (height ? height : '100%')};
 `;
 
-const StyledReactSelect = styled(Select)<{ customTheme: any }>`
+interface StyledReactSelectProps {
+  customTheme: any;
+  size: 'md' | 'sm' | 'xs';
+}
+
+const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
+  height: 100%;
   svg {
     width: 24px;
     height: 24px;
@@ -79,14 +94,14 @@ const StyledReactSelect = styled(Select)<{ customTheme: any }>`
         ? props.customTheme.colors.gray[500]
         : props.customTheme.colors.black};
   }
-
   & .Select {
     &__control {
       display: flex;
       align-items: center;
       background-color: ${(props) => props.customTheme.colors.white};
       border-color: ${(props) => props.customTheme.colors.gray[300]};
-      height: 40px;
+      min-height: auto;
+      height: 100%;
       border-radius: 5px;
       box-shadow: none !important;
       &--menu-is-open {
@@ -115,7 +130,6 @@ const StyledReactSelect = styled(Select)<{ customTheme: any }>`
 
     &__option {
       border-radius: 5px;
-      height: 40px;
       display: 'flex';
       align-items: 'center';
       font-family: 'Pretendard';
@@ -146,8 +160,8 @@ const StyledReactSelect = styled(Select)<{ customTheme: any }>`
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 400;
-      font-size: 15px;
-      line-height: 27px;
+      font-size: ${(props) => (props.size === 'md' ? '15px' : '12px')};
+      line-height: ${(props) => (props.size === 'md' ? '27px' : '18px')};
       letter-spacing: -0.02em;
       opacity: 1;
       transition: opacity 300ms;
@@ -164,8 +178,8 @@ const StyledReactSelect = styled(Select)<{ customTheme: any }>`
       font-family: 'Pretendard';
       font-style: normal;
       font-weight: 400;
-      font-size: 15px;
-      line-height: 27px;
+      font-size: ${(props) => (props.size === 'md' ? '15px' : '12px')};
+      line-height: ${(props) => (props.size === 'md' ? '27px' : '18px')};
       letter-spacing: -0.02em;
     }
 

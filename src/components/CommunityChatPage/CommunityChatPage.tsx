@@ -12,8 +12,8 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { LOUNGE_COLUMNS } from './CommunityLoungePage.data';
-import LoungeDetailModal from './_fragments/LoungeDetailModal';
+import { CHAT_COLUMNS } from './CommunityChatPage.data';
+import ChatDetailModal from './_fragments/ChatDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -32,25 +32,28 @@ interface ReqLoungeProps {
 const rows: DataTableRowType[] = [
   {
     id: 1,
-    title: '유럽',
-    banner:
-      'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    home: 'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    order: 1,
-    enable: true,
+    title: '이탈리아 라운지',
+    thumbnail:
+      'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    location: '유럽',
   },
   {
     id: 2,
-    title: '유럽',
-    banner:
-      'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    home: 'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    order: 2,
-    enable: false,
+    title: '네덜란드 라운지',
+    thumbnail:
+      'https://s3-alpha-sig.figma.com/img/81b4/2a5f/4639b9c0568ce8f8be20a16fac2c506a?Expires=1669593600&Signature=PLM-o5W2H3gqo9nV3YOyV-43bDPXG9CDjkh~z9pKT3luqPiEgNOV9UPhOV1Jor1cUzkZ7ybxbS4wK36P96swO~XHNfz7Yv1Iu5i4zYnl2A9CnHn30hHpofVdSXF2663b-~ZabTcu-pgU7QMd5YugSEk6O4nTgg4~6bWPgsn4L0TTVLFx0Dnmo3yV8PL6Gz557TR6zJavnIYBs5VKbnf0-kcz4pzUVE0sS5gOTNjb6GEfnApk0xS6NRXG3oRrqWO5mfcCphePnJrnpZbGnDxsQiu8B5bxMkNG~48XiFeBhTfYxq61bYQ6vYtM9XbdGu~mAOuX9gXjBRebkdz564UORA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    location: '유럽',
+  },
+  {
+    id: 1,
+    title: '프랑스 라운지',
+    thumbnail:
+      'https://s3-alpha-sig.figma.com/img/ba56/ae63/d2d207572cb351165db62dc4461edb5e?Expires=1669593600&Signature=dMfeMz9ygoMFNUY5kyKL~s0xX8-fqhzA5NVzxQ68cEkuqA-zsgtZk9OuDPtcjSGmZ7~onkQZebk2HHs~F4hphGUjmLKI9E0lnmEfYdngb8c9Gkv8Wooxz3-0zAHyuZANWpbWhPC2rDMHe7p3MYYwf5mDRG0K0o55DvUtqj7A-X~ZdGeTRIqCUfJgmxEtDLEH9AH12OWYb9c2KL6xHtVf59gQEgmh2JNg0JhOzcw-k1dD7V9GlhMevunSxVulSTy88VpGaY4KnOdzkCsY5cGg2AI--O~ouDseAXg6fU7gjgxttyqLI6RBPd7iQmEo8xmV1qKxqZPF3m5NbwkRp7FymA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    location: '유럽',
   },
 ];
 
-function CommunityLoungePage() {
+function CommunityChatPage() {
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 1,
     limit: 10,
@@ -83,8 +86,8 @@ function CommunityLoungePage() {
   const handleDeleteRow = (row: DataTableRowType) => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '라운지',
-        message: '라운지를 삭제 하시겠습니까?',
+        title: '오픈채팅',
+        message: '오픈채팅을 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
@@ -97,17 +100,17 @@ function CommunityLoungePage() {
   return (
     <>
       <Head>
-        <title>라운지 관리</title>
+        <title>오픈채팅 관리</title>
       </Head>
       <Flex
-        className="community-lounge-wrapper"
+        className="community-chat-wrapper"
         direction="column"
         width="100%"
         padding="20px"
       >
-        <BreadCrumb depth={['커뮤니티', '라운지 관리']} />
+        <BreadCrumb depth={['커뮤니티', '오픈채팅 관리']} />
         <PageTitle
-          title="라운지 관리"
+          title="오픈채팅 관리"
           onClickDownload={() => console.log('다운로드 클릭')}
           isDownload
         />
@@ -117,7 +120,8 @@ function CommunityLoungePage() {
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '라운지명' },
+              { value: 1, label: '채팅명' },
+              { value: 2, label: '라운지 위치' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
@@ -130,13 +134,13 @@ function CommunityLoungePage() {
             onClickSearch: () => console.log('검색'),
           }}
           createButton={{
-            title: '라운지 추가',
-            width: '93px',
+            title: '오픈채팅 추가',
+            width: '103px',
             onClickCreate: handleCreateRow,
           }}
         />
         <DataTable
-          columns={LOUNGE_COLUMNS}
+          columns={CHAT_COLUMNS}
           rows={rows}
           onEdit={handleEditRow}
           onDelete={handleDeleteRow}
@@ -154,7 +158,7 @@ function CommunityLoungePage() {
           }}
         />
       </Flex>
-      <LoungeDetailModal
+      <ChatDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
         targetId={modal.targetId}
@@ -165,4 +169,4 @@ function CommunityLoungePage() {
   );
 }
 
-export default withAdminLayout(CommunityLoungePage);
+export default withAdminLayout(CommunityChatPage);

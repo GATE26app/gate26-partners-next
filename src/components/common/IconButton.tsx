@@ -9,8 +9,7 @@ type ButtonType = 'add' | 'download';
 export interface IconButtonProps {
   type: ButtonType;
   width?: string;
-  height?: string;
-  size: 'md' | 'sm';
+  size: 'md' | 'sm' | 'xs';
   text: string;
   onClick?: () => void;
 }
@@ -18,7 +17,6 @@ export interface IconButtonProps {
 const IconButton = ({
   type,
   width = '110px',
-  height = '50px',
   size,
   text,
   onClick,
@@ -39,7 +37,7 @@ const IconButton = ({
   return (
     <CustomButton
       w={width}
-      h={height}
+      h={size === 'md' ? '50px' : size === 'sm' ? '40px' : '30px'}
       size={size}
       buttonType={type}
       onClick={onClick}
@@ -57,7 +55,7 @@ const IconButton = ({
 
 interface ButtonOptionProps {
   buttonType?: ButtonType;
-  size?: 'md' | 'sm';
+  size?: 'md' | 'sm' | 'xs';
 }
 const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
   & {

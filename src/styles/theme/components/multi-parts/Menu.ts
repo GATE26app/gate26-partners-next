@@ -17,7 +17,7 @@ const baseStyleList = {
 };
 
 const baseStyleItem = {
-  justifyContent: 'end',
+  justifyContent: 'center',
   fontFamily: 'Pretendard',
   fontStyle: 'normal',
   fontWeight: 400,

@@ -17,6 +17,7 @@ import {
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
+import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
@@ -27,10 +28,12 @@ import DataTable, {
 import DatePicker from '@components/common/DatePicker';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
+import PageTitle from '@components/common/PageTitle';
 import Pagination from '@components/common/Pagination';
 import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
+import TableTop from '@components/common/TableTop';
 import Toggle from '@components/common/Toggle';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
@@ -160,21 +163,26 @@ function Test({ Component, pageProps }: any) {
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <Flex columnGap={'10px'} alignItems="center">
-                  <Button width="69px" height="50px" size="md" text="로그인" />
-                  <Button width="61px" height="40px" size="sm" text="로그인" />
+                  <Button width="69px" size="md" text="로그인" />
+                  <Button width="61px" size="sm" text="로그인" />
+                  <Button width="61px" size="xs" text="로그인" />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="square-outline"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="square-outline"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="square-outline"
                     text="로그인"
                   />
@@ -182,47 +190,44 @@ function Test({ Component, pageProps }: any) {
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="square-grayscale"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="square-grayscale"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="square-grayscale"
                     text="로그인"
                   />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
-                  <Button
-                    width="69px"
-                    height="50px"
-                    size="md"
-                    type="round"
-                    text="로그인"
-                  />
-                  <Button
-                    width="61px"
-                    height="40px"
-                    size="sm"
-                    type="round"
-                    text="로그인"
-                  />
+                  <Button width="69px" size="md" type="round" text="로그인" />
+                  <Button width="61px" size="sm" type="round" text="로그인" />
+                  <Button width="61px" size="xs" type="round" text="로그인" />
                 </Flex>
                 <Flex columnGap={'10px'} alignItems="center">
                   <Button
                     width="69px"
-                    height="50px"
                     size="md"
                     type="round-outline"
                     text="로그인"
                   />
                   <Button
                     width="61px"
-                    height="40px"
                     size="sm"
+                    type="round-outline"
+                    text="로그인"
+                  />
+                  <Button
+                    width="61px"
+                    size="xs"
                     type="round-outline"
                     text="로그인"
                   />
@@ -242,15 +247,19 @@ function Test({ Component, pageProps }: any) {
                   <IconButton
                     type="download"
                     width="110px"
-                    height="50px"
                     size="md"
                     text="내보내기"
                   />
                   <IconButton
                     type="download"
                     width="94px"
-                    height="40px"
                     size="sm"
+                    text="내보내기"
+                  />
+                  <IconButton
+                    type="download"
+                    width="94px"
+                    size="xs"
                     text="내보내기"
                   />
                 </Flex>
@@ -258,15 +267,19 @@ function Test({ Component, pageProps }: any) {
                   <IconButton
                     type="add"
                     width="110px"
-                    height="50px"
                     size="md"
                     text="메뉴추가"
                   />
                   <IconButton
                     type="add"
                     width="94px"
-                    height="40px"
                     size="sm"
+                    text="메뉴추가"
+                  />
+                  <IconButton
+                    type="add"
+                    width="94px"
+                    size="xs"
                     text="메뉴추가"
                   />
                 </Flex>
@@ -279,7 +292,6 @@ function Test({ Component, pageProps }: any) {
               <Flex alignItems="center" columnGap={'10px'}>
                 <Button
                   width="120px"
-                  height="50px"
                   size="sm"
                   onClick={handleClick}
                   text="모달 테스트"
@@ -446,6 +458,43 @@ function Test({ Component, pageProps }: any) {
                   }}
                 />
               </Flex>
+            }
+          />
+          <AccoianWrap
+            title="페이지 공통 컴포넌트"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <BreadCrumb depth={['커뮤니티', '라운지 관리']} />
+                </Flex>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  {/* <PageTitle title="~~~ 관리" /> */}
+                  <PageTitle
+                    title="라운지 관리"
+                    onClickDownload={() => console.log('다운로드 클릭')}
+                    isDownload
+                  />
+                </Flex>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <TableTop
+                    total={100}
+                    search={{
+                      searchTypes: [
+                        { value: 0, label: '전체' },
+                        { value: 1, label: '조건1' },
+                      ],
+                      keyword: '',
+                      onChangeLimit: (value: number) =>
+                        console.log(value + '씩 보기'),
+                      onChangeSearchType: (type: number) =>
+                        console.log('검색조건: ', type),
+                      onChangeKeyword: (keyword: string) =>
+                        console.log('키워드: ' + keyword),
+                      onClickSearch: () => console.log('검색'),
+                    }}
+                  />
+                </Flex>
+              </>
             }
           />
         </Accordion>

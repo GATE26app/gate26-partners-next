@@ -2,7 +2,7 @@ import { Icon, IconProps } from '@chakra-ui/react';
 
 interface PlusIconProps extends IconProps {
   strokeColor?: string;
-  size: 'md' | 'sm';
+  size: 'md' | 'sm' | 'xs';
 }
 const PlusIcon = ({
   strokeColor = '#1A1A1A',
