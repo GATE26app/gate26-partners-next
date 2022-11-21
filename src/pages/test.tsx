@@ -19,6 +19,7 @@ import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
+import ButtonInput from '@components/common/ButtonInput';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
 import DataTable, {
@@ -26,6 +27,7 @@ import DataTable, {
   DataTableRowType,
 } from '@components/common/DataTable';
 import DatePicker from '@components/common/DatePicker';
+import FormHelper from '@components/common/FormHelper';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
 import PageTitle from '@components/common/PageTitle';
@@ -413,12 +415,24 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
-            title="InputBox(개발중)"
+            title="InputBox"
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <InputBox placeholder="Nomal input" />
                 <InputBox isInvalid={true} placeholder="Error" />
                 <InputBox placeholder="Disabled" isDisabled={true} />
+                <FormHelper errorText="아이디를 입력해주세요">
+                  <InputBox placeholder="아이디" isInvalid={true} />
+                </FormHelper>
+                <ButtonInput
+                  InputProps={{
+                    placeholder: 'Placeholder',
+                  }}
+                  ButtonProps={{
+                    text: 'Button',
+                    size: 'md',
+                  }}
+                />
               </Flex>
             }
           />
@@ -441,6 +455,16 @@ function Test({ Component, pageProps }: any) {
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column" height={'1200px'}>
                 <DatePicker
+                  type={'date'}
+                  width={'250px'}
+                  curDate={curDay}
+                  onApply={(date) => {
+                    setCurDay(date);
+                    console.log(date);
+                  }}
+                />
+                <DatePicker
+                  disabled
                   type={'date'}
                   width={'250px'}
                   curDate={curDay}
