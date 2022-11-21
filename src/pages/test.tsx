@@ -72,7 +72,15 @@ function Test({ Component, pageProps }: any) {
 
   const [currentPage, setCurretPage] = useState<number>(0);
 
-  const columns: DataTableColumnType[] = [
+  type DataColumnType =
+    | 'title'
+    | 'event_content'
+    | 'type'
+    | 'start'
+    | 'end'
+    | 'banner'
+    | 'main';
+  const columns: DataTableColumnType<DataColumnType>[] = [
     {
       key: 'title',
       name: '제목',
@@ -97,21 +105,29 @@ function Test({ Component, pageProps }: any) {
     {
       key: 'banner',
       name: '배너이미지',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.banner} width={'187px'} height="100px" />
+      render: (value: DataTableRowType<DataColumnType>) => (
+        <RoundImage
+          src={value.banner as string}
+          width={'187px'}
+          height="100px"
+        />
       ),
     },
     {
       key: 'main',
       name: '메인이미지',
       width: '200px',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.banner} width={'94px'} height="100px" />
+      render: (value: DataTableRowType<DataColumnType>) => (
+        <RoundImage
+          src={value.banner as string}
+          width={'94px'}
+          height="100px"
+        />
       ),
     },
   ];
 
-  const rows: DataTableRowType[] = [
+  const rows: DataTableRowType<DataColumnType>[] = [
     {
       title: '123',
       event_content: '232323',
@@ -329,8 +345,10 @@ function Test({ Component, pageProps }: any) {
                 <DataTable
                   columns={columns}
                   rows={rows}
-                  onEdit={(row: DataTableRowType) => console.log('edit: ', row)}
-                  onDelete={(row: DataTableRowType) =>
+                  onEdit={(row: DataTableRowType<DataColumnType>) =>
+                    console.log('edit: ', row)
+                  }
+                  onDelete={(row: DataTableRowType<DataColumnType>) =>
                     console.log('delete: ', row)
                   }
                   isMenu

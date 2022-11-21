@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { LOUNGE_COLUMNS } from './CommunityLoungePage.data';
+import { LOUNGE_COLUMNS, LoungeColumnType } from './CommunityLoungePage.data';
 import LoungeDetailModal from './_fragments/LoungeDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
@@ -29,7 +29,7 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const rows: DataTableRowType[] = [
+const rows: DataTableRowType<LoungeColumnType>[] = [
   {
     id: 1,
     title: '유럽',
@@ -71,16 +71,16 @@ function CommunityLoungePage() {
 
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
-  const handleEditRow = (row: DataTableRowType) => {
+  const handleEditRow = (row: DataTableRowType<LoungeColumnType>) => {
     if (!row.id) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id });
+    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
 
-  const handleDeleteRow = (row: DataTableRowType) => {
+  const handleDeleteRow = (row: DataTableRowType<LoungeColumnType>) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '라운지',

@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { CommunityTip } from './CommunityTipPage.data';
+import { CommunityTip, TipColumnType } from './CommunityTipPage.data';
 import TipDetailModal from './_fragments/TipDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
@@ -22,6 +22,7 @@ interface ModalProps {
   type?: 'create' | 'modify';
   targetId?: number;
 }
+
 interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
@@ -29,7 +30,7 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const rows: DataTableRowType[] = [
+const rows: DataTableRowType<TipColumnType>[] = [
   {
     id: 1,
     title: '나만 아는 인생샷 스팟은 어디인가요?',
@@ -83,16 +84,16 @@ function CommunityTipPage() {
 
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
-  const handleEditRow = (row: DataTableRowType) => {
+  const handleEditRow = (row: DataTableRowType<TipColumnType>) => {
     if (!row.id) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id });
+    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
 
-  const handleDeleteRow = (row: DataTableRowType) => {
+  const handleDeleteRow = (row: DataTableRowType<TipColumnType>) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '여행팁',

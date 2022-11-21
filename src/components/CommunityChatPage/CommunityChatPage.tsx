@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { CHAT_COLUMNS } from './CommunityChatPage.data';
+import { CHAT_COLUMNS, ChatColumnType } from './CommunityChatPage.data';
 import ChatDetailModal from './_fragments/ChatDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
@@ -29,7 +29,7 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const rows: DataTableRowType[] = [
+const rows: DataTableRowType<ChatColumnType>[] = [
   {
     id: 1,
     title: '이탈리아 라운지',
@@ -74,16 +74,16 @@ function CommunityChatPage() {
 
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
-  const handleEditRow = (row: DataTableRowType) => {
+  const handleEditRow = (row: DataTableRowType<ChatColumnType>) => {
     if (!row.id) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id });
+    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
 
-  const handleDeleteRow = (row: DataTableRowType) => {
+  const handleDeleteRow = (row: DataTableRowType<ChatColumnType>) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '오픈채팅',

@@ -4,7 +4,8 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export const CHAT_COLUMNS: DataTableColumnType[] = [
+export type ChatColumnType = 'id' | 'title' | 'thumbnail' | 'location';
+export const CHAT_COLUMNS: DataTableColumnType<ChatColumnType>[] = [
   {
     key: 'title',
     name: '채팅명',
@@ -14,9 +15,9 @@ export const CHAT_COLUMNS: DataTableColumnType[] = [
     key: 'thumbnail',
     name: '썸네일 사진',
     width: '34.1%',
-    render: (value: DataTableRowType) => (
+    render: (value: DataTableRowType<ChatColumnType>) => (
       <RoundImage
-        src={value.thumbnail}
+        src={value.thumbnail as string}
         width={'50px'}
         height={'50px'}
         isCircle

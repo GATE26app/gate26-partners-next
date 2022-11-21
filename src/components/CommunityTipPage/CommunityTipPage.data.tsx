@@ -5,6 +5,14 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
+export type TipColumnType =
+  | 'id'
+  | 'title'
+  | 'home'
+  | 'banner'
+  | 'show'
+  | 'category';
+
 class CommunityTip {
   onChange?: (key: string, value: string | number) => void;
 
@@ -14,7 +22,7 @@ class CommunityTip {
     }
   }
 
-  readonly TIP_COLUMNS: DataTableColumnType[] = [
+  readonly TIP_COLUMNS: DataTableColumnType<TipColumnType>[] = [
     {
       key: 'title',
       name: '제목',
@@ -24,16 +32,20 @@ class CommunityTip {
       key: 'home',
       name: '홈 이미지',
       width: '25.4%',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.home} width={'264px'} height="100px" />
+      render: (value: DataTableRowType<TipColumnType>) => (
+        <RoundImage src={value.home as string} width={'264px'} height="100px" />
       ),
     },
     {
       key: 'banner',
       name: '배너 이미지',
       width: '15%',
-      render: (value: DataTableRowType) => (
-        <RoundImage src={value.banner} width={'98px'} height="100px" />
+      render: (value: DataTableRowType<TipColumnType>) => (
+        <RoundImage
+          src={value.banner as string}
+          width={'98px'}
+          height="100px"
+        />
       ),
     },
 
@@ -46,7 +58,7 @@ class CommunityTip {
       key: 'show',
       name: '노출여부',
       width: '9.4%',
-      render: (value: DataTableRowType) => (
+      render: (value: DataTableRowType<TipColumnType>) => (
         <CustomSelect
           width={'65px'}
           size={'xs'}
