@@ -8,6 +8,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Tfoot,
   Th,
   Thead,
@@ -72,8 +73,8 @@ const DataTable = <T extends string>({
                     col.align === 'left'
                       ? 'flex-start'
                       : col.align === 'right'
-                      ? 'flex-end'
-                      : 'center'
+                        ? 'flex-end'
+                        : 'center'
                   }
                 >
                   {col.render(row)}
@@ -93,13 +94,21 @@ const DataTable = <T extends string>({
                     col.align === 'left'
                       ? 'flex-start'
                       : col.align === 'right'
-                      ? 'flex-end'
-                      : 'center'
+                        ? 'flex-end'
+                        : 'center'
                   }
                 >
-                  {row[col.key as T] instanceof dayjs
-                    ? formatDate(row[col.key as T] as dayjs.Dayjs)
-                    : row[col.key as T]}
+                  <Text
+                    fontSize="12px"
+                    textStyle="sm"
+                    fontFamily="body"
+                    fontWeight="regular"
+                    color="black"
+                  >
+                    {row[col.key as T] instanceof dayjs
+                      ? formatDate(row[col.key as T] as dayjs.Dayjs)
+                      : row[col.key as T]}
+                  </Text>
                 </Flex>
               </Td>
             ),
