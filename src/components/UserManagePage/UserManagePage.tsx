@@ -12,6 +12,7 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { UserManageColumnType, UserManageColumns } from './UserManagePage.data';
+import RetainedMileageModal from './_fragments/RetainedMileageModal';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -19,7 +20,11 @@ interface ReqLoungeProps {
   page: number;
   limit: number;
 }
-
+interface ModalProps {
+  isOpen: boolean;
+  type?: 'create' | 'modify';
+  targetId?: number;
+}
 const rows: DataTableRowType<UserManageColumnType>[] = [
   {
     id: 1,
@@ -59,22 +64,30 @@ const rows: DataTableRowType<UserManageColumnType>[] = [
   },
 ];
 
-function CommunityTipPage() {
+function UserManagePage() {
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 1,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
 
-  const userColumns = new UserManageColumns(handleChangeInput);
-
+  const userColumns = new UserManageColumns(
+    handleClickListBtn,
+    handleChangeInput,
+  );
+  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') newRequest.page = 1;
 
     setRequest(newRequest);
   }
-
+  function handleClickListBtn(row: DataTableRowType<UserManageColumnType>) {
+    setListModal({ isOpen: true, targetId: row.id as number });
+  }
+  function handleListModalClose() {
+    setListModal({ isOpen: false, targetId: undefined });
+  }
   return (
     <>
       <Head>
@@ -128,8 +141,13 @@ function CommunityTipPage() {
           }}
         />
       </Flex>
+      <RetainedMileageModal
+        targetId={listModal.targetId}
+        isOpen={listModal.isOpen}
+        onClose={handleListModalClose}
+      />
     </>
   );
 }
 
-export default withAdminLayout(CommunityTipPage);
+export default withAdminLayout(UserManagePage);
