@@ -122,12 +122,12 @@ export const MenuRouter: MenuType[] = [
     name: '푸쉬알림 관리',
     iconOn: '/icons/admin/alarm-on.svg',
     iconOff: '/icons/admin/alarm-off.svg',
-    path: '/alarm',
-    alt: 'alarm',
+    path: '/push',
+    alt: 'push',
     subMenus: [
       {
         name: '푸쉬 알림 관리',
-        path: '/alarm/manage',
+        path: '/push/manage',
       },
     ],
   },

@@ -141,7 +141,7 @@ const SideMenu = styled(Flex)`
       font-size: 12px;
       line-height: 18px;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       letter-spacing: -0.02em;
       color: #b8bcc8;
       &.active {
