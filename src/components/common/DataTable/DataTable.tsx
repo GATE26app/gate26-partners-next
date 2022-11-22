@@ -63,14 +63,17 @@ const DataTable = <T extends string>({
                 key={`${col.key}_${index}`}
                 textAlign={col.align}
                 maxW={col.width ? col.width : undefined}
+                w={col.width ? col.width : undefined}
               >
                 <Flex
+                  w={'100%'}
+                  whiteSpace={'break-spaces'}
                   justifyContent={
                     col.align === 'left'
                       ? 'flex-start'
-                      : col.align === 'center'
-                      ? 'center'
-                      : 'flex-end'
+                      : col.align === 'right'
+                      ? 'flex-end'
+                      : 'center'
                   }
                 >
                   {col.render(row)}
@@ -81,12 +84,23 @@ const DataTable = <T extends string>({
                 key={`${col.key}_${index}`}
                 textAlign={col.align}
                 maxW={col.width ? col.width : undefined}
+                w={col.width ? col.width : undefined}
               >
-                <span>
+                <Flex
+                  w={'100%'}
+                  whiteSpace={'break-spaces'}
+                  justifyContent={
+                    col.align === 'left'
+                      ? 'flex-start'
+                      : col.align === 'right'
+                      ? 'flex-end'
+                      : 'center'
+                  }
+                >
                   {row[col.key as T] instanceof dayjs
                     ? formatDate(row[col.key as T] as dayjs.Dayjs)
                     : row[col.key as T]}
-                </span>
+                </Flex>
               </Td>
             ),
           )}
