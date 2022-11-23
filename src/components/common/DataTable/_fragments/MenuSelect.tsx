@@ -37,8 +37,8 @@ const MenuSelect = ({ onClickEdit, onClickDelete }: MenuSelectProps) => {
         variant="unstyled"
       />
       <MenuList>
-        <MenuItem onClick={handleClickEdit}>수정</MenuItem>
-        <MenuItem onClick={handleClickDelete}>삭제</MenuItem>
+        {onClickEdit && <MenuItem onClick={handleClickEdit}>수정</MenuItem>}
+        {onClickDelete && <MenuItem onClick={handleClickDelete}>삭제</MenuItem>}
       </MenuList>
     </Menu>
   );
