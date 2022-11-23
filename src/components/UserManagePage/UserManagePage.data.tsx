@@ -20,11 +20,14 @@ export type UserManageColumnType =
 
 class UserManageColumns {
   onChange?: (key: string, value: string | number) => void;
+  onClick: (row: DataTableRowType<UserManageColumnType>) => void;
 
-  constructor(event: (key: string, value: string | number) => void) {
-    if (event) {
-      this.onChange = event;
-    }
+  constructor(
+    onClick: (row: DataTableRowType<UserManageColumnType>) => void,
+    onChange: (key: string, value: string | number) => void,
+  ) {
+    this.onClick = onClick;
+    this.onChange = onChange;
   }
 
   readonly LIST_COLUMNS: DataTableColumnType<UserManageColumnType>[] = [
@@ -82,7 +85,11 @@ class UserManageColumns {
       name: '보유 마일리지',
       width: '10%',
       render: (value: DataTableRowType<UserManageColumnType>) => (
-        <Text cursor="pointer" textStyle="textActiveSm">
+        <Text
+          cursor="pointer"
+          textStyle="textActiveSm"
+          onClick={() => this.onClick(value)}
+        >
           {value.mileage}
         </Text>
       ),

@@ -11,8 +11,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { UserManageColumnType, UserManageColumns } from './UserManagePage.data';
-import RetainedMileageModal from './_fragments/RetainedMileageModal';
+import { UserReportColumnType, UserReportColumns } from './UserReportPage.data';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -20,78 +19,60 @@ interface ReqLoungeProps {
   page: number;
   limit: number;
 }
-interface ModalProps {
-  isOpen: boolean;
-  type?: 'create' | 'modify';
-  targetId?: number;
-}
-const rows: DataTableRowType<UserManageColumnType>[] = [
+
+const rows: DataTableRowType<UserReportColumnType>[] = [
   {
     id: 1,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    category: '피드 신고',
+    reason: '스팸홍보 / 도배글입니다',
+    reporterEmail: 'gate26@toktokhan.dev',
+    reporterName: '김이륙',
+    targetEmail: 'gate26@toktokhan.dev',
+    targetName: '박이륙',
+    reportedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 2,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: false,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    category: '피드 신고',
+    reason: '스팸홍보 / 도배글입니다',
+    reporterEmail: 'gate26@toktokhan.dev',
+    reporterName: '김이륙',
+    targetEmail: 'gate26@toktokhan.dev',
+    targetName: '박이륙',
+    reportedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 3,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    category: '피드 신고',
+    reason: '스팸홍보 / 도배글입니다',
+    reporterEmail: 'gate26@toktokhan.dev',
+    reporterName: '김이륙',
+    targetEmail: 'gate26@toktokhan.dev',
+    targetName: '박이륙',
+    reportedAt: dayjs('2022-10-20 09:00'),
   },
 ];
 
-function UserManagePage() {
+function UserReportPage() {
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 1,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
 
-  const userColumns = new UserManageColumns(
-    handleClickListBtn,
-    handleChangeInput,
-  );
-  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
+  const userColumns = new UserReportColumns(handleChangeInput);
+
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') newRequest.page = 1;
 
     setRequest(newRequest);
   }
-  function handleClickListBtn(row: DataTableRowType<UserManageColumnType>) {
-    setListModal({ isOpen: true, targetId: row.id as number });
-  }
-  function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined });
-  }
+
   return (
     <>
       <Head>
-        <title>회원 관리</title>
+        <title>신고 조회</title>
       </Head>
       <Flex
         className="community-lounge-wrapper"
@@ -99,9 +80,9 @@ function UserManagePage() {
         width="100%"
         padding="20px"
       >
-        <BreadCrumb depth={['이용자', '회원 관리']} />
+        <BreadCrumb depth={['이용자', '신고 조회']} />
         <PageTitle
-          title="회원 관리"
+          title="신고 조회"
           onClickDownload={() => console.log('다운로드 클릭')}
           isDownload
         />
@@ -141,13 +122,8 @@ function UserManagePage() {
           }}
         />
       </Flex>
-      <RetainedMileageModal
-        targetId={listModal.targetId}
-        isOpen={listModal.isOpen}
-        onClose={handleListModalClose}
-      />
     </>
   );
 }
 
-export default withAdminLayout(UserManagePage);
+export default withAdminLayout(UserReportPage);
