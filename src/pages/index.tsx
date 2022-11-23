@@ -36,6 +36,7 @@ import RoundImage from '@components/common/RoundImage';
 import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
 import TableTop from '@components/common/TableTop';
+import TextareaBox from '@components/common/Textarea';
 import Toggle from '@components/common/Toggle';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
@@ -474,6 +475,14 @@ function Test({ Component, pageProps }: any) {
                     size: 'md',
                   }}
                 />
+              </Flex>
+            }
+          />
+          <AccoianWrap
+            title="TextareaBox"
+            Pannel={
+              <Flex rowGap={'10px'} flexDirection="column">
+                <TextareaBox />
               </Flex>
             }
           />
