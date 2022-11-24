@@ -11,8 +11,14 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { UserManageColumnType, UserManageColumns } from './UserManagePage.data';
+import {
+  ModalType,
+  UserManageColumnType,
+  UserManageColumns,
+} from './UserManagePage.data';
+import AirlineTicketModal from './_fragments/AirlineTicketModal';
 import RetainedMileageModal from './_fragments/RetainedMileageModal';
+import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -22,7 +28,7 @@ interface ReqLoungeProps {
 }
 interface ModalProps {
   isOpen: boolean;
-  type?: 'create' | 'modify';
+  type?: ModalType;
   targetId?: number;
 }
 const rows: DataTableRowType<UserManageColumnType>[] = [
@@ -82,11 +88,14 @@ function UserManagePage() {
 
     setRequest(newRequest);
   }
-  function handleClickListBtn(row: DataTableRowType<UserManageColumnType>) {
-    setListModal({ isOpen: true, targetId: row.id as number });
+  function handleClickListBtn(
+    row: DataTableRowType<UserManageColumnType>,
+    type: ModalType,
+  ) {
+    setListModal({ isOpen: true, targetId: row.id as number, type });
   }
   function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined });
+    setListModal({ isOpen: false, targetId: undefined, type: undefined });
   }
   return (
     <>
@@ -143,7 +152,17 @@ function UserManagePage() {
       </Flex>
       <RetainedMileageModal
         targetId={listModal.targetId}
-        isOpen={listModal.isOpen}
+        isOpen={listModal.isOpen && listModal.type === 'mileage'}
+        onClose={handleListModalClose}
+      />
+      <AirlineTicketModal
+        targetId={listModal.targetId}
+        isOpen={listModal.isOpen && listModal.type === 'airlineTicket'}
+        onClose={handleListModalClose}
+      />
+      <StamperyDialog
+        targetId={listModal.targetId}
+        isOpen={listModal.isOpen && listModal.type === 'stampery'}
         onClose={handleListModalClose}
       />
     </>

@@ -21,42 +21,39 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
-import {
-  MILEAGE_COLUMNS,
-  MileageColumnType,
-} from './RetainedMileageModal.data';
+import { STAMPERY_COLUMNS, StamperyColumnType } from './StamperyDialog.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-const rows: DataTableRowType<MileageColumnType>[] = [
+const rows: DataTableRowType<StamperyColumnType>[] = [
   {
     id: 1,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    type: '챌린지',
+    title: '이륙 뉴비',
+    savedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 2,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    type: '챌린지',
+    title: '이륙 뉴비',
+    savedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 3,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    type: '챌린지',
+    title: '이륙 뉴비',
+    savedAt: dayjs('2022-10-20 09:00'),
   },
 ];
 
-interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
+interface StamperyDialogProps extends Omit<ModalProps, 'children'> {
   targetId?: number;
 }
-const RetainedMileageModal = ({
+const StamperyDialog = ({
   targetId,
   onClose,
   ...props
-}: RetainedMileageModalProps) => {
+}: StamperyDialogProps) => {
   const [request, setRequest] = useState({
     page: 1,
     limit: 10,
@@ -69,8 +66,8 @@ const RetainedMileageModal = ({
   const handleOpenDialog = () => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '항공권 인증 내역',
-        message: '항공권 인증 내역을 삭제 하시겠습니까?',
+        title: '스탬프러리',
+        message: '스탬프러리를 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
@@ -97,7 +94,8 @@ const RetainedMileageModal = ({
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '적립사유' },
+              { value: 1, label: '스탬프러리 유형' },
+              { value: 2, label: '스탬프러리 명 ' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
@@ -109,10 +107,15 @@ const RetainedMileageModal = ({
             },
             onClickSearch: () => console.log('검색'),
           }}
+          createButton={{
+            title: '스탬프러리 추가',
+            width: '113px',
+            onClickCreate: () => console.log('??'),
+          }}
         />
         <DataTable
           variant={'gray'}
-          columns={MILEAGE_COLUMNS}
+          columns={STAMPERY_COLUMNS}
           rows={rows}
           isMenu
           onDelete={handleOpenDialog}
@@ -148,7 +151,7 @@ const RetainedMileageModal = ({
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent={'space-between'}>
-            <span>보유 마일리지 : 432</span>
+            <span>스탬프러리</span>
             <IconButton
               type="download"
               size="sm"
@@ -180,4 +183,4 @@ const RetainedMileageModal = ({
   );
 };
 
-export default RetainedMileageModal;
+export default StamperyDialog;

@@ -22,41 +22,47 @@ import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
 import {
-  MILEAGE_COLUMNS,
-  MileageColumnType,
-} from './RetainedMileageModal.data';
+  AIRLINE_TICKET_COLUMNS,
+  AirlineTicketColumnType,
+} from './AirlineTicketModal.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-const rows: DataTableRowType<MileageColumnType>[] = [
+const rows: DataTableRowType<AirlineTicketColumnType>[] = [
   {
     id: 1,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    arrivals: '김포',
+    destination: '베트남',
+    arrivalsAt: dayjs('2022-10-20 09:00'),
+    destinationAt: dayjs('2022-10-20 09:00'),
+    certifiedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 2,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    arrivals: '김포',
+    destination: '베트남',
+    arrivalsAt: dayjs('2022-10-20 09:00'),
+    destinationAt: dayjs('2022-10-20 09:00'),
+    certifiedAt: dayjs('2022-10-20 09:00'),
   },
   {
     id: 3,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
+    arrivals: '김포',
+    destination: '베트남',
+    arrivalsAt: dayjs('2022-10-20 09:00'),
+    destinationAt: dayjs('2022-10-20 09:00'),
+    certifiedAt: dayjs('2022-10-20 09:00'),
   },
 ];
 
-interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
+interface AirlineTicketModalProps extends Omit<ModalProps, 'children'> {
   targetId?: number;
 }
-const RetainedMileageModal = ({
+const AirlineTicketModal = ({
   targetId,
   onClose,
   ...props
-}: RetainedMileageModalProps) => {
+}: AirlineTicketModalProps) => {
   const [request, setRequest] = useState({
     page: 1,
     limit: 10,
@@ -69,8 +75,8 @@ const RetainedMileageModal = ({
   const handleOpenDialog = () => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '항공권 인증 내역',
-        message: '항공권 인증 내역을 삭제 하시겠습니까?',
+        title: '보유마일리지',
+        message: '보유 마일리지 내역을 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
@@ -97,7 +103,8 @@ const RetainedMileageModal = ({
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '적립사유' },
+              { value: 1, label: '출발지' },
+              { value: 2, label: '도착지' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
@@ -112,7 +119,7 @@ const RetainedMileageModal = ({
         />
         <DataTable
           variant={'gray'}
-          columns={MILEAGE_COLUMNS}
+          columns={AIRLINE_TICKET_COLUMNS}
           rows={rows}
           isMenu
           onDelete={handleOpenDialog}
@@ -148,7 +155,7 @@ const RetainedMileageModal = ({
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent={'space-between'}>
-            <span>보유 마일리지 : 432</span>
+            <span>항공권 인증 내역</span>
             <IconButton
               type="download"
               size="sm"
@@ -180,4 +187,4 @@ const RetainedMileageModal = ({
   );
 };
 
-export default RetainedMileageModal;
+export default AirlineTicketModal;
