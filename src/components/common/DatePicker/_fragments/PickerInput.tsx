@@ -20,6 +20,8 @@ const PickerInput = ({ placeholder, text, disabled }: PickerInputProps) => {
         placeholder={placeholder || ''}
         value={text}
         autoComplete="off"
+        fontSize={'15px'}
+        isReadOnly
       />
       <InputRightElement h={'100%'}>
         <CalendarIcon strokeColor={disabled ? Light.gray[500] : 'black'} />

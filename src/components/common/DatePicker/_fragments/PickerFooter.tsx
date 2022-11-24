@@ -1,18 +1,20 @@
-import React, { RefObject } from 'react';
+import React, {
+  ForwardRefRenderFunction,
+  MutableRefObject,
+  forwardRef,
+} from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
 
 interface PickerFooterProps {
-  ref: RefObject<{ focus(): void }>;
   onClickCancel: () => void;
   onClickApply: () => void;
 }
-
-const PickerFooter = ({
-  ref,
-  onClickCancel,
-  onClickApply,
-}: PickerFooterProps) => {
+const PickerFooter: ForwardRefRenderFunction<
+  HTMLParagraphElement,
+  PickerFooterProps
+> = ({ onClickCancel, onClickApply }, ref) => {
+  const forwardedRef = ref as MutableRefObject<HTMLParagraphElement | null>;
   return (
     <Flex
       w="100%"
@@ -28,7 +30,7 @@ const PickerFooter = ({
         color="gray.500"
         cursor={'pointer'}
         onClick={onClickCancel}
-        ref={ref?.current?.focus}
+        ref={forwardedRef}
       >
         {'취소'}
       </Text>
@@ -39,7 +41,7 @@ const PickerFooter = ({
         color="primary.500"
         cursor={'pointer'}
         onClick={onClickApply}
-        ref={ref?.current?.focus}
+        ref={forwardedRef}
       >
         {'확인'}
       </Text>
@@ -47,4 +49,4 @@ const PickerFooter = ({
   );
 };
 
-export default PickerFooter;
+export default forwardRef(PickerFooter);
