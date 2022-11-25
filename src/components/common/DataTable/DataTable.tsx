@@ -8,7 +8,6 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Text,
   Tfoot,
   Th,
   Thead,
@@ -64,17 +63,14 @@ const DataTable = <T extends string>({
                 key={`${col.key}_${index}`}
                 textAlign={col.align}
                 maxW={col.width ? col.width : undefined}
-                w={col.width ? col.width : undefined}
               >
                 <Flex
-                  w={'100%'}
-                  whiteSpace={'break-spaces'}
                   justifyContent={
                     col.align === 'left'
                       ? 'flex-start'
-                      : col.align === 'right'
-                      ? 'flex-end'
-                      : 'center'
+                      : col.align === 'center'
+                      ? 'center'
+                      : 'flex-end'
                   }
                 >
                   {col.render(row)}
@@ -85,31 +81,13 @@ const DataTable = <T extends string>({
                 key={`${col.key}_${index}`}
                 textAlign={col.align}
                 maxW={col.width ? col.width : undefined}
-                w={col.width ? col.width : undefined}
+                textColor={col.color ? String(col.color) : undefined}
               >
-                <Flex
-                  w={'100%'}
-                  whiteSpace={'break-spaces'}
-                  justifyContent={
-                    col.align === 'left'
-                      ? 'flex-start'
-                      : col.align === 'right'
-                      ? 'flex-end'
-                      : 'center'
-                  }
-                >
-                  <Text
-                    fontSize="12px"
-                    textStyle="sm"
-                    fontFamily="body"
-                    fontWeight="regular"
-                    color="black"
-                  >
-                    {row[col.key as T] instanceof dayjs
-                      ? formatDate(row[col.key as T] as dayjs.Dayjs)
-                      : row[col.key as T]}
-                  </Text>
-                </Flex>
+                <span>
+                  {row[col.key as T] instanceof dayjs
+                    ? formatDate(row[col.key as T] as dayjs.Dayjs)
+                    : row[col.key as T]}
+                </span>
               </Td>
             ),
           )}
@@ -137,7 +115,7 @@ const DataTable = <T extends string>({
         <Tbody>{renderBody()}</Tbody>
         <Tfoot>
           <Tr>
-            <Th colSpan={columns.length + Number(isMenu || false)}>
+            <Th colSpan={columns.length}>
               <Pagination
                 currentPage={paginationProps.currentPage}
                 limit={paginationProps.limit}
