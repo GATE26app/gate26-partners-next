@@ -41,7 +41,7 @@ const DatePicker = ({
   const originDate = curDate?.clone();
   const [date, setDate] = useState<dayjs.Dayjs>(curDate);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const initRef: RefObject<{ focus(): void }> = useRef(null);
+  const initRef = useRef(null);
 
   const handleDayClick = (current: dayjs.Dayjs) => {
     setDate(current);

@@ -12,13 +12,14 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import {
+  AdminAccountColumnType,
+  AdminAccountColumns,
   ModalType,
-  UserManageColumnType,
-  UserManageColumns,
-} from './UserManagePage.data';
-import AirlineTicketModal from './_fragments/AirlineTicketModal';
-import RetainedMileageModal from './_fragments/RetainedMileageModal';
-import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
+} from './AdminAccountPage.data';
+
+// import AirlineTicketModal from './_fragments/AirlineTicketModal';
+// import RetainedMileageModal from './_fragments/RetainedMileageModal';
+// import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -31,53 +32,44 @@ interface ModalProps {
   type?: ModalType;
   targetId?: number;
 }
-const rows: DataTableRowType<UserManageColumnType>[] = [
+const rows: DataTableRowType<AdminAccountColumnType>[] = [
   {
     id: 1,
+    userId: 'Gate26',
     name: '김이륙',
     email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    createdAt: dayjs('2002-01-02 09:00'),
+    useStatus: true,
+    authority: '권한',
   },
   {
     id: 2,
+    userId: 'Gate26',
     name: '김이륙',
     email: 'gate26@toktokhan.dev',
-    status: false,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    createdAt: dayjs('2002-01-02 09:00'),
+    useStatus: true,
+    authority: '권한',
   },
   {
     id: 3,
+    userId: 'Gate26',
     name: '김이륙',
     email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
+    createdAt: dayjs('2002-01-02 09:00'),
+    useStatus: true,
+    authority: '권한',
   },
 ];
 
-function UserManagePage() {
+function AdminAccountPage() {
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 1,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
 
-  const userColumns = new UserManageColumns(
+  const userColumns = new AdminAccountColumns(
     handleClickListBtn,
     handleChangeInput,
   );
@@ -89,7 +81,7 @@ function UserManagePage() {
     setRequest(newRequest);
   }
   function handleClickListBtn(
-    row: DataTableRowType<UserManageColumnType>,
+    row: DataTableRowType<AdminAccountColumnType>,
     type: ModalType,
   ) {
     setListModal({ isOpen: true, targetId: row.id as number, type });
@@ -108,9 +100,9 @@ function UserManagePage() {
         width="100%"
         padding="20px"
       >
-        <BreadCrumb depth={['이용자', '회원 관리']} />
+        <BreadCrumb depth={['관리자', '관리자 관리']} />
         <PageTitle
-          title="회원 관리"
+          title="관리자 관리"
           onClickDownload={() => console.log('다운로드 클릭')}
           isDownload
         />
@@ -133,10 +125,18 @@ function UserManagePage() {
             },
             onClickSearch: () => console.log('검색'),
           }}
+          createButton={{
+            title: '관리자 추가',
+            width: '93px',
+            // onClickCreate: handleCreateRow,
+          }}
         />
         <DataTable
           columns={userColumns.LIST_COLUMNS}
           rows={rows}
+          isMenu
+          onDelete={() => console.log('onDelete')}
+          onEdit={() => console.log('onEdit')}
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,
@@ -150,23 +150,8 @@ function UserManagePage() {
           }}
         />
       </Flex>
-      <RetainedMileageModal
-        targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'mileage'}
-        onClose={handleListModalClose}
-      />
-      <AirlineTicketModal
-        targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'airlineTicket'}
-        onClose={handleListModalClose}
-      />
-      <StamperyDialog
-        targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'stampery'}
-        onClose={handleListModalClose}
-      />
     </>
   );
 }
 
-export default withAdminLayout(UserManagePage);
+export default withAdminLayout(AdminAccountPage);

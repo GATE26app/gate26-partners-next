@@ -73,8 +73,8 @@ const DataTable = <T extends string>({
                     col.align === 'left'
                       ? 'flex-start'
                       : col.align === 'right'
-                        ? 'flex-end'
-                        : 'center'
+                      ? 'flex-end'
+                      : 'center'
                   }
                 >
                   {col.render(row)}
@@ -94,8 +94,8 @@ const DataTable = <T extends string>({
                     col.align === 'left'
                       ? 'flex-start'
                       : col.align === 'right'
-                        ? 'flex-end'
-                        : 'center'
+                      ? 'flex-end'
+                      : 'center'
                   }
                 >
                   <Text
@@ -137,7 +137,7 @@ const DataTable = <T extends string>({
         <Tbody>{renderBody()}</Tbody>
         <Tfoot>
           <Tr>
-            <Th colSpan={columns.length}>
+            <Th colSpan={columns.length + Number(isMenu || false)}>
               <Pagination
                 currentPage={paginationProps.currentPage}
                 limit={paginationProps.limit}

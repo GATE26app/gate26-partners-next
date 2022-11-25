@@ -18,12 +18,20 @@ export type UserManageColumnType =
   | 'airlineTicket'
   | 'stampery';
 
+export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
+
 class UserManageColumns {
   onChange?: (key: string, value: string | number) => void;
-  onClick: (row: DataTableRowType<UserManageColumnType>) => void;
+  onClick: (
+    row: DataTableRowType<UserManageColumnType>,
+    type: ModalType,
+  ) => void;
 
   constructor(
-    onClick: (row: DataTableRowType<UserManageColumnType>) => void,
+    onClick: (
+      row: DataTableRowType<UserManageColumnType>,
+      type: ModalType,
+    ) => void,
     onChange: (key: string, value: string | number) => void,
   ) {
     this.onClick = onClick;
@@ -88,7 +96,7 @@ class UserManageColumns {
         <Text
           cursor="pointer"
           textStyle="textActiveSm"
-          onClick={() => this.onClick(value)}
+          onClick={() => this.onClick(value, 'mileage')}
         >
           {value.mileage}
         </Text>
@@ -99,7 +107,11 @@ class UserManageColumns {
       name: '항공권 인증 내역',
       width: '8.33%',
       render: (value: DataTableRowType<UserManageColumnType>) => (
-        <Text cursor="pointer" textStyle="textActiveSm">
+        <Text
+          cursor="pointer"
+          textStyle="textActiveSm"
+          onClick={() => this.onClick(value, 'airlineTicket')}
+        >
           {value.airlineTicket}
         </Text>
       ),
@@ -109,7 +121,11 @@ class UserManageColumns {
       name: '스탬프러리',
       width: '8.33%',
       render: (value: DataTableRowType<UserManageColumnType>) => (
-        <Text cursor="pointer" textStyle="textActiveSm">
+        <Text
+          cursor="pointer"
+          textStyle="textActiveSm"
+          onClick={() => this.onClick(value, 'stampery')}
+        >
           {value.stampery}
         </Text>
       ),
