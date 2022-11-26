@@ -37,7 +37,7 @@ import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
 import TableTop from '@components/common/TableTop';
 import TextareaBox from '@components/common/Textarea';
-import Toggle from '@components/common/Toggle';
+import Toggle, { ToggleOption } from '@components/common/Toggle';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -65,6 +65,32 @@ function AccoianWrap({ title, Pannel }: AccodianProps) {
     </AccordionItem>
   );
 }
+
+const TOGGLE_OPTIONS: ToggleOption[] = [
+  {
+    value: '1',
+    text: '챌린지',
+  },
+  {
+    value: '2',
+    text: '국가',
+  },
+  {
+    value: '3',
+    text: '항공사',
+  },
+];
+
+const TOGGLE_OPTIONS2: ToggleOption[] = [
+  {
+    value: '1',
+    text: '챌린지',
+  },
+  {
+    value: '2',
+    text: '국가',
+  },
+];
 
 function Test({ Component, pageProps }: any) {
   const dispatch = useDispatch();
@@ -491,12 +517,12 @@ function Test({ Component, pageProps }: any) {
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <Toggle
-                  text1="챌린지"
-                  text2="국가"
-                  text3="항공사"
-                  toggleOption
+                  // text1="챌린지"
+                  // text2="국가"
+                  // text3="항공사"
+                  toggleOptions={TOGGLE_OPTIONS}
                 />
-                <Toggle text1="챌린지" text2="국가" toggleOption={false} />
+                <Toggle toggleOptions={TOGGLE_OPTIONS2} />
               </Flex>
             }
           />
