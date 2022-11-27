@@ -1,3 +1,5 @@
+import { Text } from '@chakra-ui/react';
+
 import CustomSelect from '@components/common/CustomSelect';
 import {
   DataTableColumnType,
@@ -57,8 +59,11 @@ class Question {
       name: '답변여부',
       width: '8.47%',
       align: 'center',
-      color: (value: DataTableRowType<QuestionColumnType>) =>
-        value.answer === '답변완료' ? '#FF5942' : '',
+      render: (value: DataTableRowType<QuestionColumnType>) => (
+        <Text color={value.answer === 0 ? 'warning.500' : 'success.500'}>
+          {value.answer === 1 ? '답변완료' : '답변대기'}
+        </Text>
+      ),
     },
     {
       key: 'answer',
@@ -67,7 +72,7 @@ class Question {
       align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
         <SmallButton
-          text="답변하기"
+          text={value.answerYn === 1 ? '답변확인' : '답변하기'}
           color={value.answerYn === 0 ? 'normal' : 'blue'}
         />
       ),
