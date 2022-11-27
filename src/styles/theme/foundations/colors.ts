@@ -20,7 +20,8 @@ const Light = {
   },
   success: {
     100: '#CBDFFF',
-    500: '#4850FF',
+    500: '#3479EA',
+    //500: '#4850FF',
   },
   gray: {
     50: '#FAFAFA',
