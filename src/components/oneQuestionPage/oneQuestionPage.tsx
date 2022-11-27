@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { Question, QuestionColumnType } from './oneQuestionPage.data';
+import { Question, QuestionColumnType } from './OneQuestionPage.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -66,7 +66,7 @@ function QuestionPage() {
   });
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
-
+  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
@@ -83,20 +83,6 @@ function QuestionPage() {
 
   const handleCloseModal = () => setModal({ isOpen: false });
 
-  const handleDeleteRow = (row: DataTableRowType<QuestionColumnType>) => {
-    dispatch(
-      customModalSliceAction.setMessage({
-        title: '여행팁',
-        message: '여행팁을 삭제 하시겠습니까?',
-        type: 'confirm',
-        okButtonName: '삭제',
-        cbOk: () => {
-          console.log('삭제 처리:', row);
-        },
-      }),
-    );
-    openCustomModal();
-  };
   return (
     <>
       <Head>
@@ -137,7 +123,6 @@ function QuestionPage() {
         <DataTable
           columns={communityTip.TIP_COLUMNS}
           rows={rows}
-          onDelete={handleDeleteRow}
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,

@@ -21,6 +21,7 @@ import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
 import ButtonInput from '@components/common/ButtonInput';
 import CheckBox from '@components/common/CheckBox';
+import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
 import DataTable, {
   DataTableColumnType,
@@ -98,7 +99,7 @@ function Test({ Component, pageProps }: any) {
 
   const theme = useTheme();
   const { colors, textStyles } = theme;
-
+  const [radioIdx, setRadioIdx] = useState<string | boolean>();
   const [currentPage, setCurretPage] = useState<number>(0);
 
   type DataColumnType =
@@ -442,6 +443,21 @@ function Test({ Component, pageProps }: any) {
                   noBorder
                 />
               </Flex>
+            }
+          />
+          <AccoianWrap
+            title="Radio button"
+            Pannel={
+              <>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton />
+                  <RadioButton disabled />
+                  <RadioButton checked />
+                </Flex>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton group groupLabel={['data', 'data', 'data']} />
+                </Flex>
+              </>
             }
           />
           <AccoianWrap
