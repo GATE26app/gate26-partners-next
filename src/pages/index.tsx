@@ -28,6 +28,7 @@ import DataTable, {
   DataTableRowType,
 } from '@components/common/DataTable';
 import DatePicker from '@components/common/DatePicker';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import FormHelper from '@components/common/FormHelper';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
@@ -204,6 +205,16 @@ function Test({ Component, pageProps }: any) {
     <div style={{ width: '100%' }}>
       <Flex>
         <Accordion style={{ width: '100%' }} defaultIndex={[]} allowMultiple>
+          <AccoianWrap
+            title="파일업로드"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <FileUpload />
+                </Flex>
+              </>
+            }
+          />
           <AccoianWrap
             title="Button"
             Pannel={
