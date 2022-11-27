@@ -36,6 +36,7 @@ class CommunityEvent {
       key: 'title',
       name: '제목',
       width: '9.1%',
+      align: 'left',
     },
     {
       key: 'event_content',

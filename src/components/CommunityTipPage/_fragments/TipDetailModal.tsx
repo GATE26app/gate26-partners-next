@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,7 +12,16 @@ import {
 } from '@chakra-ui/react';
 
 import Button from '@components/common/Button';
+import CustomSelect from '@components/common/CustomSelect';
+import InputBox from '@components/common/Input';
+import ModalRow from '@components/common/ModalRow';
 
+interface ReqTipDetail {
+  title: string;
+  home: File | null;
+  banner: File | null;
+  category: string;
+}
 interface TipDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
   targetId?: number;
@@ -24,12 +34,49 @@ const TipDetailModal = ({
   onComplete,
   ...props
 }: TipDetailProps) => {
+  const [request, setRequest] = useState<ReqTipDetail>({
+    title: '',
+    home: null,
+    banner: null,
+    category: '',
+  });
+
+  const handleChangeInput = (key: string, value: string | number) => {
+    setRequest({ ...request, [key]: value });
+  };
+
   const handleCreate = () => {
     if (onComplete) onComplete();
   };
   const renderContent = () => {
     return (
-      <div>{type === 'create' ? '생성중' + targetId : '수정중' + targetId}</div>
+      <Flex direction={'column'} rowGap={'15px'}>
+        <ModalRow
+          title="제목"
+          content={
+            <InputBox
+              placeholder="여행팁 제목"
+              defaultValue={request.title}
+              onChange={(e) => handleChangeInput('title', e.target.value)}
+            />
+          }
+        />
+        <ModalRow title="홈 이미지" content={<div></div>} />
+        <ModalRow title="배너 이미지" content={<div></div>} />
+        <ModalRow
+          title="카테고리"
+          content={
+            <CustomSelect
+              size="sm"
+              items={[]}
+              defaultValue={request.category}
+              onChange={(value) =>
+                handleChangeInput('category', value as string)
+              }
+            />
+          }
+        />
+      </Flex>
     );
   };
 

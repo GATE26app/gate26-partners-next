@@ -9,10 +9,10 @@ const TextareaBox = ({ ...props }: TextareaProps) => {
       borderColor="gray.300"
       backgroundColor="background.primary"
       color="black"
-      fontSize={'15px'}
       _disabled={{ backgroundColor: 'gray.100' }}
       _placeholder={{ color: 'gray.500' }}
       resize={'none'}
+      h={'100%'}
     />
   );
 };

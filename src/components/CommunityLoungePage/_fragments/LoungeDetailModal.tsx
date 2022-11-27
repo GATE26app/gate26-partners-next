@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,7 +12,18 @@ import {
 } from '@chakra-ui/react';
 
 import Button from '@components/common/Button';
+import CheckBox from '@components/common/CheckBox';
+import CustomSelect from '@components/common/CustomSelect';
+import InputBox from '@components/common/Input';
+import ModalRow from '@components/common/ModalRow';
 
+interface ReqLoungeDetail {
+  title: string;
+  banner: File | null;
+  home: File | null;
+  order: string;
+  enable: boolean;
+}
 interface LoungeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
   targetId?: number;
@@ -24,12 +36,55 @@ const LoungeDetailModal = ({
   onComplete,
   ...props
 }: LoungeDetailProps) => {
+  const [request, setRequest] = useState<ReqLoungeDetail>({
+    title: '',
+    banner: null,
+    home: null,
+    order: '0',
+    enable: false,
+  });
+  const handleChangeInput = (key: string, value: string | number | boolean) => {
+    setRequest({ ...request, [key]: value });
+  };
   const handleCreate = () => {
     if (onComplete) onComplete();
   };
   const renderContent = () => {
     return (
-      <div>{type === 'create' ? '생성중' + targetId : '수정중' + targetId}</div>
+      <Flex direction={'column'} rowGap={'15px'}>
+        <ModalRow
+          title="라운지명"
+          content={
+            <InputBox
+              placeholder="라운지명"
+              defaultValue={request.title}
+              onChange={(e) => handleChangeInput('title', e.target.value)}
+            />
+          }
+        />
+        <ModalRow title="배너 이미지" content={<div></div>} />
+        <ModalRow title="홈 이미지" content={<div></div>} />
+        <ModalRow
+          title="라운지 노출 순서"
+          content={
+            <CustomSelect
+              size="sm"
+              items={[]}
+              defaultValue={request.order}
+              onChange={(value) => handleChangeInput('order', value as string)}
+            />
+          }
+        />
+        <ModalRow
+          title="활성화 여부"
+          content={
+            <CheckBox
+              checked={request.enable}
+              onClick={() => handleChangeInput('enable', !request.enable)}
+            />
+          }
+        ></ModalRow>
+      </Flex>
     );
   };
 
