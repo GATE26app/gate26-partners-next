@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -11,7 +12,15 @@ import {
 } from '@chakra-ui/react';
 
 import Button from '@components/common/Button';
+import CustomSelect from '@components/common/CustomSelect';
+import InputBox from '@components/common/Input';
+import ModalRow from '@components/common/ModalRow';
 
+interface ReqChatDetail {
+  title: string;
+  thumbnail: File | null;
+  location: string;
+}
 interface ChatDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
   targetId?: number;
@@ -24,12 +33,47 @@ const ChatDetailModal = ({
   onComplete,
   ...props
 }: ChatDetailProps) => {
+  const [request, setRequest] = useState<ReqChatDetail>({
+    title: '',
+    thumbnail: null,
+    location: '',
+  });
+
+  const handleChangeInput = (key: string, value: string | number) => {
+    setRequest({ ...request, [key]: value });
+  };
+
   const handleCreate = () => {
     if (onComplete) onComplete();
   };
   const renderContent = () => {
     return (
-      <div>{type === 'create' ? '생성중' + targetId : '수정중' + targetId}</div>
+      <Flex direction={'column'} rowGap={'15px'}>
+        <ModalRow
+          title="채팅명"
+          content={
+            <InputBox
+              placeholder="채팅명"
+              defaultValue={request.title}
+              onChange={(e) => handleChangeInput('title', e.target.value)}
+            />
+          }
+        />
+        <ModalRow title="썸네일 사진" content={<div></div>} />
+        <ModalRow
+          title="라운지 위치"
+          content={
+            <CustomSelect
+              size="sm"
+              items={[]}
+              defaultValue={request.location}
+              onChange={(value) =>
+                handleChangeInput('location', value as string)
+              }
+            />
+          }
+        />
+      </Flex>
     );
   };
 

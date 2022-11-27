@@ -130,6 +130,7 @@ const PushDetailModal = ({
         />
         <ModalRow
           title="푸쉬내용"
+          titleAlign="top"
           content={
             <TextareaBox
               placeholder="내용"
