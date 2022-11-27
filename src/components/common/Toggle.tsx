@@ -4,63 +4,50 @@ import styled from '@emotion/styled';
 
 import Button from './Button';
 
-export interface ToogleOption {
+export interface ToggleOption {
+  text: string;
+  value: any;
+}
+export interface ToogleProps {
   width?: string;
   size?: 'md' | 'sm' | 'xs';
   onClick?: (data: string) => void;
-  text1: string;
-  text2: string;
-  text3?: string;
-  toggleOption?: boolean;
+  defaultValue?: any;
+  toggleOptions: ToggleOption[];
 }
 
 const Toggle = ({
   width = '166.67px',
   size = 'md',
-  text1,
-  text2,
-  text3,
   onClick,
-  toggleOption,
-}: ToogleOption) => {
-  const [isToggle, setIsToggle] = useState<string>('1');
+  toggleOptions,
+  defaultValue,
+}: ToogleProps) => {
+  const [selectedToggle, setSelectedToggle] = useState<any>(
+    defaultValue || toggleOptions[0].value,
+  );
 
-  const toggleHandler = (index: string) => {
-    if (onClick) {
-      onClick(index);
-    }
-    setIsToggle(index);
-    return index;
+  const toggleHandler = (value: string) => {
+    if (onClick) onClick(value);
+
+    setSelectedToggle(value);
   };
   return (
     <>
       <ToggleForm>
-        <Button
-          width={width}
-          size={size}
-          type={isToggle === '1' ? 'square-outline' : 'toggleOff'}
-          text={text1}
-          toggle
-          onClick={() => toggleHandler('1')}
-        />
-        <Button
-          width={width}
-          size={size}
-          type={isToggle === '2' ? 'square-outline' : 'toggleOff'}
-          text={text2}
-          toggle
-          onClick={() => toggleHandler('2')}
-        />
-        {toggleOption ? (
-          <Button
-            width={width}
-            size={size}
-            type={isToggle === '3' ? 'square-outline' : 'toggleOff'}
-            text={text3 ? text3 : ''}
-            toggle
-            onClick={() => toggleHandler('3')}
-          />
-        ) : null}
+        {toggleOptions.map(({ value, text }, index) => {
+          return (
+            <Button
+              key={index}
+              width={width}
+              size={size}
+              type={selectedToggle === value ? 'square-outline' : 'toggleOff'}
+              text={text}
+              toggle
+              onClick={() => toggleHandler(value)}
+            />
+          );
+        })}
       </ToggleForm>
     </>
   );
