@@ -22,6 +22,7 @@ import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
 import { STAMPERY_COLUMNS, StamperyColumnType } from './StamperyDialog.data';
+import StamperyAddDialog from './_fragments/StamperyAddDialog';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -58,10 +59,10 @@ const StamperyDialog = ({
     page: 1,
     limit: 10,
   });
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
-
   const [total, setTotal] = useState<number>(100);
   const handleOpenDialog = () => {
     dispatch(
@@ -84,6 +85,10 @@ const StamperyDialog = ({
     }
     console.log('변경: ', key, value);
     setRequest(newRequest);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
   };
 
   const renderContent = () => {
@@ -110,7 +115,9 @@ const StamperyDialog = ({
           createButton={{
             title: '스탬프러리 추가',
             width: '113px',
-            onClickCreate: () => console.log('??'),
+            onClickCreate: () => {
+              setIsOpen(true);
+            },
           }}
         />
         <DataTable
@@ -140,46 +147,49 @@ const StamperyDialog = ({
   }, [targetId]);
 
   return (
-    <Modal
-      size={'xl'}
-      isCentered
-      variant={'simple'}
-      onClose={onClose}
-      {...props}
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <Flex justifyContent={'space-between'}>
-            <span>스탬프러리</span>
-            <IconButton
-              type="download"
-              size="sm"
-              width="120px"
-              text="내보내기"
-              onClick={() => console.log('내보내기')}
+    <>
+      <Modal
+        size={'xl'}
+        isCentered
+        variant={'simple'}
+        onClose={onClose}
+        {...props}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Flex justifyContent={'space-between'}>
+              <span>스탬프러리</span>
+              <IconButton
+                type="download"
+                size="sm"
+                width="120px"
+                text="내보내기"
+                onClick={() => console.log('내보내기')}
+              />
+            </Flex>
+          </ModalHeader>
+          <ModalBody>{renderContent()}</ModalBody>
+          <ModalFooter>
+            <Button
+              type="square-grayscale"
+              text={'취소'}
+              size={'sm'}
+              width={'120px'}
+              onClick={onClose}
             />
-          </Flex>
-        </ModalHeader>
-        <ModalBody>{renderContent()}</ModalBody>
-        <ModalFooter>
-          <Button
-            type="square-grayscale"
-            text={'취소'}
-            size={'sm'}
-            width={'120px'}
-            onClick={onClose}
-          />
-          <Button
-            type="square"
-            text={'확인'}
-            size={'sm'}
-            width={'120px'}
-            onClick={onClose}
-          />
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            <Button
+              type="square"
+              text={'확인'}
+              size={'sm'}
+              width={'120px'}
+              onClick={onClose}
+            />
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <StamperyAddDialog isOpen={isOpen} onClose={handleModalClose} />
+    </>
   );
 };
 
