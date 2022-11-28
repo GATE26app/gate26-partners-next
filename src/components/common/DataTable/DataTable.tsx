@@ -56,6 +56,7 @@ const DataTable = <T extends string>({
         <Tr
           key={`${Object.keys(row)[index]}_${index}`}
           _hover={{ backgroundColor: 'gray.50' }}
+          whiteSpace={'pre-wrap'}
         >
           {columns.map((col: DataTableColumnType<T>, index: number) =>
             col.render ? (
@@ -68,9 +69,9 @@ const DataTable = <T extends string>({
                   justifyContent={
                     col.align === 'left'
                       ? 'flex-start'
-                      : col.align === 'center'
-                      ? 'center'
-                      : 'flex-end'
+                      : col.align === 'right'
+                      ? 'flex-end'
+                      : 'center'
                   }
                 >
                   {col.render(row)}

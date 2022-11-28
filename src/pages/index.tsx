@@ -21,12 +21,14 @@ import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
 import ButtonInput from '@components/common/ButtonInput';
 import CheckBox from '@components/common/CheckBox';
+import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
 import DataTable, {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
 import DatePicker from '@components/common/DatePicker';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import FormHelper from '@components/common/FormHelper';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
@@ -98,7 +100,7 @@ function Test({ Component, pageProps }: any) {
 
   const theme = useTheme();
   const { colors, textStyles } = theme;
-
+  const [radioIdx, setRadioIdx] = useState<string | boolean>();
   const [currentPage, setCurretPage] = useState<number>(0);
 
   type DataColumnType =
@@ -203,6 +205,16 @@ function Test({ Component, pageProps }: any) {
     <div style={{ width: '100%' }}>
       <Flex>
         <Accordion style={{ width: '100%' }} defaultIndex={[]} allowMultiple>
+          <AccoianWrap
+            title="파일업로드"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <FileUpload />
+                </Flex>
+              </>
+            }
+          />
           <AccoianWrap
             title="Button"
             Pannel={
@@ -442,6 +454,21 @@ function Test({ Component, pageProps }: any) {
                   noBorder
                 />
               </Flex>
+            }
+          />
+          <AccoianWrap
+            title="Radio button"
+            Pannel={
+              <>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton />
+                  <RadioButton disabled />
+                  <RadioButton checked />
+                </Flex>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton group groupLabel={['data', 'data', 'data']} />
+                </Flex>
+              </>
             }
           />
           <AccoianWrap
