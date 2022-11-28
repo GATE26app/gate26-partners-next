@@ -21,12 +21,14 @@ import BreadCrumb from '@components/common/BreadCrumb';
 import Button from '@components/common/Button';
 import ButtonInput from '@components/common/ButtonInput';
 import CheckBox from '@components/common/CheckBox';
+import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
 import DataTable, {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
 import DatePicker from '@components/common/DatePicker';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import FormHelper from '@components/common/FormHelper';
 import IconButton from '@components/common/IconButton';
 import InputBox from '@components/common/Input';
@@ -37,7 +39,7 @@ import SearchInput from '@components/common/SearchInput';
 import SmallButton from '@components/common/SmallButton';
 import TableTop from '@components/common/TableTop';
 import TextareaBox from '@components/common/Textarea';
-import Toggle from '@components/common/Toggle';
+import Toggle, { ToggleOption } from '@components/common/Toggle';
 import ColorSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/ColorSection';
 import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDocsModal/_fragments/AppStyleViewerSection/_fragments/TextStyleSection';
 
@@ -66,13 +68,39 @@ function AccoianWrap({ title, Pannel }: AccodianProps) {
   );
 }
 
+const TOGGLE_OPTIONS: ToggleOption[] = [
+  {
+    value: '1',
+    text: '챌린지',
+  },
+  {
+    value: '2',
+    text: '국가',
+  },
+  {
+    value: '3',
+    text: '항공사',
+  },
+];
+
+const TOGGLE_OPTIONS2: ToggleOption[] = [
+  {
+    value: '1',
+    text: '챌린지',
+  },
+  {
+    value: '2',
+    text: '국가',
+  },
+];
+
 function Test({ Component, pageProps }: any) {
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
   const theme = useTheme();
   const { colors, textStyles } = theme;
-
+  const [radioIdx, setRadioIdx] = useState<string | boolean>();
   const [currentPage, setCurretPage] = useState<number>(0);
 
   type DataColumnType =
@@ -177,6 +205,16 @@ function Test({ Component, pageProps }: any) {
     <div style={{ width: '100%' }}>
       <Flex>
         <Accordion style={{ width: '100%' }} defaultIndex={[]} allowMultiple>
+          <AccoianWrap
+            title="파일업로드"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <FileUpload />
+                </Flex>
+              </>
+            }
+          />
           <AccoianWrap
             title="Button"
             Pannel={
@@ -419,6 +457,21 @@ function Test({ Component, pageProps }: any) {
             }
           />
           <AccoianWrap
+            title="Radio button"
+            Pannel={
+              <>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton />
+                  <RadioButton disabled />
+                  <RadioButton checked />
+                </Flex>
+                <Flex alignItems="center" columnGap={'10px'}>
+                  <RadioButton group groupLabel={['data', 'data', 'data']} />
+                </Flex>
+              </>
+            }
+          />
+          <AccoianWrap
             title="Round Image"
             Pannel={
               <Flex alignItems="center" columnGap={'10px'}>
@@ -491,12 +544,12 @@ function Test({ Component, pageProps }: any) {
             Pannel={
               <Flex rowGap={'10px'} flexDirection="column">
                 <Toggle
-                  text1="챌린지"
-                  text2="국가"
-                  text3="항공사"
-                  toggleOption
+                  // text1="챌린지"
+                  // text2="국가"
+                  // text3="항공사"
+                  toggleOptions={TOGGLE_OPTIONS}
                 />
-                <Toggle text1="챌린지" text2="국가" toggleOption={false} />
+                <Toggle toggleOptions={TOGGLE_OPTIONS2} />
               </Flex>
             }
           />

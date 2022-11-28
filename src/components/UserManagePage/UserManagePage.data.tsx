@@ -78,6 +78,7 @@ class UserManageColumns {
       key: 'withdrawalStatus',
       name: '탈퇴상태',
       width: '10%',
+      align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <span>{value.withdrawalStatus ? '탈퇴' : '회원'}</span>
       ),
@@ -92,6 +93,7 @@ class UserManageColumns {
       key: 'mileage',
       name: '보유 마일리지',
       width: '10%',
+      align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <Text
           cursor="pointer"
@@ -106,6 +108,7 @@ class UserManageColumns {
       key: 'airlineTicket',
       name: '항공권 인증 내역',
       width: '8.33%',
+      align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <Text
           cursor="pointer"
@@ -120,6 +123,7 @@ class UserManageColumns {
       key: 'stampery',
       name: '스탬프러리',
       width: '8.33%',
+      align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <Text
           cursor="pointer"

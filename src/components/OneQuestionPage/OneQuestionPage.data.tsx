@@ -1,12 +1,14 @@
+import { Text } from '@chakra-ui/react';
+
 import CustomSelect from '@components/common/CustomSelect';
 import {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
+import SmallButton from '@components/common/SmallButton';
 
 export type QuestionColumnType =
-  | 'id'
   | 'type'
   | 'title'
   | 'content'
@@ -27,22 +29,23 @@ class Question {
     {
       key: 'type',
       name: '문의유형',
-      width: '29.1%',
+      width: '15.25%',
     },
     {
       key: 'title',
       name: '문의 제목',
-      width: '25.4%',
+      width: '23.73%',
     },
     {
       key: 'content',
-      name: '문의내용-',
-      width: '15%',
+      name: '문의내용',
+      width: '30.51%',
     },
     {
       key: 'thumbnail',
       name: '이미지',
-      width: '15%',
+      width: '12.71%',
+      align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
         <RoundImage
           src={value.thumbnail as string}
@@ -54,40 +57,23 @@ class Question {
     {
       key: 'answerYn',
       name: '답변여부',
-      width: '9.4%',
+      width: '8.47%',
+      align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
-        <CustomSelect
-          width={'65px'}
-          size={'xs'}
-          items={[
-            { value: 1, label: '답변완료' },
-            { value: 0, label: '답변대기' },
-          ]}
-          defaultValue={value.answerYn}
-          noBorder
-          onChange={(value) =>
-            this.onChange ? this.onChange('show', value as number) : undefined
-          }
-        />
+        <Text color={value.answer === 0 ? 'warning.500' : 'success.500'}>
+          {value.answer === 1 ? '답변완료' : '답변대기'}
+        </Text>
       ),
     },
     {
       key: 'answer',
       name: '답변하기',
-      width: '9.4%',
+      width: '8.47%',
+      align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
-        <CustomSelect
-          width={'65px'}
-          size={'xs'}
-          items={[
-            { value: 1, label: '답변하기' },
-            { value: 0, label: '답변하기' },
-          ]}
-          defaultValue={value.answerYn}
-          noBorder
-          onChange={(value) =>
-            this.onChange ? this.onChange('show', value as number) : undefined
-          }
+        <SmallButton
+          text={value.answerYn === 1 ? '답변확인' : '답변하기'}
+          color={value.answerYn === 0 ? 'normal' : 'blue'}
         />
       ),
     },

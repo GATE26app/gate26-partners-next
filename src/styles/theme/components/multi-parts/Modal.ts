@@ -35,7 +35,7 @@ export const Modal: ChakraMultiPartComponentType<typeof parts> = {
   defaultProps: {},
   sizes: {
     md: {
-      dialog: { maxW: '560px', maxH: '760px' },
+      dialog: { maxW: '560px', maxH: '885px' },
     },
     xl: {
       dialog: { maxW: '1260px', maxH: '576px' },

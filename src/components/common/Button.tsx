@@ -53,7 +53,7 @@ const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
     padding: 11.5px 15px;
     background-color: ${({ buttonType }) =>
       buttonType?.endsWith('-outline')
-        ? 'rgba(255, 255, 255, 0)'
+        ? 'rgba(255, 255, 255, 1)'
         : buttonType?.endsWith('-grayscale')
         ? '#ffffff'
         : buttonType === 'toggleOff'
@@ -67,6 +67,8 @@ const CustomButton = styled(ChakraButton)<ButtonOptionProps>`
         : buttonType === 'toggleOff'
         ? 'unset'
         : 0};
+    /* border-radius: ${({ buttonType }) =>
+      buttonType === 'toggleOff' ? 'unset' : ''}; */
     font-family: 'Pretendard';
     font-style: normal;
     font-weight: 700;

@@ -9,7 +9,8 @@ export type DataTableColumnType<T extends string> = {
   name: string;
   width?: string;
   align?: 'left' | 'center' | 'right';
-  render?: (value: DataTableRowType<T>) => JSX.Element;
+  render?: (value: DataTableRowType<T>) => JSX.Element | string;
+  color?: (value: DataTableRowType<T>) => string;
 };
 export type DataTableRowType<T extends string> = {
   [key in T]: string | number | boolean | dayjs.Dayjs;

@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { Question, QuestionColumnType } from './oneQuestionPage.data';
+import { Question, QuestionColumnType } from './OneQuestionPage.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -31,7 +31,15 @@ interface ReqLoungeProps {
 
 const rows: DataTableRowType<QuestionColumnType>[] = [
   {
-    id: 1,
+    type: '문의 유형',
+    title: '문의 제목 ',
+    content: '문의 내용',
+    thumbnail:
+      'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
+    answerYn: 1,
+    answer: 1,
+  },
+  {
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -41,23 +49,12 @@ const rows: DataTableRowType<QuestionColumnType>[] = [
     answer: 0,
   },
   {
-    id: 2,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
     thumbnail:
       'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answerYn: 0,
-    answer: 1,
-  },
-  {
-    id: 3,
-    type: '문의 유형',
-    title: '문의 제목 ',
-    content: '문의 내용',
-    thumbnail:
-      'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answerYn: 0,
+    answerYn: 1,
     answer: 1,
   },
 ];
@@ -69,7 +66,7 @@ function QuestionPage() {
   });
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
-
+  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
@@ -84,31 +81,8 @@ function QuestionPage() {
     setRequest(newRequest);
   }
 
-  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
-
-  const handleEditRow = (row: DataTableRowType<QuestionColumnType>) => {
-    if (!row.id) {
-      return;
-    }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
-  };
-
   const handleCloseModal = () => setModal({ isOpen: false });
 
-  const handleDeleteRow = (row: DataTableRowType<QuestionColumnType>) => {
-    dispatch(
-      customModalSliceAction.setMessage({
-        title: '여행팁',
-        message: '여행팁을 삭제 하시겠습니까?',
-        type: 'confirm',
-        okButtonName: '삭제',
-        cbOk: () => {
-          console.log('삭제 처리:', row);
-        },
-      }),
-    );
-    openCustomModal();
-  };
   return (
     <>
       <Head>
@@ -149,9 +123,6 @@ function QuestionPage() {
         <DataTable
           columns={communityTip.TIP_COLUMNS}
           rows={rows}
-          onEdit={handleEditRow}
-          onDelete={handleDeleteRow}
-          isMenu
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,
