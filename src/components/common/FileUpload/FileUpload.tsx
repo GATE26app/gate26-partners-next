@@ -5,6 +5,10 @@ import { Input } from '@chakra-ui/react';
 import SmallButton from '../SmallButton';
 import { FileInputArea, FileWrapper, IconArea } from './FileUpload.Style';
 
+interface FileProps {
+  onClick?: () => void;
+}
+
 const FileUpload = () => {
   const file = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>();
@@ -14,6 +18,9 @@ const FileUpload = () => {
     setFileName(files.name);
     console.log(files.name);
   };
+  const closeImg = `icons/svg/file-close.svg?${(Math.random() * 7).toString(
+    7,
+  )}`;
 
   const fileUpload = () => {
     const file = document.getElementById('file');
@@ -52,7 +59,7 @@ const FileUpload = () => {
         <input type="file" id="file" onChange={onFileInputChange} ref={file} />
       </FileInputArea>
 
-      <IconArea src="icons/svg/file-close.svg" onClick={delFileButton} />
+      <IconArea src={closeImg} onClick={delFileButton} />
     </FileWrapper>
   );
 };
