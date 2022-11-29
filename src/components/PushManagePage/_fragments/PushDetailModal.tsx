@@ -17,6 +17,7 @@ import {
 import Button from '@components/common/Button';
 import CustomSelect from '@components/common/CustomSelect';
 import DatePicker from '@components/common/DatePicker';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
@@ -150,7 +151,7 @@ const PushDetailModal = ({
             />
           }
         />
-        <ModalRow title="첨부파일" content={<div></div>} />
+        <ModalRow title="첨부파일" content={<FileUpload />} />
         <ModalRow
           title="예약발행"
           content={

@@ -42,6 +42,12 @@ const FileUpload = () => {
           readOnly
           value={fileName}
           onClick={fileUpload}
+          fontSize="12px"
+          lineHeight="18px"
+          letterSpacing="-0.02em"
+          w="100%"
+          h="100%"
+          padding={0}
         />
         <input type="file" id="file" onChange={onFileInputChange} ref={file} />
       </FileInputArea>
