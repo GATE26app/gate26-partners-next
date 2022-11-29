@@ -19,6 +19,5 @@ export const FileInputArea = styled.div`
   }
 `;
 export const IconArea = styled.img`
-  background-image: url('/public/icons/svg/file-close.svg');
   cursor: pointer;
 `;
