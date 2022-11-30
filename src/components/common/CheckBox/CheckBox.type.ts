@@ -3,4 +3,6 @@ export interface CheckBoxProps {
   checked?: boolean;
   children?: string | JSX.Element;
   onClick?: () => void;
+  width?: string;
+  height?: string;
 }

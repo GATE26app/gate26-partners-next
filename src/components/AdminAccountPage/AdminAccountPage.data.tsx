@@ -19,27 +19,18 @@ export type AdminAccountColumnType =
 export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
 
 class AdminAccountColumns {
-  onChange?: (key: string, value: string | number) => void;
-  onClick: (
-    row: DataTableRowType<AdminAccountColumnType>,
-    type: ModalType,
-  ) => void;
+  onClick: (row: DataTableRowType<AdminAccountColumnType>) => void;
 
   constructor(
-    onClick: (
-      row: DataTableRowType<AdminAccountColumnType>,
-      type: ModalType,
-    ) => void,
-    onChange: (key: string, value: string | number) => void,
+    onClick: (row: DataTableRowType<AdminAccountColumnType>) => void,
   ) {
     this.onClick = onClick;
-    this.onChange = onChange;
   }
 
   readonly LIST_COLUMNS: DataTableColumnType<AdminAccountColumnType>[] = [
     {
       key: 'userId',
-      name: 'ID ',
+      name: 'ID',
       width: '18.33%',
     },
     {
@@ -78,7 +69,13 @@ class AdminAccountColumns {
       name: '권한',
       width: '10%',
       render: (value: DataTableRowType<AdminAccountColumnType>) => (
-        <SmallButton color="normal" text="권한" width="31px" height="18px" />
+        <SmallButton
+          onClick={() => this.onClick(value)}
+          color="normal"
+          text="권한"
+          width="31px"
+          height="18px"
+        />
       ),
     },
   ];

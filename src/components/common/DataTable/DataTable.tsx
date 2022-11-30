@@ -114,20 +114,22 @@ const DataTable = <T extends string>({
       <Table variant={variant} colorScheme={'gray'}>
         <Thead>{renderHead()}</Thead>
         <Tbody>{renderBody()}</Tbody>
-        <Tfoot>
-          <Tr>
-            <Th colSpan={columns.length}>
-              <Pagination
-                currentPage={paginationProps.currentPage}
-                limit={paginationProps.limit}
-                total={paginationProps.total}
-                onPageNumberClicked={paginationProps.onPageNumberClicked}
-                onPreviousPageClicked={paginationProps.onPreviousPageClicked}
-                onNextPageClicked={paginationProps.onNextPageClicked}
-              />
-            </Th>
-          </Tr>
-        </Tfoot>
+        {paginationProps && (
+          <Tfoot>
+            <Tr>
+              <Th colSpan={columns.length + Number(isMenu || false)}>
+                <Pagination
+                  currentPage={paginationProps.currentPage}
+                  limit={paginationProps.limit}
+                  total={paginationProps.total}
+                  onPageNumberClicked={paginationProps.onPageNumberClicked}
+                  onPreviousPageClicked={paginationProps.onPreviousPageClicked}
+                  onNextPageClicked={paginationProps.onNextPageClicked}
+                />
+              </Th>
+            </Tr>
+          </Tfoot>
+        )}
       </Table>
     </TableContainer>
   );

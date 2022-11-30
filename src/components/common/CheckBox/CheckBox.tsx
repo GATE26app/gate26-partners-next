@@ -15,6 +15,8 @@ const CheckBox = ({
   disabled,
   children,
   onClick,
+  width,
+  height,
   ...props
 }: CheckBoxProps) => {
   return (
@@ -25,11 +27,11 @@ const CheckBox = ({
       onClick={() => onClick && onClick()}
     >
       {disabled ? (
-        <CheckedDisableIcon />
+        <CheckedDisableIcon w={width} h={height} />
       ) : checked ? (
-        <CheckedOnIcon />
+        <CheckedOnIcon w={width} h={height} />
       ) : (
-        <CheckedOffIcon />
+        <CheckedOffIcon w={width} h={height} />
       )}
       {typeof children === 'string' ? (
         <Text fontSize={'15px'} ml="8px" color="black">
