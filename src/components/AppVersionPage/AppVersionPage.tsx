@@ -1,10 +1,14 @@
 import Head from 'next/head';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
+
+import VersionEditModal from '@components/AppVersionPage/_fragments/VersionEditModal';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
@@ -14,19 +18,18 @@ import TableTop from '@components/common/TableTop';
 import {
   AppVersionPageColumnType,
   AppVersionPageColumns,
-  ModalType,
 } from './AppVersionPage.data';
 
-// import AirlineTicketModal from './_fragments/AirlineTicketModal';
-// import RetainedMileageModal from './_fragments/RetainedMileageModal';
-// import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface ReqLoungeProps {
+interface ReqAppVersionProps {
   keyword?: string;
   searchType?: number;
   page: number;
   limit: number;
 }
+
+type ModalType = 'create' | 'modify';
 interface ModalProps {
   isOpen: boolean;
   type?: ModalType;
@@ -36,9 +39,9 @@ const rows: DataTableRowType<AppVersionPageColumnType>[] = [
   {
     id: 1,
     os: 'window',
-    majorVersion: 'Major Version',
-    minorVersion: 'Minor Version',
-    patchVersion: 'Patch Version',
+    majorVer: 'Major Version',
+    minorVer: 'Minor Version',
+    patchVer: 'Patch Version',
     releaseContent: '업데이트 내용',
     releaseStatus: 'RS',
     modifiedAt: dayjs('2022-10-22 9:00'),
@@ -46,9 +49,9 @@ const rows: DataTableRowType<AppVersionPageColumnType>[] = [
   {
     id: 2,
     os: 'window',
-    majorVersion: 'Major Version',
-    minorVersion: 'Minor Version',
-    patchVersion: 'Patch Version',
+    majorVer: 'Major Version',
+    minorVer: 'Minor Version',
+    patchVer: 'Patch Version',
     releaseContent: '업데이트 내용',
     releaseStatus: 'RS',
     modifiedAt: dayjs('2022-10-22 9:00'),
@@ -56,9 +59,9 @@ const rows: DataTableRowType<AppVersionPageColumnType>[] = [
   {
     id: 3,
     os: 'window',
-    majorVersion: 'Major Version',
-    minorVersion: 'Minor Version',
-    patchVersion: 'Patch Version',
+    majorVer: 'Major Version',
+    minorVer: 'Minor Version',
+    patchVer: 'Patch Version',
     releaseContent: '업데이트 내용',
     releaseStatus: 'RS',
     modifiedAt: dayjs('2022-10-22 9:00'),
@@ -66,16 +69,30 @@ const rows: DataTableRowType<AppVersionPageColumnType>[] = [
 ];
 
 function AppVersionPagePage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
+  const [request, setRequest] = useState<ReqAppVersionProps>({
     page: 1,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
-
+  const [modal, setModal] = useState<ModalProps>({
+    isOpen: false,
+  });
   const userColumns = new AppVersionPageColumns(
     handleClickListBtn,
     handleChangeInput,
   );
+
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleVersionModalOpen = (type: ModalType) => {
+    setModal({ type, isOpen: true });
+  };
+
+  const handleVersionModalClose = () => {
+    setModal({ isOpen: false });
+  };
+
   const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
@@ -83,15 +100,27 @@ function AppVersionPagePage() {
 
     setRequest(newRequest);
   }
-  function handleClickListBtn(
-    row: DataTableRowType<AppVersionPageColumnType>,
-    type: ModalType,
-  ) {
-    setListModal({ isOpen: true, targetId: row.id as number, type });
+  function handleClickListBtn(row: DataTableRowType<AppVersionPageColumnType>) {
+    setListModal({ isOpen: true, targetId: row.id as number });
   }
   function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined, type: undefined });
+    setListModal({ isOpen: false, targetId: undefined });
   }
+
+  const handleDeleteRow = (row: DataTableRowType<AppVersionPageColumnType>) => {
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '앱버전',
+        message: '앱 버전을 삭제 하시겠습니까?',
+        type: 'confirm',
+        okButtonName: '삭제',
+        cbOk: () => {
+          console.log('삭제 처리:', row);
+        },
+      }),
+    );
+    openCustomModal();
+  };
   return (
     <>
       <Head>
@@ -131,15 +160,15 @@ function AppVersionPagePage() {
           createButton={{
             title: '앱 버전 추가',
             width: '95px',
-            // onClickCreate: handleCreateRow,
+            onClickCreate: () => handleVersionModalOpen('create'),
           }}
         />
         <DataTable
           columns={userColumns.LIST_COLUMNS}
           rows={rows}
           isMenu
-          onDelete={() => console.log('onDelete')}
-          onEdit={() => console.log('onEdit')}
+          onDelete={(row) => handleDeleteRow(row)}
+          onEdit={() => handleVersionModalOpen('modify')}
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,
@@ -153,6 +182,11 @@ function AppVersionPagePage() {
           }}
         />
       </Flex>
+      <VersionEditModal
+        isOpen={modal.isOpen}
+        type={modal.type}
+        onClose={handleVersionModalClose}
+      />
     </>
   );
 }

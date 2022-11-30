@@ -8,27 +8,19 @@ import {
 export type AppVersionPageColumnType =
   | 'id'
   | 'os'
-  | 'majorVersion'
-  | 'minorVersion'
-  | 'patchVersion'
+  | 'majorVer'
+  | 'minorVer'
+  | 'patchVer'
   | 'releaseContent'
   | 'releaseStatus'
   | 'modifiedAt';
 
-export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
-
 class AppVersionPageColumns {
   onChange?: (key: string, value: string | number) => void;
-  onClick: (
-    row: DataTableRowType<AppVersionPageColumnType>,
-    type: ModalType,
-  ) => void;
+  onClick: (row: DataTableRowType<AppVersionPageColumnType>) => void;
 
   constructor(
-    onClick: (
-      row: DataTableRowType<AppVersionPageColumnType>,
-      type: ModalType,
-    ) => void,
+    onClick: (row: DataTableRowType<AppVersionPageColumnType>) => void,
     onChange: (key: string, value: string | number) => void,
   ) {
     this.onClick = onClick;
@@ -42,17 +34,17 @@ class AppVersionPageColumns {
       width: '6.67%',
     },
     {
-      key: 'majorVersion',
+      key: 'majorVer',
       name: 'Major Version',
       width: '10%',
     },
     {
-      key: 'minorVersion',
+      key: 'minorVer',
       name: 'Minor Version',
       width: '10%',
     },
     {
-      key: 'patchVersion',
+      key: 'patchVer',
       name: 'Patch Version',
       width: '10%',
     },
