@@ -92,7 +92,7 @@ const StamperyAddDialog = ({
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent={'space-between'} direction="column">
-            <span>스탬프러리 추가</span>
+            <span style={{ marginBottom: '29px' }}>스탬프러리 추가</span>
             <Toggle toggleOptions={TOGGLE_OPTION} />
           </Flex>
         </ModalHeader>

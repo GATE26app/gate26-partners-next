@@ -1,32 +1,32 @@
 import Head from 'next/head';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
+
+import MenuEditModal from '@components/AdminMenuPage/_fragments/MenuEditModal';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import {
-  AdminMenuColumnType,
-  AdminMenuColumns,
-  ModalType,
-} from './AdminMenuPage.data';
+import { AdminMenuColumnType, AdminMenuColumns } from './AdminMenuPage.data';
 
-// import AirlineTicketModal from './_fragments/AirlineTicketModal';
-// import RetainedMileageModal from './_fragments/RetainedMileageModal';
-// import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface ReqLoungeProps {
+interface ReqMenuProps {
   keyword?: string;
   searchType?: number;
   page: number;
   limit: number;
 }
+
+type ModalType = 'create' | 'modify';
 interface ModalProps {
   isOpen: boolean;
   type?: ModalType;
@@ -57,32 +57,46 @@ const rows: DataTableRowType<AdminMenuColumnType>[] = [
 ];
 
 function AdminMenuPage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
+  const [request, setRequest] = useState<ReqMenuProps>({
     page: 1,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
-
-  const userColumns = new AdminMenuColumns(
-    handleClickListBtn,
-    handleChangeInput,
-  );
-  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
+  const [modal, setModal] = useState<ModalProps>({
+    isOpen: false,
+  });
+  const userColumns = new AdminMenuColumns();
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') newRequest.page = 1;
 
     setRequest(newRequest);
   }
-  function handleClickListBtn(
-    row: DataTableRowType<AdminMenuColumnType>,
-    type: ModalType,
-  ) {
-    setListModal({ isOpen: true, targetId: row.id as number, type });
-  }
-  function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined, type: undefined });
-  }
+
+  const handleMenuModalOpen = (type: ModalType) => {
+    setModal({ type, isOpen: true });
+  };
+
+  const handleMenuModalClose = () => {
+    setModal({ isOpen: false });
+  };
+
+  const handleDeleteRow = (row: DataTableRowType<AdminMenuColumnType>) => {
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '메뉴 관리',
+        message: '메뉴를 삭제 하시겠습니까?',
+        type: 'confirm',
+        okButtonName: '삭제',
+        cbOk: () => {
+          console.log('삭제 처리:', row);
+        },
+      }),
+    );
+    openCustomModal();
+  };
   return (
     <>
       <Head>
@@ -122,15 +136,15 @@ function AdminMenuPage() {
           createButton={{
             title: '메뉴 추가',
             width: '83px',
-            // onClickCreate: handleCreateRow,
+            onClickCreate: () => handleMenuModalOpen('create'),
           }}
         />
         <DataTable
           columns={userColumns.LIST_COLUMNS}
           rows={rows}
           isMenu
-          onDelete={() => console.log('onDelete')}
-          onEdit={() => console.log('onEdit')}
+          onDelete={(row) => handleDeleteRow(row)}
+          onEdit={() => handleMenuModalOpen('modify')}
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,
@@ -144,6 +158,11 @@ function AdminMenuPage() {
           }}
         />
       </Flex>
+      <MenuEditModal
+        isOpen={modal.isOpen}
+        type={modal.type}
+        onClose={handleMenuModalClose}
+      />
     </>
   );
 }

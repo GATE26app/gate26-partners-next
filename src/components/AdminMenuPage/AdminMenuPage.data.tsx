@@ -1,11 +1,9 @@
 import { Text } from '@chakra-ui/react';
 
-import CustomSelect from '@components/common/CustomSelect';
 import {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
-import SmallButton from '@components/common/SmallButton';
 
 export type AdminMenuColumnType =
   | 'id'
@@ -14,26 +12,7 @@ export type AdminMenuColumnType =
   | 'useStatus'
   | 'createdAt';
 
-export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
-
 class AdminMenuColumns {
-  onChange?: (key: string, value: string | number) => void;
-  onClick: (
-    row: DataTableRowType<AdminMenuColumnType>,
-    type: ModalType,
-  ) => void;
-
-  constructor(
-    onClick: (
-      row: DataTableRowType<AdminMenuColumnType>,
-      type: ModalType,
-    ) => void,
-    onChange: (key: string, value: string | number) => void,
-  ) {
-    this.onClick = onClick;
-    this.onChange = onChange;
-  }
-
   readonly LIST_COLUMNS: DataTableColumnType<AdminMenuColumnType>[] = [
     {
       key: 'title',
