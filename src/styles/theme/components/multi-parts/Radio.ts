@@ -6,6 +6,10 @@ export const Radio: ChakraMultiPartComponentType<typeof parts> = {
   parts,
   baseStyle: {},
   defaultProps: {},
-  sizes: {},
+  sizes: {
+    lg: {
+      label: { fontSize: '15px' },
+    },
+  },
   variants: {},
 };

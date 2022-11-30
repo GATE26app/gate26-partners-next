@@ -14,6 +14,7 @@ import {
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
@@ -62,8 +63,8 @@ const LoungeDetailModal = ({
             />
           }
         />
-        <ModalRow title="배너 이미지" content={<div></div>} />
-        <ModalRow title="홈 이미지" content={<div></div>} />
+        <ModalRow title="배너 이미지" content={<FileUpload />} />
+        <ModalRow title="홈 이미지" content={<FileUpload />} />
         <ModalRow
           title="라운지 노출 순서"
           content={

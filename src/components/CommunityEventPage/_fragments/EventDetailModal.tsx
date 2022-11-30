@@ -14,8 +14,10 @@ import {
 } from '@chakra-ui/react';
 
 import Button from '@components/common/Button';
+import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
 import DatePicker from '@components/common/DatePicker';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
@@ -45,7 +47,7 @@ const EventDetailModal = ({
   const [request, setRequest] = useState<ReqEventDetail>({
     title: '',
     eventContent: '',
-    type: '',
+    type: '0',
     start: dayjs('2022-09-21 09:00'),
     end: dayjs('2022-09-21 09:00'),
     banner: null,
@@ -67,7 +69,16 @@ const EventDetailModal = ({
   const renderContent = () => {
     return (
       <Flex direction={'column'} rowGap={'15px'}>
-        <ModalRow title="타입" content={<div></div>} />
+        <ModalRow
+          title="타입"
+          content={
+            <RadioButton
+              group
+              groupLabel={['URL', 'IMAGE', 'TEXT']}
+              onClick={(idx) => handleChangeInput('type', idx)}
+            />
+          }
+        />
         <ModalRow
           title="제목"
           content={
@@ -90,7 +101,7 @@ const EventDetailModal = ({
                 }
               />
             ) : request.type === '1' ? (
-              <div></div>
+              <FileUpload />
             ) : (
               <TextareaBox
                 placeholder="이벤트 내용"
@@ -102,7 +113,7 @@ const EventDetailModal = ({
               />
             )
           }
-          height="300px"
+          height={request.type === '2' ? '300px' : undefined}
         />
         <ModalRow
           title="시작일자"
@@ -124,8 +135,8 @@ const EventDetailModal = ({
             />
           }
         />
-        <ModalRow title="배너 이미지" content={<div></div>} />
-        <ModalRow title="홈 이미지" content={<div></div>} />
+        <ModalRow title="배너 이미지" content={<FileUpload />} />
+        <ModalRow title="홈 이미지" content={<FileUpload />} />
         <ModalRow
           title="표시장소"
           content={

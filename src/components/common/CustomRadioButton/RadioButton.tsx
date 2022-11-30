@@ -5,7 +5,7 @@ import { Flex, Radio, RadioGroup, Stack, background } from '@chakra-ui/react';
 type radioColor = 'checked' | 'disabled';
 
 interface RadioPrsop {
-  onClick?: (buttonIdx: number | boolean) => void;
+  onClick?: (buttonIdx: number) => void;
   type?: radioColor;
   radioCount?: number;
   groupLabel?: string[];

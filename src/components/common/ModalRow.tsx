@@ -41,7 +41,9 @@ const ModalRow = ({
         </Text>
       </Flex>
 
-      <Content h={height}>{content}</Content>
+      <Content h={height} alignItems={'center'}>
+        {content}
+      </Content>
     </Flex>
   );
 };

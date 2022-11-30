@@ -5,19 +5,29 @@ import { Input } from '@chakra-ui/react';
 import SmallButton from '../SmallButton';
 import { FileInputArea, FileWrapper, IconArea } from './FileUpload.Style';
 
-const FileUpload = () => {
+interface FileProps {
+  onClick?: () => void;
+  fileValue?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const FileUpload = ({ onClick, fileValue, onChange }: FileProps) => {
   const file = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState<string>();
+  const [fileName, setFileName] = useState<string>(fileValue ? fileValue : '');
+  const id = (Math.random() * 7).toString(7);
   const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
     const files = (target.files as FileList)[0];
-    setFileName(files.name);
-    console.log(files.name);
+    setFileName(files?.name);
+    console.log(files?.name);
+    if (onChange) onChange(e);
   };
-
   const fileUpload = () => {
     const file = document.getElementById('file');
     file?.click();
+    if (onClick) {
+      onClick();
+    }
   };
   const delFileButton = () => {
     if (file.current) {
@@ -32,7 +42,7 @@ const FileUpload = () => {
         text="파일선택"
         color="file"
         height="26px"
-        label={'file'}
+        label={`file-${id}`}
       />
       <FileInputArea>
         <Input
@@ -42,11 +52,24 @@ const FileUpload = () => {
           readOnly
           value={fileName}
           onClick={fileUpload}
+          fontSize="12px"
+          lineHeight="18px"
+          letterSpacing="-0.02em"
+          w="100%"
+          h="100%"
+          padding={0}
+          defaultValue={fileName}
         />
-        <input type="file" id="file" onChange={onFileInputChange} ref={file} />
+        <input
+          type="file"
+          id={`file-${id}`}
+          onChange={onFileInputChange}
+          ref={file}
+          accept="image/png, image/jpeg"
+        />
       </FileInputArea>
 
-      <IconArea src="icons/svg/file-close.svg" onClick={delFileButton} />
+      <IconArea src="/icons/svg/file-close.svg" onClick={delFileButton} />
     </FileWrapper>
   );
 };
