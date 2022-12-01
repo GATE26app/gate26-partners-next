@@ -5,11 +5,7 @@ import ArrowDownIcon from '@components/common/@Icons/Admin/ArrowDown';
 
 import styled from '@emotion/styled';
 
-interface AdminHeaderProps {
-  //   variant?: HomeHeaderVariantType;
-}
-
-const AdminHeader = ({}: AdminHeaderProps) => {
+const AdminHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   //   const cssByVariant = HOME_HEADER_VARIANTS[variant];

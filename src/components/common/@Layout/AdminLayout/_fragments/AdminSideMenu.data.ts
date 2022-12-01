@@ -52,20 +52,20 @@ export const MenuRouter: MenuType[] = [
     name: '공통 코드',
     iconOn: '/icons/admin/code-on.svg',
     iconOff: '/icons/admin/code-off.svg',
-    path: '/code',
+    path: '/admin',
     alt: 'code',
     subMenus: [
       {
         name: '코드 관리',
-        path: '/code/manage',
+        path: '/commonCode/managementCode',
       },
       {
         name: '항공사 코드',
-        path: '/code/airline',
+        path: '/commonCode/airLineCode',
       },
       {
         name: '공항 코드',
-        path: '/code/airport',
+        path: '/commonCode/airportCode',
       },
     ],
   },

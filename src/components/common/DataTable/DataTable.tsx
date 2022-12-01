@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -33,6 +33,9 @@ const DataTable = <T extends string>({
   variant = 'simple',
   onEdit,
   onDelete,
+  onRefusal,
+  onAtom,
+  onRegister,
 }: DataTableProps<T>) => {
   const renderHead = () => {
     return (
@@ -95,8 +98,12 @@ const DataTable = <T extends string>({
           {isMenu && (
             <Td key={`${Object.keys(row)[index]}_${index}_menu`}>
               <MenuSelect
+                state={row['state' as T]}
                 onClickEdit={onEdit && (() => onEdit(row))}
                 onClickDelete={onDelete && (() => onDelete(row))}
+                onClickRegister={onRegister && (() => onRegister(row))}
+                onClickRefusal={onRefusal && (() => onRefusal(row))}
+                onClickAtom={onAtom && (() => onAtom(row))}
               />
             </Td>
           )}
