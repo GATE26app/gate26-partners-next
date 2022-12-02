@@ -21,7 +21,11 @@ export interface DataTableProps<T extends string> extends TableProps {
   columns: DataTableColumnType<T>[];
   rows?: DataTableRowType<T>[];
   isMenu?: boolean;
+  state?: number;
   paginationProps: PaginationProps;
   onEdit?: (row: DataTableRowType<T>) => void;
   onDelete?: (row: DataTableRowType<T>) => void;
+  onRefusal?: (row: DataTableRowType<T>) => void;
+  onAtom?: (row: DataTableRowType<T>) => void;
+  onRegister?: (row: DataTableRowType<T>) => void;
 }

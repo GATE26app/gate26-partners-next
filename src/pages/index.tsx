@@ -31,6 +31,7 @@ import DatePicker from '@components/common/DatePicker';
 import FileUpload from '@components/common/FileUpload/FileUpload';
 import FormHelper from '@components/common/FormHelper';
 import IconButton from '@components/common/IconButton';
+import ImageCloseUp from '@components/common/ImageCloseUp/ImageCloseUp';
 import InputBox from '@components/common/Input';
 import PageTitle from '@components/common/PageTitle';
 import Pagination from '@components/common/Pagination';
@@ -205,6 +206,20 @@ function Test({ Component, pageProps }: any) {
     <div style={{ width: '100%' }}>
       <Flex>
         <Accordion style={{ width: '100%' }} defaultIndex={[]} allowMultiple>
+          <AccoianWrap
+            title="이미지 클로즈업"
+            Pannel={
+              <>
+                <Flex rowGap={'10px'} flexDirection="column">
+                  <ImageCloseUp
+                    width={'80px'}
+                    height={'80px'}
+                    src="https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA"
+                  />
+                </Flex>
+              </>
+            }
+          />
           <AccoianWrap
             title="파일업로드"
             Pannel={

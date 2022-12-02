@@ -10,7 +10,7 @@ const InputBox = ({ ...props }: InputProps) => {
       borderColor="gray.300"
       backgroundColor="background.primary"
       color="black"
-      _disabled={{ backgroundColor: 'gray.100' }}
+      _disabled={{ backgroundColor: 'gray.100', color: 'gray.500' }}
       _placeholder={{ color: 'gray.500' }}
     />
   );

@@ -9,12 +9,14 @@ interface ModalRowProps {
   titleAlign?: 'top' | 'center' | 'bottom';
   content: JSX.Element;
   height?: string;
+  color?: string;
 }
 const ModalRow = ({
   title,
   titleAlign = 'center',
   content,
   height = '40px',
+  color = '1A1A1A',
 }: ModalRowProps) => {
   return (
     <Flex
@@ -36,12 +38,15 @@ const ModalRow = ({
           fontStyle={'normal'}
           lineHeight={'18px'}
           letterSpacing={'-0.02em'}
+          color={color}
         >
           {title}
         </Text>
       </Flex>
 
-      <Content h={height}>{content}</Content>
+      <Content h={height} alignItems={'center'}>
+        {content}
+      </Content>
     </Flex>
   );
 };

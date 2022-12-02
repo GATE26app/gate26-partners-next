@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -33,6 +33,9 @@ const DataTable = <T extends string>({
   variant = 'simple',
   onEdit,
   onDelete,
+  onRefusal,
+  onAtom,
+  onRegister,
 }: DataTableProps<T>) => {
   const renderHead = () => {
     return (
@@ -95,8 +98,12 @@ const DataTable = <T extends string>({
           {isMenu && (
             <Td key={`${Object.keys(row)[index]}_${index}_menu`}>
               <MenuSelect
+                state={row['state' as T]}
                 onClickEdit={onEdit && (() => onEdit(row))}
                 onClickDelete={onDelete && (() => onDelete(row))}
+                onClickRegister={onRegister && (() => onRegister(row))}
+                onClickRefusal={onRefusal && (() => onRefusal(row))}
+                onClickAtom={onAtom && (() => onAtom(row))}
               />
             </Td>
           )}
@@ -114,20 +121,22 @@ const DataTable = <T extends string>({
       <Table variant={variant} colorScheme={'gray'}>
         <Thead>{renderHead()}</Thead>
         <Tbody>{renderBody()}</Tbody>
-        <Tfoot>
-          <Tr>
-            <Th colSpan={columns.length}>
-              <Pagination
-                currentPage={paginationProps.currentPage}
-                limit={paginationProps.limit}
-                total={paginationProps.total}
-                onPageNumberClicked={paginationProps.onPageNumberClicked}
-                onPreviousPageClicked={paginationProps.onPreviousPageClicked}
-                onNextPageClicked={paginationProps.onNextPageClicked}
-              />
-            </Th>
-          </Tr>
-        </Tfoot>
+        {paginationProps && (
+          <Tfoot>
+            <Tr>
+              <Th colSpan={columns.length + Number(isMenu || false)}>
+                <Pagination
+                  currentPage={paginationProps.currentPage}
+                  limit={paginationProps.limit}
+                  total={paginationProps.total}
+                  onPageNumberClicked={paginationProps.onPageNumberClicked}
+                  onPreviousPageClicked={paginationProps.onPreviousPageClicked}
+                  onNextPageClicked={paginationProps.onNextPageClicked}
+                />
+              </Th>
+            </Tr>
+          </Tfoot>
+        )}
       </Table>
     </TableContainer>
   );

@@ -13,6 +13,7 @@ import {
 
 import Button from '@components/common/Button';
 import CustomSelect from '@components/common/CustomSelect';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
@@ -59,7 +60,7 @@ const ChatDetailModal = ({
             />
           }
         />
-        <ModalRow title="썸네일 사진" content={<div></div>} />
+        <ModalRow title="썸네일 사진" content={<FileUpload />} />
         <ModalRow
           title="라운지 위치"
           content={

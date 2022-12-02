@@ -13,6 +13,7 @@ import {
 
 import Button from '@components/common/Button';
 import CustomSelect from '@components/common/CustomSelect';
+import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
@@ -61,14 +62,22 @@ const TipDetailModal = ({
             />
           }
         />
-        <ModalRow title="홈 이미지" content={<div></div>} />
-        <ModalRow title="배너 이미지" content={<div></div>} />
+        <ModalRow title="홈 이미지" content={<FileUpload />} />
+        <ModalRow title="배너 이미지" content={<FileUpload />} />
         <ModalRow
           title="카테고리"
           content={
             <CustomSelect
               size="sm"
-              items={[]}
+              items={[
+                { value: '0', label: '핫플레이스' },
+                { value: '1', label: '로컬맛집' },
+                { value: '2', label: '투어 액티비티' },
+                { value: '3', label: '항공' },
+                { value: '4', label: '쇼핑템' },
+                { value: '5', label: '숙소뷰' },
+                { value: '6', label: '행룩' },
+              ]}
               defaultValue={request.category}
               onChange={(value) =>
                 handleChangeInput('category', value as string)

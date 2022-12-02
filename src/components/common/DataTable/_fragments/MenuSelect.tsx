@@ -13,9 +13,20 @@ import MoreIcon from '@components/common/@Icons/Admin/More';
 interface MenuSelectProps {
   onClickEdit?: () => void;
   onClickDelete?: () => void;
+  onClickRegister?: () => void;
+  onClickAtom?: () => void;
+  onClickRefusal?: () => void;
+  state: any;
 }
 
-const MenuSelect = ({ onClickEdit, onClickDelete }: MenuSelectProps) => {
+const MenuSelect = ({
+  onClickEdit,
+  onClickDelete,
+  onClickRegister,
+  onClickRefusal,
+  onClickAtom,
+  state,
+}: MenuSelectProps) => {
   const handleClickEdit = (e: any) => {
     if (onClickEdit) {
       onClickEdit();
@@ -27,7 +38,22 @@ const MenuSelect = ({ onClickEdit, onClickDelete }: MenuSelectProps) => {
       onClickDelete();
     }
   };
-
+  const handleClickRegister = (e: any) => {
+    if (onClickRegister) {
+      onClickRegister();
+    }
+  };
+  const handleClickRefusal = (e: any) => {
+    if (onClickRefusal) {
+      onClickRefusal();
+      console.log(state);
+    }
+  };
+  const handleClickAtom = (e: any) => {
+    if (onClickAtom) {
+      onClickAtom();
+    }
+  };
   return (
     <Menu>
       <MenuButton
@@ -39,6 +65,15 @@ const MenuSelect = ({ onClickEdit, onClickDelete }: MenuSelectProps) => {
       <MenuList>
         {onClickEdit && <MenuItem onClick={handleClickEdit}>수정</MenuItem>}
         {onClickDelete && <MenuItem onClick={handleClickDelete}>삭제</MenuItem>}
+        {onClickRegister && state !== 0 && (
+          <MenuItem onClick={handleClickRegister}>등록</MenuItem>
+        )}
+        {onClickRefusal && state !== 1 && (
+          <MenuItem onClick={handleClickRefusal}>거절</MenuItem>
+        )}
+        {onClickAtom && state !== 2 && (
+          <MenuItem onClick={handleClickAtom}>대기</MenuItem>
+        )}
       </MenuList>
     </Menu>
   );
