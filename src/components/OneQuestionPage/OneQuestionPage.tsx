@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { Question, QuestionColumnType } from './OneQuestionPage.data';
+import Question, { QuestionColumnType } from './OneQuestionPage.data';
 import AnswerModal from './_fragments/AnswerModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
@@ -32,6 +32,7 @@ interface ReqLoungeProps {
 
 const rows: DataTableRowType<QuestionColumnType>[] = [
   {
+    id: 1,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -41,6 +42,7 @@ const rows: DataTableRowType<QuestionColumnType>[] = [
     answer: 1,
   },
   {
+    id: 2,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -50,6 +52,7 @@ const rows: DataTableRowType<QuestionColumnType>[] = [
     answer: 0,
   },
   {
+    id: 3,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',

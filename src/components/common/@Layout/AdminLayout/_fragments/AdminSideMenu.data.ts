@@ -52,7 +52,7 @@ export const MenuRouter: MenuType[] = [
     name: '공통 코드',
     iconOn: '/icons/admin/code-on.svg',
     iconOff: '/icons/admin/code-off.svg',
-    path: '/admin',
+    path: '/commonCode',
     alt: 'code',
     subMenus: [
       {
