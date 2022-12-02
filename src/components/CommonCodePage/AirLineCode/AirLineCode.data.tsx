@@ -31,48 +31,48 @@ class AirLineCode {
     {
       key: 'nameKr',
       name: '항공사명 (국문)',
-      width: '15%',
+      width: '10%',
     },
     {
       key: 'nameEng',
       name: '항공사명 (영문)',
-      width: '21.6%',
+      width: '10%',
     },
     {
       key: 'iata',
       name: 'IATA',
-      width: '31.6%',
+      width: '4.1%',
     },
 
     {
       key: 'icao',
       name: 'ICAO',
-      width: '6.6%',
+      width: '4.1%',
     },
     {
       key: 'airportUrl',
       name: '항공사 이미지 URL',
-      width: '6.6%',
+      width: '11.25%',
     },
     {
       key: 'pageUrl',
       name: '홈페이지 URL',
-      width: '6.6%',
+      width: '11.25%',
     },
     {
       key: 'selfUrl',
       name: '셀프체크인 URL',
-      width: '6.6%',
+      width: '11.25%',
     },
     {
       key: 'dutyUrl',
       name: '면세점 URL',
-      width: '6.6%',
+      width: '11.25%',
     },
     {
       key: 'repNum',
       name: '대표번호',
-      width: '6.6%',
+      width: '8.3%',
     },
     {
       key: 'korYn',
@@ -82,7 +82,7 @@ class AirLineCode {
     {
       key: 'answer',
       name: '사용여부',
-      width: '6.6%',
+      width: '5.8%',
     },
   ];
 }

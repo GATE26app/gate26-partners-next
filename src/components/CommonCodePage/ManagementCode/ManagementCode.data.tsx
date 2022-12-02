@@ -19,17 +19,17 @@ class ManageCode {
     {
       key: 'code',
       name: '코드',
-      width: '15%',
+      width: '26.6%',
     },
     {
       key: 'codeValue',
       name: '코드값',
-      width: '21.6%',
+      width: '43.3%',
     },
     {
       key: 'info',
       name: '설명',
-      width: '31.6%',
+      width: '23.3%',
     },
   ];
 }

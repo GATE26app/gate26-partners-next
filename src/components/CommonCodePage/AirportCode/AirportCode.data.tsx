@@ -19,23 +19,23 @@ class AirportCode {
     {
       key: 'name',
       name: '공항명 (국문)',
-      width: '15%',
+      width: '56.6%',
     },
     {
       key: 'code',
       name: '코드',
-      width: '21.6%',
+      width: '11.6%',
     },
     {
       key: 'rounge',
       name: '라운지 위치',
-      width: '31.6%',
+      width: '16.6%',
     },
 
     {
       key: 'answer',
       name: '사용여부',
-      width: '18.3%',
+      width: '8.3%',
     },
   ];
 }
