@@ -66,8 +66,10 @@ const RadioButton = ({
               return (
                 <>
                   <Radio
+                    isChecked={checked ? checked : disabled ? true : value}
                     isDisabled={disabled}
                     size="lg"
+                    onClick={(e) => RadioValue(e)}
                     _disabled={{ border: '5px solid #b8bccb' }}
                     _checked={{ background: '#FF5942' }}
                     _before={{
