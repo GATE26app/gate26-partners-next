@@ -9,23 +9,29 @@ import RoundImage from '@components/common/RoundImage';
 import SmallButton from '@components/common/SmallButton';
 
 export type QuestionColumnType =
+  | 'id'
   | 'type'
   | 'title'
   | 'content'
   | 'thumbnail'
   | 'answerYn'
   | 'answer';
-
+export type ModalQuestionColumnType =
+  | 'type'
+  | 'title'
+  | 'content'
+  | 'thumbnail'
+  | 'email'
+  | 'answerTitle'
+  | 'answerContent';
 class Question {
-  onChange?: (key: string, value: string | number) => void;
+  onClick?: (row: DataTableRowType<QuestionColumnType>) => void;
 
-  constructor(event: (key: string, value: string | number) => void) {
-    if (event) {
-      this.onChange = event;
-    }
+  constructor(onClick: (row: DataTableRowType<QuestionColumnType>) => void) {
+    this.onClick = onClick;
   }
 
-  readonly TIP_COLUMNS: DataTableColumnType<QuestionColumnType>[] = [
+  readonly QUESTION_COL: DataTableColumnType<QuestionColumnType>[] = [
     {
       key: 'type',
       name: '문의유형',
@@ -65,6 +71,7 @@ class Question {
         </Text>
       ),
     },
+
     {
       key: 'answer',
       name: '답변하기',
@@ -73,7 +80,9 @@ class Question {
       render: (value: DataTableRowType<QuestionColumnType>) => (
         <SmallButton
           text={value.answerYn === 1 ? '답변확인' : '답변하기'}
-          color={value.answerYn === 0 ? 'normal' : 'blue'}
+          width="64px"
+          onClick={() => (this.onClick ? this.onClick(value) : undefined)}
+          color={'normal'}
         />
       ),
     },

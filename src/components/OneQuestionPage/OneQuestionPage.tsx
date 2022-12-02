@@ -13,12 +13,13 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { Question, QuestionColumnType } from './OneQuestionPage.data';
+import AnswerModal from './_fragments/AnswerModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface ModalProps {
   isOpen: boolean;
-  type?: 'create' | 'modify';
+  type?: number;
   targetId?: number;
 }
 
@@ -31,6 +32,7 @@ interface ReqLoungeProps {
 
 const rows: DataTableRowType<QuestionColumnType>[] = [
   {
+    id: 1,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -40,6 +42,7 @@ const rows: DataTableRowType<QuestionColumnType>[] = [
     answer: 1,
   },
   {
+    id: 2,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -49,6 +52,7 @@ const rows: DataTableRowType<QuestionColumnType>[] = [
     answer: 0,
   },
   {
+    id: 3,
     type: '문의 유형',
     title: '문의 제목 ',
     content: '문의 내용',
@@ -65,12 +69,16 @@ function QuestionPage() {
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
-  const [modal, setModal] = useState<ModalProps>({ isOpen: false });
-  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
-  const dispatch = useDispatch();
-  const { openCustomModal } = useCustomModalHandlerContext();
 
-  const communityTip = new Question(handleChangeInput);
+  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
+  function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
+    setListModal({
+      isOpen: true,
+      type: row.answerYn as number,
+      targetId: row.id as number,
+    });
+  }
+  const oneQuestion = new Question(handleClickListBtn);
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
@@ -81,7 +89,7 @@ function QuestionPage() {
     setRequest(newRequest);
   }
 
-  const handleCloseModal = () => setModal({ isOpen: false });
+  const handleCloseModal = () => setListModal({ isOpen: false });
 
   return (
     <>
@@ -121,7 +129,7 @@ function QuestionPage() {
           }}
         />
         <DataTable
-          columns={communityTip.TIP_COLUMNS}
+          columns={oneQuestion.QUESTION_COL}
           rows={rows}
           paginationProps={{
             currentPage: request.page,
@@ -136,6 +144,13 @@ function QuestionPage() {
           }}
         />
       </Flex>
+      <AnswerModal
+        isOpen={listModal.isOpen}
+        type={listModal.type}
+        targetId={listModal.targetId}
+        onClose={handleCloseModal}
+        onComplete={() => console.log('데이터 생성 후 처리')}
+      />
     </>
   );
 }
