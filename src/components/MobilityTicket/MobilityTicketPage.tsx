@@ -15,6 +15,7 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { Tiket, TiketCol } from './MobilityTicketPage.data';
+import MobilityTiketModal from './_fragments/MobilityTicketModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -107,6 +108,7 @@ const MobilityTicketPage = () => {
     }
     setModal({ isOpen: true, type: 'refusal', targetId: row.id as number });
   };
+  const handleCloseModal = () => setModal({ isOpen: false });
   return (
     <>
       <Head>
@@ -161,6 +163,13 @@ const MobilityTicketPage = () => {
             onNextPageClicked: (page: number) =>
               handleChangeInput('page', page),
           }}
+        />
+        <MobilityTiketModal
+          isOpen={modal.isOpen}
+          type={modal.type}
+          targetId={modal.targetId}
+          onClose={handleCloseModal}
+          onComplete={() => console.log('데이터 생성 후 처리')}
         />
       </Flex>
     </>

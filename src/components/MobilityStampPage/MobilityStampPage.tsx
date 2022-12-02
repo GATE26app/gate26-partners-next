@@ -13,6 +13,7 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { Stamp, StampCol } from './MobilityStamp.data';
+import MobilityStampModal from './_fragments/MobilityStampModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -72,7 +73,7 @@ const MobilityStamp = () => {
     }
     setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
   };
-
+  const handleCloseModal = () => setModal({ isOpen: false });
   const dispatch = useDispatch();
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
@@ -158,6 +159,13 @@ const MobilityStamp = () => {
           }}
         />
       </Flex>
+      <MobilityStampModal
+        isOpen={modal.isOpen}
+        type={modal.type}
+        targetId={modal.targetId}
+        onClose={handleCloseModal}
+        onComplete={() => console.log('데이터 생성 후 처리')}
+      />
     </>
   );
 };
