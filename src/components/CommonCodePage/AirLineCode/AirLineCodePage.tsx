@@ -13,7 +13,7 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { AirLineCode, AirLineCol } from './AirLineCode.data';
-import AirLineCodeModal from './_fragments/AirportCodeModal';
+import AirLineCodeModal from './_fragments/AirLineCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
