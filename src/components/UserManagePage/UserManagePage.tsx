@@ -1,9 +1,13 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
+
+import memberManageApi, {
+  MemberManageApi,
+} from '@apis/membermanage/MemberManage';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -31,48 +35,51 @@ interface ModalProps {
   type?: ModalType;
   targetId?: number;
 }
-const rows: DataTableRowType<UserManageColumnType>[] = [
-  {
-    id: 1,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
-  },
-  {
-    id: 2,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: false,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
-  },
-  {
-    id: 3,
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    status: true,
-    withdrawalAt: '2022-10-20',
-    withdrawalStatus: false,
-    reportAccrue: 1,
-    mileage: 100,
-    airlineTicket: 20,
-    stampery: 10,
-  },
-];
+
+// const rows: DataTableRowType<UserManageColumnType>[] = [
+//   {
+//     id: 1,
+//     name: '김이륙',
+//     email: 'gate26@toktokhan.dev',
+//     status: true,
+//     withdrawalAt: '2022-10-20',
+//     withdrawalStatus: false,
+//     reportAccrue: 1,
+//     mileage: 100,
+//     airlineTicket: 20,
+//     stampery: 10,
+//   },
+//   {
+//     id: 2,
+//     name: '김이륙',
+//     email: 'gate26@toktokhan.dev',
+//     status: false,
+//     withdrawalAt: '2022-10-20',
+//     withdrawalStatus: false,
+//     reportAccrue: 1,
+//     mileage: 100,
+//     airlineTicket: 20,
+//     stampery: 10,
+//   },
+//   {
+//     id: 3,
+//     name: '김이륙',
+//     email: 'gate26@toktokhan.dev',
+//     status: true,
+//     withdrawalAt: '2022-10-20',
+//     withdrawalStatus: false,
+//     reportAccrue: 1,
+//     mileage: 100,
+//     airlineTicket: 20,
+//     stampery: 10,
+//   },
+// ];
 
 function UserManagePage() {
+  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
+  // 페이지 세팅
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
@@ -85,18 +92,58 @@ function UserManagePage() {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') newRequest.page = 1;
-
+    console.log(`page ${newRequest.page}`);
     setRequest(newRequest);
+    getMemberInfoPagin(newRequest.page);
   }
   function handleClickListBtn(
     row: DataTableRowType<UserManageColumnType>,
     type: ModalType,
   ) {
-    setListModal({ isOpen: true, targetId: row.id as number, type });
+    setListModal({ isOpen: true, targetId: row.userId as number, type });
   }
   function handleListModalClose() {
     setListModal({ isOpen: false, targetId: undefined, type: undefined });
   }
+
+  const getMemberInfo = useCallback(() => {
+    let params = { page: request.page, size: request.limit };
+    if (request.page !== 0) {
+      params = { page: request.page, size: request.limit * request.page };
+    }
+    console.log(request.page);
+
+    memberManageApi.getMemberInfo(params).then((response) => {
+      const { success, data, message } = response;
+
+      if (data) {
+        setRows(data.content);
+        console.log(data);
+      }
+    });
+  }, []);
+
+  const getMemberInfoPagin = useCallback((page: number) => {
+    let params = { page: request.page, size: request.limit };
+    if (page !== 0) {
+      params = { page: page, size: request.limit * page };
+    }
+    console.log(request.page);
+
+    memberManageApi.getMemberInfo(params).then((response) => {
+      const { success, data, message } = response;
+
+      if (data) {
+        setRows(data.content);
+        console.log(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getMemberInfo();
+  }, []);
+
   return (
     <>
       <Head>
@@ -152,17 +199,17 @@ function UserManagePage() {
       </Flex>
       <RetainedMileageModal
         targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'mileage'}
+        isOpen={listModal.isOpen && listModal.type === 'totalMileage'}
         onClose={handleListModalClose}
       />
       <AirlineTicketModal
         targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'airlineTicket'}
+        isOpen={listModal.isOpen && listModal.type === 'ticketAuthCount'}
         onClose={handleListModalClose}
       />
       <StamperyDialog
         targetId={listModal.targetId}
-        isOpen={listModal.isOpen && listModal.type === 'stampery'}
+        isOpen={listModal.isOpen && listModal.type === 'stampCount'}
         onClose={handleListModalClose}
       />
     </>
