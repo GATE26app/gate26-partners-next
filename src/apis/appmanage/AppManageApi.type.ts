@@ -12,7 +12,7 @@ export type AppVersionInfoDTOType = {
 export type DefaultDTOType = {
   code?: string;
   data?: string;
-  message?: StringLocale;
+  message?: string;
   count?: number;
   success: boolean;
 };
@@ -20,7 +20,7 @@ export type DefaultDTOType = {
 export type AppVersionInfoDTO = {
   code?: string;
   data?: AppVesionInfo;
-  message?: StringLocale;
+  message?: string;
   count?: number;
   success: boolean;
 };
