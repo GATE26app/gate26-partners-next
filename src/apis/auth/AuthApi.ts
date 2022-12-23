@@ -10,7 +10,7 @@ export class AuthApi {
     if (axios) this.axios = axios;
   }
 
-  // 앱 버전 추가하기
+  // 로그인
   postLogin = async (body: LoginDTOType): Promise<LoginDTO> => {
     const { data } = await this.axios({
       method: 'POST',
