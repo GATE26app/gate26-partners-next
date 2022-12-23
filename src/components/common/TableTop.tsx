@@ -53,7 +53,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </EmphasisText>
         <CustomSelect
           width={'110px'}
-          size={'xs'}
+          size="sm"
           items={[
             { value: 10, label: '10개씩 보기' },
             { value: 25, label: '25개씩 보기' },

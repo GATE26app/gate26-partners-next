@@ -56,7 +56,7 @@ class UserManageColumns {
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <CustomSelect
           width={'65px'}
-          size={'xs'}
+          size="sm"
           items={[
             { value: 1, label: '활성' },
             { value: 0, label: '비활성' },
