@@ -27,12 +27,16 @@ const variantSimple: StyleObjectOrFn = (props) => {
       backgroundColor: 'white',
       borderRadius: '5px',
     },
+    thead: {
+      tr: {
+        height: '50px',
+      },
+    },
     th: {
       position: 'relative',
       color: 'gray.500',
       borderBottom: '1px',
       borderColor: `${c}.300`,
-      fontFamily: 'Pretendard',
       fontStyle: 'normal',
       fontWeight: 700,
       fontSize: '12px',
@@ -45,7 +49,6 @@ const variantSimple: StyleObjectOrFn = (props) => {
       borderBottom: '1px',
       borderColor: `${c}.300`,
       color: 'black',
-      fontFamily: 'Pretendard',
       fontStyle: 'normal',
       fontWeight: 400,
       fontSize: '12px',
@@ -53,6 +56,9 @@ const variantSimple: StyleObjectOrFn = (props) => {
       letterSpacing: '-0.02em',
       textAlign: 'center',
       ...numericStyles,
+    },
+    tr: {
+      height: '70px',
     },
     caption: {
       color: 'gray.600',
@@ -68,6 +74,20 @@ const variantSimple: StyleObjectOrFn = (props) => {
   };
 };
 
+const variantGray: StyleObjectOrFn = (props) => {
+  const simple = variantSimple(props);
+
+  return {
+    ...simple,
+    thead: {
+      tr: {
+        height: '50px',
+        backgroundColor: 'gray.50',
+      },
+    },
+  };
+};
+
 export const Table: ChakraMultiPartComponentType<typeof parts> = {
   parts,
   baseStyle: {},
@@ -75,5 +95,6 @@ export const Table: ChakraMultiPartComponentType<typeof parts> = {
   sizes: {},
   variants: {
     simple: variantSimple,
+    gray: variantGray,
   },
 };

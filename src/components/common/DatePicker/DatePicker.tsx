@@ -11,6 +11,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { formatDate } from '@utils/format';
+
 import { PickerGrid } from './_fragments/DatePicker.style';
 import DateTimePicker from './_fragments/DateTimePicker';
 import Picker from './_fragments/Picker';
@@ -26,13 +28,20 @@ interface CalendarProps {
   curDate: dayjs.Dayjs;
   width?: string;
   onApply?: (val: dayjs.Dayjs) => void;
+  disabled?: boolean;
 }
 
-const DatePicker = ({ type, curDate, width, onApply }: CalendarProps) => {
+const DatePicker = ({
+  type,
+  curDate,
+  width,
+  onApply,
+  disabled,
+}: CalendarProps) => {
   const originDate = curDate?.clone();
   const [date, setDate] = useState<dayjs.Dayjs>(curDate);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const initRef: RefObject<{ focus(): void }> = useRef(null);
+  const initRef = useRef(null);
 
   const handleDayClick = (current: dayjs.Dayjs) => {
     setDate(current);
@@ -49,25 +58,18 @@ const DatePicker = ({ type, curDate, width, onApply }: CalendarProps) => {
     }
   };
 
-  const parseDate = (date: dayjs.Dayjs) => {
-    const yyyymmdd = date?.format('YYYY-MM-DD');
-    const ampm = date?.format('a');
-    const hhmm = date?.format('HH:mm');
-
-    return [yyyymmdd, ampm === 'am' ? '오전' : '오후', hhmm].join(' ');
-  };
   return (
     <>
       <Popover
         initialFocusRef={initRef}
-        isOpen={isOpen}
+        isOpen={!disabled && isOpen}
         onOpen={onOpen}
         onClose={onClose}
         closeOnBlur={false}
       >
         <PopoverTrigger>
           <Box w={width}>
-            <PickerInput text={parseDate(date)} />
+            <PickerInput disabled={disabled} text={formatDate(date)} />
           </Box>
         </PopoverTrigger>
         <PopoverContent bg={'white'} w={'100%'} maxH={'430px'}>

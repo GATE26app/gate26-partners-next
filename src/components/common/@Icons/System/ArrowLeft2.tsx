@@ -4,9 +4,9 @@ const ArrowLeft2Icon = ({ ...props }: IconProps) => {
   return (
     <Icon viewBox="0 0 24 24" fill="none" {...props}>
       <path
-        d="M15.523 18.878L8.5 11.9297L15.523 5.50006"
+        d="M 14.382 16.7046 L 9.64099 12.0146 L 14.382 7.67383"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

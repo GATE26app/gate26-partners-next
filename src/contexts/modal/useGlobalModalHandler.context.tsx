@@ -26,7 +26,7 @@ export function withGlobalModalHandlerContext<T extends Function>(
   return function WrappedComponent(props: Parameter<T>) {
     return (
       <GlobalModalHandlerProvider>
-        <Component {...props} />
+        <Component {...(typeof props === 'object' ? props : {})} />
       </GlobalModalHandlerProvider>
     );
   };

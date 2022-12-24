@@ -1,7 +1,3 @@
-import withAdminLayout from '@components/common/@Layout/AdminLayout';
+import AdminAccountPage from '@components/AdminAccountPage';
 
-function AccountManagement({ Component, pageProps }: any) {
-  return <div>어드민 : 관리자관리</div>;
-}
-
-export default withAdminLayout(AccountManagement);
+export default AdminAccountPage;

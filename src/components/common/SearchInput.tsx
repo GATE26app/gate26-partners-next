@@ -1,4 +1,6 @@
-import { Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { InputGroup, InputProps, InputRightElement } from '@chakra-ui/react';
+
+import InputBox from '@components/common/Input';
 
 import { Light } from '@theme/foundations/colors';
 
@@ -9,12 +11,14 @@ interface SearchInputProps {
   text: string;
   onChange: (text: string) => void;
   onSearch: () => void;
+  InputProps?: InputProps;
 }
 const SearchInput = ({
   placeholder,
   text,
   onChange,
   onSearch,
+  InputProps,
 }: SearchInputProps) => {
   const handleChangeInput = (e: { target: { value: string } }) => {
     if (onChange) {
@@ -23,13 +27,13 @@ const SearchInput = ({
   };
   return (
     <InputGroup w={'315px'} h={'40px'}>
-      <Input
+      <InputBox
         h={'100%'}
-        variant={'outline'}
-        placeholder={placeholder ? placeholder : ''}
+        placeholder={placeholder || ''}
         onChange={handleChangeInput}
         value={text}
         autoComplete="off"
+        {...InputProps}
       />
       <InputRightElement h={'100%'} onClick={onSearch}>
         <SearchIcon strokeColor={Light.gray[500]} />

@@ -101,6 +101,7 @@ const SideMenu = styled(Flex)`
   &.admin-sidemenu {
     padding: 15px;
     width: 200px;
+    min-width: 200px;
     height: 100vh;
     background-color: #ffffff;
     border-right: 1px solid #e5e7ec;
@@ -140,7 +141,7 @@ const SideMenu = styled(Flex)`
       font-size: 12px;
       line-height: 18px;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       letter-spacing: -0.02em;
       color: #b8bcc8;
       &.active {

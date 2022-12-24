@@ -5,14 +5,20 @@ import IconButton from './IconButton';
 interface PageTitleProps {
   title: string;
   isDownload?: boolean;
-  onClickDownload: () => void;
+  noMargin?: boolean;
+  onClickDownload?: () => void;
 }
-const PageTitle = ({ title, isDownload, onClickDownload }: PageTitleProps) => {
+const PageTitle = ({
+  title,
+  isDownload,
+  noMargin,
+  onClickDownload,
+}: PageTitleProps) => {
   return (
     <Flex
       justifyContent={'space-between'}
       alignItems={'center'}
-      marginBottom={'30px'}
+      marginBottom={noMargin ? '0' : '30px'}
     >
       <Text
         fontSize="26px"
@@ -27,9 +33,8 @@ const PageTitle = ({ title, isDownload, onClickDownload }: PageTitleProps) => {
       {isDownload && (
         <IconButton
           type="download"
-          size="md"
+          size="sm"
           width="120px"
-          height="40px"
           text="내보내기"
           onClick={onClickDownload}
         />

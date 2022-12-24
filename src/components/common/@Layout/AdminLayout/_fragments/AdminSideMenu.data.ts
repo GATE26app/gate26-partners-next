@@ -32,7 +32,7 @@ export const MenuRouter: MenuType[] = [
     ],
   },
   {
-    name: '어드민',
+    name: '관리자',
     iconOn: '/icons/admin/admin-on.svg',
     iconOff: '/icons/admin/admin-off.svg',
     path: '/admin',
@@ -52,20 +52,20 @@ export const MenuRouter: MenuType[] = [
     name: '공통 코드',
     iconOn: '/icons/admin/code-on.svg',
     iconOff: '/icons/admin/code-off.svg',
-    path: '/code',
+    path: '/commonCode',
     alt: 'code',
     subMenus: [
       {
         name: '코드 관리',
-        path: '/code/manage',
+        path: '/commonCode/managementCode',
       },
       {
         name: '항공사 코드',
-        path: '/code/airline',
+        path: '/commonCode/airLineCode',
       },
       {
         name: '공항 코드',
-        path: '/code/airport',
+        path: '/commonCode/airportCode',
       },
     ],
   },
@@ -122,12 +122,12 @@ export const MenuRouter: MenuType[] = [
     name: '푸쉬알림 관리',
     iconOn: '/icons/admin/alarm-on.svg',
     iconOff: '/icons/admin/alarm-off.svg',
-    path: '/alarm',
-    alt: 'alarm',
+    path: '/push',
+    alt: 'push',
     subMenus: [
       {
         name: '푸쉬 알림 관리',
-        path: '/alarm/manage',
+        path: '/push/manage',
       },
     ],
   },

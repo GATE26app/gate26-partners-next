@@ -7,7 +7,8 @@ export interface SmallButton {
   height?: string;
   text: string;
   onClick?: () => void;
-  color: 'blue' | 'normal';
+  color: 'blue' | 'normal' | 'file';
+  label?: string;
 }
 
 const SmallButton = ({
@@ -16,6 +17,7 @@ const SmallButton = ({
   text,
   color,
   onClick,
+  label,
 }: SmallButton) => {
   return (
     <SamllButotnStyle
@@ -25,23 +27,33 @@ const SmallButton = ({
       onClick={onClick}
     >
       <Flex alignItems="center" justifyContent="center">
-        <div>{text}</div>
+        <label htmlFor={label}>
+          <div>{text}</div>
+        </label>
       </Flex>
     </SamllButotnStyle>
   );
 };
 
 interface ButtonOption {
-  buttonColor?: 'normal' | 'blue';
+  buttonColor?: 'normal' | 'blue' | 'file';
 }
 const SamllButotnStyle = styled(ChakraButton)<ButtonOption>`
   & {
     padding: 0px 5px;
     background-color: #ffffff;
     border: ${({ buttonColor }) =>
-      buttonColor === 'normal' ? '1px solid #E5E7EC' : '1px solid #CBDFFF'};
+      buttonColor === 'normal'
+        ? '1px solid #E5E7EC'
+        : buttonColor === 'file'
+        ? '1px solid #E5E7EC'
+        : '1px solid #CBDFFF'};
     color: ${({ buttonColor }) =>
-      buttonColor === 'normal' ? '#1A1A1A' : '#3479EA'};
+      buttonColor === 'normal'
+        ? '#1A1A1A'
+        : buttonColor === 'file'
+        ? '#4a4d55'
+        : '#3479EA'};
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
