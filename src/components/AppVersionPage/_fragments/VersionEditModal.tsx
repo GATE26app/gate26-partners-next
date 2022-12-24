@@ -14,6 +14,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import appManageApi, { AppManageApi } from '@apis/appmanage/AppManageApi';
+
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
@@ -52,6 +54,22 @@ const VersionEditModal = ({
     releaseStatus: '',
   });
 
+  onComplete = () => {
+    const body = {
+      deviceType: request.os,
+      majorVersion: request.majorVer,
+      minorVersion: request.minorVer,
+      patchVersion: request.patchVer,
+      descText: request.releaseContent,
+      versionStatus: request.releaseStatus,
+    };
+
+    appManageApi.postAppVersion(body).then((response) => {
+      const { data, success } = response;
+
+      console.log(`data>> ${data}`);
+    });
+  };
   const handleCreate = () => {
     if (onComplete) onComplete();
   };

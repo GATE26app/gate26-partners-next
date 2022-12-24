@@ -1,3 +1,3 @@
-import oneQuestionList from './OneQuestionPage';
+import OneQuestionPage from './OneQuestionPage';
 
-export default oneQuestionList;
+export default OneQuestionPage;

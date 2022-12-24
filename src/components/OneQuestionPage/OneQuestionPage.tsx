@@ -12,7 +12,7 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
-import { Question, QuestionColumnType } from './OneQuestionPage.data';
+import Question, { QuestionColumnType } from './OneQuestionPage.data';
 import AnswerModal from './_fragments/AnswerModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';

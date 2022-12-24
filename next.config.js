@@ -1,5 +1,6 @@
 module.exports = {
   poweredByHeader: false,
+  ignoreBuildErrors: true,
   eslint: {
     ignoreDuringBuilds: true,
   },

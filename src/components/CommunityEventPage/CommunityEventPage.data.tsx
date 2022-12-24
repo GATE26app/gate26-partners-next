@@ -113,7 +113,7 @@ class CommunityEvent {
       render: (value: DataTableRowType<EventColumnType>) => (
         <CustomSelect
           width={'65px'}
-          size={'xs'}
+          size="sm"
           items={[
             { value: 1, label: '1' },
             { value: 2, label: '2' },
