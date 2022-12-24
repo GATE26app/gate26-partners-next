@@ -11,7 +11,7 @@ import styledConsole from '@utils/styledConsole';
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: CONFIG.API_BASE_URL,
+  baseURL: isDev ? 'http://43.201.68.143:40003' : CONFIG.API_BASE_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
