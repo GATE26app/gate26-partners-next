@@ -1,5 +1,7 @@
-import { Flex, Image } from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react';
+import { useRef } from 'react';
+
+import { Flex, Image, Text } from '@chakra-ui/react';
+import { useDisclosure, useOutsideClick } from '@chakra-ui/react';
 
 import ArrowDownIcon from '@components/common/@Icons/Admin/ArrowDown';
 
@@ -7,8 +9,12 @@ import styled from '@emotion/styled';
 
 const AdminHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const ref = useRef<HTMLDivElement>(null);
 
-  //   const cssByVariant = HOME_HEADER_VARIANTS[variant];
+  useOutsideClick({
+    ref,
+    handler: onClose,
+  });
 
   return (
     <Header
@@ -24,10 +30,23 @@ const AdminHeader = () => {
         h="30px"
         cursor="pointer"
       />
-      <div className="admin-header-profile">
+      <div className="admin-header-profile" onClick={onOpen}>
         <Image src="/images/header/profile.png" w="30px" h="30px" />
         <div className="profile-name">GATE26 님</div>
-        <ArrowDownIcon />
+        <ArrowDownIcon
+          color="white"
+          style={{
+            transform: isOpen ? 'rotate(180deg)' : '',
+          }}
+          // transform={isOpen ? 'rotate(180deg)' : null}
+        />
+        {isOpen && (
+          <div className="admin-menu" id="adminMenu" ref={ref}>
+            <Text textStyle="textSm" color="primary.500">
+              로그아웃
+            </Text>
+          </div>
+        )}
       </div>
     </Header>
   );
@@ -40,8 +59,23 @@ const Header = styled(Flex)`
     .admin-header-profile {
       display: flex;
       align-items: center;
+      cursor: pointer;
+      position: relative;
       > img {
         margin-right: 8px;
+      }
+      .admin-menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100px;
+        height: 40px;
+        background-color: #ffffff;
+        box-shadow: 0px 0px 10px rgba(26, 26, 26, 0.1);
+        border-radius: 5px;
+        top: 40px;
+        right: 0;
       }
       .profile-name {
         font-family: 'Pretendard';
