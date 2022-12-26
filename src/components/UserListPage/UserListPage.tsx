@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
@@ -11,76 +11,67 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { UserColumnType, UserColumns } from './UserListPage.data';
+import UserListApi from '@apis/userList/UserListApi';
 
 interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
   page: number;
-  limit: number;
+  size: number;
 }
 
-const rows: DataTableRowType<UserColumnType>[] = [
-  {
-    id: 1,
-    profile:
-      'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    name: '김이륙',
-    nickname: '게이트이륙',
-    enName: 'Gate26',
-    gender: '여',
-    email: 'gate26@toktokhan.dev',
-    phoneNumber: '010-1234-5678',
-    birthday: '2002-01-02',
-    signupPath: '이메일',
-    createdAt: '2002-01-02',
-    lastedAt: '2002-01-02',
-  },
-  {
-    id: 2,
-    profile:
-      'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    name: '김이륙',
-    nickname: '게이트이륙',
-    enName: 'Gate26',
-    gender: '여',
-    email: 'gate26@toktokhan.dev',
-    phoneNumber: '010-1234-5678',
-    birthday: '2002-01-02',
-    signupPath: '이메일',
-    createdAt: '2002-01-02',
-    lastedAt: '2002-01-02',
-  },
-  {
-    id: 3,
-    profile:
-      'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    name: '김이륙',
-    nickname: '게이트이륙',
-    enName: 'Gate26',
-    gender: '여',
-    email: 'gate26@toktokhan.dev',
-    phoneNumber: '010-1234-5678',
-    birthday: '2002-01-02',
-    signupPath: '이메일',
-    createdAt: '2002-01-02',
-    lastedAt: '2002-01-02',
-  },
-];
+// let rows: DataTableRowType<UserColumnType>[] = [];
 
 function UserListPage() {
+  let pageNumber = 0;
+  let pageSize = 3;
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+    page: 0,
+    size: 10,
   });
+
+  const [rows, setDataTableRow] = useState<DataTableRowType<UserColumnType>[]>([]);
+
   const [total, setTotal] = useState<number>(100);
 
   const userColumns = new UserColumns(handleChangeInput);
 
+  useEffect(() => {
+    getUserInfoList({pageNumber, pageSize});
+  }, []);
+
+  const getUserInfoList = useCallback((params) => {
+    const pageRequest = { page: params['pageNumber'], size: params['pageSize'] };
+    setRequest(pageRequest);
+    UserListApi.getUserList(pageRequest)
+      .then((response) => {
+        const { data, count, success } = response;
+        let listData: DataTableRowType<UserColumnType>[] = [];
+        if (success) {
+          data?.content.forEach((element) => {
+            listData.push(element);
+          });
+          setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
+        } else {
+          listData = [];
+          console.log('이용자 > 회원 목록 리스트 호출 실패');
+        }
+        setDataTableRow(listData);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
-
+    if (key === 'page') {
+      pageNumber = newRequest.page;
+    }
+    if (key === 'limit') {
+      newRequest.page = 0; // 0으로 초기화
+      pageSize = newRequest.size;
+    }
     setRequest(newRequest);
+    getUserInfoList({pageNumber, pageSize}); // 페이징 요청
   }
 
   return (
@@ -125,7 +116,7 @@ function UserListPage() {
           rows={rows}
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
