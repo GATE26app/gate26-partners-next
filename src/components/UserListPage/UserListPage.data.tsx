@@ -51,8 +51,8 @@ class UserColumns {
       name: '이름',
       width: '6.67%',
       render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.name as string)
-      }
+        return crypto.decrypt(value.name as string);
+      },
     },
     {
       key: 'nickName',
@@ -64,20 +64,22 @@ class UserColumns {
       name: '영문명',
       width: '10%',
       render: (value: DataTableRowType<UserColumnType>) => {
-        let lastName = "";
-        let firstName = "";
-        if(value.enLastName != undefined) lastName = value.enLastName as string;
-        if(value.enFirstName != undefined) firstName = value.enFirstName as string;
-        return lastName + " " + firstName;
-      }
+        let lastName = '';
+        let firstName = '';
+        if (value.enLastName != undefined)
+          lastName = value.enLastName as string;
+        if (value.enFirstName != undefined)
+          firstName = value.enFirstName as string;
+        return lastName + ' ' + firstName;
+      },
     },
     {
       key: 'gender',
       name: '성별',
       width: '4.17%',
       render: (value: DataTableRowType<UserColumnType>) => {
-        return value.gender === 'F'? '여' : '남';
-      }
+        return value.gender === 'F' ? '여' : '남';
+      },
     },
     {
       key: 'emailAddress',
@@ -89,16 +91,16 @@ class UserColumns {
       name: '핸드폰 번호',
       width: '10%',
       render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.phone as string)
-      }
+        return crypto.decrypt(value.phone as string);
+      },
     },
     {
       key: 'birthDate',
       name: '생년월일',
       width: '8.33%',
       render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.birthDate as string)
-      }
+        return crypto.decrypt(value.birthDate as string);
+      },
     },
     {
       key: 'signupPath',

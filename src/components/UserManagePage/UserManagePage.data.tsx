@@ -6,6 +6,8 @@ import {
   DataTableRowType,
 } from '@components/common/DataTable';
 
+import { crypto } from '@utils/crypto';
+
 export type UserManageColumnType =
   | 'userId'
   | 'userName'
@@ -43,6 +45,9 @@ class UserManageColumns {
       key: 'userName',
       name: '이름',
       width: '11.67%',
+      render: (value: DataTableRowType<UserManageColumnType>) => {
+        return crypto.decrypt(value.userName as string);
+      },
     },
     {
       key: 'emailAddress',

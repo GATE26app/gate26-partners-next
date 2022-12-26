@@ -78,7 +78,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </Text>
         <CustomSelect
           width={'100px'}
-          size={'xs'}
+          size="sm"
           items={searchTypes}
           onChange={(value) => onChangeSearchType(value as number)}
         />
