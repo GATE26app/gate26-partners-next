@@ -87,7 +87,6 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    //데이터 초기화
     rows = [];
 
     let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
@@ -107,7 +106,6 @@ function QuestionPage() {
           console.log('1:1문의 불러오기 성공');
           setTotal(data?.totalElements);
           const codeList: any = data?.content;
-          rows = [];
           codeList.forEach((element: any, idx: number) => {
             console.log(element?.inquireImageUrl?.first);
             rows.push({
@@ -140,14 +138,14 @@ function QuestionPage() {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') {
-      newRequest.page = 1;
+      newRequest.page = 0;
     }
     console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
   useEffect(() => {
-    //페이징 카운트 변경 시 재조회
+    //페이징 카운트 & 조회 조건 변경 시 재조회
     loadData();
   }, [request, type]);
 
