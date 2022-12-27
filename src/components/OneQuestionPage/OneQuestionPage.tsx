@@ -172,6 +172,7 @@ function QuestionPage() {
     excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
     excel?.writeFile(wb, '문의목록.xlsx');
   };
+
   return (
     <>
       <Head>
