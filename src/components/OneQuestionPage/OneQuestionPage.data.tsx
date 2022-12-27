@@ -53,11 +53,17 @@ class Question {
       width: '12.71%',
       align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
-        <RoundImage
-          src={value.thumbnail as string}
-          width={'98px'}
-          height="100px"
-        />
+        <>
+          {value.thumbnail === undefined ? (
+            '없음'
+          ) : (
+            <RoundImage
+              src={value.thumbnail as string}
+              width={'98px'}
+              height="100px"
+            />
+          )}
+        </>
       ),
     },
     {

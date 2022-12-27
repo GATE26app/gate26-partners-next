@@ -67,6 +67,10 @@ function QuestionPage() {
           console.log(data);
           const typeList: any = [];
           const codeList: any = data?.content;
+          typeList.push({
+            label: '전체',
+            value: undefined,
+          });
           codeList.forEach((element: any) => {
             typeList.push({
               label: element?.codeValue,
@@ -83,11 +87,14 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
+    //데이터 초기화
+    rows = [];
+
     let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
     if (type == undefined && keyword !== '') {
       urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
     } else if (type !== undefined && keyword === '') {
-      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&type=${type}`;
+      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&inquireType=${type}`;
     }
 
     OneQuestionApi.getInquiryList(urlStr)
@@ -102,6 +109,7 @@ function QuestionPage() {
           const codeList: any = data?.content;
           rows = [];
           codeList.forEach((element: any, idx: number) => {
+            console.log(element?.inquireImageUrl?.first);
             rows.push({
               id: idx,
               type: element?.inquireType,
@@ -136,8 +144,12 @@ function QuestionPage() {
     }
     console.log('변경: ', key, value);
     setRequest(newRequest);
-    loadData();
   }
+
+  useEffect(() => {
+    //페이징 카운트 변경 시 재조회
+    loadData();
+  }, [request, type]);
 
   const handleCloseModal = () => setListModal({ isOpen: false });
 
