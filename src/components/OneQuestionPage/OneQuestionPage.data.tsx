@@ -14,7 +14,7 @@ export type QuestionColumnType =
   | 'title'
   | 'content'
   | 'thumbnail'
-  | 'answerYn'
+  | 'isReplyDone'
   | 'answer';
 export type ModalQuestionColumnType =
   | 'type'
@@ -61,13 +61,13 @@ class Question {
       ),
     },
     {
-      key: 'answerYn',
+      key: 'isReplyDone',
       name: '답변여부',
       width: '8.47%',
       align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
-        <Text color={value.answer === 0 ? 'warning.500' : 'success.500'}>
-          {value.answer === 1 ? '답변완료' : '답변대기'}
+        <Text color={value.isReplyDone === 'F' ? 'warning.500' : 'success.500'}>
+          {value.isReplyDone === 'T' ? '답변완료' : '답변대기'}
         </Text>
       ),
     },
@@ -79,7 +79,7 @@ class Question {
       align: 'center',
       render: (value: DataTableRowType<QuestionColumnType>) => (
         <SmallButton
-          text={value.answerYn === 1 ? '답변확인' : '답변하기'}
+          text={value.isReplyDone === 'T' ? '답변확인' : '답변하기'}
           width="64px"
           onClick={() => (this.onClick ? this.onClick(value) : undefined)}
           color={'normal'}
