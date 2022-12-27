@@ -48,7 +48,7 @@ function QuestionPage() {
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const [type, setType] = useState<number>();
+  const [type, setType] = useState<string>();
 
   const [inquiryTypeList, setInquiryTypeList] = useState<any>([
     {
@@ -88,8 +88,6 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    rows = [];
-
     let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
     if (type == undefined && keyword !== '') {
       urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
@@ -198,7 +196,7 @@ function QuestionPage() {
             searchTypes: inquiryTypeList,
             keyword: keyword,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
+            onChangeSearchType: (type: string) => {
               setType(type);
             },
             onChangeKeyword: (keyword: string) => {
