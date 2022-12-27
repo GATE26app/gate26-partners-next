@@ -65,7 +65,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         {createButton && (
           <IconButton
             type={'add'}
-            size={'xs'}
+            size="sm"
             width={buttonWidth ? buttonWidth : undefined}
             text={buttonTitle ? buttonTitle : ''}
             onClick={onClickCreate}

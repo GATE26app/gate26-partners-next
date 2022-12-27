@@ -73,7 +73,7 @@ const QuestionModal = ({
             color="gray.700"
             content={
               <Text color={'gray.700'} fontSize={'15px'}>
-                문의 유형
+                항공/공항 정보
               </Text>
             }
           />
@@ -82,7 +82,7 @@ const QuestionModal = ({
             color="gray.700"
             content={
               <Text color={'gray.700'} fontSize={'15px'}>
-                문의 제목
+                Test
               </Text>
             }
           />
@@ -91,7 +91,7 @@ const QuestionModal = ({
             color="gray.700"
             content={
               <Text color={'gray.700'} fontSize={'15px'}>
-                문의 내용
+                Testtesttesttest
               </Text>
             }
           />
@@ -113,7 +113,7 @@ const QuestionModal = ({
           title="이메일"
           content={
             <InputBox
-              placeholder="gate26@toktokhan.dev"
+              placeholder="gate26@asianaidt.com"
               defaultValue={request.email}
               onChange={(e) => handleChangeInput('email', e.target.value)}
             />
