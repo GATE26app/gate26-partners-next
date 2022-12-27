@@ -4,7 +4,7 @@ import instance from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { ResponseDTOType, PagingDTOType } from './UserListApi.type';
+import { ResponseDTOType, RequestDTOType } from './UserListApi.type';
 
 export class UserListApi {
   axios: AxiosInstance = instance;
@@ -14,7 +14,7 @@ export class UserListApi {
 
   // 회원 목록 조회하기
   getUserList = async (
-    params?: PagingDTOType,
+    params?: RequestDTOType,
   ): Promise<ResponseDTOType> => {
     const { data } = await this.axios({
       method: 'GET',

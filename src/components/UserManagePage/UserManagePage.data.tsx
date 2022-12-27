@@ -10,7 +10,7 @@ import { crypto } from '@utils/crypto';
 
 export type UserManageColumnType =
   | 'userId'
-  | 'userName'
+  | 'name'
   | 'emailAddress'
   | 'activeUser'
   | 'leaveDate'
@@ -42,11 +42,11 @@ class UserManageColumns {
 
   readonly LIST_COLUMNS: DataTableColumnType<UserManageColumnType>[] = [
     {
-      key: 'userName',
+      key: 'name',
       name: '이름',
       width: '11.67%',
       render: (value: DataTableRowType<UserManageColumnType>) => {
-        return crypto.decrypt(value.userName as string);
+        return crypto.decrypt(value.name as string);
       },
     },
     {
