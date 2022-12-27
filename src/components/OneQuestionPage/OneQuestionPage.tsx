@@ -23,7 +23,7 @@ import { List } from 'reselect/es/types';
 
 interface ModalProps {
   isOpen: boolean;
-  type?: number;
+  type?: string;
   targetId?: number;
 }
 
@@ -42,6 +42,7 @@ function QuestionPage() {
     limit: 10,
   });
   const [total, setTotal] = useState<number>(0);
+  const [lastPage, setLastPage] = useState<number>(0);
 
   const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
 
@@ -87,8 +88,6 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    rows = [];
-
     let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
     if (type == undefined && keyword !== '') {
       urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
@@ -104,7 +103,10 @@ function QuestionPage() {
           console.log(data);
           // setVisible(true);
           console.log('1:1문의 불러오기 성공');
+          //총 개수
           setTotal(data?.totalElements);
+          setLastPage(data?.totalPages);
+          rows = [];
           const codeList: any = data?.content;
           codeList.forEach((element: any, idx: number) => {
             console.log(element?.inquireImageUrl?.first);
@@ -129,7 +131,7 @@ function QuestionPage() {
   function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
     setListModal({
       isOpen: true,
-      type: row.isReplyDone as number,
+      type: row.isReplyDone as string,
       targetId: row.id as number,
     });
   }
@@ -137,8 +139,20 @@ function QuestionPage() {
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
+
+    //10개씩 보기, 20개씩 보기, 50개씩 보기, 100개씩 보기 클릭 시 0으로 초기화
     if (key === 'limit') {
       newRequest.page = 0;
+    }
+
+    //페이지가 0보다 작은 경우 0으로 세팅
+    if (newRequest.page < 0) {
+      newRequest.page = 0;
+    }
+
+    //페이지가 마지막 페이지보다 큰 경우 마지막 페이지로 세팅
+    if (newRequest.page >= lastPage - 1) {
+      newRequest.page = lastPage - 1;
     }
     console.log('변경: ', key, value);
     setRequest(newRequest);
@@ -180,7 +194,7 @@ function QuestionPage() {
           total={total}
           search={{
             searchTypes: inquiryTypeList,
-            keyword: '',
+            keyword: keyword,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
               setType(type);
@@ -189,7 +203,10 @@ function QuestionPage() {
               console.log('키워드');
               setKeyword(keyword);
             },
-            onClickSearch: () => console.log('검색'),
+            onClickSearch: () => {
+              console.log('검색');
+              loadData();
+            },
           }}
         />
         <DataTable
