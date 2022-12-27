@@ -34,3 +34,9 @@ export type sortDTOType = {
   unsorted: boolean;
   sorted: boolean;
 };
+
+export type InquirySendMailType = {
+  inquireId?: string;
+  replyTitle: string;
+  replyContent: string;
+};
