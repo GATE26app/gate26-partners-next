@@ -23,8 +23,8 @@ import { List } from 'reselect/es/types';
 
 interface ModalProps {
   isOpen: boolean;
-  type?: string;
-  targetId?: number;
+  type?: number;
+  targetId?: string;
 }
 
 interface ReqLoungeProps {
@@ -50,12 +50,7 @@ function QuestionPage() {
 
   const [type, setType] = useState<number>();
 
-  const [inquiryTypeList, setInquiryTypeList] = useState<any>([
-    {
-      label: '전체',
-      value: '',
-    },
-  ]);
+  const [inquiryTypeList, setInquiryTypeList] = useState<any>([]);
   useEffect(() => {
     //첫 로드
     CommonApi.getCommonCodeById('parentCode', 'INQUIRY_TYPES')
@@ -111,7 +106,7 @@ function QuestionPage() {
           codeList.forEach((element: any, idx: number) => {
             console.log(element?.inquireImageUrl?.first);
             rows.push({
-              id: idx,
+              id: element?.inquireId,
               type: element?.inquireType,
               title: element?.inquireTitle,
               thumbnail: element?.inquireImageUrl?.first,
@@ -131,8 +126,8 @@ function QuestionPage() {
   function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
     setListModal({
       isOpen: true,
-      type: row.isReplyDone as string,
-      targetId: row.id as number,
+      type: row.isReplyDone === 'T' ? 0 : 1,
+      targetId: row.id as string,
     });
   }
   const oneQuestion = new Question(handleClickListBtn);
@@ -172,6 +167,7 @@ function QuestionPage() {
     excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
     excel?.writeFile(wb, '문의목록.xlsx');
   };
+
   return (
     <>
       <Head>
@@ -230,7 +226,10 @@ function QuestionPage() {
         type={listModal.type}
         targetId={listModal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => {
+          console.log('데이터 생성 후 처리');
+          loadData();
+        }}
       />
     </>
   );
