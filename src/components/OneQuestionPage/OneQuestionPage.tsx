@@ -48,7 +48,7 @@ function QuestionPage() {
 
   const [keyword, setKeyword] = useState<string>('');
 
-  const [type, setType] = useState<string>();
+  const [type, setType] = useState<number>();
 
   const [inquiryTypeList, setInquiryTypeList] = useState<any>([
     {
@@ -196,7 +196,7 @@ function QuestionPage() {
             searchTypes: inquiryTypeList,
             keyword: keyword,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: string) => {
+            onChangeSearchType: (type: number) => {
               setType(type);
             },
             onChangeKeyword: (keyword: string) => {
