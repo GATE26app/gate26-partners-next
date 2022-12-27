@@ -88,7 +88,6 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    //데이터 초기화
     rows = [];
 
     let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
