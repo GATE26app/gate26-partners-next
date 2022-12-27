@@ -15,7 +15,7 @@ interface SearchProps {
   searchTypes: SearchTypeProps[];
   keyword: string;
   onChangeLimit: (value: number) => void;
-  onChangeSearchType: (type: string) => void;
+  onChangeSearchType: (type: number) => void;
   onChangeKeyword: (keyword: string) => void;
   onClickSearch: () => void;
 }
