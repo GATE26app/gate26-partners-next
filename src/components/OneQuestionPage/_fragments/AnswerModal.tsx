@@ -34,7 +34,7 @@ interface ReqOneQuestionModal {
   answerContent: string;
 }
 interface OneQuestionProps extends Omit<ModalProps, 'children'> {
-  type?: number;
+  type?: string;
   targetId?: number;
   onComplete?: () => void;
 }
@@ -100,11 +100,17 @@ const QuestionModal = ({
             height="80px"
             color="gray.700"
             content={
-              <ImageCloseUp
-                src={request.thumbnail}
-                width={'80px'}
-                height={'80px'}
-              />
+              request.thumbnail == undefined ? (
+                <Text color={'gray.700'} fontSize={'15px'}>
+                  없음
+                </Text>
+              ) : (
+                <ImageCloseUp
+                  src={request.thumbnail}
+                  width={'80px'}
+                  height={'80px'}
+                />
+              )
             }
           />
         </TableWrapper>
@@ -165,11 +171,11 @@ const QuestionModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{type === 1 ? '답변확인' : '답변하기'}</ModalHeader>
+        <ModalHeader>{type === 'T' ? '답변확인' : '답변하기'}</ModalHeader>
 
         <ModalBody>{renderContent()}</ModalBody>
         <ModalFooter>
-          {type === 0 ? (
+          {type === 'T' ? (
             <>
               <Button
                 type="square-grayscale"
