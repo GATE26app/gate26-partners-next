@@ -37,3 +37,4 @@ yarn-error.log*
 
 #build info
 tsconfig.tsbuildinfo
+package-lock.json

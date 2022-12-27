@@ -1,9 +1,13 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
+import CommonApi from '@apis/common/CommonApi';
+import OneQuestionApi from '@apis/oneQuestion/OneQuestionApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -15,7 +19,7 @@ import TableTop from '@components/common/TableTop';
 import Question, { QuestionColumnType } from './OneQuestionPage.data';
 import AnswerModal from './_fragments/AnswerModal';
 
-import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import { List } from 'reselect/es/types';
 
 interface ModalProps {
   isOpen: boolean;
@@ -30,51 +34,96 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const rows: DataTableRowType<QuestionColumnType>[] = [
-  {
-    id: 1,
-    type: '문의 유형',
-    title: '문의 제목 ',
-    content: '문의 내용',
-    thumbnail:
-      'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answerYn: 1,
-    answer: 1,
-  },
-  {
-    id: 2,
-    type: '문의 유형',
-    title: '문의 제목 ',
-    content: '문의 내용',
-    thumbnail:
-      'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answerYn: 0,
-    answer: 0,
-  },
-  {
-    id: 3,
-    type: '문의 유형',
-    title: '문의 제목 ',
-    content: '문의 내용',
-    thumbnail:
-      'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answerYn: 1,
-    answer: 1,
-  },
-];
+let rows: DataTableRowType<QuestionColumnType>[] = [];
 
 function QuestionPage() {
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
-  const [total, setTotal] = useState<number>(100);
+  const [total, setTotal] = useState<number>(0);
 
   const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
+
+  const [keyword, setKeyword] = useState<string>('');
+
+  const [type, setType] = useState<number>();
+
+  const [inquiryTypeList, setInquiryTypeList] = useState<any>([
+    {
+      label: '전체',
+      value: '',
+    },
+  ]);
+  useEffect(() => {
+    //첫 로드
+    CommonApi.getCommonCodeById('parentCode', 'INQUIRY_TYPES')
+      .then((response) => {
+        const { message, data, success } = response;
+        console.log(response);
+        console.log(success);
+        if (success) {
+          console.log('commoncode');
+          console.log(data);
+          const typeList: any = [];
+          const codeList: any = data?.content;
+          codeList.forEach((element: any) => {
+            typeList.push({
+              label: element?.codeValue,
+              value: element?.codeId,
+            });
+          });
+          console.log('>>>>>>>>>>>>>>' + typeList);
+          setInquiryTypeList(typeList);
+        }
+      })
+      .catch((err) => console.log(err));
+
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
+    if (type == undefined && keyword !== '') {
+      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
+    } else if (type !== undefined && keyword === '') {
+      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&type=${type}`;
+    }
+
+    OneQuestionApi.getInquiryList(urlStr)
+      .then((response) => {
+        const { message, data, success } = response;
+        console.log(response);
+        if (success) {
+          console.log(data);
+          // setVisible(true);
+          console.log('1:1문의 불러오기 성공');
+          setTotal(data?.totalElements);
+          const codeList: any = data?.content;
+          rows = [];
+          codeList.forEach((element: any, idx: number) => {
+            rows.push({
+              id: idx,
+              type: element?.inquireType,
+              title: element?.inquireTitle,
+              thumbnail: element?.inquireImageUrl?.first,
+              isReplyDone: element?.isReplyDone,
+              content: element?.inquireContent,
+              answer: '',
+            });
+          });
+        } else {
+          // setVisible(false);
+          console.log('1:1문의 불러오기 실패');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
     setListModal({
       isOpen: true,
-      type: row.answerYn as number,
+      type: row.isReplyDone as number,
       targetId: row.id as number,
     });
   }
@@ -87,10 +136,18 @@ function QuestionPage() {
     }
     console.log('변경: ', key, value);
     setRequest(newRequest);
+    loadData();
   }
 
   const handleCloseModal = () => setListModal({ isOpen: false });
 
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '문의목록.xlsx');
+  };
   return (
     <>
       <Head>
@@ -105,25 +162,22 @@ function QuestionPage() {
         <BreadCrumb depth={['1:1 문의']} />
         <PageTitle
           title="1:1 문의"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
-            ],
+            searchTypes: inquiryTypeList,
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              setType(type);
             },
             onChangeKeyword: (keyword: string) => {
               console.log('키워드');
+              setKeyword(keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
