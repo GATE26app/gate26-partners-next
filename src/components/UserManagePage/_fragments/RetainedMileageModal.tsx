@@ -14,6 +14,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import memberManageApi from '@apis/membermanage/MemberManage';
+import { SearchGetDTOType } from '@apis/membermanage/MemberManage.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
@@ -28,65 +30,98 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-const rows: DataTableRowType<MileageColumnType>[] = [
-  {
-    id: 1,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
-  },
-  {
-    id: 2,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
-  },
-  {
-    id: 3,
-    reason: '김이륙',
-    createdAt: dayjs('2022-10-20 09:00'),
-    amount: 432411,
-  },
-];
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
 
 interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
-  targetId?: number;
+  targetId?: string;
+  totalMileage: number;
 }
 const RetainedMileageModal = ({
   targetId,
   onClose,
+  isOpen,
+  totalMileage,
   ...props
 }: RetainedMileageModalProps) => {
-  const [request, setRequest] = useState({
+  const [request, setRequest] = useState<SearchParam>({
     page: 1,
-    limit: 10,
+    size: 10,
+    searchType: 1,
   });
-
+  const [rows, setRows] = useState<DataTableRowType<MileageColumnType>[]>([]);
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
   const [total, setTotal] = useState<number>(100);
-  const handleOpenDialog = () => {
+
+  useEffect(() => {
+    if (!isOpen) {
+      setRequest({} as SearchParam);
+      setRows([]);
+    }
+
+    if (isOpen && targetId) getMileageHistory(request);
+  }, [targetId, isOpen]);
+
+  const handleOpenDialog = (historyId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '항공권 인증 내역',
-        message: '항공권 인증 내역을 삭제 하시겠습니까?',
+        title: '보유마일리지',
+        message: '보유 마일리지 내역을 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('asdasdasdsdasdas');
+          handleHistoryDelete(historyId);
         },
       }),
     );
     openCustomModal();
   };
+
+  const handleHistoryDelete = (historyId: string) => {
+    memberManageApi
+      .deleteMileageHistory({ historyId })
+      .then(({ success }) => {
+        const newRequest = { ...request };
+        if (success) {
+          //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+          if (rows && rows.length - 1 === 0 && newRequest.page)
+            newRequest.page -= 1;
+
+          getMileageHistory(newRequest);
+          alert('삭제 성공');
+        } else {
+          alert('삭제 실패');
+        }
+      })
+      .catch(() => {
+        alert('삭제 실패');
+      });
+  };
+
+  const getMileageHistory = (param: SearchParam) => {
+    if (targetId) {
+      memberManageApi
+        .getMileageHistory({
+          userId: targetId,
+          ...param,
+        })
+        .then(({ data, success }) => {
+          if (data && success) {
+            setRows(data.content);
+            setTotal(data.totalElements);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
-    }
-    console.log('변경: ', key, value);
+    if (key === 'limit') newRequest.page = 1;
+
     setRequest(newRequest);
+    if (key === 'limit' || key === 'page') getMileageHistory(newRequest);
   };
 
   const renderContent = () => {
@@ -96,18 +131,20 @@ const RetainedMileageModal = ({
           total={total}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '적립사유' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '적립사유' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => {
+              handleChangeInput('limit', value);
             },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+            onChangeSearchType: (value: number) => {
+              handleChangeInput('searchType', value);
             },
-            onClickSearch: () => console.log('검색'),
+            onChangeKeyword: (value: string) => {
+              handleChangeInput('keyword', value);
+            },
+            onClickSearch: () => getMileageHistory(request),
           }}
         />
         <DataTable
@@ -115,10 +152,10 @@ const RetainedMileageModal = ({
           columns={MILEAGE_COLUMNS}
           rows={rows}
           isMenu
-          onDelete={handleOpenDialog}
+          onDelete={({ historyId }) => handleOpenDialog(historyId as string)}
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page || 0,
+            limit: request.size || 10,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -132,23 +169,21 @@ const RetainedMileageModal = ({
     );
   };
 
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId]);
-
   return (
     <Modal
       size={'xl'}
       isCentered
       variant={'simple'}
       onClose={onClose}
+      isOpen={isOpen}
+      // styleConfig={{conta}}
       {...props}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent={'space-between'}>
-            <span>보유 마일리지 : 432</span>
+            <span>보유 마일리지 : {totalMileage}</span>
             <IconButton
               type="download"
               size="sm"

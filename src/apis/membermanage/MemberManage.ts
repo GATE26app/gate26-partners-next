@@ -1,15 +1,18 @@
 import { AxiosInstance } from 'axios';
 
-import instance from '@apis/_axios/instance';
+import instance, { AxiosResponseType } from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
 import {
+  ActivitHitoryListDTOType,
   BasicDTO,
-  HistoryParamDeleteDTOType,
+  HistoryDeleteDTOType,
+  MileageHitoryListDTOType,
+  MileageSearchGetDTOType,
   RequestDTOType,
-  SearchParamGetType,
-  TotalCountGetDTOType,
+  SearchGetDTOType,
+  StmaperyHitoryListDTOType,
 } from './MemberManage.type';
 
 export class MemberManageApi {
@@ -31,7 +34,9 @@ export class MemberManageApi {
     return data;
   };
   //유저 스탬프러리 내역 조회
-  getStampHistory = async (params: SearchParamGetType): Promise<BasicDTO> => {
+  getStampHistory = async (
+    params: SearchGetDTOType,
+  ): Promise<AxiosResponseType<StmaperyHitoryListDTOType>> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
@@ -44,7 +49,7 @@ export class MemberManageApi {
   };
   //유저 스탬프러리 내역 삭제
   deleteStampHistory = async (
-    params: HistoryParamDeleteDTOType,
+    params: HistoryDeleteDTOType,
   ): Promise<BasicDTO> => {
     const { data } = await this.axios({
       method: 'DELETE',
@@ -56,24 +61,11 @@ export class MemberManageApi {
     });
     return data;
   };
-  //유저 총 스탬프러리 카운트 조회
-  getStampHistoryTotalCount = async (
-    params: TotalCountGetDTOType,
-  ): Promise<BasicDTO> => {
-    const { data } = await this.axios({
-      method: 'GET',
-      headers: {
-        'X-AUTH-TOKEN': `${getToken()}`,
-      },
-      url: `/users/stamp`,
-      params,
-    });
-    return data;
-  };
+
   //유저 항공권 인증 내역 조회
   getActivityHistory = async (
-    params: SearchParamGetType,
-  ): Promise<BasicDTO> => {
+    params: SearchGetDTOType,
+  ): Promise<AxiosResponseType<ActivitHitoryListDTOType>> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
@@ -84,23 +76,10 @@ export class MemberManageApi {
     });
     return data;
   };
-  //유저 총 항공권 인증 내역 카운트 조회
-  getActivityHistoryTotalCount = async (
-    params: SearchParamGetType,
-  ): Promise<BasicDTO> => {
-    const { data } = await this.axios({
-      method: 'GET',
-      headers: {
-        'X-AUTH-TOKEN': `${getToken()}`,
-      },
-      url: `/users/activity`,
-      params,
-    });
-    return data;
-  };
+
   //유저 항공권 인증내역 삭제
   deleteActivityHistory = async (
-    params: HistoryParamDeleteDTOType,
+    params: HistoryDeleteDTOType,
   ): Promise<BasicDTO> => {
     const { data } = await this.axios({
       method: 'DELETE',
@@ -113,41 +92,29 @@ export class MemberManageApi {
     return data;
   };
   //유저 마일리지 적립 내역 조회
-  getMileageHistory = async (params: SearchParamGetType): Promise<BasicDTO> => {
+  getMileageHistory = async (
+    params: MileageSearchGetDTOType,
+  ): Promise<AxiosResponseType<MileageHitoryListDTOType>> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/users/activity/history`,
-      params,
-    });
-    return data;
-  };
-  //유저 총 적립 마일리지  조회
-  getMileageHistoryTotalCount = async (
-    params: SearchParamGetType,
-  ): Promise<BasicDTO> => {
-    const { data } = await this.axios({
-      method: 'GET',
-      headers: {
-        'X-AUTH-TOKEN': `${getToken()}`,
-      },
-      url: `/users/activity`,
+      url: `/users/mileage/history`,
       params,
     });
     return data;
   };
   //유저 마일리지 적립 내역 삭제
   deleteMileageHistory = async (
-    params: HistoryParamDeleteDTOType,
+    params: HistoryDeleteDTOType,
   ): Promise<BasicDTO> => {
     const { data } = await this.axios({
       method: 'DELETE',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/users/activity`,
+      url: `/users/mileage`,
       params,
     });
     return data;

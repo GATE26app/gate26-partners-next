@@ -1,36 +1,36 @@
 import { DataTableColumnType } from '@components/common/DataTable';
 
 export type AirlineTicketColumnType =
-  | 'id'
-  | 'arrivals'
-  | 'destination'
-  | 'arrivalsAt'
-  | 'destinationAt'
-  | 'certifiedAt';
+  | 'airlineTicketId'
+  | 'departureAirportName'
+  | 'arrivalAirportName'
+  | 'departureKorDate'
+  | 'arrivalKorDate'
+  | 'createdDate';
 export const AIRLINE_TICKET_COLUMNS: DataTableColumnType<AirlineTicketColumnType>[] =
   [
     {
-      key: 'arrivals',
+      key: 'departureAirportName',
       name: '출발지',
       width: '21.67%',
     },
     {
-      key: 'destination',
+      key: 'arrivalAirportName',
       name: '도착지',
       width: '21.67%',
     },
     {
-      key: 'arrivalsAt',
+      key: 'arrivalKorDate',
       name: '출발일자',
       width: '16.67%',
     },
     {
-      key: 'destinationAt',
+      key: 'departureKorDate',
       name: '도착일자',
       width: '16.67%',
     },
     {
-      key: 'certifiedAt',
+      key: 'createdDate',
       name: '인증일자',
       width: '16.67%',
     },
