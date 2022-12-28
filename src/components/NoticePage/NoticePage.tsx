@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-
-import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
+import noticeApi from '@apis/notice/NoticeApi';
+import { NoticeParamGetType } from '@apis/notice/NoticeApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -22,49 +22,20 @@ import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandl
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: string;
 }
 
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
-
-const rows: DataTableRowType<NoticeColumnType>[] = [
-  {
-    id: 1,
-    title: '공지사항입니다.',
-    content:
-      '공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.',
-    start: dayjs('2022-10-20 09:00'),
-    end: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 2,
-    title: '공지사항입니다.',
-    content:
-      '공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.',
-    start: dayjs('2022-10-20 09:00'),
-    end: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 3,
-    title: '공지사항입니다.',
-    content:
-      '공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.공지사항입니다.',
-    start: dayjs('2022-10-20 09:00'),
-    end: dayjs('2022-10-22 09:00'),
-  },
-];
+const SEARCH_TYPE = ['ALL', 'TITLE', 'CONTENT'];
 
 function NoticePage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
+  const [request, setRequest] = useState<NoticeParamGetType>({
     page: 1,
     limit: 10,
+    search: '',
+    filter: SEARCH_TYPE[0],
   });
   const [total, setTotal] = useState<number>(100);
+  const [rows, setRows] = useState<DataTableRowType<NoticeColumnType>[]>([]);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
 
   const dispatch = useDispatch();
@@ -82,10 +53,14 @@ function NoticePage() {
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
   const handleEditRow = (row: DataTableRowType<NoticeColumnType>) => {
-    if (!row.id) {
+    if (!row.noticeId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      targetId: row.noticeId as string,
+    });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
@@ -97,13 +72,29 @@ function NoticePage() {
         message: '공지를 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
-        cbOk: () => {
-          console.log('삭제 처리:', row);
+        cbOk: async () => {
+          const response = await noticeApi.deleteNotice(row.noticeId as string);
+          if (response.success) {
+            console.log('삭제 처리:', row);
+          }
         },
       }),
     );
     openCustomModal();
   };
+
+  const getNoticeList = async () => {
+    const response = await noticeApi.getNoticeList(request);
+    if (response.success) {
+      setTotal(response.count);
+      setRows(response.data);
+    }
+  };
+
+  useEffect(() => {
+    getNoticeList();
+  }, [request]);
+
   return (
     <>
       <Head>
@@ -128,16 +119,14 @@ function NoticePage() {
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '제목' },
-              { value: 1, label: '내용' },
+              { value: 2, label: '내용' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('filter', SEARCH_TYPE[type]),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('search', keyword),
             onClickSearch: () => console.log('검색'),
           }}
           createButton={{
@@ -153,8 +142,8 @@ function NoticePage() {
           onDelete={handleDeleteRow}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page!,
+            limit: request.limit!,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -170,7 +159,7 @@ function NoticePage() {
         type={modal.type}
         targetId={modal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={getNoticeList}
       />
     </>
   );

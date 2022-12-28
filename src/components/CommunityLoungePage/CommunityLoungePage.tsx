@@ -25,27 +25,6 @@ interface ModalProps {
   targetId?: string;
 }
 
-// const rows: DataTableRowType<LoungeColumnType>[] = [
-//   {
-//     id: 1,
-//     title: '유럽',
-//     banner:
-//       'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-//     home: 'https://s3-alpha-sig.figma.com/img/ef8f/de7d/966b0231d1c3a3f512afd35d15b82fb8?Expires=1669593600&Signature=WEpB17Xs3S0QbQhQOBO3Q6LcEuniubtw2vAZiTWTM5A1Vq89~FKdVYG4eH5r~CuBrIJP5DDLK2bdnyN5NRHRU3QUp9buLXpvdqW-lJ2Vh8QFEl94YRpgIr0gYYfR0bLCtgfAlHcJt73wtQpm7R49CXeCXSXB6aj~X0nJ7sYB8YWQVckYP81lS405qrAnWkSD8lQS0RdG9uL3nIGsTVYzolppNw7gYTM4HOfkfBpjTRgWkpngyiXVsjm2Tg24VZzLb-CTeoVCyEzBlokpzAK9xSEK0H3q-n7Dlh-Cs4BhdXMlNjDWS09hrJGrm1u1eWu2Yy-HMPioaQ52iDfxv6eXug__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-//     order: 1,
-//     enable: true,
-//   },
-//   {
-//     id: 2,
-//     title: '유럽',
-//     banner:
-//       'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-//     home: 'https://s3-alpha-sig.figma.com/img/7ebf/ba66/4da17fddb067f82c8cb5e779dd5af0eb?Expires=1669593600&Signature=ZZZd7tBdWAGpOexfvcYAq3eSL1UfFJcW9jUv~2lCGw6MqJK~TeMmqOYCypt8XPoPLSx-Juh0-gz-MpWVBWObdCDJO5qTVzzJ--~yQTXH5xNd0mT724cp0f4AbPAE0acXUGQM0qv7uSh8XTsw-0rs2OFx5TrDL2Su63hBeLoIVpbqf7o2Zm57HFkJZKn~69-gyj1Eu39XizP-ZJ5vEWdNAGvcuo8ftT7vEHz81rvhD2GOVDSoFJTUUdvfL0GOyqSSg1GpzHtMs9taR3UK2tvInwhZw81VkXvg9M8frZkFYVA7FR2sqV3cIOXuAp76VG3M2i7-~t8LBLoVgHx549R0Ww__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-//     order: 2,
-//     enable: false,
-//   },
-// ];
-
 function CommunityLoungePage() {
   const [request, setRequest] = useState<CommunityLoungeParamGetType>({
     searchType: 1,
