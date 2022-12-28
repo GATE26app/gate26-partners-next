@@ -60,7 +60,7 @@ class AdminAccountColumns {
           fontWeight="regular"
           color="black"
         >
-          {value.useStatus ? '사용' : '-'}
+          {value.useStatus==='T' ? '사용' : '-'}
         </Text>
       ),
     },

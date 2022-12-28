@@ -4,28 +4,30 @@ import instance from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { BasicDTO, RequestDTOType } from './MemberManage.type';
+import { basicDtotype } from './CommonApi.type';
 
-export class MemberManageApi {
+export class CommonApi {
   axios: AxiosInstance = instance;
   constructor(axios?: AxiosInstance) {
     if (axios) this.axios = axios;
   }
 
-  // 회원 관리 조회
-  getMemberInfo = async (params?: RequestDTOType): Promise<BasicDTO> => {
+  getCommonCodeById = async (
+    type: string,
+    codeName: string,
+  ): Promise<basicDtotype> => {
+    //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/users/all`,
-      params,
+      url: `/backoffice/common/codes?type=${type}&keyword=${codeName}`,
     });
     return data;
   };
 }
 
-const memberManageApi = new MemberManageApi();
+const commonApi = new CommonApi();
 
-export default memberManageApi;
+export default commonApi;

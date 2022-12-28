@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
@@ -20,30 +20,68 @@ interface ReqLoungeProps {
   size: number;
 }
 
-// let rows: DataTableRowType<UserColumnType>[] = [];
-
 function UserListPage() {
-  let pageNumber = 0;
-  let pageSize = 3;
+  // 검색 구분
+  const searchTypeList = [ 
+    { value: 0, label: '전체' },
+    { value: 1, label: '이름' },
+    { value: 2, label: '닉네임' },
+    { value: 3, label: '이메일' },
+  ];
+
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  };
+
+  const searchType = useRef('');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'name'; // 이름 검색
+        return;
+      case 2:
+        searchType.current = 'nickName'; // 닉네임 검색
+        return;
+      case 3:
+        searchType.current = 'emailAddress'; // 이메일 검색
+        return;
+      default:
+        searchType.current = ''; // 전체 검색
+        return;
+    }
+  };
+
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {keyword.current = value};
+
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
     size: 10,
   });
 
   const [rows, setDataTableRow] = useState<DataTableRowType<UserColumnType>[]>([]);
-
   const [total, setTotal] = useState<number>(100);
-
   const userColumns = new UserColumns(handleChangeInput);
 
   useEffect(() => {
-    getUserInfoList({pageNumber, pageSize});
+    getUserInfoList();
   }, []);
 
-  const getUserInfoList = useCallback((params) => {
-    const pageRequest = { page: params['pageNumber'], size: params['pageSize'] };
-    setRequest(pageRequest);
-    UserListApi.getUserList(pageRequest)
+  const getUserInfoList = useCallback(() => {
+    const requestParams = {
+      page: pageNumber.current,
+      size: pageSize.current,
+      keyword: keyword.current,
+      type: searchType.current
+    };
+    setRequest(requestParams);
+    UserListApi.getUserList(requestParams)
       .then((response) => {
         const { data, count, success } = response;
         let listData: DataTableRowType<UserColumnType>[] = [];
@@ -64,14 +102,17 @@ function UserListPage() {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'page') {
-      pageNumber = newRequest.page;
-    }
-    if (key === 'limit') {
-      newRequest.page = 0; // 0으로 초기화
-      pageSize = newRequest.size;
+      setPage(value as number);
+    } else if (key === 'limit') {
+      setPage(0);
+      setPageSize(value as number);
+    } else if (key === 'searchType') {
+      setSearchType(value as  number);
+    } else if (key === 'keyword') {
+      setKeyword(value as  string);
     }
     setRequest(newRequest);
-    getUserInfoList({pageNumber, pageSize}); // 페이징 요청
+    getUserInfoList(); // 페이징 요청
   }
 
   return (
@@ -95,18 +136,14 @@ function UserListPage() {
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '출발지' },
-              { value: 1, label: '도착지 ' },
-            ],
-            keyword: '',
+            searchTypes: searchTypeList,
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              handleChangeInput('searchType', type);
             },
             onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+              handleChangeInput('keyword', keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
