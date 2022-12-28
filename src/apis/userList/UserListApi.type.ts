@@ -25,7 +25,9 @@ export type UserInfoDTO = {
   lastAccessDate: string;
 };
 
-export type PagingDTOType = {
+export type RequestDTOType = {
   page: number;
   size: number;
+  type?: string;
+  keyword?: string;
 };
