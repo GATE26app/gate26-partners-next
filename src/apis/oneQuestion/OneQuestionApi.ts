@@ -3,6 +3,8 @@ import { AxiosInstance } from 'axios';
 import instance from '@apis/_axios/instance';
 import { basicDtotype } from '@apis/common/CommonApi.type';
 
+import { getToken } from '@utils/localStorage/token';
+
 import { InquirySendMailType } from './OneQuestionApi.type';
 
 export class OneQuestionApi {
@@ -14,6 +16,9 @@ export class OneQuestionApi {
   getInquiryList = async (urlStr: string): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: urlStr,
     });
     return data;
@@ -22,6 +27,9 @@ export class OneQuestionApi {
   getInquiry = async (inquiryId?: string): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: `/backoffice/users/inquires/${inquiryId}`,
     });
     return data;
@@ -32,6 +40,9 @@ export class OneQuestionApi {
   ): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'POST',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: '/backoffice/users/inquires',
       data: body,
     });

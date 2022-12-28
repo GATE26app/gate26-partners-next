@@ -50,7 +50,12 @@ function QuestionPage() {
 
   const [type, setType] = useState<number>();
 
-  const [inquiryTypeList, setInquiryTypeList] = useState<any>([]);
+  const [inquiryTypeList, setInquiryTypeList] = useState<any>([
+    {
+      label: '전체',
+      value: undefined,
+    },
+  ]);
   useEffect(() => {
     //첫 로드
     CommonApi.getCommonCodeById('parentCode', 'INQUIRY_TYPES')
