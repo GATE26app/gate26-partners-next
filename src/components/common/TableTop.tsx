@@ -13,7 +13,7 @@ interface SearchTypeProps {
 }
 interface SearchProps {
   searchTypes: SearchTypeProps[];
-  keyword: string;
+  keyword?: string;
   onChangeLimit: (value: number) => void;
   onChangeSearchType: (type: number) => void;
   onChangeKeyword: (keyword: string) => void;
@@ -84,7 +84,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         />
         <SearchInput
           placeholder={'Search'}
-          text={keyword}
+          text={keyword || ''}
           onChange={onChangeKeyword}
           onSearch={onClickSearch}
         />

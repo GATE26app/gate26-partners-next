@@ -26,7 +26,7 @@ export type CommunityLoungeListDTOType = {
   size: number;
   numberOfElements: number;
 };
-export type CommunityLoungeDeleteDTOType = "T" | "F"
+export type CommunityLoungeDeleteDTOType = 'T' | 'F';
 export type CommunityLoungeParamGetType = {
   searchType: number;
   keyword: string;

@@ -9,15 +9,17 @@ import styledConsole from '@utils/styledConsole';
 // import { refresh } from './refresh';
 
 export type AxiosResponseType<T> = {
-  count: number,
+  count: number;
   data: T;
   success: boolean;
-}
+};
 
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: isDev ? 'http://43.201.68.143:40003' : CONFIG.API_BASE_URL,
+  baseURL: isDev
+    ? 'http://43.201.68.143:40003'
+    : 'http://dbackoffice.gate26.co.kr',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',

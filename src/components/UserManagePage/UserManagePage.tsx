@@ -6,9 +6,7 @@ import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
-import memberManageApi, {
-  MemberManageApi,
-} from '@apis/membermanage/MemberManage';
+import memberManageApi from '@apis/membermanage/MemberManage';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -34,7 +32,8 @@ interface ReqLoungeProps {
 interface ModalProps {
   isOpen: boolean;
   type?: ModalType;
-  targetId?: number;
+  targetId?: string;
+  total: number;
 }
 
 function UserManagePage() {
@@ -97,8 +96,10 @@ function UserManagePage() {
     getMemberInfo();
   }, []);
 
-  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
-
+  const [listModal, setListModal] = useState<ModalProps>({
+    isOpen: false,
+    total: 0,
+  });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'page') {
@@ -118,10 +119,20 @@ function UserManagePage() {
     row: DataTableRowType<UserManageColumnType>,
     type: ModalType,
   ) {
-    setListModal({ isOpen: true, targetId: row.userId as number, type });
+    setListModal({
+      isOpen: true,
+      targetId: row.userId as string,
+      type,
+      total: row[type] as number,
+    });
   }
   function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined, type: undefined });
+    setListModal({
+      isOpen: false,
+      targetId: undefined,
+      type: undefined,
+      total: 0,
+    });
   }
 
   const getMemberInfo = useCallback(() => {
@@ -212,6 +223,7 @@ function UserManagePage() {
       </Flex>
       <RetainedMileageModal
         targetId={listModal.targetId}
+        totalMileage={listModal.total}
         isOpen={listModal.isOpen && listModal.type === 'totalMileage'}
         onClose={handleListModalClose}
       />

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
-
 import {
   Flex,
   Modal,
@@ -14,6 +12,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import memberManageApi from '@apis/membermanage/MemberManage';
+import { SearchGetDTOType } from '@apis/membermanage/MemberManage.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
@@ -26,45 +26,36 @@ import StamperyAddDialog from './_fragments/StamperyAddDialog';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-const rows: DataTableRowType<StamperyColumnType>[] = [
-  {
-    id: 1,
-    type: '챌린지',
-    title: '이륙 뉴비',
-    savedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 2,
-    type: '챌린지',
-    title: '이륙 뉴비',
-    savedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 3,
-    type: '챌린지',
-    title: '이륙 뉴비',
-    savedAt: dayjs('2022-10-20 09:00'),
-  },
-];
-
 interface StamperyDialogProps extends Omit<ModalProps, 'children'> {
-  targetId?: number;
+  targetId?: string;
 }
+
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
+
 const StamperyDialog = ({
   targetId,
   onClose,
+  isOpen,
   ...props
 }: StamperyDialogProps) => {
-  const [request, setRequest] = useState({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<SearchParam>({
+    page: 0,
+    size: 10,
   });
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
+  const [rows, setRows] = useState<DataTableRowType<StamperyColumnType>[]>();
+  const [total, setTotal] = useState<number>(0);
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
-  const [total, setTotal] = useState<number>(100);
-  const handleOpenDialog = () => {
+
+  useEffect(() => {
+    if (!isOpen) setRequest({} as SearchParam);
+
+    if (isOpen && targetId) getStampHistory(request);
+  }, [targetId, isOpen]);
+
+  const handleOpenDialog = (tgId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '스탬프러리',
@@ -72,23 +63,61 @@ const StamperyDialog = ({
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('asdasdasdsdasdas');
+          handleHistoryDelete(tgId);
         },
       }),
     );
     openCustomModal();
   };
+
+  const handleHistoryDelete = (tgId: string) => {
+    memberManageApi
+      .deleteStampHistory({ historyId: tgId })
+      .then(({ success }) => {
+        const newRequest = { ...request };
+        if (success) {
+          //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+          if (rows && rows.length - 1 === 0 && newRequest.page)
+            newRequest.page -= 1;
+
+          getStampHistory(newRequest);
+          alert('삭제 성공');
+        } else {
+          alert('삭제 실패');
+        }
+      })
+      .catch(() => {
+        alert('삭제 실패');
+      });
+  };
+
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
-    }
-    console.log('변경: ', key, value);
+    if (key === 'limit') newRequest.page = 0;
+
     setRequest(newRequest);
+    if (key === 'limit' || key === 'page') getStampHistory(newRequest);
+  };
+
+  const getStampHistory = (param: SearchParam) => {
+    if (targetId) {
+      memberManageApi
+        .getStampHistory({
+          userId: targetId,
+          ...param,
+        })
+        .then(({ data, success }) => {
+          if (data && success) {
+            setRows(data.content);
+            setTotal(data.totalElements);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const handleModalClose = () => {
-    setIsOpen(false);
+    setIsAddDialogOpen(false);
   };
 
   const renderContent = () => {
@@ -98,25 +127,27 @@ const StamperyDialog = ({
           total={total}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '스탬프러리 유형' },
-              { value: 2, label: '스탬프러리 명 ' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '스탬프러리 유형' },
+              { value: 3, label: '스탬프러리 명 ' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => {
+              handleChangeInput('limit', value);
             },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+            onChangeSearchType: (value: number) => {
+              handleChangeInput('searchType', value);
             },
-            onClickSearch: () => console.log('검색'),
+            onChangeKeyword: (value: string) => {
+              handleChangeInput('keyword', value);
+            },
+            onClickSearch: () => getStampHistory(request),
           }}
           createButton={{
             title: '스탬프러리 추가',
             width: '113px',
             onClickCreate: () => {
-              setIsOpen(true);
+              setIsAddDialogOpen(true);
             },
           }}
         />
@@ -125,11 +156,11 @@ const StamperyDialog = ({
           columns={STAMPERY_COLUMNS}
           rows={rows}
           isMenu
-          onDelete={handleOpenDialog}
+          onDelete={({ tgId }) => handleOpenDialog(tgId as string)}
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
-            total: total,
+            currentPage: request.page || 0,
+            limit: request.size || 10,
+            total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
             onPreviousPageClicked: (page: number) =>
@@ -142,10 +173,6 @@ const StamperyDialog = ({
     );
   };
 
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId]);
-
   return (
     <>
       <Modal
@@ -153,6 +180,7 @@ const StamperyDialog = ({
         isCentered
         variant={'simple'}
         onClose={onClose}
+        isOpen={isOpen}
         {...props}
       >
         <ModalOverlay />
@@ -188,7 +216,7 @@ const StamperyDialog = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <StamperyAddDialog isOpen={isOpen} onClose={handleModalClose} />
+      <StamperyAddDialog isOpen={isAddDialogOpen} onClose={handleModalClose} />
     </>
   );
 };
