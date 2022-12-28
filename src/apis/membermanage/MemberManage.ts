@@ -7,7 +7,7 @@ import { getToken } from '@utils/localStorage/token';
 import {
   BasicDTO,
   HistoryParamDeleteDTOType,
-  PagingDTOType,
+  RequestDTOType,
   SearchParamGetType,
   TotalCountGetDTOType,
 } from './MemberManage.type';
@@ -19,7 +19,7 @@ export class MemberManageApi {
   }
 
   // 회원 관리 조회
-  getMemberInfo = async (params?: PagingDTOType): Promise<BasicDTO> => {
+  getMemberInfo = async (params?: RequestDTOType): Promise<BasicDTO> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {

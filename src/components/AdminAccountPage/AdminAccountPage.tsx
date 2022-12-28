@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
@@ -23,10 +23,8 @@ import AccountDetailModal from './_fragments/AccountDetailModal';
 import AuthChangeModal from './_fragments/AuthChangeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import adminAccountApi from '@apis/admin/AdminAccountApi';
 
-// import AirlineTicketModal from './_fragments/AirlineTicketModal';
-// import RetainedMileageModal from './_fragments/RetainedMileageModal';
-// import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -43,39 +41,21 @@ interface AccountDetailModalProps extends Omit<ModalProps, 'type'> {
   type?: 'create' | 'modify';
 }
 
-const rows: DataTableRowType<AdminAccountColumnType>[] = [
-  {
-    id: 1,
-    userId: 'Gate26',
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    createdAt: dayjs('2002-01-02 09:00'),
-    useStatus: true,
-    authority: '권한',
-  },
-  {
-    id: 2,
-    userId: 'Gate26',
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    createdAt: dayjs('2002-01-02 09:00'),
-    useStatus: true,
-    authority: '권한',
-  },
-  {
-    id: 3,
-    userId: 'Gate26',
-    name: '김이륙',
-    email: 'gate26@toktokhan.dev',
-    createdAt: dayjs('2002-01-02 09:00'),
-    useStatus: true,
-    authority: '권한',
-  },
-];
-
 function AdminAccountPage() {
+  // 데이터 타입 정의 
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  }
+  const [rows, setRows] = useState<DataTableRowType<AdminAccountColumnType>[]>([]);
+
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
@@ -88,12 +68,62 @@ function AdminAccountPage() {
   const userColumns = new AdminAccountColumns(handleAuthChangeModalOpen);
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
+  
+
+  // // 전체 건수 API 불러오기 
+  const getAdminInfoAll = useCallback(() => {
+    adminAccountApi.getAdminAll().then((response) => {
+      const { success, data, message } = response;
+      if (data) {
+        setTotal(data.content.length);
+      } else {
+        console.log(message);
+      }
+    })
+  }, []);
+  
+  
+  // // 페이징 API 불러오기 
+  const getAdminInfoPagin = useCallback(() => {
+    let params = { page: pageNumber.current, size: pageSize.current
+    
+    };
+    adminAccountApi.getAdminAccount(params).then((response) => {
+          const { success, data, message } = response;
+          let count:number = 0;
+          setRows([]);
+          if (data) {
+            data.content.map((iter) => {
+              const obj :DataTableRowType<AdminAccountColumnType> = { 'id': count++,
+              'userId': iter.adminId, 
+              'name': iter.adminName,'email': iter.adminEmail, 
+              'createdAt': iter.createdDate, 'useStatus': iter.useYn, 
+              'authority': iter.authId};
+              setRows(row => [...row, obj])
+            })
+          } else {
+            console.log(message);
+          }
+        });
+  },[]);
+
+  // // useEffect 최초 호출
+  useEffect(() => {
+    getAdminInfoAll();
+    getAdminInfoPagin();
+  }, []);
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
-
+    
+    if (key === 'limit') {
+      setPage(0);
+      setPageSize(value as number);
+    } else if(key === 'page'){
+      setPage(value as number);
+    }
     setRequest(newRequest);
+    getAdminInfoPagin();
   }
 
   function handleAuthChangeModalOpen(
@@ -109,10 +139,10 @@ function AdminAccountPage() {
   };
 
   const handleEditRow = (row: DataTableRowType<AdminAccountColumnType>) => {
-    if (!row.id) {
+    if (!row.userId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    setModal({ isOpen: true, type: 'modify', targetId: row.userId as number });
   };
 
   const handleCreateRow = () => {

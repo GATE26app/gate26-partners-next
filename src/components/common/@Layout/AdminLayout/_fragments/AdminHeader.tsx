@@ -6,6 +6,7 @@ import { useDisclosure, useOutsideClick } from '@chakra-ui/react';
 import ArrowDownIcon from '@components/common/@Icons/Admin/ArrowDown';
 
 import styled from '@emotion/styled';
+import { getNickName } from '@utils/localStorage/token';
 
 const AdminHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

@@ -1,6 +1,10 @@
 export type BasicDTO = {
   code?: string;
-  data?: any;
+  data?: {
+    content: UserManageDTO[];
+    totalElements?: number;
+    totalPages?: number;
+  };
   message?: string;
   count?: number;
   success: boolean;
@@ -22,7 +26,19 @@ export type TotalCountGetDTOType = {
   userId: string;
 };
 
-export type PagingDTOType = {
+export type UserManageDTO = {
+  activeUser: string;
+  emailAddress: string;
+  name: string;
+  reportedCount: number;
+  stampCount: number;
+  ticketAuthCount: number;
+  totalMileage: number;
+  userId: string;
+};
+export type RequestDTOType = {
   page: number;
-  size: number;
+  limit: number;
+  type?: string;
+  keyword?: string;
 };
