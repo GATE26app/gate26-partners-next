@@ -2,6 +2,8 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
+import { getToken } from '@utils/localStorage/token';
+
 import { basicDtotype } from './CommonApi.type';
 
 export class CommonApi {
@@ -17,6 +19,9 @@ export class CommonApi {
     //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: `/backoffice/common/codes?type=${type}&keyword=${codeName}`,
     });
     return data;
