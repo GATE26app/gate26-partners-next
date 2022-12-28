@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ["","/oneQuestion","/oneQuestion/main","/notice","/user","/admin/account","/admin/menu","/commonCode/airLineCode","/commonCode/airportCode","/commonCode/managementCode","/community/chat","/community/event","/community/lounge","/community/tip","/push/manage","/user/list","/user/manage","/user/report"]
+=======
+["","/notice","/oneQuestion","/oneQuestion/main","/user","/admin/account","/admin/menu","/commonCode/airportCode","/commonCode/managementCode","/commonCode/airLineCode","/community/chat","/community/lounge","/community/event","/community/tip","/push/manage","/user/list","/user/manage","/user/report"]
+>>>>>>> 467473a (feat: 🎸adminAccount api 적용)
