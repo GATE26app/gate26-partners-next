@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
 
-import CommunityLoungeApi from '@apis/community-lounge/CommunityLoungeApi';
-import { CommunityLoungeParamGetType } from '@apis/community-lounge/CommunityLoungeApi.type';
+import CommunityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
+import { CommunityLoungeParamGetType } from '@apis/communityLounge/CommunityLoungeApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
