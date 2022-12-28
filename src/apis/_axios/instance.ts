@@ -8,6 +8,12 @@ import styledConsole from '@utils/styledConsole';
 
 // import { refresh } from './refresh';
 
+export type AxiosResponseType<T> = {
+  count: number,
+  data: T;
+  success: boolean;
+}
+
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
