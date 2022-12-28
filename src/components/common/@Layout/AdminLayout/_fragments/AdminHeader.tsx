@@ -4,6 +4,7 @@ import { useDisclosure } from '@chakra-ui/react';
 import ArrowDownIcon from '@components/common/@Icons/Admin/ArrowDown';
 
 import styled from '@emotion/styled';
+import { getNickName } from '@utils/localStorage/token';
 
 const AdminHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,7 +27,7 @@ const AdminHeader = () => {
       />
       <div className="admin-header-profile">
         <Image src="/images/header/profile.png" w="30px" h="30px" />
-        <div className="profile-name">GATE26 님</div>
+        <div className="profile-name">{getNickName()} 님</div>
         <ArrowDownIcon />
       </div>
     </Header>

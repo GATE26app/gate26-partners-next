@@ -11,7 +11,7 @@ import CheckBox from '@components/common/CheckBox';
 import FormHelper from '@components/common/FormHelper';
 import InputBox from '@components/common/Input';
 
-import { setToken } from '@utils/localStorage/token';
+import { setNickName, setToken } from '@utils/localStorage/token';
 
 interface LoginModel {
   adminId: string;
@@ -35,6 +35,7 @@ function LoginPage() {
       if (response.success) {
         if (response.data !== undefined) {
           setToken(response.data?.accessToken);
+          setNickName(response.data?.adminName);
           router.push('/user/list');
         }
       } else {

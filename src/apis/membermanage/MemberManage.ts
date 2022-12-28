@@ -4,7 +4,7 @@ import instance from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { BasicDTO, PagingDTOType } from './MemberManage.type';
+import { BasicDTO, RequestDTOType } from './MemberManage.type';
 
 export class MemberManageApi {
   axios: AxiosInstance = instance;
@@ -13,7 +13,7 @@ export class MemberManageApi {
   }
 
   // 회원 관리 조회
-  getMemberInfo = async (params?: PagingDTOType): Promise<BasicDTO> => {
+  getMemberInfo = async (params?: RequestDTOType): Promise<BasicDTO> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {

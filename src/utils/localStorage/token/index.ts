@@ -17,6 +17,7 @@ export type TokenType = {
 const GateUserDefaultKey = {
   _JWT_TOKEN: 'jwtToken',
   _USER_ID: 'userId',
+  _NICK_NAME: 'nickName',
 };
 
 export const getToken = () => {
@@ -43,4 +44,17 @@ export const setUserId = (userId: string) => {
 
 export const deleteUserId = () => {
   removeLocalStorage(GateUserDefaultKey._USER_ID);
+};
+
+export const getNickName = () => {
+  const token = getLocalStorage<string>(GateUserDefaultKey._NICK_NAME);
+  return token;
+};
+
+export const setNickName = (nickName: string) => {
+  setLocalStorage(GateUserDefaultKey._NICK_NAME, nickName);
+};
+
+export const deleteNickName = () => {
+  removeLocalStorage(GateUserDefaultKey._NICK_NAME);
 };
