@@ -78,13 +78,14 @@ function UserManagePage() {
     keyword.current = value;
   };
 
+  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
+
   // 페이지 세팅
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
     limit: 10,
   });
 
-  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
   const [total, setTotal] = useState<number>(100);
   const userColumns = new UserManageColumns(
     handleClickListBtn,
@@ -139,8 +140,8 @@ function UserManagePage() {
     const requestParams = {
       page: pageNumber.current,
       limit: pageSize.current,
-      keyword: keyword.current,
-      type: searchType.current,
+      keyword: '',
+      type: '',
     };
     setRequest(requestParams);
     memberManageApi
@@ -150,7 +151,7 @@ function UserManagePage() {
         let listData: DataTableRowType<UserManageColumnType>[] = [];
         if (data) {
           data?.content.forEach((element) => {
-            // listData.push(element);
+            listData.push(element);
           });
           setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
         } else {

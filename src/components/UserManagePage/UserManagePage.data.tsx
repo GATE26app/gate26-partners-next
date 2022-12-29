@@ -14,7 +14,7 @@ export type UserManageColumnType =
   | 'emailAddress'
   | 'activeUser'
   | 'leaveDate'
-  | 'withdrawalStatus'
+  // | 'withdrawalStatus'
   | 'reportedCount'
   | 'totalMileage'
   | 'ticketAuthCount'
