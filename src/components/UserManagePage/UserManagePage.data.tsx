@@ -85,7 +85,7 @@ class UserManageColumns {
       width: '10%',
       align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
-        <span>{value.withdrawalStatus ? '회원' : '탈퇴'}</span>
+        <span>{value.leaveDate === undefined ? '회원' : '탈퇴'}</span>
       ),
     },
 

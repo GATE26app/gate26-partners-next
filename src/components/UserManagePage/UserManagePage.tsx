@@ -1,13 +1,12 @@
 import Head from 'next/head';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import dayjs from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
-import memberManageApi, {
-  MemberManageApi,
-} from '@apis/membermanage/MemberManage';
+import memberManageApi from '@apis/membermanage/MemberManage';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -33,116 +32,145 @@ interface ReqLoungeProps {
 interface ModalProps {
   isOpen: boolean;
   type?: ModalType;
-  targetId?: number;
+  targetId?: string;
+  total: number;
 }
 
-// const rows: DataTableRowType<UserManageColumnType>[] = [
-//   {
-//     id: 1,
-//     name: '김이륙',
-//     email: 'gate26@toktokhan.dev',
-//     status: true,
-//     withdrawalAt: '2022-10-20',
-//     withdrawalStatus: false,
-//     reportAccrue: 1,
-//     mileage: 100,
-//     airlineTicket: 20,
-//     stampery: 10,
-//   },
-//   {
-//     id: 2,
-//     name: '김이륙',
-//     email: 'gate26@toktokhan.dev',
-//     status: false,
-//     withdrawalAt: '2022-10-20',
-//     withdrawalStatus: false,
-//     reportAccrue: 1,
-//     mileage: 100,
-//     airlineTicket: 20,
-//     stampery: 10,
-//   },
-//   {
-//     id: 3,
-//     name: '김이륙',
-//     email: 'gate26@toktokhan.dev',
-//     status: true,
-//     withdrawalAt: '2022-10-20',
-//     withdrawalStatus: false,
-//     reportAccrue: 1,
-//     mileage: 100,
-//     airlineTicket: 20,
-//     stampery: 10,
-//   },
-// ];
-
 function UserManagePage() {
-  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
+  // 검색 구분
+  const searchTypeList = [
+    { value: 0, label: '전체' },
+    { value: 1, label: '이름' },
+    { value: 2, label: '닉네임' },
+    { value: 3, label: '이메일' },
+  ];
+
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  };
+
+  const searchType = useRef('');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'name'; // 이름 검색
+        return;
+      case 2:
+        searchType.current = 'nickName'; // 닉네임 검색
+        return;
+      case 3:
+        searchType.current = 'emailAddress'; // 이메일 검색
+        return;
+      default: // 전체 검색
+        searchType.current = '';
+        return;
+    }
+  };
+
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {
+    keyword.current = value;
+  };
+
   // 페이지 세팅
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
     limit: 10,
   });
-  const [total, setTotal] = useState<number>(100);
 
+  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
+  const [total, setTotal] = useState<number>(100);
   const userColumns = new UserManageColumns(
     handleClickListBtn,
     handleChangeInput,
   );
-  const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
+
+  // 최초 조회
+  useEffect(() => {
+    getMemberInfo();
+  }, []);
+
+  const [listModal, setListModal] = useState<ModalProps>({
+    isOpen: false,
+    total: 0,
+  });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
-    console.log(`page ${newRequest.page}`);
+    if (key === 'page') {
+      setPage(value as number);
+    } else if (key === 'limit') {
+      setPage(0);
+      setPageSize(value as number);
+    } else if (key === 'searchType') {
+      setSearchType(value as number);
+    } else if (key === 'keyword') {
+      setKeyword(value as string);
+    }
     setRequest(newRequest);
-    getMemberInfoPagin(newRequest.page);
+    getMemberInfo(); // 페이징 요청
   }
   function handleClickListBtn(
     row: DataTableRowType<UserManageColumnType>,
     type: ModalType,
   ) {
-    setListModal({ isOpen: true, targetId: row.userId as number, type });
+    setListModal({
+      isOpen: true,
+      targetId: row.userId as string,
+      type,
+      total: row[type] as number,
+    });
   }
   function handleListModalClose() {
-    setListModal({ isOpen: false, targetId: undefined, type: undefined });
+    setListModal({
+      isOpen: false,
+      targetId: undefined,
+      type: undefined,
+      total: 0,
+    });
   }
 
   const getMemberInfo = useCallback(() => {
-    let params = { page: request.page, size: request.limit };
-    if (request.page !== 0) {
-      params = { page: request.page, size: request.limit * request.page };
-    }
-    console.log(request.page);
-
-    memberManageApi.getMemberInfo(params).then((response) => {
-      const { success, data, message } = response;
-
-      if (data) {
-        setRows(data.content);
-        console.log(data);
-      }
-    });
+    const requestParams = {
+      page: pageNumber.current,
+      limit: pageSize.current,
+      keyword: keyword.current,
+      type: searchType.current,
+    };
+    setRequest(requestParams);
+    memberManageApi
+      .getMemberInfo(requestParams)
+      .then((response) => {
+        const { success, data, message } = response;
+        let listData: DataTableRowType<UserManageColumnType>[] = [];
+        if (data) {
+          data?.content.forEach((element) => {
+            // listData.push(element);
+          });
+          setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
+        } else {
+          listData = [];
+          console.log('이용자 > 회원 목록 리스트 호출 실패');
+        }
+        setRows(listData);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
-  const getMemberInfoPagin = useCallback((page: number) => {
-    let params = { page: request.page, size: request.limit };
-    if (page !== 0) {
-      params = { page: page, size: request.limit * page };
-    }
-    console.log(request.page);
+  const Excelrows: DataTableRowType<UserManageColumnType>[] = [];
 
-    memberManageApi.getMemberInfo(params).then((response) => {
-      const { success, data, message } = response;
-
-      if (data) {
-        setRows(data.content);
-        console.log(data);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    getMemberInfo();
-  }, []);
+  const excelDown = () => {
+    // console.log('다운로드 클릭' + excel);
+    // const ws = excel?.utils?.json_to_sheet(rows);
+    // const wb = excel?.utils?.book_new();
+    // excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    // excel?.writeFile(wb, '회원관리 목록.xlsx');
+  };
 
   return (
     <>
@@ -158,25 +186,21 @@ function UserManagePage() {
         <BreadCrumb depth={['이용자', '회원 관리']} />
         <PageTitle
           title="회원 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
-            ],
-            keyword: '',
+            searchTypes: searchTypeList,
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              handleChangeInput('searchType', type);
             },
             onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+              handleChangeInput('keyword', keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
@@ -199,6 +223,7 @@ function UserManagePage() {
       </Flex>
       <RetainedMileageModal
         targetId={listModal.targetId}
+        totalMileage={listModal.total}
         isOpen={listModal.isOpen && listModal.type === 'totalMileage'}
         onClose={handleListModalClose}
       />

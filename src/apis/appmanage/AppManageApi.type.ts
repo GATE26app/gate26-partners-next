@@ -1,6 +1,7 @@
 import { StringLocale } from 'yup/lib/locale';
 
 export type AppVersionInfoDTOType = {
+  id?: number;
   deviceType: string;
   majorVersion: string;
   minorVersion: string;
@@ -34,4 +35,23 @@ export type AppVesionInfo = {
   descText: string;
   versionStatus: string;
   modifiedDate: string;
+};
+
+export type RequestDTOType = {
+  deviceType?: string;
+  keyword?: string;
+  page?: number;
+  size?: number;
+};
+
+export type AppVesionListDTOType = {
+  code?: string;
+  data?: {
+    content: AppVesionInfo[];
+    totalElements?: number;
+    totalPages?: number;
+  };
+  message?: string;
+  count?: number;
+  success: boolean;
 };
