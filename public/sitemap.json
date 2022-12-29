@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-
-["","/notice","/oneQuestion","/oneQuestion/main","/user","/admin/account","/admin/menu","/commonCode/airLineCode","/commonCode/airportCode","/commonCode/managementCode","/community/chat","/community/event","/community/lounge","/community/tip","/push/manage","/user/list","/user/manage","/user/report"]
-=======
-["","/oneQuestion","/oneQuestion/main","/notice","/user","/admin/account","/admin/menu","/commonCode/airLineCode","/commonCode/airportCode","/commonCode/managementCode","/community/chat","/community/event","/community/lounge","/community/tip","/push/manage","/user/list","/user/manage","/user/report"]
->>>>>>> 16f698767b06d2da5e71a5f945000bc1d98f627e
+["","/notice","/oneQuestion","/oneQuestion/main","/user","/admin/account","/admin/menu","/community/chat","/community/event","/community/lounge","/commonCode/airLineCode","/community/tip","/commonCode/managementCode","/commonCode/airportCode","/push/manage","/user/list","/user/manage","/user/report"]
