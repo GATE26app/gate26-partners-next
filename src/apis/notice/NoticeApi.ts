@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import instance, { AxiosResponseType } from '@apis/_axios/instance';
 
+import { formatDateTimeDash } from '@utils/format';
 import { getToken } from '@utils/localStorage/token';
 
 import {
@@ -33,13 +34,18 @@ export class NoticeApi {
   postNotice = async (
     body: NoticeDTOType,
   ): Promise<AxiosResponseType<NoticeListDTOType>> => {
+    const body2 = {
+      ...body,
+      startDate: formatDateTimeDash(body.startDate),
+      expiredDate: formatDateTimeDash(body.expiredDate),
+    };
     const { data } = await this.axios({
       method: 'POST',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
       url: `/notice`,
-      data: body,
+      data: body2,
     });
     return data;
   };
@@ -47,10 +53,15 @@ export class NoticeApi {
   putNotice = async (
     body: NoticeDTOType,
   ): Promise<AxiosResponseType<NoticeListDTOType>> => {
+    const body2 = {
+      ...body,
+      startDate: formatDateTimeDash(body.startDate),
+      expiredDate: formatDateTimeDash(body.expiredDate),
+    };
     const { data } = await this.axios({
       method: 'PUT',
       url: `/notice`,
-      data: body,
+      data: body2,
     });
     return data;
   };

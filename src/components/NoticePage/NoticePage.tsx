@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { Dayjs } from 'dayjs';
+
 import { Flex } from '@chakra-ui/react';
 
 import noticeApi from '@apis/notice/NoticeApi';
@@ -23,13 +25,17 @@ interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
   targetId?: string;
+  title?: string;
+  content?: string;
+  startDate?: Dayjs;
+  expiredDate?: Dayjs;
 }
 
 const SEARCH_TYPE = ['ALL', 'TITLE', 'CONTENT'];
 
 function NoticePage() {
   const [request, setRequest] = useState<NoticeParamGetType>({
-    page: 1,
+    page: 0,
     limit: 10,
     search: '',
     filter: SEARCH_TYPE[0],
@@ -46,7 +52,6 @@ function NoticePage() {
     if (key === 'limit') {
       newRequest.page = 1;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
@@ -60,6 +65,10 @@ function NoticePage() {
       isOpen: true,
       type: 'modify',
       targetId: row.noticeId as string,
+      title: row.title as string,
+      content: row.content as string,
+      startDate: row.startDate as Dayjs,
+      expiredDate: row.expiredDate as Dayjs,
     });
   };
 
@@ -73,10 +82,8 @@ function NoticePage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: async () => {
-          const response = await noticeApi.deleteNotice(row.noticeId as string);
-          if (response.success) {
-            console.log('삭제 처리:', row);
-          }
+          await noticeApi.deleteNotice(row.noticeId as string);
+          getNoticeList();
         },
       }),
     );
@@ -121,7 +128,7 @@ function NoticePage() {
               { value: 1, label: '제목' },
               { value: 2, label: '내용' },
             ],
-            keyword: '',
+            keyword: request.search,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('filter', SEARCH_TYPE[type]),
@@ -157,9 +164,12 @@ function NoticePage() {
       <NoticeDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal}
         onClose={handleCloseModal}
-        onComplete={getNoticeList}
+        onComplete={() => {
+          handleCloseModal();
+          getNoticeList();
+        }}
       />
     </>
   );

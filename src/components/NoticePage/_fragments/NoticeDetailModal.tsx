@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import {
   Flex,
@@ -26,23 +26,41 @@ import { NoticeColumnType } from '../NoticePage.data';
 
 interface NoticeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: string;
+  detail: {
+    targetId?: string;
+    title?: string;
+    content?: string;
+    startDate?: Dayjs;
+    expiredDate?: Dayjs;
+  };
+
   onComplete?: () => void;
 }
 const NoticeDetailModal = ({
   type,
-  targetId,
+  detail,
   onClose,
   onComplete,
   ...props
 }: NoticeDetailProps) => {
   const [request, setRequest] = useState<NoticeDTOType>({
-    noticeId: targetId ? targetId : undefined,
+    noticeId: '',
     title: '',
     content: '',
-    startDate: dayjs('2022-09-21 09:00'),
-    expiredDate: dayjs('2022-09-21 09:00'),
+    startDate: dayjs(),
+    expiredDate: dayjs(),
   });
+
+  useEffect(() => {
+    const request = {
+      noticeId: detail.targetId ? detail.targetId : undefined,
+      title: detail.title ? detail.title : '',
+      content: detail.content ? detail.content : '',
+      startDate: detail.startDate ? dayjs(detail.startDate) : dayjs(),
+      expiredDate: detail.expiredDate ? dayjs(detail.expiredDate) : dayjs(),
+    };
+    setRequest(request);
+  }, [detail]);
 
   const handleCreate = async () => {
     const response = await NoticeApi.postNotice(request);
@@ -112,17 +130,6 @@ const NoticeDetailModal = ({
       </Flex>
     );
   };
-
-  useEffect(() => {
-    if (type !== 'modify') {
-      return;
-    }
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
-
-  useEffect(() => {
-    console.log('업데이트 : ', request);
-  }, [request]);
 
   return (
     <Modal

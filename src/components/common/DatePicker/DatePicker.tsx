@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useState } from 'react';
+import React, { RefObject, useEffect, useRef, useState } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -57,6 +57,10 @@ const DatePicker = ({
       onApply(date);
     }
   };
+
+  useEffect(() => {
+    setDate(curDate);
+  }, [curDate]);
 
   return (
     <>
