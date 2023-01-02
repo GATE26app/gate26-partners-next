@@ -23,6 +23,11 @@ interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
   targetId?: string;
+  title?: string;
+  coverImg?: string;
+  img?: string;
+  displayOrder?: number;
+  openYn?: boolean;
 }
 
 function CommunityLoungePage() {
@@ -35,6 +40,7 @@ function CommunityLoungePage() {
   const [rows, setRows] = useState<DataTableRowType<LoungeColumnType>[]>([]);
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+  const [displayMax, setDisplayMax] = useState<number>(0);
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
@@ -53,7 +59,16 @@ function CommunityLoungePage() {
     if (!row.tgId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.tgId as string });
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      targetId: row.tgId as string,
+      title: row.loungeName as string,
+      coverImg: row.coverImg as string,
+      img: row.imagePath as string,
+      displayOrder: row.displayOrder as number,
+      openYn: row.isOpen as boolean,
+    });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
@@ -84,6 +99,15 @@ function CommunityLoungePage() {
         const { data } = response;
         setTotal(data.totalElements);
         setRows(data.content);
+        getLoungeDisplayOrderMax();
+      }
+    });
+  };
+
+  const getLoungeDisplayOrderMax = () => {
+    CommunityLoungeApi.getDisplayOrderMax().then((count) => {
+      if (count > 0) {
+        setDisplayMax(count);
       }
     });
   };
@@ -152,9 +176,13 @@ function CommunityLoungePage() {
       <LoungeDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal}
+        displayMax={displayMax}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => {
+          handleCloseModal();
+          getLoungeList();
+        }}
       />
     </>
   );

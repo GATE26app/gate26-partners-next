@@ -11,6 +11,7 @@ import {
   CommunityLoungeParamGetType,
   CommunityLoungeParamPatchType,
   CommunityLoungeParamPutType,
+  CommunityLoungeResponseType,
 } from './CommunityLoungeApi.type';
 
 export class CommunityLoungeApi {
@@ -27,35 +28,44 @@ export class CommunityLoungeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/lounge/list`,
+      url: `/lounges/list`,
       params,
     });
     return data;
   };
 
-  getCommunityLoungeById = async (
-    id: string,
-  ): Promise<CommunityLoungeDTOType> => {
+  getDisplayOrderMax = async (): Promise<number> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/v1/community-lounge/${id}`,
+      url: `/lounges/display/count`,
+    });
+    return data?.count;
+  };
+
+  postCommunityLounge = async (
+    body: CommunityLoungeDTOType,
+  ): Promise<CommunityLoungeResponseType> => {
+    const formData = new FormData();
+    formData.append('title', body.title);
+    formData.append('displayOrder', body.displayOrder.toString());
+    formData.append('openYn', body.openYn ? 'T' : 'F');
+    if (body.img) formData.append('img', body.img);
+    if (body.coverImg) formData.append('coverImg', body.coverImg);
+
+    const { data } = await this.axios({
+      method: 'POST',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+        'Content-Type': 'multipart/form-data',
+      },
+      url: `/lounges/create`,
+      data: formData,
     });
     return data;
   };
-
-  // postCommunityLounge = async (
-  //   body: CommunityLoungeDTOType,
-  // ): Promise<CommunityLoungeDTOType> => {
-  //   const { data } = await this.axios({
-  //     method: 'POST',
-  //     url: `/v1/community-lounge`,
-  //     data: body,
-  //   });
-  //   return data;
-  // };
 
   // putCommunityLounge = async (
   //   req: CommunityLoungeParamPutType,
@@ -86,7 +96,7 @@ export class CommunityLoungeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/lounge`,
+      url: `/lounges`,
       params: { tgId },
     });
     return data;

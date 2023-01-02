@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Input } from '@chakra-ui/react';
 
@@ -8,20 +8,22 @@ import { FileInputArea, FileWrapper, IconArea } from './FileUpload.Style';
 interface FileProps {
   onClick?: () => void;
   fileValue?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (file: File) => void;
 }
 
 const FileUpload = ({ onClick, fileValue, onChange }: FileProps) => {
   const file = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>(fileValue ? fileValue : '');
   const id = (Math.random() * 7).toString(7);
+
   const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.currentTarget;
-    const files = (target.files as FileList)[0];
-    setFileName(files?.name);
-    console.log(files?.name);
-    if (onChange) onChange(e);
+    const file = (target.files as FileList)[0];
+    setFileName(file?.name);
+
+    if (onChange) onChange(file);
   };
+
   const fileUpload = () => {
     const file = document.getElementById('file');
     file?.click();
@@ -29,12 +31,18 @@ const FileUpload = ({ onClick, fileValue, onChange }: FileProps) => {
       onClick();
     }
   };
+
   const delFileButton = () => {
     if (file.current) {
       file.current.value = '';
       setFileName('');
     }
   };
+
+  useEffect(() => {
+    setFileName(fileValue ? fileValue : '');
+  }, [fileValue]);
+
   return (
     <FileWrapper>
       <SmallButton

@@ -33,6 +33,8 @@ const CustomSelect = ({
   ...props
 }: CustomSelectProps & ReactSelectProps) => {
   const theme = useTheme();
+  const id = (Math.random() * 7).toString(7);
+
   const handleChange = (e: any) => {
     if (onChange) {
       onChange(e.value);
@@ -46,6 +48,7 @@ const CustomSelect = ({
     >
       <StyledReactSelect
         className="select-container"
+        key={`${id}_${defaultValue}`}
         {...props}
         isDisabled={disabled}
         placeholder={placeholder}
@@ -57,7 +60,7 @@ const CustomSelect = ({
         options={items}
         defaultValue={
           defaultValue !== undefined
-            ? items.find((item) => item.value === defaultValue)
+            ? items.find((item) => item.value == defaultValue)
             : items[0]
         }
         size={size}

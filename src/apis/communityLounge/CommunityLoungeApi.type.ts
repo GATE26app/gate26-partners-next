@@ -1,4 +1,10 @@
-export type CommunityLoungeDTOType = {};
+export type CommunityLoungeDTOType = {
+  title: string;
+  displayOrder: number;
+  openYn: boolean;
+  img?: File; // 홈
+  coverImg?: File; // 배너
+};
 export type CommunityLoungeListDTOType = {
   content: {
     tgId: string;
@@ -40,4 +46,19 @@ export type CommunityLoungeParamPutType = {
 export type CommunityLoungeParamPatchType = {
   id: string;
   data: Partial<CommunityLoungeDTOType>;
+};
+
+export type CommunityLoungeResponseType = {
+  tgId: string;
+  coverImg: string;
+  createdDate: string;
+  displayOrder: number;
+  endDateTime: string;
+  imagePath: string;
+  isAuthLounge: 'T' | 'F';
+  isOpen: 'T' | 'F';
+  loungeName: string;
+  loungeType: string;
+  modifiedDate: string;
+  startDateTime: string;
 };
