@@ -1,6 +1,11 @@
 import { DataTableColumnType } from '@components/common/DataTable';
 
-export type NoticeColumnType = 'id' | 'title' | 'content' | 'start' | 'end';
+export type NoticeColumnType =
+  | 'noticeId'
+  | 'title'
+  | 'content'
+  | 'startDate'
+  | 'expiredDate';
 
 export const LIST_COLUMNS: DataTableColumnType<NoticeColumnType>[] = [
   {
@@ -14,12 +19,12 @@ export const LIST_COLUMNS: DataTableColumnType<NoticeColumnType>[] = [
     width: '44.1%',
   },
   {
-    key: 'start',
+    key: 'startDate',
     name: '시작일자',
     width: '10%',
   },
   {
-    key: 'end',
+    key: 'expiredDate',
     name: '종료일자',
     width: '10%',
   },

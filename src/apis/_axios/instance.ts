@@ -1,16 +1,25 @@
 import axios, { AxiosError } from 'axios';
 
 import { CONFIG } from '@config';
+
 import { apiLogger } from '@utils/apiLogger';
 import { getToken } from '@utils/localStorage/token';
 import styledConsole from '@utils/styledConsole';
 
-import { refresh } from './refresh';
+// import { refresh } from './refresh';
+
+export type AxiosResponseType<T> = {
+  count: number;
+  data: T;
+  success: boolean;
+};
 
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: CONFIG.API_BASE_URL,
+  baseURL: isDev
+    ? 'http://43.201.68.143:40003'
+    : 'http://dbackoffice.gate26.co.kr',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -30,13 +39,15 @@ const unsetAuthHeader = () => {
 instance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
-    const isAccess = !!token && !!token.access;
+    // 만약 토큰이 없다면
+    const isAccess = !!token;
+    //&& !!token.access;
     if (isAccess) {
-      setAuthHeader(token.access as string);
-      return {
-        ...config,
-        headers: { ...config.headers, Authorization: `Bearer ${token.access}` },
-      };
+      // setAuthHeader(token.access as string);
+      // return {
+      //   ...config,
+      //   headers: { ...config.headers, Authorization: `Bearer ${token.access}` },
+      // };
     }
     return config;
   },
@@ -63,7 +74,7 @@ instance.interceptors.response.use(
         apiLogger({ status, reqData, resData: error, method: 'error' });
 
       if (isExpiredToken) {
-        return refresh(reqData);
+        // return refresh(reqData);
       }
 
       if (isUnAuthError) {

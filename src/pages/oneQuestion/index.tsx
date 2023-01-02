@@ -1,3 +1,3 @@
-import oneQuestionPage from '@components/OneQuestionPage/OneQuestionPage';
+import OneQuestionPage from '@components/OneQuestionPage';
 
-export default oneQuestionPage;
+export default OneQuestionPage;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import {
   Flex,
@@ -13,6 +13,9 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import NoticeApi from '@apis/notice/NoticeApi';
+import { NoticeDTOType } from '@apis/notice/NoticeApi.type';
+
 import Button from '@components/common/Button';
 import DatePicker from '@components/common/DatePicker';
 import InputBox from '@components/common/Input';
@@ -21,33 +24,58 @@ import TextareaBox from '@components/common/Textarea';
 
 import { NoticeColumnType } from '../NoticePage.data';
 
-interface ReqNoticeDetail {
-  title: string;
-  content: string;
-  start: dayjs.Dayjs;
-  end: dayjs.Dayjs;
-}
 interface NoticeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  detail: {
+    targetId?: string;
+    title?: string;
+    content?: string;
+    startDate?: Dayjs;
+    expiredDate?: Dayjs;
+  };
+
   onComplete?: () => void;
 }
 const NoticeDetailModal = ({
   type,
-  targetId,
+  detail,
   onClose,
   onComplete,
   ...props
 }: NoticeDetailProps) => {
-  const [request, setRequest] = useState<ReqNoticeDetail>({
+  const [request, setRequest] = useState<NoticeDTOType>({
+    noticeId: '',
     title: '',
     content: '',
-    start: dayjs('2022-09-21 09:00'),
-    end: dayjs('2022-09-21 09:00'),
+    startDate: dayjs(),
+    expiredDate: dayjs(),
   });
-  const handleCreate = () => {
-    if (onComplete) onComplete();
+
+  useEffect(() => {
+    const request = {
+      noticeId: detail.targetId ? detail.targetId : undefined,
+      title: detail.title ? detail.title : '',
+      content: detail.content ? detail.content : '',
+      startDate: detail.startDate ? dayjs(detail.startDate) : dayjs(),
+      expiredDate: detail.expiredDate ? dayjs(detail.expiredDate) : dayjs(),
+    };
+    setRequest(request);
+  }, [detail]);
+
+  const handleCreate = async () => {
+    const response = await NoticeApi.postNotice(request);
+    if (response.success) {
+      if (onComplete) onComplete();
+    }
   };
+
+  const handleUpdate = async () => {
+    const response = await NoticeApi.putNotice(request);
+    if (response.success) {
+      if (onComplete) onComplete();
+    }
+  };
+
   const handleChangeInput = (
     key: NoticeColumnType,
     value: string | number | dayjs.Dayjs,
@@ -84,8 +112,8 @@ const NoticeDetailModal = ({
           content={
             <DatePicker
               type="datetime"
-              curDate={request.start}
-              onApply={(val) => handleChangeInput('start', val)}
+              curDate={request.startDate}
+              onApply={(val) => handleChangeInput('startDate', val)}
             />
           }
         />
@@ -94,25 +122,14 @@ const NoticeDetailModal = ({
           content={
             <DatePicker
               type="datetime"
-              curDate={request.end}
-              onApply={(val) => handleChangeInput('end', val)}
+              curDate={request.expiredDate}
+              onApply={(val) => handleChangeInput('expiredDate', val)}
             />
           }
         />
       </Flex>
     );
   };
-
-  useEffect(() => {
-    if (type !== 'modify') {
-      return;
-    }
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
-
-  useEffect(() => {
-    console.log('업데이트 : ', request);
-  }, [request]);
 
   return (
     <Modal
@@ -141,7 +158,7 @@ const NoticeDetailModal = ({
             text={type === 'create' ? '추가' : '수정'}
             size={'sm'}
             width={'120px'}
-            onClick={handleCreate}
+            onClick={type === 'create' ? handleCreate : handleUpdate}
           />
         </ModalFooter>
       </ModalContent>

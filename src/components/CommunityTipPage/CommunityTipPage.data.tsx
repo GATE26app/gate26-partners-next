@@ -61,7 +61,7 @@ class CommunityTip {
       render: (value: DataTableRowType<TipColumnType>) => (
         <CustomSelect
           width={'65px'}
-          size={'xs'}
+          size="sm"
           items={[
             { value: 1, label: '노출' },
             { value: 0, label: '비활성' },

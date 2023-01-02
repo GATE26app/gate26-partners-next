@@ -7,13 +7,13 @@ import {
 
 export type AppVersionPageColumnType =
   | 'id'
-  | 'os'
-  | 'majorVer'
-  | 'minorVer'
-  | 'patchVer'
-  | 'releaseContent'
-  | 'releaseStatus'
-  | 'modifiedAt';
+  | 'deviceType'
+  | 'majorVersion'
+  | 'minorVersion'
+  | 'patchVersion'
+  | 'descText'
+  | 'versionStatus'
+  | 'modifiedDate';
 
 class AppVersionPageColumns {
   onChange?: (key: string, value: string | number) => void;
@@ -29,37 +29,42 @@ class AppVersionPageColumns {
 
   readonly LIST_COLUMNS: DataTableColumnType<AppVersionPageColumnType>[] = [
     {
-      key: 'os',
+      key: 'id',
+      name: 'id',
+      width: '0%',
+    },
+    {
+      key: 'deviceType',
       name: 'OS',
       width: '6.67%',
     },
     {
-      key: 'majorVer',
+      key: 'majorVersion',
       name: 'Major Version',
       width: '10%',
     },
     {
-      key: 'minorVer',
+      key: 'minorVersion',
       name: 'Minor Version',
       width: '10%',
     },
     {
-      key: 'patchVer',
+      key: 'patchVersion',
       name: 'Patch Version',
       width: '10%',
     },
     {
-      key: 'releaseContent',
+      key: 'versionStatus',
       name: '업데이트 내용 ',
       width: '38.33%',
     },
     {
       key: 'releaseStatus',
-      name: '릴리즈 상태',
+      name: '',
       width: '8.33%',
     },
     {
-      key: 'modifiedAt',
+      key: 'modifiedDate',
       name: '최종수정일',
       width: '10%',
     },

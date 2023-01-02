@@ -6,19 +6,21 @@ import {
   DataTableRowType,
 } from '@components/common/DataTable';
 
-export type UserManageColumnType =
-  | 'id'
-  | 'name'
-  | 'email'
-  | 'status'
-  | 'withdrawalAt'
-  | 'withdrawalStatus'
-  | 'reportAccrue'
-  | 'mileage'
-  | 'airlineTicket'
-  | 'stampery';
+import { crypto } from '@utils/crypto';
 
-export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
+export type UserManageColumnType =
+  | 'userId'
+  | 'name'
+  | 'emailAddress'
+  | 'activeUser'
+  | 'leaveDate'
+  | 'withdrawalStatus'
+  | 'reportedCount'
+  | 'totalMileage'
+  | 'ticketAuthCount'
+  | 'stampCount';
+
+export type ModalType = 'totalMileage' | 'ticketAuthCount' | 'stampCount';
 
 class UserManageColumns {
   onChange?: (key: string, value: string | number) => void;
@@ -43,25 +45,28 @@ class UserManageColumns {
       key: 'name',
       name: '이름',
       width: '11.67%',
+      render: (value: DataTableRowType<UserManageColumnType>) => {
+        return crypto.decrypt(value.name as string);
+      },
     },
     {
-      key: 'email',
+      key: 'emailAddress',
       name: '이메일',
       width: '19.17%',
     },
     {
-      key: 'status',
+      key: 'activeUser',
       name: '회원상태',
       width: '10%',
       render: (value: DataTableRowType<UserManageColumnType>) => (
         <CustomSelect
           width={'65px'}
-          size={'xs'}
+          size="sm"
           items={[
-            { value: 1, label: '활성' },
-            { value: 0, label: '비활성' },
+            { value: 'T', label: '활성' },
+            { value: 'F', label: '비활성' },
           ]}
-          defaultValue={Number(value.status)}
+          defaultValue={String(value.activeUser)}
           noBorder
           onChange={(value) =>
             this.onChange ? this.onChange('status', value as number) : undefined
@@ -70,7 +75,7 @@ class UserManageColumns {
       ),
     },
     {
-      key: 'withdrawalAt',
+      key: 'leaveDate',
       name: '탈퇴일자',
       width: '12.50%',
     },
@@ -80,17 +85,17 @@ class UserManageColumns {
       width: '10%',
       align: 'center',
       render: (value: DataTableRowType<UserManageColumnType>) => (
-        <span>{value.withdrawalStatus ? '탈퇴' : '회원'}</span>
+        <span>{value.leaveDate === undefined ? '회원' : '탈퇴'}</span>
       ),
     },
 
     {
-      key: 'reportAccrue',
+      key: 'reportedCount',
       name: '신고누적',
       width: '8.33%',
     },
     {
-      key: 'mileage',
+      key: 'totalMileage',
       name: '보유 마일리지',
       width: '10%',
       align: 'center',
@@ -98,14 +103,14 @@ class UserManageColumns {
         <Text
           cursor="pointer"
           textStyle="textActiveSm"
-          onClick={() => this.onClick(value, 'mileage')}
+          onClick={() => this.onClick(value, 'totalMileage')}
         >
-          {value.mileage}
+          {value.totalMileage}
         </Text>
       ),
     },
     {
-      key: 'airlineTicket',
+      key: 'ticketAuthCount',
       name: '항공권 인증 내역',
       width: '8.33%',
       align: 'center',
@@ -113,14 +118,14 @@ class UserManageColumns {
         <Text
           cursor="pointer"
           textStyle="textActiveSm"
-          onClick={() => this.onClick(value, 'airlineTicket')}
+          onClick={() => this.onClick(value, 'ticketAuthCount')}
         >
-          {value.airlineTicket}
+          {value.ticketAuthCount}
         </Text>
       ),
     },
     {
-      key: 'stampery',
+      key: 'stampCount',
       name: '스탬프러리',
       width: '8.33%',
       align: 'center',
@@ -128,9 +133,9 @@ class UserManageColumns {
         <Text
           cursor="pointer"
           textStyle="textActiveSm"
-          onClick={() => this.onClick(value, 'stampery')}
+          onClick={() => this.onClick(value, 'stampCount')}
         >
-          {value.stampery}
+          {value.stampCount}
         </Text>
       ),
     },

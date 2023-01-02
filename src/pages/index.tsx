@@ -458,7 +458,7 @@ function Test({ Component, pageProps }: any) {
                 />
                 <CustomSelect
                   width={'100px'}
-                  size={'xs'}
+                  size="sm"
                   placeholder={'Type'}
                   items={[
                     { value: 1, label: 'Option1' },

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
-
 import {
   Flex,
   Modal,
@@ -14,6 +12,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import memberManageApi from '@apis/membermanage/MemberManage';
+import { SearchGetDTOType } from '@apis/membermanage/MemberManage.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
@@ -28,73 +28,99 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-const rows: DataTableRowType<AirlineTicketColumnType>[] = [
-  {
-    id: 1,
-    arrivals: '김포',
-    destination: '베트남',
-    arrivalsAt: dayjs('2022-10-20 09:00'),
-    destinationAt: dayjs('2022-10-20 09:00'),
-    certifiedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 2,
-    arrivals: '김포',
-    destination: '베트남',
-    arrivalsAt: dayjs('2022-10-20 09:00'),
-    destinationAt: dayjs('2022-10-20 09:00'),
-    certifiedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 3,
-    arrivals: '김포',
-    destination: '베트남',
-    arrivalsAt: dayjs('2022-10-20 09:00'),
-    destinationAt: dayjs('2022-10-20 09:00'),
-    certifiedAt: dayjs('2022-10-20 09:00'),
-  },
-];
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
 
 interface AirlineTicketModalProps extends Omit<ModalProps, 'children'> {
-  targetId?: number;
+  targetId?: string;
 }
 const AirlineTicketModal = ({
   targetId,
   onClose,
+  isOpen,
   ...props
 }: AirlineTicketModalProps) => {
-  const [request, setRequest] = useState({
+  const [request, setRequest] = useState<SearchParam>({
     page: 1,
-    limit: 10,
+    size: 10,
+    searchType: 1,
   });
-
+  const [rows, setRows] = useState<DataTableRowType<AirlineTicketColumnType>[]>(
+    [],
+  );
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
-  const [total, setTotal] = useState<number>(100);
-  const handleOpenDialog = () => {
+  const [total, setTotal] = useState<number>(0);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setRequest({} as SearchParam);
+      setRows([]);
+    }
+
+    if (isOpen && targetId) getActivityHistory(request);
+  }, [targetId, isOpen]);
+
+  const handleOpenDialog = (airlineTicketId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '보유마일리지',
-        message: '보유 마일리지 내역을 삭제 하시겠습니까?',
+        title: '항공권 인증 내역',
+        message: '항공권 인증 내역을 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('asdasdasdsdasdas');
+          handleHistoryDelete(airlineTicketId);
         },
       }),
     );
     openCustomModal();
   };
-  const handleChangeInput = (key: string, value: string | number) => {
-    const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
-    }
-    console.log('변경: ', key, value);
-    setRequest(newRequest);
+
+  const handleHistoryDelete = (airlineTicketId: string) => {
+    memberManageApi
+      .deleteActivityHistory({ historyId: airlineTicketId })
+      .then(({ success }) => {
+        const newRequest = { ...request };
+        if (success) {
+          //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+          if (rows && rows.length - 1 === 0 && newRequest.page)
+            newRequest.page -= 1;
+
+          getActivityHistory(newRequest);
+          alert('삭제 성공');
+        } else {
+          alert('삭제 실패');
+        }
+      })
+      .catch(() => {
+        alert('삭제 실패');
+      });
   };
 
+  const getActivityHistory = (param: SearchParam) => {
+    if (targetId) {
+      memberManageApi
+        .getActivityHistory({
+          userId: targetId,
+          ...param,
+        })
+        .then(({ data, success }) => {
+          if (data && success) {
+            console.log(data.content);
+            setRows(data.content);
+            setTotal(data.totalElements);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  const handleChangeInput = (key: string, value: string | number) => {
+    const newRequest = { ...request, [key]: value };
+    if (key === 'limit') newRequest.page = 1;
+
+    setRequest(newRequest);
+    if (key === 'limit' || key === 'page') getActivityHistory(newRequest);
+  };
   const renderContent = () => {
     return (
       <div>
@@ -102,19 +128,21 @@ const AirlineTicketModal = ({
           total={total}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '출발지' },
-              { value: 2, label: '도착지' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '출발지' },
+              { value: 3, label: '도착지' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => {
+              handleChangeInput('limit', value);
             },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+            onChangeSearchType: (value: number) => {
+              handleChangeInput('searchType', value);
             },
-            onClickSearch: () => console.log('검색'),
+            onChangeKeyword: (value: string) => {
+              handleChangeInput('keyword', value);
+            },
+            onClickSearch: () => getActivityHistory(request),
           }}
         />
         <DataTable
@@ -122,10 +150,12 @@ const AirlineTicketModal = ({
           columns={AIRLINE_TICKET_COLUMNS}
           rows={rows}
           isMenu
-          onDelete={handleOpenDialog}
+          onDelete={({ airlineTicketId }) =>
+            handleOpenDialog(airlineTicketId as string)
+          }
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page || 0,
+            limit: request.size || 10,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -139,16 +169,13 @@ const AirlineTicketModal = ({
     );
   };
 
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId]);
-
   return (
     <Modal
       size={'xl'}
       isCentered
       variant={'simple'}
       onClose={onClose}
+      isOpen={isOpen}
       {...props}
     >
       <ModalOverlay />

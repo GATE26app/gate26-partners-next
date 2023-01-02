@@ -27,7 +27,7 @@ interface ReqLoungeDetail {
 }
 interface LoungeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: string;
   onComplete?: () => void;
 }
 const LoungeDetailModal = ({

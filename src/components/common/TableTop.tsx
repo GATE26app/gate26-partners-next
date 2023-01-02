@@ -13,7 +13,7 @@ interface SearchTypeProps {
 }
 interface SearchProps {
   searchTypes: SearchTypeProps[];
-  keyword: string;
+  keyword?: string;
   onChangeLimit: (value: number) => void;
   onChangeSearchType: (type: number) => void;
   onChangeKeyword: (keyword: string) => void;
@@ -53,7 +53,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </EmphasisText>
         <CustomSelect
           width={'110px'}
-          size={'xs'}
+          size="sm"
           items={[
             { value: 10, label: '10개씩 보기' },
             { value: 25, label: '25개씩 보기' },
@@ -65,7 +65,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         {createButton && (
           <IconButton
             type={'add'}
-            size={'xs'}
+            size="sm"
             width={buttonWidth ? buttonWidth : undefined}
             text={buttonTitle ? buttonTitle : ''}
             onClick={onClickCreate}
@@ -78,13 +78,13 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
         </Text>
         <CustomSelect
           width={'100px'}
-          size={'sm'}
+          size="sm"
           items={searchTypes}
           onChange={(value) => onChangeSearchType(value as number)}
         />
         <SearchInput
           placeholder={'Search'}
-          text={keyword}
+          text={keyword || ''}
           onChange={onChangeKeyword}
           onSearch={onClickSearch}
         />
