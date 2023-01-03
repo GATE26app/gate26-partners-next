@@ -37,7 +37,7 @@ interface ReqPushDetail {
 }
 interface PushDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: string;
   onComplete?: () => void;
 }
 const PushDetailModal = ({

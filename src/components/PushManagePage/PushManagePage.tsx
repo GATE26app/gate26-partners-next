@@ -1,11 +1,13 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
+import { PushParamGetType } from '@apis/push/Push.type';
+import pushApi from '@apis/push/PushApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -22,49 +24,18 @@ import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandl
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: string;
 }
-
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
-
-const rows: DataTableRowType<AlarmColumnType>[] = [
-  {
-    id: 1,
-    target: '전체',
-    push_type: '모빌리티-공항정보',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 2,
-    target: '특정 채팅방',
-    push_type: '채팅_라운지',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 3,
-    target: '특정 채팅방',
-    push_type: '모빌리티_항공',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-];
 
 function PushManagePage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<PushParamGetType>({
+    page: 0,
+    size: 10,
+    keyword: '',
+    searchType: 1,
   });
   const [total, setTotal] = useState<number>(100);
+  const [rows, setRows] = useState<DataTableRowType<AlarmColumnType>[]>([]);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
 
   const dispatch = useDispatch();
@@ -72,20 +43,23 @@ function PushManagePage() {
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
   const handleEditRow = (row: DataTableRowType<AlarmColumnType>) => {
-    if (!row.id) {
+    if (!row.noticeId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      targetId: row.noticeId as string,
+    });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
@@ -98,12 +72,25 @@ function PushManagePage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('삭제 처리:', row);
+          pushApi.deletePush(row.noticeId as string);
         },
       }),
     );
     openCustomModal();
   };
+
+  const getPushList = async () => {
+    const response = await pushApi.getPushList(request);
+    if (response.success) {
+      const { data } = response;
+      setTotal(data.totalElements);
+      setRows(data.content);
+    }
+  };
+
+  useEffect(() => {
+    getPushList();
+  }, [request]);
   return (
     <>
       <Head>
@@ -124,21 +111,21 @@ function PushManagePage() {
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '푸쉬대상' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '푸쉬내용' },
+              { value: 1, label: '전체' },
+              // { value: 1, label: '푸쉬대상' },
+              { value: 2, label: '제목' },
+              { value: 3, label: '푸쉬내용' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
+            searchType: request.searchType,
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('searchType', type),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
             onClickSearch: () => console.log('검색'),
           }}
           createButton={{
@@ -154,8 +141,8 @@ function PushManagePage() {
           onDelete={handleDeleteRow}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page!,
+            limit: request.size!,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),

@@ -1,12 +1,12 @@
 import { DataTableColumnType } from '@components/common/DataTable';
 
 export type AlarmColumnType =
-  | 'id'
-  | 'target'
-  | 'push_type'
+  | 'noticeId'
+  // | 'target'
+  | 'type'
   | 'title'
   | 'content'
-  | 'reserve';
+  | 'noticeDate';
 
 export const LIST_COLUMNS: DataTableColumnType<AlarmColumnType>[] = [
   {
@@ -15,7 +15,7 @@ export const LIST_COLUMNS: DataTableColumnType<AlarmColumnType>[] = [
     width: '10.8%',
   },
   {
-    key: 'push_type',
+    key: 'type',
     name: '푸쉬유형',
     width: '14.1%',
   },
@@ -30,7 +30,7 @@ export const LIST_COLUMNS: DataTableColumnType<AlarmColumnType>[] = [
     width: '34.1%',
   },
   {
-    key: 'reserve',
+    key: 'noticeDate',
     name: '예약발송',
     width: '10%',
   },

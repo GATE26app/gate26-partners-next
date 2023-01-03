@@ -13,6 +13,7 @@ interface SearchTypeProps {
 }
 interface SearchProps {
   searchTypes: SearchTypeProps[];
+  searchType?: number;
   keyword?: string;
   onChangeLimit: (value: number) => void;
   onChangeSearchType: (type: number) => void;
@@ -26,12 +27,14 @@ interface ButtonProps {
 }
 interface TableTopProps {
   total: number;
+  limit?: number;
   search: SearchProps;
   createButton?: ButtonProps;
 }
-const TableTop = ({ total, search, createButton }: TableTopProps) => {
+const TableTop = ({ total, limit, search, createButton }: TableTopProps) => {
   const {
     searchTypes,
+    searchType,
     keyword,
     onChangeLimit,
     onChangeSearchType,
@@ -60,6 +63,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
             { value: 50, label: '50개씩 보기' },
             { value: 100, label: '100개씩 보기' },
           ]}
+          defaultValue={limit}
           onChange={(value) => onChangeLimit(value as number)}
         />
         {createButton && (
@@ -80,6 +84,7 @@ const TableTop = ({ total, search, createButton }: TableTopProps) => {
           width={'100px'}
           size="sm"
           items={searchTypes}
+          defaultValue={searchType}
           onChange={(value) => onChangeSearchType(value as number)}
         />
         <SearchInput
