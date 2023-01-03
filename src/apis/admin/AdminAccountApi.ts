@@ -2,8 +2,9 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
-import { DefaultDTOType, PagingDTOType } from './AdminAccountApi.type';
 import { getToken } from '@utils/localStorage/token';
+
+import { DefaultDTOType, PagingDTOType } from './AdminAccountApi.type';
 
 export class AdminAccountApi {
   axios: AxiosInstance = instance;
@@ -12,13 +13,11 @@ export class AdminAccountApi {
   }
 
   // 관리자 조회
-  getAdminAccount = async (
-    params?: PagingDTOType
-  ): Promise<DefaultDTOType> => {
+  getAdminAccount = async (params?: PagingDTOType): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
-        'X-AUTH-TOKEN': `${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
       url: `http://dbackoffice.gate26.co.kr/admin`,
       params,
@@ -32,7 +31,7 @@ export class AdminAccountApi {
       url: `http://dbackoffice.gate26.co.kr/admin?page=0&size=10000`,
     });
     return data;
-  } 
+  };
 }
 
 const adminAccountApi = new AdminAccountApi();

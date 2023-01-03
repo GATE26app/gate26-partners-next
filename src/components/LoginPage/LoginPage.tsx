@@ -48,6 +48,7 @@ function LoginPage() {
       if (response.success) {
         if (response.data !== undefined) {
           setToken(response.data?.accessToken);
+          setNickName(response.data?.adminName);
           router.push('/user/list');
         }
       } else {
