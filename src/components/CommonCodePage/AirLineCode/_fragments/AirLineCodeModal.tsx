@@ -218,7 +218,7 @@ const StampModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {type === 'create' ? '코드 추가' : '코드 수정'}
+          {type === 'create' ? '공항사 코드 추가' : '공항사 코드 수정'}
         </ModalHeader>
 
         <ModalBody>{renderContent()}</ModalBody>
