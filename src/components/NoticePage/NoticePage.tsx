@@ -50,7 +50,7 @@ function NoticePage() {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') {
-      newRequest.page = 1;
+      newRequest.page = 0;
     }
     setRequest(newRequest);
   }
@@ -122,12 +122,14 @@ function NoticePage() {
 
         <TableTop
           total={total}
+          limit={request.limit}
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '제목' },
               { value: 2, label: '내용' },
             ],
+            searchType: SEARCH_TYPE.indexOf(request.filter),
             keyword: request.search,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) =>

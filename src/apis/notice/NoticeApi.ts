@@ -60,6 +60,9 @@ export class NoticeApi {
     };
     const { data } = await this.axios({
       method: 'PUT',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: `/notice`,
       data: body2,
     });
@@ -69,6 +72,9 @@ export class NoticeApi {
   deleteNotice = async (id: string): Promise<AxiosResponseType<boolean>> => {
     const { data } = await this.axios({
       method: 'DELETE',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
       url: `/notice/${id}`,
     });
     return data;

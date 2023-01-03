@@ -47,8 +47,8 @@ function CommunityLoungePage() {
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
     setRequest(newRequest);
   };
@@ -135,13 +135,15 @@ function CommunityLoungePage() {
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '라운지명' },
             ],
+            searchType: request.searchType,
             keyword: request.keyword,
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('searchType', type),
             onChangeKeyword: (keyword: string) =>
