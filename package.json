@@ -112,5 +112,8 @@
     "win32",
     "linux"
   ],
-  "engineStrict": true
+  "engineStrict": true,
+  "resolutions": {
+    "@types/react": "^17.0.38"
+  }
 }
