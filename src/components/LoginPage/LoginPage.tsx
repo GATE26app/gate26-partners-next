@@ -11,7 +11,7 @@ import CheckBox from '@components/common/CheckBox';
 import FormHelper from '@components/common/FormHelper';
 import InputBox from '@components/common/Input';
 
-import { setToken } from '@utils/localStorage/token';
+import { setNickName, setToken } from '@utils/localStorage/token';
 
 interface LoginModel {
   adminId: string;
@@ -31,6 +31,19 @@ function LoginPage() {
       adminId: request.adminId,
       adminPwd: request.adminPwd,
     };
+    // //TEST LOGIN
+    // authApi.postTestLogin().then((response) => {
+    //   console.log(response);
+    //   if (response.success) {
+    //     if (response.data !== undefined) {
+    //       setToken(response.data?.accessToken);
+    //       setNickName(response.data?.adminName);
+    //       router.push('/user/list');
+    //     }
+    //   } else {
+    //     console.log('오류');
+    //   }
+    // });
     authApi.postLogin(body).then((response) => {
       if (response.success) {
         if (response.data !== undefined) {

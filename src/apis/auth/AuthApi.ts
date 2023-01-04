@@ -19,6 +19,14 @@ export class AuthApi {
     });
     return data;
   };
+
+  postTestLogin = async (): Promise<any> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: '/admin/loginTest',
+    });
+    return data;
+  };
 }
 
 const authApi = new AuthApi();

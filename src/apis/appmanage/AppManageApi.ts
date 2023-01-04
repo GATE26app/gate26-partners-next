@@ -2,7 +2,14 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
-import { AppVersionInfoDTO, AppVersionInfoDTOType } from './AppManageApi.type';
+import { getToken } from './../../utils/localStorage/token/index';
+import {
+  AppVersionInfoDTO,
+  AppVersionInfoDTOType,
+  AppVesionListDTOType,
+  DefaultDTOType,
+  RequestDTOType,
+} from './AppManageApi.type';
 
 export class AppManageApi {
   axios: AxiosInstance = instance;
@@ -17,10 +24,64 @@ export class AppManageApi {
     const { data } = await this.axios({
       method: 'POST',
       headers: {
-        'X-AUTH-TOKEN': `eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYW5nZ2giLCJpYXQiOjE2NzE2MDc4MjksImV4cCI6MTY3MTY5NDIyOX0.ajBFndeaI_QIc1sU1hV2xgwiZdb2UuFOFePgEhZg8Hs`,
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
       url: `http://dbackoffice.gate26.co.kr/app/version`,
       data: body,
+    });
+    return data;
+  };
+
+  // 앱 버전 리스트 조회하기
+  getAppVersionList = async (
+    params?: RequestDTOType,
+  ): Promise<AppVesionListDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `http://dbackoffice.gate26.co.kr/app/version`,
+      params,
+    });
+    return data;
+  };
+
+  // 앱 버전 상세 조회하기
+  getAppVersion = async (id: number): Promise<AppVersionInfoDTO> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `http://dbackoffice.gate26.co.kr/app/version/${id}`,
+    });
+    return data;
+  };
+
+  // 앱 버전 수정하기
+  putAppVersion = async (
+    body: AppVersionInfoDTOType,
+  ): Promise<AppVersionInfoDTO> => {
+    const { data } = await this.axios({
+      method: 'PUT',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `http://dbackoffice.gate26.co.kr/app/version`,
+      data: body,
+    });
+    return data;
+  };
+
+  // 앱 버전 삭제하기
+  deleteAppVersion = async (id: any): Promise<DefaultDTOType> => {
+    const { data } = await this.axios({
+      method: 'DELETE',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `http://dbackoffice.gate26.co.kr/app/version/${id}`,
     });
     return data;
   };

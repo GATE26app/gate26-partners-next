@@ -1,19 +1,23 @@
 import { DataTableColumnType } from '@components/common/DataTable';
 
-export type StamperyColumnType = 'id' | 'type' | 'title' | 'savedAt';
+export type StamperyColumnType =
+  | 'tgId'
+  | 'stampType'
+  | 'stampName'
+  | 'createdDate';
 export const STAMPERY_COLUMNS: DataTableColumnType<StamperyColumnType>[] = [
   {
-    key: 'type',
+    key: 'stampType',
     name: '스탬프러리 유형',
     width: '17.50%',
   },
   {
-    key: 'title',
+    key: 'stampName',
     name: '스탬프러리 명',
     width: '42.50%',
   },
   {
-    key: 'savedAt',
+    key: 'createdDate',
     name: '적립일자',
     width: '33.33%',
   },
