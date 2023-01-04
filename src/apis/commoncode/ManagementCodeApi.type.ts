@@ -1,37 +1,30 @@
 import { StringLocale } from 'yup/lib/locale';
 
 export type CommonCodeInfoDTOType = {
-  deviceType: string;
-  majorVersion: string;
-  minorVersion: string;
-  patchVersion: string;
-  descText: string;
-  versionStatus: string;
-};
-
-export type DefaultDTOType = {
-  code?: string;
-  data?: string;
-  message?: StringLocale;
-  count?: number;
-  success: boolean;
+  content: CommonCodeInfo[];
+  totalElements: number;
+  totalPages: number;
+  pageable:any;
 };
 
 export type CommonCodeInfoDTO = {
   code?: string;
-  data?: CommonCodeInfo;
+  data?: CommonCodeInfoDTOType;
   message?: StringLocale;
   count?: number;
   success: boolean;
 };
 
 export type CommonCodeInfo = {
-  id: number;
-  deviceType: string;
-  majorVersion: number;
-  minorVersion: number;
-  patchVersion: number;
+  codeId: number;
+  codeName: string;
   descText: string;
-  versionStatus: string;
-  modifiedDate: string;
+  codeValue: string;
+};
+
+export type PagingDTOType = {
+  page : number;
+  size : number;
+  type? : string;
+  keyword? : string;
 };

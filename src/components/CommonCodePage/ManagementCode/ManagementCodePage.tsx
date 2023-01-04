@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
@@ -16,6 +16,7 @@ import { ManageCode, MenageCol } from './ManagementCode.data';
 import CodeManagementModal from './_fragments/ManagementCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import managementCodeApi from '@apis/commoncode/ManagementCodeApi';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -51,9 +52,21 @@ const rows: DataTableRowType<MenageCol>[] = [
 ];
 
 const ManagementCode = () => {
-  const [total, setTotal] = useState<number>(100);
+  // 데이터 타입 정의 
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  }
+  const [rows, setRows]=useState<DataTableRowType<MenageCol>[]>([]);
+
+  const [total, setTotal] = useState<number>(0);
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const { openCustomModal } = useCustomModalHandlerContext();
@@ -71,10 +84,14 @@ const ManagementCode = () => {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') {
-      newRequest.page = 1;
+      setPage(0);
+      setPageSize(value as number);
+      
+    } else if(key === 'page') {
+      setPage(value as number);
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
+    getCommonCodeInfoPagin();
   }
   const handleDeleteRow = (row: DataTableRowType<MenageCol>) => {
     dispatch(
@@ -90,6 +107,40 @@ const ManagementCode = () => {
     );
     openCustomModal();
   };
+
+// // 페이징 API 불러오기 
+const getCommonCodeInfoPagin = useCallback(() => {
+  let params = { page: pageNumber.current, size: pageSize.current
+
+  };
+  console.log("params:",params);
+  managementCodeApi.getCommonCode(params).then((response) => {
+        const { success, data, message } = response;
+        // let listData: DataTableRowType<MenageCol>[]=[];
+        setRows([]);
+        if (data) {
+          console.log(data.content.length);
+          data.content.map((iter) => {
+            const obj :DataTableRowType<MenageCol> = { 'id': iter.codeId,
+            'code': iter.codeName, 
+            'codeValue': iter.codeValue,'info': iter.descText
+            };
+            // listData.push(obj);
+            setRows(row => [...row, obj])
+          })
+          // setRows(listData);
+          setTotal(data.totalElements ? data.totalElements : 0);
+        } else {
+          console.log(message);
+        }
+      });
+},[]);
+
+// // useEffect 최초 호출
+useEffect(() => {
+  getCommonCodeInfoPagin();
+}, []);
+
   return (
     <>
       <Head>
