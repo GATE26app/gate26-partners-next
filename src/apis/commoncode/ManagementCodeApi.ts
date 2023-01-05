@@ -12,15 +12,15 @@ export class ManagementCodeApi {
   }
 
   getCommonCode =async (
-    body : PagingDTOType,
+    params : PagingDTOType,
   ): Promise<CommonCodeInfoDTO> => {
     const { data } = await this.axios({
         method: 'GET',
         headers: {
           'X-AUTH-TOKEN':`${getToken()}`
         },
-        url: `http://localhost:40004/common/codes`,
-        // body,
+        url: `http://localhost:40004/common/codes?`,
+        params,
       });
       return data;
   }

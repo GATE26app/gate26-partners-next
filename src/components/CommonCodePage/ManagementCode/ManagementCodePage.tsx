@@ -22,7 +22,7 @@ interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
   page: number;
-  limit: number;
+  size: number;
 }
 interface ModalProps {
   isOpen: boolean;
@@ -62,12 +62,31 @@ const ManagementCode = () => {
   const setPageSize = (value: number) => {
     pageSize.current = value;
   }
+
+  const searchType = useRef('');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'parentCodeName'; // 상위 코드 검색
+        return;
+      case 2:
+        searchType.current = 'codeName'; // 코드 검색
+        return;
+      default:
+        searchType.current = ''; // 전체 검색
+        return;
+    }
+  };
+
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {keyword.current = value};
+
   const [rows, setRows]=useState<DataTableRowType<MenageCol>[]>([]);
 
-  const [total, setTotal] = useState<number>(0);
+  const [total, setTotal] = useState<number>(100);
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
-    limit: 10,
+    size: 10,
   });
   const { openCustomModal } = useCustomModalHandlerContext();
   const Menage = new ManageCode(handleChangeInput);
@@ -83,12 +102,15 @@ const ManagementCode = () => {
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
+    if(key === 'page') {
+      setPage(value as number);
+    } else if (key === 'limit') {
       setPage(0);
       setPageSize(value as number);
-      
-    } else if(key === 'page') {
-      setPage(value as number);
+    } else if (key === 'searchType') {
+      setSearchType(value as  number);
+    } else if (key === 'keyword') {
+      setKeyword(value as  string);
     }
     setRequest(newRequest);
     getCommonCodeInfoPagin();
@@ -110,9 +132,10 @@ const ManagementCode = () => {
 
 // // 페이징 API 불러오기 
 const getCommonCodeInfoPagin = useCallback(() => {
-  let params = { page: pageNumber.current, size: pageSize.current
-
+  const params = { page: pageNumber.current, size: pageSize.current,
+    keyword: keyword.current, type: searchType.current
   };
+  setRequest(params);
   console.log("params:",params);
   managementCodeApi.getCommonCode(params).then((response) => {
         const { success, data, message } = response;
@@ -128,13 +151,13 @@ const getCommonCodeInfoPagin = useCallback(() => {
             // listData.push(obj);
             setRows(row => [...row, obj])
           })
-          // setRows(listData);
           setTotal(data.totalElements ? data.totalElements : 0);
         } else {
+          setRows([]);
           console.log(message);
         }
-      });
-},[]);
+      }).catch((err) => console.log(err));
+  },[]);
 
 // // useEffect 최초 호출
 useEffect(() => {
@@ -163,18 +186,23 @@ useEffect(() => {
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 1, label: '상위코드' },
+              { value: 2, label: '공통코드' },
             ],
-            keyword: '',
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              // handleChangeInput('searchType', type);
+              setSearchType(type);
             },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+            onChangeKeyword: (keyword: string) => {         
+              // handleChangeInput('keyword', keyword);
+              setKeyword(keyword);
             },
-            onClickSearch: () => console.log('검색'),
+            onClickSearch: () => {
+              handleChangeInput('keyword', keyword.current);
+              handleChangeInput('searchType', searchType.current);
+            },
           }}
           createButton={{
             title: '코드 추가',
@@ -185,12 +213,12 @@ useEffect(() => {
         <DataTable
           columns={Menage.MANAGE_COLUMNS}
           rows={rows}
-          onEdit={handleEditRow}
-          onDelete={handleDeleteRow}
+          onEdit={(row) => handleEditRow(row)}
+          onDelete={(row) => handleDeleteRow(row)}
           isMenu
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
