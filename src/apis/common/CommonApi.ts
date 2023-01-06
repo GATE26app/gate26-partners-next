@@ -22,7 +22,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/common/codes?type=${type}&keyword=${codeName}`,
+      url: `http://dbackoffice.gate26.co.kr/common/codes?type=${type}&keyword=${codeName}`,
     });
     return data;
   };

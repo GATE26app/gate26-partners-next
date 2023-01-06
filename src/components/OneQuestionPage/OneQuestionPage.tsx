@@ -88,11 +88,11 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
+    let urlStr = `http://dbackoffice.gate26.co.kr/users/inquires?page=${request.page}&size=${request.limit}`;
     if (type == undefined && keyword !== '') {
-      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
+      urlStr = `http://dbackoffice.gate26.co.kr/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
     } else if (type !== undefined && keyword === '') {
-      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&inquireType=${type}`;
+      urlStr = `http://dbackoffice.gate26.co.kr/users/inquires?page=${request.page}&size=${request.limit}&inquireType=${type}`;
     }
 
     OneQuestionApi.getInquiryList(urlStr)
@@ -125,7 +125,7 @@ function QuestionPage() {
           console.log('1:1문의 불러오기 실패');
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('hihihiihi' + err));
   };
 
   function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
@@ -160,6 +160,7 @@ function QuestionPage() {
 
   useEffect(() => {
     //페이징 카운트 & 조회 조건 변경 시 재조회
+    console.log('여기서 타낭');
     loadData();
   }, [request, type]);
 

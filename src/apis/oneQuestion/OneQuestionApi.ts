@@ -30,7 +30,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/users/inquires/${inquiryId}`,
+      url: `http://dbackoffice.gate26.co.kr/users/inquires/${inquiryId}`,
     });
     return data;
   };
@@ -43,7 +43,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: '/backoffice/users/inquires',
+      url: 'http://dbackoffice.gate26.co.kr/users/inquires',
       data: body,
     });
     return data;
