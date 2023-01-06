@@ -19,7 +19,7 @@ export class ManagementCodeApi {
         headers: {
           'X-AUTH-TOKEN':`${getToken()}`
         },
-        url: `http://localhost:40004/common/codes?`,
+        url: `http://dbackoffice.gate26.co.kr/common/codes?`,
         params,
       });
       return data;
