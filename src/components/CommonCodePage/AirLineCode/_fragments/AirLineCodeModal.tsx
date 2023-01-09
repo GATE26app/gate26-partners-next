@@ -32,7 +32,7 @@ interface ReqAirportKey {
   nameEng: string;
   iata: string;
   icao: string;
-  airportUrl: string;
+  imageUrl: string;
   pageUrl: string;
   selfUrl: string;
   dutyUrl: string;
@@ -57,7 +57,7 @@ const StampModal = ({
     nameEng: '',
     iata: '',
     icao: '',
-    airportUrl: '',
+    imageUrl: '',
     pageUrl: '',
     selfUrl: '',
     dutyUrl: '',
@@ -128,8 +128,8 @@ const StampModal = ({
           content={
             <InputBox
               placeholder="항공사 이미지 URL"
-              defaultValue={request.airportUrl}
-              onChange={(e) => handleChangeInput('airportUrl', e.target.value)}
+              defaultValue={request.imageUrl}
+              onChange={(e) => handleChangeInput('imageUrl', e.target.value)}
             />
           }
         />

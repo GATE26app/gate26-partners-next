@@ -1,9 +1,13 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
+import airlineCodeApi, { AirlineCodeApi } from '@apis/airline/AirlineCodeApi';
+import { AirlineRequestDTOType } from '@apis/airline/AirlineCodeApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -29,52 +33,9 @@ interface ModalProps {
   targetId?: number;
 }
 
-const rows: DataTableRowType<AirLineCol>[] = [
-  {
-    id: 1,
-    nameKr: '대한항공',
-    nameEng: 'Korean Air',
-    iata: 'KE',
-    icao: 'KAL',
-    airportUrl: 'http://www.koreanair.com',
-    pageUrl: 'http://www.koreanair.com',
-    selfUrl: 'http://www.koreanair.com',
-    dutyUrl: 'http://www.koreanair.com',
-    repNum: '02-2656-2001',
-    korYn: '국내',
-    answer: '사용',
-  },
-  {
-    id: 2,
-    nameKr: '대한항공',
-    nameEng: 'Korean Air',
-    iata: 'KE',
-    icao: 'KAL',
-    airportUrl: 'http://www.koreanair.com',
-    pageUrl: 'http://www.koreanair.com',
-    selfUrl: 'http://www.koreanair.com',
-    dutyUrl: 'http://www.koreanair.com',
-    repNum: '02-2656-2001',
-    korYn: '국내',
-    answer: '사용',
-  },
-  {
-    id: 3,
-    nameKr: '대한항공',
-    nameEng: 'Korean Air',
-    iata: 'KE',
-    icao: 'KAL',
-    airportUrl: 'http://www.koreanair.com',
-    pageUrl: 'http://www.koreanair.com',
-    selfUrl: 'http://www.koreanair.com',
-    dutyUrl: 'http://www.koreanair.com',
-    repNum: '02-2656-2001',
-    korYn: '국내',
-    answer: '사용',
-  },
-];
+var rows: DataTableRowType<AirLineCol>[] = [];
 
-const MobilityStamp = () => {
+const AirlineCodePage = () => {
   const [total, setTotal] = useState<number>(100);
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 1,
@@ -92,14 +53,7 @@ const MobilityStamp = () => {
   const dispatch = useDispatch();
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
-  function handleChangeInput(key: string, value: string | number) {
-    const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
-    }
-    console.log('변경: ', key, value);
-    setRequest(newRequest);
-  }
+
   const handleDeleteRow = (row: DataTableRowType<AirLineCol>) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -114,10 +68,115 @@ const MobilityStamp = () => {
     );
     openCustomModal();
   };
+
+  const [keyword, setKeyword] = useState<string>('');
+
+  const [type, setType] = useState<number>();
+
+  const [lastPage, setLastPage] = useState<number>(0);
+
+  const [typeList, setTypeList] = useState<any>([
+    {
+      label: '전체',
+      value: undefined,
+    },
+    {
+      label: '코드',
+      value: 'code',
+    },
+    {
+      label: '이름',
+      value: 'name',
+    },
+  ]);
+
+  useEffect(() => {
+    //첫 로드
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    const params: AirlineRequestDTOType = {
+      type: type,
+      keyword: keyword,
+      page: request?.page,
+      size: request?.limit,
+    };
+
+    airlineCodeApi
+      .getAirlineCodeList(params)
+      .then((response) => {
+        const { message, data, success } = response;
+        console.log(response);
+        if (success) {
+          console.log(data);
+          console.log('항공사 불러오기 성공');
+          //총 개수
+          setTotal(data?.totalElements);
+          setLastPage(data?.totalPages);
+          rows = [];
+          const codeList: any = data?.content;
+          codeList.forEach((element: any, idx: number) => {
+            rows.push({
+              id: idx,
+              nameKr: element?.name,
+              nameEng: element?.englishName,
+              iata: element?.airlineId,
+              icao: element?.airlineCode,
+              imageUrl: element?.imageUrl,
+              pageUrl: element?.homepageUrl,
+              selfUrl: element?.selfCheckInUrl,
+              dutyUrl: element?.dutyFreeShopUrl,
+              repNum: element?.phoneNumber,
+              korYn: element?.domestic,
+              answer: element?.useYn,
+            });
+          });
+        } else {
+          console.log('항공사 불러오기 실패');
+        }
+      })
+      .catch((err) => console.log('hihihiihi' + err));
+  };
+
+  function handleChangeInput(key: string, value: string | number) {
+    const newRequest = { ...request, [key]: value };
+
+    //10개씩 보기, 20개씩 보기, 50개씩 보기, 100개씩 보기 클릭 시 0으로 초기화
+    if (key === 'limit') {
+      newRequest.page = 0;
+    }
+
+    //페이지가 0보다 작은 경우 0으로 세팅
+    if (newRequest.page < 0) {
+      newRequest.page = 0;
+    }
+
+    //페이지가 마지막 페이지보다 큰 경우 마지막 페이지로 세팅
+    if (newRequest.page >= lastPage - 1) {
+      newRequest.page = lastPage - 1;
+    }
+    console.log('변경: ', key, value);
+    setRequest(newRequest);
+  }
+
+  useEffect(() => {
+    //페이징 카운트 & 조회 조건 변경 시 재조회
+    loadData();
+  }, [request]);
+
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '문의목록.xlsx');
+  };
+
   return (
     <>
       <Head>
-        <title>공항사 코드</title>
+        <title>항공사 코드</title>
       </Head>
       <Flex
         className="community-lounge-wrapper"
@@ -127,27 +186,27 @@ const MobilityStamp = () => {
       >
         <BreadCrumb depth={['공통 코드', '공항사 코드']} />
         <PageTitle
-          title="공항사 코드"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          title="항공사 코드"
+          onClickDownload={() => excelDown}
           isDownload
         />
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
-            ],
+            searchTypes: typeList,
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              setType(type);
             },
             onChangeKeyword: (keyword: string) => {
               console.log('키워드');
+              setKeyword(keyword);
             },
-            onClickSearch: () => console.log('검색'),
+            onClickSearch: () => {
+              console.log('검색');
+              loadData();
+            },
           }}
           createButton={{
             title: '공항사 코드 추가',
@@ -185,4 +244,4 @@ const MobilityStamp = () => {
   );
 };
 
-export default withAdminLayout(MobilityStamp);
+export default withAdminLayout(AirlineCodePage);

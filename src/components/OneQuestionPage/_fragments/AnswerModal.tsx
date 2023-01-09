@@ -195,24 +195,26 @@ const QuestionModal = ({
 
   useEffect(() => {
     console.log('선택한 row :', targetId);
-    oneQuestionApi
-      .getInquiry(targetId)
-      .then((response) => {
-        const { message, data, success } = response;
-        if (success) {
-          setRequest({
-            inquireType: data?.inquireType,
-            title: data?.inquireTitle,
-            content: data?.inquireContent,
-            thumbnail: data?.inquireImageUrl?.first,
-            answerTitle: data?.replyTitle,
-            answerContent: data?.replyContent,
-          });
-        } else {
-          console.log('문의/답변 불러오기 실패');
-        }
-      })
-      .catch((err) => console.log(err));
+    if (targetId !== undefined) {
+      oneQuestionApi
+        .getInquiry(targetId)
+        .then((response) => {
+          const { message, data, success } = response;
+          if (success) {
+            setRequest({
+              inquireType: data?.inquireType,
+              title: data?.inquireTitle,
+              content: data?.inquireContent,
+              thumbnail: data?.inquireImageUrl?.first,
+              answerTitle: data?.replyTitle,
+              answerContent: data?.replyContent,
+            });
+          } else {
+            console.log('문의/답변 불러오기 실패');
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }, [targetId, type]);
 
   useEffect(() => {

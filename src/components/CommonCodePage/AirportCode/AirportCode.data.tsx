@@ -5,7 +5,7 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export type AirPortCol = 'id' | 'name' | 'code' | 'rounge' | 'answer';
+export type AirPortCol = 'name' | 'code' | 'loungeId' | 'useYn';
 
 class AirportCode {
   onChange?: (key: string, value: string | number) => void;
@@ -27,15 +27,18 @@ class AirportCode {
       width: '11.6%',
     },
     {
-      key: 'rounge',
+      key: 'loungeName',
       name: '라운지 위치',
       width: '16.6%',
     },
 
     {
-      key: 'answer',
+      key: 'useYn',
       name: '사용여부',
       width: '8.3%',
+      render: (value: DataTableRowType<AirPortCol>) => {
+        return value.useYn === 'false' ? '사용안함' : '사용중';
+      },
     },
   ];
 }

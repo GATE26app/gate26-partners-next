@@ -1,8 +1,10 @@
 import Head from 'next/head';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
+
+import UserListApi from '@apis/userList/UserListApi';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -11,7 +13,6 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { UserColumnType, UserColumns } from './UserListPage.data';
-import UserListApi from '@apis/userList/UserListApi';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -22,7 +23,7 @@ interface ReqLoungeProps {
 
 function UserListPage() {
   // 검색 구분
-  const searchTypeList = [ 
+  const searchTypeList = [
     { value: 0, label: '전체' },
     { value: 1, label: '이름' },
     { value: 2, label: '닉네임' },
@@ -51,21 +52,25 @@ function UserListPage() {
       case 3:
         searchType.current = 'emailAddress'; // 이메일 검색
         return;
-      default:
-        searchType.current = ''; // 전체 검색
+      default: // 전체 검색
+        searchType.current = '';
         return;
     }
   };
 
   const keyword = useRef('');
-  const setKeyword = (value: string) => {keyword.current = value};
+  const setKeyword = (value: string) => {
+    keyword.current = value;
+  };
 
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
     size: 10,
   });
 
-  const [rows, setDataTableRow] = useState<DataTableRowType<UserColumnType>[]>([]);
+  const [rows, setDataTableRow] = useState<DataTableRowType<UserColumnType>[]>(
+    [],
+  );
   const [total, setTotal] = useState<number>(100);
   const userColumns = new UserColumns(handleChangeInput);
 
@@ -78,7 +83,7 @@ function UserListPage() {
       page: pageNumber.current,
       size: pageSize.current,
       keyword: keyword.current,
-      type: searchType.current
+      type: searchType.current,
     };
     setRequest(requestParams);
     UserListApi.getUserList(requestParams)
@@ -107,9 +112,9 @@ function UserListPage() {
       setPage(0);
       setPageSize(value as number);
     } else if (key === 'searchType') {
-      setSearchType(value as  number);
+      setSearchType(value as number);
     } else if (key === 'keyword') {
-      setKeyword(value as  string);
+      setKeyword(value as string);
     }
     setRequest(newRequest);
     getUserInfoList(); // 페이징 요청

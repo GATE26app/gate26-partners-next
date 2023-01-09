@@ -11,7 +11,7 @@ export type AirLineCol =
   | 'nameEng'
   | 'iata'
   | 'icao'
-  | 'airportUrl'
+  | 'imageUrl'
   | 'pageUrl'
   | 'selfUrl'
   | 'dutyUrl'
@@ -50,7 +50,7 @@ class AirLineCode {
       width: '4.1%',
     },
     {
-      key: 'airportUrl',
+      key: 'imageUrl',
       name: '항공사 이미지 URL',
       width: '11.25%',
     },
