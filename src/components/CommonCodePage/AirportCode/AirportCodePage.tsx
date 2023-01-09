@@ -20,12 +20,15 @@ import AirportCodeModal from './_fragments/AirportCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
+// 기본 페이징 Props
 interface ReqLoungeProps {
-  type?: string;
   keyword?: string;
+  type?: string;
   page: number;
   size: number;
 }
+
+// 모달용 Props
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
@@ -33,27 +36,22 @@ interface ModalProps {
 }
 
 const MobilityStamp = () => {
-  const [total, setTotal] = useState<number>(0);
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    type: '',
-    keyword: '',
-    page: 1,
-    size: 10,
-  });
-
-  // 검색 용
-
+  // 검색 구분
   const searchTypeList = [
     { value: 0, label: '전체' },
-    { value: 1, label: 'OS' },
-    { value: 2, label: 'MAJOR VERSION' },
-    { value: 3, label: 'MINOR VERSION' },
+    { value: 1, label: '공항명' },
+    { value: 2, label: '코드' },
+    { value: 3, label: '라운지 위치' },
+    { value: 4, label: '사용여부' },
   ];
+
+  // 총 페이지 Num
   const pageNumber = useRef(0);
   const setPage = (value: number) => {
     pageNumber.current = value;
   };
 
+  // default 페이지 사이즈 10
   const pageSize = useRef(10);
   const setPageSize = (value: number) => {
     pageSize.current = value;
@@ -63,13 +61,10 @@ const MobilityStamp = () => {
   const setSearchType = (value: number) => {
     switch (value) {
       case 1:
-        searchType.current = 'OS'; // 이름 검색
+        searchType.current = 'name'; // 이름 검색
         return;
       case 2:
-        searchType.current = 'MAJOR VERSION'; // 닉네임 검색
-        return;
-      case 3:
-        searchType.current = 'MINOR VERSION'; // 이메일 검색
+        searchType.current = 'code'; // 닉네임 검색
         return;
       default: // 전체 검색
         searchType.current = '';
@@ -79,13 +74,23 @@ const MobilityStamp = () => {
 
   const keyword = useRef('');
   const setKeyword = (value: string) => {
+    console.log(`value ${value}`);
     keyword.current = value;
   };
 
+  const [request, setRequest] = useState<ReqLoungeProps>({
+    page: 0,
+    size: 10,
+  });
+
   const [rows, setDataTableRow] = useState<DataTableRowType<AirPortCol>[]>([]);
 
-  const { openCustomModal } = useCustomModalHandlerContext();
+  // 총 건수
+  const [total, setTotal] = useState<number>(0);
   const airportCode = new AirportCode(handleChangeInput);
+
+  const { openCustomModal } = useCustomModalHandlerContext();
+
   const handleEditRow = (row: DataTableRowType<AirPortCol>) => {
     if (!row.code) {
       return;
@@ -123,10 +128,19 @@ const MobilityStamp = () => {
     getAirportList();
   }, []);
 
+  useEffect(() => {
+    getAirportList();
+  }, [modal.type]);
+
+  const handleClickComplete = () => {
+    console.log('aaaa');
+    setModal({ isOpen: false, type: 'create' });
+  };
+
   const getAirportList = useCallback(() => {
     const requestParams = {
-      type: '',
-      keyword: '',
+      type: searchType.current,
+      keyword: keyword.current,
       page: pageNumber.current,
       size: pageSize.current,
     };
@@ -202,18 +216,14 @@ const MobilityStamp = () => {
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
-            ],
-            keyword: '',
+            searchTypes: searchTypeList,
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              handleChangeInput('type', type);
             },
             onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+              handleChangeInput('keyword', keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
@@ -247,7 +257,7 @@ const MobilityStamp = () => {
         type={modal.type}
         targetId={modal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={handleClickComplete}
       />
     </>
   );
