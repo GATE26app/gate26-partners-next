@@ -64,10 +64,11 @@ const StampModal = ({
     if (onComplete) {
       if (type === 'modify') {
         putAirportCode();
+        onComplete();
       } else {
         addAirportCode();
+        onComplete();
       }
-      onComplete();
     }
   };
   const handleCodeType = (e: any) => {
