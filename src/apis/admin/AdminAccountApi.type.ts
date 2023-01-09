@@ -11,6 +11,15 @@ export type AdminAccountInfoDTOType = {
     empty : boolean;
 };
 
+// 상세 조회
+export type AdminAccountDetailInfoDTOType = {
+  code?: string;
+  data?: AdminAccountInfo;
+  message?: string;
+  count?: number;
+  success: boolean;
+};
+
 export type DefaultDTOType = {
   code?: string;
   data?: AdminAccountInfoDTOType;
@@ -28,7 +37,17 @@ export type AdminAccountInfo = {
   createdDate: string;
 };
 
+export type AdminCreatOrUpdateDTO = {
+  adminId: string;
+  adminName: string;
+  adminEmail: string;
+  adminPwd: number;
+  useYn: string;
+};
+
 export type PagingDTOType = {
-    page: number;
-    size: number;
-  };
+  page: number;
+  size: number;
+  type?: string;
+  keyword?: string;
+};
