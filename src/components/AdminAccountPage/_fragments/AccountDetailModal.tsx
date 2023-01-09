@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -27,17 +27,27 @@ import ModalRow from '@components/common/ModalRow';
 
 import { formatDate } from '@utils/format';
 
+import AdminAccountApi from '@apis/admin/AdminAccountApi';
+
 interface ReqAccountDetailModal {
   title: string;
   banner: File | null;
   home: File | null;
   order: string;
-  enable: boolean;
 }
+
 interface AccountDetailModalProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: number | string;
   onComplete?: () => void;
+}
+
+interface AccountDetailInfoProps {
+  adminId: string;
+  adminName: string;
+  adminEmail: string;
+  createdDate: string;
+  useYn: string;
 }
 
 const AccountDetailModalModal = ({
@@ -47,13 +57,24 @@ const AccountDetailModalModal = ({
   onComplete,
   ...props
 }: AccountDetailModalProps) => {
+
+  const defaultValue = {
+    adminId: '',
+    adminName: '',
+    adminEmail: '',
+    useYn: 'F',
+    createdDate: ''
+  };
+
+  const [admin, setAdmin] = useState<AccountDetailInfoProps>(defaultValue);
   const [request, setRequest] = useState<ReqAccountDetailModal>({
     title: '',
     banner: null,
     home: null,
-    order: '0',
-    enable: false,
+    order: '0'
   });
+
+  const [checked, setChecked] = useState<boolean>(false);
 
   const [rows, setRows] = useState<DataTableRowType<MenuColumnType>[]>([
     {
@@ -103,8 +124,49 @@ const AccountDetailModalModal = ({
     },
   ]);
 
+  // 관리자 상세 정보 호출
+  const getAdminAccountByAdminId = useCallback((params) => {
+    AdminAccountApi.getAdminAccountByAdminId(params).then((response) => {
+          const { success, data, message } = response;
+          if (success) {
+            // 어드민 정보 셋팅
+            setAdmin(data as AccountDetailInfoProps);
+            setChecked(data?.useYn === 'T' ? true : false);
+          } else {
+          }
+        });
+  },[]);
+
+  // 관리자 수정 API 호출
+  const updateAdminAccount = useCallback((params) => {
+    AdminAccountApi.updateAdminAccount(params).then((response) => {
+          const { success, data, message } = response;
+          if (success) {
+            console.log("수정");
+          } else {
+            console.log(message);
+          }
+        });
+  },[]);
+
+  // 관리자 추가 API 호출
+  const createAdminAccount = useCallback((params) => {
+    AdminAccountApi.createAdminAccount(params).then((response) => {
+          const { success, data, message } = response;
+          if (success) {
+            console.log("생성");
+          } else {
+            console.log(message);
+          }
+        });
+  },[]);
+
   const handleChangeInput = (key: string, value: string | number | boolean) => {
-    setRequest({ ...request, [key]: value });
+    if(key === 'useYn') {
+      setChecked(!checked as boolean);
+      value = (!value === true) ? 'T' : 'F';
+    }
+    setAdmin({ ...admin, [key]: value });
   };
 
   const handleValueChange = (id: number, value: boolean) => {
@@ -117,6 +179,11 @@ const AccountDetailModalModal = ({
   const Colunms = new MenuAuthColumns(handleValueChange);
 
   const handleCreate = () => {
+    if(type === 'modify') {
+      updateAdminAccount(admin);
+    } else {
+      createAdminAccount(admin);
+    }
     if (onComplete) onComplete();
   };
   const renderContent = () => {
@@ -126,27 +193,31 @@ const AccountDetailModalModal = ({
           title="아이디"
           content={
             <InputBox
+              isDisabled = {type === 'modify' ? true : false}
               placeholder="아이디"
-              defaultValue={request.title}
-              onChange={(e) => handleChangeInput('title', e.target.value)}
+              value={admin.adminId}
+              onChange={(e) => handleChangeInput('adminId', e.target.value)}
             />
           }
         />
         <ModalRow
           title="비밀번호"
-          content={<InputBox placeholder="비밀번호" type="password" />}
+          content={<InputBox placeholder="새 비밀번호" type="password" onChange={(e) => handleChangeInput('adminPwd', e.target.value)}/>}
         />
-        <ModalRow title="이름" content={<InputBox placeholder="이름" />} />
+        <ModalRow 
+          title="이름" 
+          content={<InputBox placeholder="이름" value={admin.adminName} onChange={(e) => handleChangeInput('adminName', e.target.value)}/>} />
         <ModalRow
           title="이메일"
-          content={<InputBox placeholder="gate26@toktokhan.dev" />}
+          content={<InputBox type="email" value={admin.adminEmail} placeholder="gate26@toktokhan.dev" onChange={(e) => handleChangeInput('adminEmail', e.target.value)} />}
         />
         <ModalRow
           title="등록일"
           content={
             <InputBox
               isDisabled
-              placeholder={formatDate(dayjs('2022-09-21 09:00'))}
+              value={type === 'modify' ? formatDate(dayjs(admin.createdDate)) : formatDate(dayjs(Date()))}
+              placeholder={formatDate(dayjs(Date()))}
             />
           }
         />
@@ -154,26 +225,29 @@ const AccountDetailModalModal = ({
           title="사용 여부"
           content={
             <CheckBox
-              checked={request.enable}
-              onClick={() => handleChangeInput('enable', !request.enable)}
+              checked={checked}
+              onClick={() => handleChangeInput('useYn', checked)}
             />
           }
         />
-        <ModalRow
+        {/* <ModalRow
           title="권한"
           titleAlign="top"
           height="fit-content"
           content={<DataTable columns={Colunms.LIST_COLUMNS} rows={rows} />}
-        />
+        /> */}
       </Flex>
     );
   };
 
   useEffect(() => {
-    if (type !== 'modify') {
-      return;
+    if (type !== 'modify') { // 추가하기
+      return() => {
+        // unmount
+        setAdmin(defaultValue); // 초기값 세팅
+      };
     }
-    console.log('선택한 row :', targetId);
+    getAdminAccountByAdminId(targetId);
   }, [targetId, type]);
 
   return (
@@ -194,7 +268,7 @@ const AccountDetailModalModal = ({
           />
           <Button
             type="square"
-            text="추가"
+            text= {type === 'create' ? '추가' : '수정'}
             size={'sm'}
             width={'120px'}
             onClick={handleCreate}

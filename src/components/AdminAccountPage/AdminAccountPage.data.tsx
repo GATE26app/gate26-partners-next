@@ -13,8 +13,8 @@ export type AdminAccountColumnType =
   | 'name'
   | 'email'
   | 'createdAt'
-  | 'useStatus'
-  | 'authority';
+  | 'useStatus';
+  // | 'authority'; // 권한 기능 제외
 
 export type ModalType = 'mileage' | 'airlineTicket' | 'stampery';
 
@@ -64,20 +64,20 @@ class AdminAccountColumns {
         </Text>
       ),
     },
-    {
-      key: 'authority',
-      name: '권한',
-      width: '10%',
-      render: (value: DataTableRowType<AdminAccountColumnType>) => (
-        <SmallButton
-          onClick={() => this.onClick(value)}
-          color="normal"
-          text="권한"
-          width="31px"
-          height="18px"
-        />
-      ),
-    },
+    // {
+    //   key: 'authority',
+    //   name: '권한',
+    //   width: '10%',
+    //   render: (value: DataTableRowType<AdminAccountColumnType>) => (
+    //     <SmallButton
+    //       onClick={() => this.onClick(value)}
+    //       color="normal"
+    //       text="권한"
+    //       width="31px"
+    //       height="18px"
+    //     />
+    //   ),
+    // },
   ];
 }
 
