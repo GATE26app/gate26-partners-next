@@ -40,3 +40,10 @@ export type InquirySendMailType = {
   replyTitle: string;
   replyContent: string;
 };
+
+export type InquiryRequestDTOType = {
+  inquireType?: number;
+  keyword?: string;
+  page?: number;
+  size?: number;
+};

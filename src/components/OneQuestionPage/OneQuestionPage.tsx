@@ -8,6 +8,7 @@ import { Flex } from '@chakra-ui/react';
 
 import CommonApi from '@apis/common/CommonApi';
 import OneQuestionApi from '@apis/oneQuestion/OneQuestionApi';
+import { InquiryRequestDTOType } from '@apis/oneQuestion/OneQuestionApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -88,14 +89,14 @@ function QuestionPage() {
   }, []);
 
   const loadData = () => {
-    let urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}`;
-    if (type == undefined && keyword !== '') {
-      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&keyword=${keyword}`;
-    } else if (type !== undefined && keyword === '') {
-      urlStr = `/backoffice/users/inquires?page=${request.page}&size=${request.limit}&inquireType=${type}`;
-    }
+    const params: InquiryRequestDTOType = {
+      inquireType: type,
+      keyword: keyword,
+      page: request?.page,
+      size: request?.limit,
+    };
 
-    OneQuestionApi.getInquiryList(urlStr)
+    OneQuestionApi.getInquiryList(params)
       .then((response) => {
         const { message, data, success } = response;
         console.log(response);
@@ -125,7 +126,7 @@ function QuestionPage() {
           console.log('1:1문의 불러오기 실패');
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('hihihiihi' + err));
   };
 
   function handleClickListBtn(row: DataTableRowType<QuestionColumnType>) {
@@ -161,7 +162,7 @@ function QuestionPage() {
   useEffect(() => {
     //페이징 카운트 & 조회 조건 변경 시 재조회
     loadData();
-  }, [request, type]);
+  }, [request]);
 
   const handleCloseModal = () => setListModal({ isOpen: false });
 

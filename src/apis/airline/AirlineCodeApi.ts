@@ -1,33 +1,34 @@
 import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
+import { basicDtotype } from '@apis/common/CommonApi.type';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { basicDtotype } from './CommonApi.type';
+import { AirlineRequestDTOType } from './AirlineCodeApi.type';
 
-export class CommonApi {
+export class AirlineCodeApi {
   axios: AxiosInstance = instance;
   constructor(axios?: AxiosInstance) {
     if (axios) this.axios = axios;
   }
 
-  getCommonCodeById = async (
-    type: string,
-    codeName: string,
+  getAirlineCodeList = async (
+    params?: AirlineRequestDTOType,
   ): Promise<basicDtotype> => {
-    //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes?type=${type}&keyword=${codeName}`,
+      url: `http://dbackoffice.gate26.co.kr/common/codes/airline`,
+      params: params,
     });
     return data;
   };
+
 }
 
-const commonApi = new CommonApi();
+const airlineCodeApi = new AirlineCodeApi();
 
-export default commonApi;
+export default airlineCodeApi;
