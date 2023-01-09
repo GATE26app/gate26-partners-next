@@ -18,7 +18,7 @@ const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
   baseURL: isDev
-    ? 'http://dbackoffice.gate26.co.kr'
+    ? 'http://43.201.68.143:40003'
     : 'http://dbackoffice.gate26.co.kr',
   timeout: 5000,
   headers: {
