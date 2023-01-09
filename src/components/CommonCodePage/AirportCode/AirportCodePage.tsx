@@ -1,9 +1,12 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
+import commonApi from '@apis/common/CommonApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -18,10 +21,10 @@ import AirportCodeModal from './_fragments/AirportCodeModal';
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface ReqLoungeProps {
+  type?: string;
   keyword?: string;
-  searchType?: number;
   page: number;
-  limit: number;
+  size: number;
 }
 interface ModalProps {
   isOpen: boolean;
@@ -29,56 +32,132 @@ interface ModalProps {
   targetId?: number;
 }
 
-const rows: DataTableRowType<AirPortCol>[] = [
-  {
-    id: 1,
-    name: '인천 국제공항',
-    code: 'ICN',
-    rounge: '국내',
-    answer: '사용',
-  },
-  {
-    id: 2,
-    name: '센트리아 나고야 국제공항',
-    code: 'NGO',
-    rounge: '국내',
-    answer: '-',
-  },
-  {
-    id: 3,
-    name: '차트라파티 시바지 국제공항',
-    code: 'BOM',
-    rounge: '국내',
-    answer: '사용',
-  },
-];
-
 const MobilityStamp = () => {
-  const [total, setTotal] = useState<number>(100);
+  const [total, setTotal] = useState<number>(0);
   const [request, setRequest] = useState<ReqLoungeProps>({
+    type: '',
+    keyword: '',
     page: 1,
-    limit: 10,
+    size: 10,
   });
+
+  // 검색 용
+
+  const searchTypeList = [
+    { value: 0, label: '전체' },
+    { value: 1, label: 'OS' },
+    { value: 2, label: 'MAJOR VERSION' },
+    { value: 3, label: 'MINOR VERSION' },
+  ];
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  };
+
+  const searchType = useRef('');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'OS'; // 이름 검색
+        return;
+      case 2:
+        searchType.current = 'MAJOR VERSION'; // 닉네임 검색
+        return;
+      case 3:
+        searchType.current = 'MINOR VERSION'; // 이메일 검색
+        return;
+      default: // 전체 검색
+        searchType.current = '';
+        return;
+    }
+  };
+
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {
+    keyword.current = value;
+  };
+
+  const [rows, setDataTableRow] = useState<DataTableRowType<AirPortCol>[]>([]);
+
   const { openCustomModal } = useCustomModalHandlerContext();
   const airportCode = new AirportCode(handleChangeInput);
   const handleEditRow = (row: DataTableRowType<AirPortCol>) => {
-    if (!row.id) {
+    if (!row.code) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    console.log(`codecodecode ${row.code}`);
+    setModal({ isOpen: true, type: 'modify', targetId: row.code as any });
   };
   const handleCloseModal = () => setModal({ isOpen: false });
   const dispatch = useDispatch();
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+
+  // 공항 코드 추가하기
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
+
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'page') {
+      setPage(value as number);
+    } else if (key === 'size') {
+      setPage(0);
+      setPageSize(value as number);
+    } else if (key === 'type') {
+      setSearchType(value as number);
+    } else if (key === 'keyword') {
+      setKeyword(value as string);
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
+    getAirportList(); // 페이징 요청
   }
+
+  /**
+   * 최초 공항코드 리스트 불러오기
+   * */
+  useEffect(() => {
+    getAirportList();
+  }, []);
+
+  const getAirportList = useCallback(() => {
+    const requestParams = {
+      type: '',
+      keyword: '',
+      page: pageNumber.current,
+      size: pageSize.current,
+    };
+    setRequest(requestParams);
+    commonApi
+      .getAirportList(requestParams)
+      .then((response) => {
+        const { data, count, success } = response;
+        let listData: DataTableRowType<AirPortCol>[] = [];
+        if (success) {
+          data?.content.forEach((element) => {
+            listData.push(element);
+          });
+          setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
+        } else {
+          listData = [];
+          console.log(`앱 버전 리스트 조회 실패`);
+        }
+        setDataTableRow(listData);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '앱 버전 목록.xlsx');
+  };
+
   const handleDeleteRow = (row: DataTableRowType<AirPortCol>) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -87,11 +166,21 @@ const MobilityStamp = () => {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('삭제 처리:', row);
+          deleteAirlineCode(row);
         },
       }),
     );
     openCustomModal();
+  };
+
+  // 공항코드 삭제하기
+  const deleteAirlineCode = (row: DataTableRowType<AirPortCol>) => {
+    const code = row.code;
+    commonApi.deleteAlineCode(code).then((response) => {
+      const { success } = response;
+
+      alert(`${success}`);
+    });
   };
   return (
     <>
@@ -142,7 +231,7 @@ const MobilityStamp = () => {
           isMenu
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
