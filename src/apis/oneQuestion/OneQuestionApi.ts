@@ -5,7 +5,7 @@ import { basicDtotype } from '@apis/common/CommonApi.type';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { InquirySendMailType } from './OneQuestionApi.type';
+import { InquiryRequestDTOType, InquirySendMailType } from './OneQuestionApi.type';
 
 export class OneQuestionApi {
   axios: AxiosInstance = instance;
@@ -13,13 +13,16 @@ export class OneQuestionApi {
     if (axios) this.axios = axios;
   }
 
-  getInquiryList = async (urlStr: string): Promise<basicDtotype> => {
+  getInquiryList = async (
+    params: InquiryRequestDTOType,
+  ): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: urlStr,
+      url: `http://dbackoffice.gate26.co.kr/users/inquires`,
+      params,
     });
     return data;
   };
