@@ -5,7 +5,10 @@ import { basicDtotype } from '@apis/common/CommonApi.type';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { InquiryRequestDTOType, InquirySendMailType } from './OneQuestionApi.type';
+import {
+  InquiryRequestDTOType,
+  InquirySendMailType,
+} from './OneQuestionApi.type';
 
 export class OneQuestionApi {
   axios: AxiosInstance = instance;
