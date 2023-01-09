@@ -17,7 +17,7 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { AirLineCode, AirLineCol } from './AirLineCode.data';
-import AirLineCodeModal from './_fragments/AirportCodeModal';
+import AirLineCodeModal from './_fragments/AirLineCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -33,7 +33,7 @@ interface ModalProps {
   targetId?: number;
 }
 
-var rows: DataTableRowType<AirLineCol>[] = [];
+let rows: DataTableRowType<AirLineCol>[] = [];
 
 const AirlineCodePage = () => {
   const [total, setTotal] = useState<number>(100);
@@ -44,6 +44,7 @@ const AirlineCodePage = () => {
   const { openCustomModal } = useCustomModalHandlerContext();
   const stamp = new AirLineCode(handleChangeInput);
   const handleEditRow = (row: DataTableRowType<AirLineCol>) => {
+    console.log(row.id);
     if (!row.id) {
       return;
     }
@@ -57,16 +58,38 @@ const AirlineCodePage = () => {
   const handleDeleteRow = (row: DataTableRowType<AirLineCol>) => {
     dispatch(
       customModalSliceAction.setMessage({
-        title: '공항사 코드',
-        message: '공항사 코드를 삭제 하시겠습니까?',
+        title: '항공사 코드',
+        message: '항공사 코드를 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
           console.log('삭제 처리:', row);
+          handleAirlineCodeDelete(row?.id);
         },
       }),
     );
     openCustomModal();
+  };
+
+  const handleAirlineCodeDelete = (tgId: any) => {
+    airlineCodeApi
+      .deleteAirlineCode(tgId)
+      .then(({ success }) => {
+        const newRequest = { ...request };
+        if (success) {
+          //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+          if (rows && rows.length - 1 === 0 && newRequest.page)
+            newRequest.page -= 1;
+
+          loadData();
+          alert('삭제 성공');
+        } else {
+          alert('삭제 실패');
+        }
+      })
+      .catch(() => {
+        alert('삭제 실패');
+      });
   };
 
   const [keyword, setKeyword] = useState<string>('');
@@ -116,9 +139,9 @@ const AirlineCodePage = () => {
           setLastPage(data?.totalPages);
           rows = [];
           const codeList: any = data?.content;
-          codeList.forEach((element: any, idx: number) => {
+          codeList.forEach((element: any) => {
             rows.push({
-              id: idx,
+              id: element?.airlineId,
               nameKr: element?.name,
               nameEng: element?.englishName,
               iata: element?.airlineId,
@@ -139,7 +162,7 @@ const AirlineCodePage = () => {
       .catch((err) => console.log('hihihiihi' + err));
   };
 
-  function handleChangeInput(key: string, value: string | number) {
+  function handleChangeInput(key: string, value: string | number | boolean) {
     const newRequest = { ...request, [key]: value };
 
     //10개씩 보기, 20개씩 보기, 50개씩 보기, 100개씩 보기 클릭 시 0으로 초기화
@@ -170,7 +193,7 @@ const AirlineCodePage = () => {
     const ws = excel?.utils?.json_to_sheet(rows);
     const wb = excel?.utils?.book_new();
     excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '문의목록.xlsx');
+    excel?.writeFile(wb, '항공사코드.xlsx');
   };
 
   return (
@@ -184,17 +207,17 @@ const AirlineCodePage = () => {
         width="100%"
         padding="20px"
       >
-        <BreadCrumb depth={['공통 코드', '공항사 코드']} />
+        <BreadCrumb depth={['공통 코드', '항공사 코드']} />
         <PageTitle
           title="항공사 코드"
-          onClickDownload={() => excelDown}
+          onClickDownload={() => excelDown()}
           isDownload
         />
         <TableTop
           total={total}
           search={{
             searchTypes: typeList,
-            keyword: '',
+            keyword: keyword,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
               setType(type);
@@ -209,13 +232,13 @@ const AirlineCodePage = () => {
             },
           }}
           createButton={{
-            title: '공항사 코드 추가',
+            title: '항공사 코드 추가',
             width: '116px',
             onClickCreate: handleCreateRow,
           }}
         />
         <DataTable
-          columns={stamp.TIP_COLUMNS}
+          columns={stamp.STAMP_COLUMNS}
           rows={rows}
           onEdit={handleEditRow}
           onDelete={handleDeleteRow}
@@ -238,7 +261,7 @@ const AirlineCodePage = () => {
         type={modal.type}
         targetId={modal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => loadData()}
       />
     </>
   );
