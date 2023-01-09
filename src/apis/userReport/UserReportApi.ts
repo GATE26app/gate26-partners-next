@@ -3,7 +3,7 @@ import { AxiosInstance } from 'axios';
 import instance from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
-import { PagingDTOType, UserReportInfoDTO } from './UserReportApi.type';
+import { PagingDTOType, UserReportInfoDTO, UserReportInfoDTOType } from './UserReportApi.type';
 
 export class UserReportApi {
   axios: AxiosInstance = instance;
@@ -11,15 +11,15 @@ export class UserReportApi {
     if (axios) this.axios = axios;
   }
 
-  getUserReport =async (
-    params : PagingDTOType,
-  ): Promise<UserReportInfoDTO> => {
+  getReportInfo =async (
+    params : PagingDTOType, category : string
+  ): Promise<UserReportInfoDTOType> => {
     const { data } = await this.axios({
         method: 'GET',
         headers: {
           'X-AUTH-TOKEN':`${getToken()}`
         },
-        url: `http://dbackoffice.gate26.co.kr/report?`,
+        url: `http://dbackoffice.gate26.co.kr/report/${category}?`,
         params,
       });
       return data;

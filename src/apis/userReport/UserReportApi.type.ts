@@ -1,31 +1,26 @@
-export type ResponseDTOType = {
+export type UserReportInfoDTOType = {
     data?: {
       content: UserReportInfoDTO[];
       totalElements?: number;
       totalPages?: number;
     };
     count: number;
+    message?: string;
     success: boolean;
   };
   
   export type UserReportInfoDTO = {
-    userId: string;
-    profileImagePath: string;
-    nickName: string;
-    name: string;
-    enLastName: string;
-    enFirstName: string;
-    gender: string;
-    birthDate: string;
-    phone: string;
-    emailAddress: string;
-    createdDate: string;
-    lastAccessDate: string;
+    descText: string,
+    reportEmailAddress: string,
+    reportNickName: string,
+    targetEmailAddress: string,
+    targetNickName: string,
+    createdDate: string
   };
   
   export type PagingDTOType = {
     page: number;
-    size: number;
+    limit: number;
     type?: string;
     keyword?: string;
   };

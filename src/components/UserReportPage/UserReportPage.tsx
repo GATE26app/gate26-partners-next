@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -12,6 +12,8 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { UserReportColumnType, UserReportColumns } from './UserReportPage.data';
+import userReportApi from '@apis/userReport/UserReportApi';
+import { UserReportInfoDTOType } from '@apis/userReport/UserReportApi.type';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -20,42 +22,77 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-const rows: DataTableRowType<UserReportColumnType>[] = [
-  {
-    id: 1,
-    category: '피드 신고',
-    reason: '스팸홍보 / 도배글입니다',
-    reporterEmail: 'gate26@toktokhan.dev',
-    reporterName: '김이륙',
-    targetEmail: 'gate26@toktokhan.dev',
-    targetName: '박이륙',
-    reportedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 2,
-    category: '피드 신고',
-    reason: '스팸홍보 / 도배글입니다',
-    reporterEmail: 'gate26@toktokhan.dev',
-    reporterName: '김이륙',
-    targetEmail: 'gate26@toktokhan.dev',
-    targetName: '박이륙',
-    reportedAt: dayjs('2022-10-20 09:00'),
-  },
-  {
-    id: 3,
-    category: '피드 신고',
-    reason: '스팸홍보 / 도배글입니다',
-    reporterEmail: 'gate26@toktokhan.dev',
-    reporterName: '김이륙',
-    targetEmail: 'gate26@toktokhan.dev',
-    targetName: '박이륙',
-    reportedAt: dayjs('2022-10-20 09:00'),
-  },
-];
+// const rows: DataTableRowType<UserReportColumnType>[] = [
+//   {
+//     id: 1,
+//     category: '피드 신고',
+//     reason: '스팸홍보 / 도배글입니다',
+//     reporterEmail: 'gate26@toktokhan.dev',
+//     reporterName: '김이륙',
+//     targetEmail: 'gate26@toktokhan.dev',
+//     targetName: '박이륙',
+//     reportedAt: dayjs('2022-10-20 09:00'),
+//   },
+//   {
+//     id: 2,
+//     category: '피드 신고',
+//     reason: '스팸홍보 / 도배글입니다',
+//     reporterEmail: 'gate26@toktokhan.dev',
+//     reporterName: '김이륙',
+//     targetEmail: 'gate26@toktokhan.dev',
+//     targetName: '박이륙',
+//     reportedAt: dayjs('2022-10-20 09:00'),
+//   },
+//   {
+//     id: 3,
+//     category: '피드 신고',
+//     reason: '스팸홍보 / 도배글입니다',
+//     reporterEmail: 'gate26@toktokhan.dev',
+//     reporterName: '김이륙',
+//     targetEmail: 'gate26@toktokhan.dev',
+//     targetName: '박이륙',
+//     reportedAt: dayjs('2022-10-20 09:00'),
+//   },
+// ];
 
 function UserReportPage() {
+
+  const pageNumber = useRef(0);
+  const setPage = (value: number) => {
+    pageNumber.current = value;
+  };
+
+  const pageSize = useRef(10);
+  const setPageSize = (value: number) => {
+    pageSize.current = value;
+  }
+
+  const searchType = useRef('user');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'accompany'; // 상위 코드 검색
+        return;
+      case 2:
+        searchType.current = 'post'; // 코드 검색
+        return;
+      case 3:
+        searchType.current = 'tip'; // 코드 검색
+        return;
+      case 4:
+        searchType.current = 'message'; // 코드 검색
+        return;
+      default:
+        searchType.current = 'user'; // 전체 검색
+        return;
+    }
+  };
+  const [rows, setRows]=useState<DataTableRowType<UserReportColumnType>[]>([]);
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {keyword.current = value};
+
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
@@ -64,11 +101,78 @@ function UserReportPage() {
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
-
-    setRequest(newRequest);
+    if (key === 'searchType') {
+      setSearchType(value as number);
+      getReportInfo(searchType.current);
+    } 
+    else {
+      if(key === 'page') {
+        setPage(value as number);
+      } else if (key === 'limit') {
+        setPage(0);
+        setPageSize(value as number);
+      } else if (key === 'keyword') {
+        setKeyword(value as  string);
+      }
+      setRequest(newRequest);
+      getReportInfo(searchType.current);
+    }
   }
-
+  const getTypeFromCategory = (category:string) => {
+    switch(category){
+      case category='user':
+        return '유저 신고';
+      case category='accompany':
+        return '동행 신고';
+      case category='post':
+        return '게시물 신고';
+      case category='tip':
+        return '여행팁 신고';
+      case category='message':
+        return '채팅 메세지 신고';
+      default:
+        return '';
+    }
+  }
+  const getReportInfo = useCallback((category : string) => {
+    const params = { page: pageNumber.current, limit: pageSize.current,
+      keyword: keyword.current
+    };
+    setRequest(params);
+    setRows([]);
+    console.log("params:",params);
+    userReportApi.getReportInfo(params,category).then((response) => {
+      const { success, data, message } = response;
+      if (data) {
+        console.log(data.content.length);
+        let count = 0;
+        data.content.map((iter) => {
+          count++;
+          const obj :DataTableRowType<UserReportColumnType> = { 
+            'id': count,
+            'category': getTypeFromCategory(category) , 
+            'reason': iter.descText,
+            'reporterEmail' : iter.reportEmailAddress,
+            'reporterName' : iter.reportNickName,
+            'targetEmail': iter.targetEmailAddress,
+            'targetName': iter.targetNickName,
+            'reportedAt': iter.createdDate
+          };
+          setRows(row => [...row, obj])
+        })
+        setTotal(data.content.length ? data.content.length : 0);
+      } else {
+        setRows([]);
+        console.log(message);
+      }
+        }).catch((err) => console.log(err));
+    },[]);
+  
+  
+  // // useEffect 최초 호출
+  useEffect(() => {
+    getReportInfo('user');
+  }, []);
   return (
     <>
       <Head>
@@ -91,17 +195,19 @@ function UserReportPage() {
           total={total}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 0, label: '유저' },
+              { value: 1, label: '동행' },
+              { value: 2, label: '게시물' },
+              { value: 3, label: '여행팁' },
+              { value: 4, label: '메세지' },
             ],
-            keyword: '',
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              handleChangeInput('searchType', type);
             },
             onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+              handleChangeInput('keyword', keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
