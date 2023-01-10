@@ -7,87 +7,100 @@ import { basicDtotype } from '@apis/common/CommonApi.type';
 import { getToken } from '@utils/localStorage/token';
 
 import {
-  AirlineInfoDTOType,
-  AirlineModifyDTOType,
-  AirlineRequestDTOType,
-} from './AirlineCodeApi.type';
+  AdminMenuInfoDTOType,
+  AdminMenuModifyDTOType,
+  MenuRequestDTOType,
+} from './AdminMenuApi.type';
 
-export class AirlineCodeApi {
+export class AdminMenuApi {
   axios: AxiosInstance = instance;
   constructor(axios?: AxiosInstance) {
     if (axios) this.axios = axios;
   }
 
-  //항공사 코드 리스트 조회
-  getAirlineCodeList = async (
-    params?: AirlineRequestDTOType,
+  //메뉴 리스트 조회
+  getAdminMenuList = async (
+    params?: MenuRequestDTOType,
   ): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline`,
+      url: `http://dbackoffice.gate26.co.kr/admin/menu`,
       params: params,
     });
     return data;
   };
 
-  getAirlineCode = async (airlineId: any): Promise<basicDtotype> => {
+  //상위메뉴리스트 조회
+  getParentAdminMenu = async (): Promise<basicDtotype> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `http://dbackoffice.gate26.co.kr/admin/menu/parents`,
     });
     return data;
   };
 
-  // 항공사 코드 추가
-  postAddAirlineCode = async (
-    body: AirlineInfoDTOType,
+  //메뉴 아이디로 조회
+  getAdminMenu = async (id: any): Promise<basicDtotype> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `http://dbackoffice.gate26.co.kr/admin/menu/${id}`,
+    });
+    return data;
+  };
+
+  // 메뉴 추가
+  postAddAdminMenu = async (
+    body: AdminMenuInfoDTOType,
   ): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline`,
+      url: `http://dbackoffice.gate26.co.kr/admin/menu`,
       data: body,
     });
     return data;
   };
 
-  // 항공사 코드 수정
-  putModifyAirlineCode = async (
-    body: AirlineModifyDTOType,
-    airlineId: any,
+  // 메뉴 수정
+  putModifyAdminMenu = async (
+    body: AdminMenuModifyDTOType,
+    id: any,
   ): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'PUT',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `http://dbackoffice.gate26.co.kr/admin/menu/${id}`,
       data: body,
     });
     return data;
   };
 
-  // 항공사 코드 삭제하기
-  deleteAirlineCode = async (airlineId: any): Promise<DefaultDTOType> => {
+  // 메뉴 삭제하기
+  deleteAdminMenu = async (id: any): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'DELETE',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `http://dbackoffice.gate26.co.kr/admin/menu/${id}`,
     });
     return data;
   };
 }
 
-const airlineCodeApi = new AirlineCodeApi();
+const adminMenuApi = new AdminMenuApi();
 
-export default airlineCodeApi;
+export default adminMenuApi;
