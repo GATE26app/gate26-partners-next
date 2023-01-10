@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import * as excel from 'xlsx';
 
-import { Flex } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 
 import airlineCodeApi, { AirlineCodeApi } from '@apis/airline/AirlineCodeApi';
 import { AirlineRequestDTOType } from '@apis/airline/AirlineCodeApi.type';
@@ -36,9 +36,10 @@ interface ModalProps {
 let rows: DataTableRowType<AirLineCol>[] = [];
 
 const AirlineCodePage = () => {
+  const toast = useToast();
   const [total, setTotal] = useState<number>(100);
   const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const { openCustomModal } = useCustomModalHandlerContext();
@@ -82,13 +83,15 @@ const AirlineCodePage = () => {
             newRequest.page -= 1;
 
           loadData();
-          alert('삭제 성공');
+          toast({
+            description: '삭제 성공',
+          });
         } else {
-          alert('삭제 실패');
+          toast({ description: '삭제 실패' });
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        toast({ description: '삭제 실패' });
       });
   };
 
@@ -156,10 +159,12 @@ const AirlineCodePage = () => {
             });
           });
         } else {
-          console.log('항공사 불러오기 실패');
+          toast({ description: '항공사 불러오기 실패' });
         }
       })
-      .catch((err) => console.log('hihihiihi' + err));
+      .catch(() => {
+        toast({ description: '항공사 불러오기 실패' });
+      });
   };
 
   function handleChangeInput(key: string, value: string | number | boolean) {

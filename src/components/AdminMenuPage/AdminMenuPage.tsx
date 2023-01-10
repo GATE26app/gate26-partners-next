@@ -1,11 +1,14 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
+import * as excel from 'xlsx';
 
-import { Flex } from '@chakra-ui/react';
+import { Flex, Toast, useToast } from '@chakra-ui/react';
 
+import adminMenuApi from '@apis/menu/AdminMenuApi';
+import { MenuRequestDTOType } from '@apis/menu/AdminMenuApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import MenuEditModal from '@components/AdminMenuPage/_fragments/MenuEditModal';
@@ -32,33 +35,13 @@ interface ModalProps {
   type?: ModalType;
   targetId?: number;
 }
-const rows: DataTableRowType<AdminMenuColumnType>[] = [
-  {
-    id: 1,
-    title: '메뉴 관리',
-    path: '/admin/list',
-    useStatus: true,
-    createdAt: dayjs('2002-01-02 09:00'),
-  },
-  {
-    id: 2,
-    title: '메뉴 관리',
-    path: '/admin/list',
-    useStatus: true,
-    createdAt: dayjs('2002-01-02 09:00'),
-  },
-  {
-    id: 3,
-    title: '메뉴 관리',
-    path: '/admin/list',
-    useStatus: true,
-    createdAt: dayjs('2002-01-02 09:00'),
-  },
-];
+let rows: DataTableRowType<AdminMenuColumnType>[] = [];
 
 function AdminMenuPage() {
+  const toast = useToast();
+
   const [request, setRequest] = useState<ReqMenuProps>({
-    page: 1,
+    page: 0,
     limit: 10,
   });
   const [total, setTotal] = useState<number>(100);
@@ -68,15 +51,21 @@ function AdminMenuPage() {
   const userColumns = new AdminMenuColumns();
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
-  function handleChangeInput(key: string, value: string | number) {
-    const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
 
-    setRequest(newRequest);
-  }
+  const [keyword, setKeyword] = useState<string>('');
+  const [type, setType] = useState<number>();
+  const [lastPage, setLastPage] = useState<number>(0);
 
-  const handleMenuModalOpen = (type: ModalType) => {
+  const handleCreateModalOpen = (type: ModalType) => {
     setModal({ type, isOpen: true });
+  };
+
+  const handleModifyModalOpen = (
+    type: ModalType,
+    row: DataTableRowType<AdminMenuColumnType>,
+  ) => {
+    console.log(Number(row?.id));
+    setModal({ type, isOpen: true, targetId: Number(row?.id) });
   };
 
   const handleMenuModalClose = () => {
@@ -92,10 +81,120 @@ function AdminMenuPage() {
         okButtonName: '삭제',
         cbOk: () => {
           console.log('삭제 처리:', row);
+          handleAdminMenuDelete(row?.id);
         },
       }),
     );
     openCustomModal();
+  };
+
+  const handleAdminMenuDelete = (tgId: any) => {
+    adminMenuApi
+      .deleteAdminMenu(tgId)
+      .then(({ success }) => {
+        const newRequest = { ...request };
+        if (success) {
+          //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+          if (rows && rows.length - 1 === 0 && newRequest.page)
+            newRequest.page -= 1;
+
+          loadData();
+          toast({
+            description: '삭제 성공',
+          });
+        } else {
+          toast({ description: '삭제 실패' });
+        }
+      })
+      .catch(() => {
+        toast({ description: '삭제 실패' });
+      });
+  };
+
+  useEffect(() => {
+    //첫 로드
+    loadData();
+  }, []);
+
+  const loadData = () => {
+    //검색 타입별 코드값
+    let typeStr = '';
+    if (type == 1) {
+      typeStr = 'name';
+    } else if (type == 2) {
+      typeStr = 'path';
+    }
+
+    const params: MenuRequestDTOType = {
+      type: typeStr,
+      keyword: keyword,
+      page: request?.page,
+      size: request?.limit,
+    };
+
+    adminMenuApi
+      .getAdminMenuList(params)
+      .then((response) => {
+        const { message, data, success } = response;
+        console.log(response);
+        if (success) {
+          console.log(data);
+          console.log('메뉴리스트 불러오기 성공');
+          //총 개수
+          setTotal(data?.totalElements);
+          setLastPage(data?.totalPages);
+          rows = [];
+          const codeList: any = data?.content;
+          codeList.forEach((element: any) => {
+            rows.push({
+              id: element?.menuId,
+              title: element?.menuName,
+              path: element?.menuPath,
+              useStatus: element?.useYn,
+              createdAt: element?.createdDate,
+            });
+          });
+        } else {
+          toast({ description: '메뉴리스트 불러오기 실패' });
+        }
+      })
+      .catch(() => {
+        toast({ description: '메뉴리스트 불러오기 실패' });
+      });
+  };
+
+  function handleChangeInput(key: string, value: string | number | boolean) {
+    const newRequest = { ...request, [key]: value };
+
+    //10개씩 보기, 20개씩 보기, 50개씩 보기, 100개씩 보기 클릭 시 0으로 초기화
+    if (key === 'limit') {
+      newRequest.page = 0;
+    }
+
+    //페이지가 0보다 작은 경우 0으로 세팅
+    if (newRequest.page < 0) {
+      newRequest.page = 0;
+    }
+
+    //페이지가 마지막 페이지보다 큰 경우 마지막 페이지로 세팅
+    if (newRequest.page >= lastPage - 1) {
+      newRequest.page = lastPage - 1;
+    }
+    console.log('변경: ', key, value);
+    setRequest(newRequest);
+  }
+
+  useEffect(() => {
+    //페이징 카운트 & 조회 조건 변경 시 재조회
+    loadData();
+  }, [request]);
+
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '관리자메뉴.xlsx');
   };
   return (
     <>
@@ -111,7 +210,7 @@ function AdminMenuPage() {
         <BreadCrumb depth={['관리자', '메뉴 관리']} />
         <PageTitle
           title="메뉴 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 
@@ -120,23 +219,27 @@ function AdminMenuPage() {
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 1, label: '메뉴명' },
+              { value: 1, label: '경로' },
             ],
-            keyword: '',
+            keyword: keyword,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              setType(type);
             },
             onChangeKeyword: (keyword: string) => {
               console.log('키워드');
+              setKeyword(keyword);
             },
-            onClickSearch: () => console.log('검색'),
+            onClickSearch: () => {
+              console.log('검색');
+              loadData();
+            },
           }}
           createButton={{
             title: '메뉴 추가',
             width: '83px',
-            onClickCreate: () => handleMenuModalOpen('create'),
+            onClickCreate: () => handleCreateModalOpen('create'),
           }}
         />
         <DataTable
@@ -144,7 +247,7 @@ function AdminMenuPage() {
           rows={rows}
           isMenu
           onDelete={(row) => handleDeleteRow(row)}
-          onEdit={() => handleMenuModalOpen('modify')}
+          onEdit={(row) => handleModifyModalOpen('modify', row)}
           paginationProps={{
             currentPage: request.page,
             limit: request.limit,
@@ -161,7 +264,9 @@ function AdminMenuPage() {
       <MenuEditModal
         isOpen={modal.isOpen}
         type={modal.type}
+        targetId={modal.targetId}
         onClose={handleMenuModalClose}
+        onComplete={() => loadData()}
       />
     </>
   );

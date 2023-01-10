@@ -10,7 +10,14 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  useToast,
 } from '@chakra-ui/react';
+
+import adminMenuApi from '@apis/menu/AdminMenuApi';
+import {
+  AdminMenuInfoDTOType,
+  AdminMenuModifyDTOType,
+} from '@apis/menu/AdminMenuApi.type';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -18,24 +25,16 @@ import CustomSelect from '@components/common/CustomSelect';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
-const TOP_MENU = [
-  { value: 1, label: '이용자' },
-  { value: 2, label: '관리자' },
-  { value: 3, label: '공통 코드' },
-  { value: 4, label: '커뮤니티' },
-  { value: 5, label: '모빌리티' },
-  { value: 6, label: '공지사항' },
-  { value: 7, label: '푸쉬알림 관리' },
-  { value: 8, label: '1:1문의' },
-  { value: 9, label: '앱 관리' },
-];
+import number from 'yup/lib/number';
+
+let TOP_MENU: { label: any; value: any }[] = [];
 
 interface ReqMenuEditModal {
-  topMenu: string;
+  topMenu: number | undefined;
   title: string;
   path: string;
-  step: string;
-  order: string;
+  step: number | undefined;
+  order: number | undefined;
   enable: boolean;
 }
 
@@ -52,15 +51,16 @@ const MenuEditModal = ({
   onComplete,
   ...props
 }: MenuEditModalProps) => {
+  const toast = useToast();
   const [request, setRequest] = useState<ReqMenuEditModal>({
-    topMenu: '',
+    topMenu: undefined,
     title: '',
     path: '',
-    step: '',
-    order: '',
+    step: undefined,
+    order: undefined,
     enable: false,
   });
-  function handleChangeInput(key: string, value: string | boolean) {
+  function handleChangeInput(key: string, value: string | boolean | number) {
     const newRequest = { ...request, [key]: value };
 
     setRequest(newRequest);
@@ -68,14 +68,133 @@ const MenuEditModal = ({
 
   const handleCreate = () => {
     if (onComplete) onComplete();
+    if (type === 'create') {
+      handleCreateCode();
+    } else {
+      handleModifyCode();
+    }
+  };
+
+  const handleCreateCode = () => {
+    const body: AdminMenuInfoDTOType = {
+      upMenuId: request.topMenu,
+      menuName: request.title,
+      menuPath: request.path,
+      depth: request.step,
+      sort: request.order,
+      useYn: request.enable,
+    };
+
+    adminMenuApi
+      .postAddAdminMenu(body)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '생성 완료',
+          });
+        } else {
+          toast({
+            description: '생성 실패',
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          description: '생성 실패',
+        });
+      });
+  };
+
+  const handleModifyCode = () => {
+    const body: AdminMenuModifyDTOType = {
+      menuName: request.title,
+      menuPath: request.path,
+      depth: request.step,
+      sort: request.order,
+      useYn: request.enable,
+    };
+
+    adminMenuApi
+      .putModifyAdminMenu(body, targetId)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '수정 완료',
+          });
+        } else {
+          toast({
+            description: '수정 실패',
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          description: '수정 실패',
+        });
+      });
   };
 
   useEffect(() => {
-    if (type !== 'modify') {
-      return;
-    }
+    loadParentData();
     console.log('선택한 row :', targetId);
+    if (targetId !== undefined) {
+      adminMenuApi
+        .getAdminMenu(targetId)
+        .then((response) => {
+          const { message, data, success } = response;
+          console.log(response);
+          if (success) {
+            setRequest({
+              topMenu: data?.upMenuId,
+              title: data?.menuName,
+              path: data?.menuPath,
+              step: data?.depth,
+              order: data?.sort,
+              enable: data?.useYn,
+            });
+          } else {
+            console.log('메뉴 불러오기 실패');
+          }
+        })
+        .catch((err) => console.log('hihihiihi' + err));
+    } else {
+      setRequest({} as ReqMenuEditModal);
+    }
   }, [targetId, type]);
+
+  const loadParentData = () => {
+    adminMenuApi
+      .getParentAdminMenu()
+      .then((response) => {
+        const { message, data, success } = response;
+        console.log(response);
+        console.log(success);
+        if (success) {
+          console.log(data);
+          TOP_MENU = [];
+          TOP_MENU.push({
+            label: '상위 메뉴',
+            value: undefined,
+          });
+          data?.forEach((element: any) => {
+            TOP_MENU.push({
+              label: element?.menuName,
+              value: element?.menuId,
+            });
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    console.log('업데이트 : ', request);
+  }, [request]);
+
   const renderContent = () => {
     return (
       <Flex direction={'column'} rowGap={'15px'}>
@@ -86,10 +205,12 @@ const MenuEditModal = ({
               width={'100px'}
               placeholder={'상위 메뉴'}
               items={TOP_MENU}
-              value={request.topMenu}
-              onChange={(value) =>
-                handleChangeInput('topMenu', value as string)
-              }
+              defaultValue={request.topMenu}
+              key={request.topMenu}
+              onChange={(value) => {
+                console.log(request.topMenu);
+                handleChangeInput('topMenu', value as number);
+              }}
             />
           }
         />
@@ -116,34 +237,26 @@ const MenuEditModal = ({
         <ModalRow
           title="메뉴 단계"
           content={
-            <CustomSelect
-              width={'100px'}
-              placeholder={'Type'}
-              items={[
-                { value: 1, label: '0' },
-                { value: 2, label: '1' },
-                { value: 3, label: '2' },
-                { value: 4, label: '3' },
-              ]}
+            <InputBox
+              type="number"
+              placeholder="메뉴 단계"
               value={request.step}
-              onChange={(value) => handleChangeInput('step', value as string)}
+              onChange={(e) =>
+                handleChangeInput('step', Number(e.target.value))
+              }
             />
           }
         />
         <ModalRow
           title="정렬순서"
           content={
-            <CustomSelect
-              width={'100px'}
-              placeholder={'Type'}
-              items={[
-                { value: 1, label: '0' },
-                { value: 2, label: '1' },
-                { value: 3, label: '2' },
-                { value: 4, label: '3' },
-              ]}
+            <InputBox
+              type="number"
+              placeholder="정렬순서"
               value={request.order}
-              onChange={(value) => handleChangeInput('order', value as string)}
+              onChange={(e) =>
+                handleChangeInput('order', Number(e.target.value))
+              }
             />
           }
         />
