@@ -98,20 +98,26 @@ const AirlineCodeModal = ({
       useYn: request.answer,
     };
 
-    airlineCodeApi.postAddAirlineCode(body).then((response) => {
-      const { data, success } = response;
-      if (success) {
-        onClose();
+    airlineCodeApi
+      .postAddAirlineCode(body)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '생성 완료',
+          });
+        } else {
+          toast({
+            description: '생성 실패',
+          });
+        }
+      })
+      .catch(() => {
         toast({
-          description: '생성 완료',
-        });
-      } else {
-        toast({
-          status: 'error',
           description: '생성 실패',
         });
-      }
-    });
+      });
   };
 
   const handleModifyCode = () => {
@@ -128,20 +134,26 @@ const AirlineCodeModal = ({
       useYn: request.answer,
     };
 
-    airlineCodeApi.putModifyAirlineCode(body, request.iata).then((response) => {
-      const { data, success } = response;
-      if (success) {
-        onClose();
+    airlineCodeApi
+      .putModifyAirlineCode(body, request.iata)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '수정 완료',
+          });
+        } else {
+          toast({
+            description: '수정 실패',
+          });
+        }
+      })
+      .catch(() => {
         toast({
-          description: '수정 완료',
-        });
-      } else {
-        toast({
-          status: 'error',
           description: '수정 실패',
         });
-      }
-    });
+      });
   };
 
   const handleCodeType = (e: any) => {
