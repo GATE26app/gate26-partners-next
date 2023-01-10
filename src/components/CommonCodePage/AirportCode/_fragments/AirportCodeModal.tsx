@@ -19,7 +19,6 @@ import { RoungeInfo } from '@apis/common/CommonApi.type';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
-import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
 import DatePicker from '@components/common/DatePicker';
 import FileUpload from '@components/common/FileUpload/FileUpload';

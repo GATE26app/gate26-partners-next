@@ -22,6 +22,21 @@ import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
+const RadioGroups = [
+  {
+    value: '0',
+    label: 'URL',
+  },
+  {
+    value: '1',
+    label: 'IMAGE',
+  },
+  {
+    value: '2',
+    label: 'TEXT',
+  },
+];
+
 interface ReqEventDetail {
   title: string;
   eventContent: string;
@@ -74,8 +89,8 @@ const EventDetailModal = ({
           content={
             <RadioButton
               group
-              groupLabel={['URL', 'IMAGE', 'TEXT']}
-              onClick={(idx) => handleChangeInput('type', idx)}
+              groupItems={RadioGroups}
+              onClick={(value) => handleChangeInput('type', value)}
             />
           }
         />

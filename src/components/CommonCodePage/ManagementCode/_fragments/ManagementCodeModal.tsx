@@ -38,6 +38,18 @@ interface StampProps extends Omit<ModalProps, 'children'> {
   targetId?: number;
   onComplete?: () => void;
 }
+
+const RadioGroups = [
+  {
+    value: '0',
+    label: '상위코드',
+  },
+  {
+    value: '1',
+    label: '하위코드',
+  },
+];
+
 const StampModal = ({
   type,
   targetId,
@@ -72,8 +84,9 @@ const StampModal = ({
           content={
             <RadioButton
               group
-              groupLabel={['상위코드', '하위코드']}
+              groupItems={RadioGroups}
               onClick={handleCodeType}
+              value={codeType}
             />
           }
         />

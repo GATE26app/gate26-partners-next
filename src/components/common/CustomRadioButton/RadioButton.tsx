@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
-
-import { Flex, Radio, RadioGroup, Stack, background } from '@chakra-ui/react';
+import { Radio, RadioGroup, Stack } from '@chakra-ui/react';
 
 type radioColor = 'checked' | 'disabled';
 
+interface GroupObj {
+  value: any;
+  label: string;
+}
+
 interface RadioPrsop {
-  onClick?: (buttonIdx: number) => void;
+  onClick?: (e: any) => void;
   type?: radioColor;
   radioCount?: number;
-  groupLabel?: string[];
+  groupItems?: GroupObj[];
   label?: string;
   disabled?: boolean;
   group?: boolean;
   checked?: boolean;
+  value?: any;
 }
 
 const RadioButton = ({
@@ -21,24 +25,9 @@ const RadioButton = ({
   disabled = false,
   group = false,
   checked = false,
-  groupLabel,
+  groupItems,
+  value,
 }: RadioPrsop) => {
-  const [value, setVaule] = useState<boolean>(false);
-  const [groupValue, setGroupValue] = useState<string>('0');
-
-  const RadioValue = (e: any) => {
-    if (!group) {
-      setVaule(!value);
-      if (onClick) {
-        onClick(e);
-      }
-      return;
-    }
-    setGroupValue(e);
-    if (onClick) {
-      onClick(e);
-    }
-  };
   return (
     <>
       {!group ? (
@@ -46,7 +35,7 @@ const RadioButton = ({
           isDisabled={disabled}
           size="lg"
           isChecked={checked ? checked : disabled ? true : value}
-          onClick={(e) => RadioValue(e)}
+          onClick={onClick}
           _disabled={{ border: '5px solid #b8bccb' }}
           _checked={{ background: '#FF5942' }}
           _before={{
@@ -60,30 +49,31 @@ const RadioButton = ({
           {label}
         </Radio>
       ) : (
-        <RadioGroup onChange={(e) => RadioValue(e)} value={groupValue}>
+        <RadioGroup onChange={onClick} value={value}>
           <Stack direction="row" columnGap={'30.5px'}>
-            {groupLabel?.map((item, index) => {
+            {groupItems?.map(({ value: item, label }, index) => {
               return (
-                <>
-                  <Radio
-                    isChecked={checked ? checked : disabled ? true : value}
-                    isDisabled={disabled}
-                    size="lg"
-                    onClick={(e) => RadioValue(e)}
-                    _disabled={{ border: '5px solid #b8bccb' }}
-                    _checked={{ background: '#FF5942' }}
-                    _before={{
-                      background: '#ffffff',
-                      width: '10px',
-                      height: '10px',
-                      content: '""',
-                      borderRadius: '50%',
-                    }}
-                    value={String(index)}
-                  >
-                    {item}
-                  </Radio>
-                </>
+                <Radio
+                  key={index}
+                  isChecked={
+                    checked ? checked : disabled ? true : item === value
+                  }
+                  isDisabled={disabled}
+                  size="lg"
+                  onClick={onClick}
+                  _disabled={{ border: '5px solid #b8bccb' }}
+                  _checked={{ background: '#FF5942' }}
+                  _before={{
+                    background: '#ffffff',
+                    width: '10px',
+                    height: '10px',
+                    content: '""',
+                    borderRadius: '50%',
+                  }}
+                  value={item}
+                >
+                  {label}
+                </Radio>
               );
             })}
           </Stack>

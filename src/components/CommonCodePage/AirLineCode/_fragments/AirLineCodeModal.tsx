@@ -27,6 +27,16 @@ import TextareaBox from '@components/common/Textarea';
 
 import { AirLineCol } from '../AirLineCode.data';
 
+const RadioGroups = [
+  {
+    value: '0',
+    label: '국내',
+  },
+  {
+    value: '1',
+    label: '국외',
+  },
+];
 interface ReqAirportKey {
   nameKr: string;
   nameEng: string;
@@ -175,7 +185,7 @@ const StampModal = ({
         />
         <ModalRow
           title="국내외여부"
-          content={<RadioButton group groupLabel={['국내', '국회']} />}
+          content={<RadioButton group groupItems={RadioGroups} />}
         />
         <ModalRow
           title="대표번호"

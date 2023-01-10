@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
@@ -46,6 +47,20 @@ import TextStyleSection from '@components/common/TokDocsDevTool/_fragments/TokDo
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
+const RadioGroups = [
+  {
+    value: '1',
+    label: 'teseData',
+  },
+  {
+    value: '2',
+    label: 'teseData',
+  },
+  {
+    value: '3',
+    label: 'teseData',
+  },
+];
 interface AccodianProps {
   title: string;
   Pannel: JSX.Element;
@@ -101,7 +116,7 @@ function Test({ Component, pageProps }: any) {
 
   const theme = useTheme();
   const { colors, textStyles } = theme;
-  const [radioIdx, setRadioIdx] = useState<string | boolean>();
+  const [radioIdx, setRadioIdx] = useState<string>('1');
   const [currentPage, setCurretPage] = useState<number>(0);
 
   type DataColumnType =
@@ -481,7 +496,12 @@ function Test({ Component, pageProps }: any) {
                   <RadioButton checked />
                 </Flex>
                 <Flex alignItems="center" columnGap={'10px'}>
-                  <RadioButton group groupLabel={['data', 'data', 'data']} />
+                  <RadioButton
+                    group
+                    groupItems={RadioGroups}
+                    onClick={setRadioIdx}
+                    value={radioIdx}
+                  />
                 </Flex>
               </>
             }
