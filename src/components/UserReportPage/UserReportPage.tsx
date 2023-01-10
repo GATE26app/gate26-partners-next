@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import dayjs from 'dayjs';
-
 import { Flex } from '@chakra-ui/react';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -13,7 +11,6 @@ import TableTop from '@components/common/TableTop';
 
 import { UserReportColumnType, UserReportColumns } from './UserReportPage.data';
 import userReportApi from '@apis/userReport/UserReportApi';
-import { UserReportInfoDTOType } from '@apis/userReport/UserReportApi.type';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -22,38 +19,6 @@ interface ReqLoungeProps {
   limit: number;
 }
 
-// const rows: DataTableRowType<UserReportColumnType>[] = [
-//   {
-//     id: 1,
-//     category: '피드 신고',
-//     reason: '스팸홍보 / 도배글입니다',
-//     reporterEmail: 'gate26@toktokhan.dev',
-//     reporterName: '김이륙',
-//     targetEmail: 'gate26@toktokhan.dev',
-//     targetName: '박이륙',
-//     reportedAt: dayjs('2022-10-20 09:00'),
-//   },
-//   {
-//     id: 2,
-//     category: '피드 신고',
-//     reason: '스팸홍보 / 도배글입니다',
-//     reporterEmail: 'gate26@toktokhan.dev',
-//     reporterName: '김이륙',
-//     targetEmail: 'gate26@toktokhan.dev',
-//     targetName: '박이륙',
-//     reportedAt: dayjs('2022-10-20 09:00'),
-//   },
-//   {
-//     id: 3,
-//     category: '피드 신고',
-//     reason: '스팸홍보 / 도배글입니다',
-//     reporterEmail: 'gate26@toktokhan.dev',
-//     reporterName: '김이륙',
-//     targetEmail: 'gate26@toktokhan.dev',
-//     targetName: '박이륙',
-//     reportedAt: dayjs('2022-10-20 09:00'),
-//   },
-// ];
 
 function UserReportPage() {
 
@@ -160,6 +125,7 @@ function UserReportPage() {
           };
           setRows(row => [...row, obj])
         })
+        // setTotal(data.totalElements ? data.totalElements : 0);
         setTotal(data.content.length ? data.content.length : 0);
       } else {
         setRows([]);
@@ -171,7 +137,7 @@ function UserReportPage() {
   
   // // useEffect 최초 호출
   useEffect(() => {
-    getReportInfo('user');
+    getReportInfo(searchType.current);
   }, []);
   return (
     <>
