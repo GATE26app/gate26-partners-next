@@ -51,7 +51,7 @@ const LoungeDetailModal = ({
 
   const handleChangeInput = (
     key: string,
-    value: string | number | boolean | File,
+    value: string | number | boolean | File | null,
   ) => {
     setRequest({ ...request, [key]: value });
   };
