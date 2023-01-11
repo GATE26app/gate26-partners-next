@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
-import { CommonCodeInfoDTO, CommonCodeInfoDTOType, PagingDTOType } from './ManagementCodeApi.type';
+import { CommonCodeInfo, CommonCodeInfoDTOType, PagingDTOType, ParentCodeDTOType, PostCommonCodeInfo } from './ManagementCodeApi.type';
 import { getToken } from '@utils/localStorage/token';
 
 export class ManagementCodeApi {
@@ -11,9 +11,10 @@ export class ManagementCodeApi {
     if (axios) this.axios = axios;
   }
 
+  // 코드 목록 조회 페이징
   getCommonCode =async (
     params : PagingDTOType,
-  ): Promise<CommonCodeInfoDTO> => {
+  ): Promise<CommonCodeInfoDTOType> => {
     const { data } = await this.axios({
         method: 'GET',
         headers: {
@@ -25,10 +26,22 @@ export class ManagementCodeApi {
       return data;
   }
 
+  // 상위코드 목록 조회
+  getParentCommonCode =async (
+  ): Promise<ParentCodeDTOType> => {
+    const { data } = await this.axios({
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN':`${getToken()}`
+        },
+        url: `http://dbackoffice.gate26.co.kr/common/codes/parents?`,
+      });
+      return data;
+  }
 
   // 공통코드 추가하기
   postCommonCode = async (
-    body: CommonCodeInfoDTOType,
+    body: PostCommonCodeInfo,
   ): Promise<CommonCodeInfoDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
@@ -40,6 +53,35 @@ export class ManagementCodeApi {
     });
     return data;
   };
+
+  // 공통코드 수정하기
+  putCommonCode = async (
+    body: CommonCodeInfo, codeId : number
+  ): Promise<CommonCodeInfoDTOType> => {
+    const { data } = await this.axios({
+      method: 'PUT',
+      headers: {
+        'X-AUTH-TOKEN':`${getToken()}`
+      },
+      url: `http://dbackoffice.gate26.co.kr/common/codes/${codeId}`,
+      data : body,
+    })
+    return data;
+  }
+
+  // 공통코드 삭제하기
+  deleteCommonCode = async (
+    codeId : number,
+  ): Promise<CommonCodeInfoDTOType> => {
+    const { data } = await this.axios({
+      method: 'DELETE',
+      headers: {
+        'X-AUTH-TOKEN':`${getToken()}`
+      },
+      url: `http://dbackoffice.gate26.co.kr/common/codes/${codeId}`,
+    })
+    return data;
+  }
 }
 
 const managementCodeApi = new ManagementCodeApi();
