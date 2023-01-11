@@ -22,12 +22,14 @@ import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandl
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: string;
-  title?: string;
-  coverImg?: string;
-  img?: string;
-  displayOrder?: number;
-  openYn?: boolean;
+  detail?: {
+    targetId: string;
+    title: string;
+    coverImg: string;
+    img: string;
+    displayOrder: number;
+    openYn: boolean;
+  };
 }
 
 function CommunityLoungePage() {
@@ -62,12 +64,14 @@ function CommunityLoungePage() {
     setModal({
       isOpen: true,
       type: 'modify',
-      targetId: row.tgId as string,
-      title: row.loungeName as string,
-      coverImg: row.coverImg as string,
-      img: row.imagePath as string,
-      displayOrder: row.displayOrder as number,
-      openYn: row.isOpen as boolean,
+      detail: {
+        targetId: row.tgId as string,
+        title: row.loungeName as string,
+        coverImg: row.coverImg as string,
+        img: row.imagePath as string,
+        displayOrder: row.displayOrder as number,
+        openYn: row.isOpen === 'T' ? true : false,
+      },
     });
   };
 
@@ -178,7 +182,7 @@ function CommunityLoungePage() {
       <LoungeDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        detail={modal}
+        detail={modal.detail}
         displayMax={displayMax}
         onClose={handleCloseModal}
         onComplete={() => {
