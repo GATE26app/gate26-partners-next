@@ -87,12 +87,15 @@ export type StmaperyHitoryListDTOType = Omit<BasicGetListDTOType, 'content'> & {
   }[];
 };
 export type StampListDTOType = Omit<BasicDTO, 'content'> & {
-  content: {
-    stampId: string;
-    stampName: string;
-    imagePath: string;
-  }[];
+  content: StampInfoDTOType[];
 };
+
+export type StampInfoDTOType = {
+  stampId: string;
+  stampName: string;
+  imagePath: string;
+};
+
 export type ActivitHitoryListDTOType = Omit<BasicGetListDTOType, 'content'> & {
   content: {
     airlineTicketId: string;

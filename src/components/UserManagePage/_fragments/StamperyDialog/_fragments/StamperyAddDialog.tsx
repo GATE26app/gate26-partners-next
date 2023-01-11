@@ -16,6 +16,7 @@ import {
 import memberManageApi from '@apis/membermanage/MemberManage';
 import {
   SearchGetDTOType,
+  StampInfoDTOType,
   StampListGetDTOType,
 } from '@apis/membermanage/MemberManage.type';
 import { StampParamGetType } from '@apis/stamp/StampApis.type';
@@ -54,12 +55,12 @@ const StamperyAddDialog = ({
   const [selectedType, setSelectedType] = useState<StampListGetDTOType>({
     type: TOGGLE_OPTION[0].value,
   });
-  const [stampItems, setStampItems] = useState<any>([]);
+  const [stampItems, setStampItems] = useState<StampInfoDTOType[]>([]);
 
   const getStampList = async (param: StampListGetDTOType) => {
     const response = await memberManageApi.getStampList({ ...param });
     if (response.success) {
-      setStampItems(response.data || []);
+      setStampItems(response.data.content || []);
     }
   };
 
