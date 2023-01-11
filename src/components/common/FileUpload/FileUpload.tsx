@@ -8,10 +8,11 @@ import { FileInputArea, FileWrapper, IconArea } from './FileUpload.Style';
 interface FileProps {
   onClick?: () => void;
   fileValue?: string;
-  onChange?: (file: File) => void;
+  onChange?: (file: File | null) => void;
+  onDelete?: () => void;
 }
 
-const FileUpload = ({ onClick, fileValue, onChange }: FileProps) => {
+const FileUpload = ({ onClick, fileValue, onChange, onDelete }: FileProps) => {
   const file = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>(fileValue ? fileValue : '');
   const id = (Math.random() * 7).toString(7);
@@ -36,6 +37,8 @@ const FileUpload = ({ onClick, fileValue, onChange }: FileProps) => {
     if (file.current) {
       file.current.value = '';
       setFileName('');
+      if (onChange) onChange(null);
+      if (onDelete) onDelete();
     }
   };
 

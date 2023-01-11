@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -17,14 +17,23 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { AlarmColumnType, LIST_COLUMNS } from './PushManagePage.data';
-import NoticeDetailModal from './_fragments/PushDetailModal';
+import PushDetailModal from './_fragments/PushDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: string;
+  detail: {
+    targetId: string;
+    fcmType: string;
+    chatRoomId: string;
+    loungeId: string;
+    title: string;
+    content: string;
+    coverImg?: string;
+    noticeDate: Dayjs;
+  } | null;
 }
 
 function PushManagePage() {
@@ -36,7 +45,10 @@ function PushManagePage() {
   });
   const [total, setTotal] = useState<number>(100);
   const [rows, setRows] = useState<DataTableRowType<AlarmColumnType>[]>([]);
-  const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+  const [modal, setModal] = useState<ModalProps>({
+    isOpen: false,
+    detail: null,
+  });
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
@@ -49,7 +61,8 @@ function PushManagePage() {
     setRequest(newRequest);
   }
 
-  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
+  const handleCreateRow = () =>
+    setModal({ isOpen: true, type: 'create', detail: null });
 
   const handleEditRow = (row: DataTableRowType<AlarmColumnType>) => {
     if (!row.noticeId) {
@@ -58,11 +71,20 @@ function PushManagePage() {
     setModal({
       isOpen: true,
       type: 'modify',
-      targetId: row.noticeId as string,
+      detail: {
+        targetId: row.noticeId as string,
+        fcmType: row.type as string,
+        loungeId: row.loungeId as string,
+        chatRoomId: row.chatRoomId as string,
+        noticeDate: row.noticeDate as Dayjs,
+        coverImg: row.imagePath ? (row.imagePath as string) : undefined,
+        title: row.title as string,
+        content: row.content as string,
+      },
     });
   };
 
-  const handleCloseModal = () => setModal({ isOpen: false });
+  const handleCloseModal = () => setModal({ isOpen: false, detail: null });
 
   const handleDeleteRow = (row: DataTableRowType<AlarmColumnType>) => {
     dispatch(
@@ -72,7 +94,9 @@ function PushManagePage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          pushApi.deletePush(row.noticeId as string);
+          pushApi.deletePush(row.noticeId as string).then((response) => {
+            if (response.success) getPushList();
+          });
         },
       }),
     );
@@ -153,12 +177,15 @@ function PushManagePage() {
           }}
         />
       </Flex>
-      <NoticeDetailModal
+      <PushDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal.detail}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => {
+          handleCloseModal();
+          getPushList();
+        }}
       />
     </>
   );

@@ -120,6 +120,10 @@ const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
       &--menu-is-open {
         border-color: #ff5942;
       }
+      &--is-disabled {
+        border-color: ${(props) => props.customTheme.colors.gray[500]};
+        background-color: ${(props) => props.customTheme.colors.gray[100]};
+      }
       &:hover {
         border-color: #ff5942;
       }
