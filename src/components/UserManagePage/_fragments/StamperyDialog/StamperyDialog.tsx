@@ -30,7 +30,7 @@ interface StamperyDialogProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
 }
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
 
 const StamperyDialog = ({
   targetId,
@@ -54,6 +54,18 @@ const StamperyDialog = ({
 
     if (isOpen && targetId) getStampHistory(request);
   }, [targetId, isOpen]);
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '스탬프러리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
 
   const handleOpenDialog = (tgId: string) => {
     dispatch(
@@ -81,22 +93,22 @@ const StamperyDialog = ({
             newRequest.page -= 1;
 
           getStampHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 0;
+    if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'limit' || key === 'page') getStampHistory(newRequest);
+    if (key === 'size' || key === 'page') getStampHistory(newRequest);
   };
 
   const getStampHistory = (param: SearchParam) => {
@@ -125,6 +137,7 @@ const StamperyDialog = ({
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
@@ -132,8 +145,9 @@ const StamperyDialog = ({
               { value: 3, label: '스탬프러리 명 ' },
             ],
             keyword: request.keyword,
+            searchType: request.searchType,
             onChangeLimit: (value: number) => {
-              handleChangeInput('limit', value);
+              handleChangeInput('size', value);
             },
             onChangeSearchType: (value: number) => {
               handleChangeInput('searchType', value);
@@ -152,6 +166,7 @@ const StamperyDialog = ({
           }}
         />
         <DataTable
+          maxH="260px"
           variant={'gray'}
           columns={STAMPERY_COLUMNS}
           rows={rows}

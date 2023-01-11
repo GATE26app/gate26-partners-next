@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -20,6 +21,7 @@ import {
   PushPostType,
 } from '@apis/push/Push.type';
 import pushApi from '@apis/push/PushApi';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -30,7 +32,9 @@ import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
-import { FCM_TYPE } from './PushDetailModal.data';
+import { FCM_TYPE, validRequest } from './PushDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface PushDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -67,33 +71,56 @@ const PushDetailModal = ({
   const [loungeList, setLoungeList] = useState<PushLoungeListResponse[]>([]);
   const [isAllTarget, setAllTarget] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '푸쉬 알림 관리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleCreate = () => {
-    pushApi
-      .postPush({
-        ...request,
-        chatRoom: isAllTarget ? undefined : request.chatRoom,
-      })
-      .then((response) => {
-        if (response && response.noticeId) {
-          if (onComplete) onComplete();
-        }
-      });
+    const newRequest = {
+      ...request,
+      chatRoom: isAllTarget ? undefined : request.chatRoom,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    pushApi.postPush(newRequest).then((response) => {
+      if (response && response.noticeId) {
+        if (onComplete) onComplete();
+      }
+    });
   };
 
   const handleUpdate = () => {
-    pushApi
-      .putPush({
-        ...request,
-        chatRoom: isAllTarget ? undefined : request.chatRoom,
-        deleteChatRoom: isAllTarget ? 'delete' : undefined,
-        deleteFile:
-          coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
-      })
-      .then((response) => {
-        if (response && response.noticeId) {
-          if (onComplete) onComplete();
-        }
-      });
+    const newRequest = {
+      ...request,
+      chatRoom: isAllTarget ? undefined : request.chatRoom,
+      deleteChatRoom: isAllTarget ? 'delete' : undefined,
+      deleteFile:
+        coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    pushApi.putPush(newRequest).then((response) => {
+      if (response && response.noticeId) {
+        if (onComplete) onComplete();
+      }
+    });
   };
 
   const handleChangeInput = (
@@ -162,7 +189,7 @@ const PushDetailModal = ({
           content={
             <InputBox
               placeholder="제목"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
@@ -173,7 +200,7 @@ const PushDetailModal = ({
           content={
             <TextareaBox
               placeholder="내용"
-              defaultValue={request.content}
+              value={request.content}
               onChange={(e) => handleChangeInput('content', e.target.value)}
             />
           }

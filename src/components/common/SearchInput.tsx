@@ -35,7 +35,7 @@ const SearchInput = ({
         autoComplete="off"
         {...InputProps}
       />
-      <InputRightElement h={'100%'} onClick={onSearch}>
+      <InputRightElement h={'100%'} onClick={onSearch} cursor="pointer">
         <SearchIcon strokeColor={Light.gray[500]} />
       </InputRightElement>
     </InputGroup>

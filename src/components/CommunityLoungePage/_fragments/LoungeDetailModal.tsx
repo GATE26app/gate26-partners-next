@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Flex,
@@ -12,7 +13,8 @@ import {
 } from '@chakra-ui/react';
 
 import CommunityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
-import { CommunityLoungeDTOType } from '@apis/communityLounge/CommunityLoungeApi.type';
+import { CommunityLoungePostType } from '@apis/communityLounge/CommunityLoungeApi.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -21,15 +23,19 @@ import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
+import { validRequest } from './LoungeDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+
 interface LoungeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  detail: {
-    targetId?: string;
-    title?: string;
-    coverImg?: string;
-    img?: string;
-    displayOrder?: number;
-    openYn?: boolean;
+  detail?: {
+    targetId: string;
+    title: string;
+    coverImg: string;
+    img: string;
+    displayOrder: number;
+    openYn: boolean;
   };
   displayMax: number;
   onComplete?: () => void;
@@ -42,12 +48,57 @@ const LoungeDetailModal = ({
   onComplete,
   ...props
 }: LoungeDetailProps) => {
-  const [request, setRequest] = useState<CommunityLoungeDTOType>({
+  const [request, setRequest] = useState<CommunityLoungePostType>({
     title: '',
-    displayOrder: detail.displayOrder ? detail.displayOrder : 0,
+    displayOrder: detail?.displayOrder ? detail?.displayOrder : 0,
     openYn: false,
   });
   const [url, setUrl] = useState({ imgUrl: '', coverImgUrl: '' });
+
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '라운지',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
+  const handleCreate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    const response = await CommunityLoungeApi.postCommunityLounge(request);
+    if (response.tgId) {
+      if (onComplete) onComplete();
+    }
+  };
+
+  const handleUpdate = async () => {
+    const newRequest = {
+      ...request,
+      deleteFile: url.imgUrl === '' && !request.img ? 'delete' : undefined,
+      deleteCoverFile:
+        url.coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    const response = await CommunityLoungeApi.putCommunityLounge(newRequest);
+    if (response.tgId) {
+      if (onComplete) onComplete();
+    }
+  };
 
   const handleChangeInput = (
     key: string,
@@ -55,14 +106,9 @@ const LoungeDetailModal = ({
   ) => {
     setRequest({ ...request, [key]: value });
   };
-  const handleCreate = async () => {
-    const response = await CommunityLoungeApi.postCommunityLounge(request);
-    if (response.tgId) {
-      if (onComplete) onComplete();
-    }
-  };
 
   const renderContent = () => {
+    console.log(request);
     return (
       <Flex direction={'column'} rowGap={'15px'}>
         <ModalRow
@@ -70,7 +116,7 @@ const LoungeDetailModal = ({
           content={
             <InputBox
               placeholder="라운지명"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
@@ -81,6 +127,7 @@ const LoungeDetailModal = ({
             <FileUpload
               fileValue={url.coverImgUrl}
               onChange={(file) => handleChangeInput('coverImg', file)}
+              onDelete={() => setUrl({ ...url, coverImgUrl: '' })}
             />
           }
         />
@@ -90,6 +137,7 @@ const LoungeDetailModal = ({
             <FileUpload
               fileValue={url.imgUrl}
               onChange={(file) => handleChangeInput('img', file)}
+              onDelete={() => setUrl({ ...url, imgUrl: '' })}
             />
           }
         />
@@ -125,18 +173,27 @@ const LoungeDetailModal = ({
     );
   };
 
+  const resetData = () => {
+    setRequest({
+      title: '',
+      displayOrder: 0,
+      openYn: false,
+    });
+    setUrl({ imgUrl: '', coverImgUrl: '' });
+  };
+
   useEffect(() => {
-    const request: CommunityLoungeDTOType = {
-      title: detail.title ? detail.title : '',
-      displayOrder: detail.displayOrder ? detail.displayOrder : 0,
-      openYn: detail.openYn ? detail.openYn : false,
-    };
-    const url = {
-      imgUrl: detail.img ? detail.img : '',
-      coverImgUrl: detail.coverImg ? detail.coverImg : '',
-    };
-    setRequest(request);
-    setUrl(url);
+    if (type === 'modify') {
+      if (!detail) return;
+      const { targetId: loungeId, title, displayOrder, openYn } = detail;
+      setRequest({ loungeId, title, displayOrder, openYn });
+      setUrl({
+        imgUrl: detail.img ? detail.img : '',
+        coverImgUrl: detail.coverImg ? detail.coverImg : '',
+      });
+    } else {
+      resetData();
+    }
   }, [detail]);
 
   return (
@@ -160,7 +217,7 @@ const LoungeDetailModal = ({
             text="추가"
             size={'sm'}
             width={'120px'}
-            onClick={handleCreate}
+            onClick={type === 'create' ? handleCreate : handleUpdate}
           />
         </ModalFooter>
       </ModalContent>

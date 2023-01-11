@@ -1,11 +1,26 @@
-import CustomSelect from '@components/common/CustomSelect';
+import { Text } from '@chakra-ui/react';
+
 import {
   DataTableColumnType,
   DataTableRowType,
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export type StampCol = 'id' | 'type' | 'title' | 'info' | 'image' | 'answer';
+import axios from 'apis/_axios/instance';
+
+export type StampCol =
+  | 'stampId'
+  | 'stampType'
+  | 'stampName'
+  | 'descText'
+  | 'imagePath'
+  | 'useYn';
+
+const renderStmapType = (type?: string) => {
+  if (type === 'COUNTRY') return '국가';
+  else if (type === 'CHALLENGE') return '챌린지';
+  else return '항공사';
+};
 
 class Stamp {
   onChange?: (key: string, value: string | number) => void;
@@ -17,33 +32,45 @@ class Stamp {
   }
   readonly STAMP_COLUMNS: DataTableColumnType<StampCol>[] = [
     {
-      key: 'type',
+      key: 'stampType',
       name: '스탬프러리 유형',
       width: '15%',
+      render: (value: DataTableRowType<StampCol>) => (
+        <Text textStyle="textSm">
+          {renderStmapType(value?.stampType as string)}
+        </Text>
+      ),
     },
     {
-      key: 'title',
+      key: 'stampName',
       name: '스탬프러리명',
       width: '21.6%',
     },
     {
-      key: 'info',
+      key: 'descText',
       name: '스탬프러리 설명',
       width: '31.6%',
     },
 
     {
-      key: 'image',
+      key: 'imagePath',
       name: '이미지',
       width: '18.3%',
       render: (value: DataTableRowType<StampCol>) => (
-        <RoundImage src={value.image as string} width={'90px'} height="90px" />
+        <RoundImage
+          src={`${axios.defaults.baseURL}${value.imagePath as string}`}
+          width={'90px'}
+          height="90px"
+        />
       ),
     },
     {
-      key: 'answer',
+      key: 'useYn',
       name: '사용여부',
       width: '6.6%',
+      render: (value: DataTableRowType<StampCol>) => (
+        <Text textStyle="textSm">{value.useYn === 'T' ? '사용' : '-'}</Text>
+      ),
     },
   ];
 }

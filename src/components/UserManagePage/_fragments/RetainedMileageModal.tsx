@@ -30,7 +30,7 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
 
 interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
@@ -63,6 +63,18 @@ const RetainedMileageModal = ({
     if (isOpen && targetId) getMileageHistory(request);
   }, [targetId, isOpen]);
 
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '보유마일리지',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleOpenDialog = (historyId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -89,13 +101,13 @@ const RetainedMileageModal = ({
             newRequest.page -= 1;
 
           getMileageHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 
@@ -118,10 +130,10 @@ const RetainedMileageModal = ({
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
+    if (key === 'size') newRequest.page = 1;
 
     setRequest(newRequest);
-    if (key === 'limit' || key === 'page') getMileageHistory(newRequest);
+    if (key === 'size' || key === 'page') getMileageHistory(newRequest);
   };
 
   const renderContent = () => {
@@ -129,14 +141,16 @@ const RetainedMileageModal = ({
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '적립사유' },
             ],
+            searchType: request.searchType,
             keyword: request.keyword,
             onChangeLimit: (value: number) => {
-              handleChangeInput('limit', value);
+              handleChangeInput('size', value);
             },
             onChangeSearchType: (value: number) => {
               handleChangeInput('searchType', value);
@@ -148,6 +162,7 @@ const RetainedMileageModal = ({
           }}
         />
         <DataTable
+          maxH="260px"
           variant={'gray'}
           columns={MILEAGE_COLUMNS}
           rows={rows}
