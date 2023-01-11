@@ -98,6 +98,7 @@ const EventParticipantModal = ({
           variant={'gray'}
           columns={PARTICIPANT_COLUMNS}
           rows={user}
+          maxH="270px"
           paginationProps={{
             currentPage: request.page,
             limit: request.size,

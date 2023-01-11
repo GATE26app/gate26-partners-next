@@ -130,7 +130,7 @@ const RetainedMileageModal = ({
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'size') newRequest.page = 1;
+    if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
     if (key === 'size' || key === 'page') getMileageHistory(newRequest);

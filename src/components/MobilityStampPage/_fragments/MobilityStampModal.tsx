@@ -94,7 +94,13 @@ const StampModal = ({
     }
     if (!isOpen) {
       setImagePath(undefined);
-      setRequest({} as StampDTOType);
+      setRequest({
+        stampName: '',
+        stampType: SEARCH_TYPE[0].value,
+        descText: '',
+        useYn: 'F',
+        img: undefined,
+      });
     }
   }, [modifyData, isOpen]);
   const renderContent = () => {
@@ -159,14 +165,6 @@ const StampModal = ({
       </Flex>
     );
   };
-
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
-
-  useEffect(() => {
-    console.log('업데이트 : ', request);
-  }, [request]);
 
   return (
     <Modal
