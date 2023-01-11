@@ -30,6 +30,8 @@ type EventListType = EventListDTOType & {
     bannerImgPath: string;
     imgPath: string;
     seq: number;
+    loungeId: string;
+    loungeName: string;
     startDate: dayjs.Dayjs;
     endDate: dayjs.Dayjs;
     createdDate: dayjs.Dayjs;
@@ -48,26 +50,35 @@ type EventParticipantList = EventListDTOType & {
   }[];
 };
 
-type EventEditType = {
-  noticeId: string;
+type EventPostType = {
+  eventId?: string;
   title: string;
   content: string;
   contentType: string;
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
-  img: File;
-  bannerImg: File;
+  img?: File;
+  bannerImg?: File;
+  loungeId?: string;
+  deleteFile?: string;
+  deleteBannerFile?: string;
 };
 
-type EventListSetType = {
-  title: string;
+type EventPostResponse = {
+  bannerImgPath: string;
   content: string;
   contentType: string;
-  startDate: dayjs.Dayjs;
-  endDate: dayjs.Dayjs;
-  img: File;
-  bannerImg: File;
-  loungeId: string;
+  createdDate: string;
+  endDate: Date;
+  eventId: string;
+  imgPath: string;
+  modifiedDate: Date;
+  regUserId: null;
+  seq: number;
+  startDate: Date;
+  title: string;
+  useYn: 'T' | 'F';
+  validDate: boolean;
 };
 type EventListSeqType = {
   eventId: string;
@@ -89,9 +100,9 @@ export type {
   EventListType,
   EventParamGetType,
   EventListDTOType,
-  EventEditType,
-  EventListSetType,
+  EventPostType,
   EventParticipantList,
   EventParticipantParamGetType,
   EventListSeqType,
+  EventPostResponse,
 };

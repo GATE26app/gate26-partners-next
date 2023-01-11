@@ -14,6 +14,8 @@ export type EventColumnType =
   | 'bannerImgPath'
   | 'imgPath'
   | 'seq'
+  | 'loungeId'
+  | 'loungeName'
   | 'startDate'
   | 'endDate'
   | 'createdDate'
@@ -100,11 +102,14 @@ class CommunityEvent {
         />
       ),
     },
-    // {
-    //   key: 'location',
-    //   name: '표시 장소',
-    //   width: '6.6%',
-    // },
+    {
+      key: 'loungeName',
+      name: '표시 장소',
+      width: '6.6%',
+      render: (value: DataTableRowType<EventColumnType>) => (
+        <span>{value.loungeId ? value.loungeName : '홈'}</span>
+      ),
+    },
     {
       key: 'seq',
       name: '노출순서',

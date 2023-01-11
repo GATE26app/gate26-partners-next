@@ -6,14 +6,13 @@ import { formatDateTimeDash } from '@utils/format';
 import { getToken } from '@utils/localStorage/token';
 
 import {
-  EventEditType,
   EventListDTOType,
-  EventListSeqType,
-  EventListSetType,
   EventListType,
   EventParamGetType,
   EventParticipantList,
   EventParticipantParamGetType,
+  EventPostResponse,
+  EventPostType,
 } from './EventApi.type';
 
 export class EventApi {
@@ -77,49 +76,56 @@ export class EventApi {
     return data;
   };
 
-  putEventList = async (
-    body: EventEditType,
-  ): Promise<AxiosResponseType<EventListDTOType>> => {
+  // 이벤트 수정
+  putEvent = async (
+    body: EventPostType,
+  ): Promise<AxiosResponseType<EventPostResponse>> => {
     const formData = new FormData();
-    formData.append(
-      'request',
-      new Blob([JSON.stringify(body.bannerImg), JSON.stringify(body.img)], {
-        type: 'application/json',
-      }),
-    );
-    const body2 = {
-      ...body,
-      bannerImg: formData.append('bannerImg', body.bannerImg),
-      img: formData.append('img', body.img),
-      startDate: formatDateTimeDash(body.startDate),
-      endDate: formatDateTimeDash(body.endDate),
-    };
+    formData.append('eventId', body.eventId!);
+    formData.append('title', body.title);
+    formData.append('content', body.content);
+    formData.append('contentType', body.contentType);
+    formData.append('startDate', body.startDate.toISOString());
+    formData.append('endDate', body.endDate.toISOString());
+    if (body.img) formData.append('img', body.img);
+    if (body.bannerImg) formData.append('bannerImg', body.bannerImg);
+    if (body.loungeId) formData.append('loungeId', body.loungeId);
+    if (body.deleteFile) formData.append('deleteFile', body.deleteFile);
+    if (body.deleteBannerFile)
+      formData.append('deleteBannerFile', body.deleteBannerFile);
+
     const { data } = await this.axios({
       method: 'PUT',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
+        'Content-Type': 'multipart/form-data',
       },
       url: '/event',
-      data: body2,
+      data: formData,
     });
     return data;
   };
 
-  postEventList = async (
-    body: EventListSetType,
-  ): Promise<AxiosResponseType<EventListDTOType>> => {
-    const body2 = {
-      ...body,
-      startDate: formatDateTimeDash(body.startDate),
-      expiredDate: formatDateTimeDash(body.endDate),
-    };
+  // 이벤트 등록
+  postEvent = async (body: EventPostType): Promise<EventPostResponse> => {
+    const formData = new FormData();
+    formData.append('title', body.title);
+    formData.append('content', body.content);
+    formData.append('contentType', body.contentType);
+    formData.append('startDate', body.startDate.toISOString());
+    formData.append('endDate', body.endDate.toISOString());
+    if (body.img) formData.append('img', body.img);
+    if (body.bannerImg) formData.append('bannerImg', body.bannerImg);
+    if (body.loungeId) formData.append('loungeId', body.loungeId);
+
     const { data } = await this.axios({
       method: 'POST',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
+        'Content-Type': 'multipart/form-data',
       },
       url: '/event',
-      data: body2,
+      data: formData,
     });
     return data;
   };
