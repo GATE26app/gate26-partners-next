@@ -13,13 +13,20 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 
-import { StamperyItems } from '@components/UserManagePage/_fragments/StamperyDialog/_fragments/StamperyAddDialog.data';
+import memberManageApi from '@apis/membermanage/MemberManage';
+import {
+  SearchGetDTOType,
+  StampListGetDTOType,
+} from '@apis/membermanage/MemberManage.type';
+import { StampParamGetType } from '@apis/stamp/StampApis.type';
+
 import StamperyItem from '@components/UserManagePage/_fragments/StamperyDialog/_fragments/StamperyItem';
 import Button from '@components/common/Button';
 import Toggle, { ToggleOption } from '@components/common/Toggle';
 
 interface StamperyAddDialogProps extends Omit<ModalProps, 'children'> {
   targetId?: number;
+  handleCreate: (stampId: string) => void;
 }
 
 const TOGGLE_OPTION: ToggleOption[] = [
@@ -40,9 +47,34 @@ const TOGGLE_OPTION: ToggleOption[] = [
 const StamperyAddDialog = ({
   targetId,
   onClose,
+  handleCreate,
   ...props
 }: StamperyAddDialogProps) => {
   const [selectedItem, setSelectedItem] = useState<any>('');
+  const [selectedType, setSelectedType] = useState<StampListGetDTOType>({
+    type: TOGGLE_OPTION[0].value,
+  });
+  const [stampItems, setStampItems] = useState<any>([]);
+
+  const getStampList = async (param: StampListGetDTOType) => {
+    const response = await memberManageApi.getStampList({ ...param });
+    if (response.success) {
+      setStampItems(response.data || []);
+    }
+  };
+
+  useEffect(() => {
+    getStampList(selectedType);
+  }, []);
+
+  useEffect(() => {
+    getStampList(selectedType);
+  }, [selectedType]);
+
+  const handleChangeType = (data: string) => {
+    const type: StampListGetDTOType = { type: data };
+    setSelectedType(type);
+  };
 
   const renderContent = () => {
     return (
@@ -65,14 +97,14 @@ const StamperyAddDialog = ({
         }}
       >
         <SimpleGrid columns={4} gap="20px 18px">
-          {StamperyItems.map(({ icon, text }, index) => {
+          {stampItems.map(({ imagePath, stampName }, index) => {
             return (
               <StamperyItem
                 key={index}
                 isAcitve={selectedItem === index}
                 onClick={setSelectedItem}
-                icon={icon}
-                text={text}
+                icon={imagePath}
+                text={stampName}
                 value={index}
               />
             );
@@ -93,7 +125,11 @@ const StamperyAddDialog = ({
         <ModalHeader>
           <Flex justifyContent={'space-between'} direction="column">
             <span style={{ marginBottom: '29px' }}>스탬프러리 추가</span>
-            <Toggle toggleOptions={TOGGLE_OPTION} />
+            <Toggle
+              toggleOptions={TOGGLE_OPTION}
+              defaultValue={selectedType.type}
+              onClick={handleChangeType}
+            />
           </Flex>
         </ModalHeader>
         <ModalBody>{renderContent()}</ModalBody>
@@ -110,7 +146,7 @@ const StamperyAddDialog = ({
             text={'추가'}
             size={'sm'}
             width={'120px'}
-            onClick={onClose}
+            onClick={() => handleCreate(stampItems[selectedItem].stampId)}
           />
         </ModalFooter>
       </ModalContent>

@@ -12,6 +12,10 @@ import {
   MileageSearchGetDTOType,
   RequestDTOType,
   SearchGetDTOType,
+  StampHistoryCreateDTOType,
+  StampHistoryInfoDTOType,
+  StampListDTOType,
+  StampListGetDTOType,
   StmaperyHitoryListDTOType,
 } from './MemberManage.type';
 
@@ -44,6 +48,34 @@ export class MemberManageApi {
       },
       url: `/users/stamp/history`,
       params,
+    });
+    return data;
+  };
+  //유저 스탬프러리 내역 조회
+  getStampList = async (
+    params: StampListGetDTOType,
+  ): Promise<AxiosResponseType<StampListDTOType>> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/users/stamp/list`,
+      params,
+    });
+    return data;
+  };
+  //유저 스탬프러리 내역 생성
+  postStampHistory = async (
+    body: StampHistoryCreateDTOType,
+  ): Promise<AxiosResponseType<StampHistoryInfoDTOType>> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/users/stamp`,
+      data: body,
     });
     return data;
   };

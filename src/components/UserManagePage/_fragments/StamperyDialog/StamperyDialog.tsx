@@ -13,7 +13,10 @@ import {
 } from '@chakra-ui/react';
 
 import memberManageApi from '@apis/membermanage/MemberManage';
-import { SearchGetDTOType } from '@apis/membermanage/MemberManage.type';
+import {
+  SearchGetDTOType,
+  StampHistoryCreateDTOType,
+} from '@apis/membermanage/MemberManage.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
@@ -30,7 +33,7 @@ interface StamperyDialogProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
 }
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
 
 const StamperyDialog = ({
   targetId,
@@ -130,6 +133,22 @@ const StamperyDialog = ({
 
   const handleModalClose = () => {
     setIsAddDialogOpen(false);
+    getStampHistory(request);
+  };
+
+  const handleCreate = async (stampId: string) => {
+    if (targetId) {
+      const param: StampHistoryCreateDTOType = {
+        userId: targetId,
+        stampId,
+      };
+
+      const response = await memberManageApi.postStampHistory(param);
+      if (response.success) {
+        getStampHistory(request);
+        handleModalClose();
+      }
+    }
   };
 
   const renderContent = () => {
@@ -231,7 +250,11 @@ const StamperyDialog = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <StamperyAddDialog isOpen={isAddDialogOpen} onClose={handleModalClose} />
+      <StamperyAddDialog
+        isOpen={isAddDialogOpen}
+        onClose={handleModalClose}
+        handleCreate={handleCreate}
+      />
     </>
   );
 };

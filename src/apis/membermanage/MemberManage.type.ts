@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export type BasicDTO = {
   code?: string;
   data?: {
@@ -39,6 +41,31 @@ export type SearchGetDTOType = {
   size?: number;
 };
 
+export type StampListGetDTOType = {
+  type: string;
+};
+
+export type StampHistoryCreateDTOType = {
+  stampId: string;
+  userId: string;
+};
+
+export type StampHistoryInfoDTOType = {
+  createdDate: dayjs.Dayjs;
+  modifiedDate: dayjs.Dayjs;
+  tgId: string;
+  stamp: {
+    createdDate: dayjs.Dayjs;
+    modifiedDate: dayjs.Dayjs;
+    stampId: string;
+    stampName: string;
+    descText: string;
+    imagePath: string;
+    stampType: string;
+    useYn: string;
+  };
+};
+
 export type MileageSearchGetDTOType = {
   userId: string;
   historyType?: number;
@@ -57,6 +84,13 @@ export type StmaperyHitoryListDTOType = Omit<BasicGetListDTOType, 'content'> & {
     stampName: string;
     stampType: string;
     createdDate: string;
+  }[];
+};
+export type StampListDTOType = Omit<BasicDTO, 'content'> & {
+  content: {
+    stampId: string;
+    stampName: string;
+    imagePath: string;
   }[];
 };
 export type ActivitHitoryListDTOType = Omit<BasicGetListDTOType, 'content'> & {
