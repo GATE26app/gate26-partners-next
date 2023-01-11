@@ -70,16 +70,15 @@ const StampModal = ({
   }
   const [request, setRequest] = useState<ReqManageKey>(defaultRequest);
   const [codeType, setCodeType] = useState<string>('0');
-  const [parentType, setParentType] = useState<{ value:number, label:string }[]>([]);
+  type itemType = { value:string | number, label:string }
+  const [parentType, setParentType] = useState<itemType[]>([{ value: '', label: '' }]);
 
   const getParentType = () => {
     managementCodeApi.getParentCommonCode().then((response) => {
       const { success, data } = response;
       if(success){
-        let count = 0;
         data?.map((iter) => {
-          count++;
-          setParentType((parentType) => [...parentType, {value: count, label : iter.codeName}])
+          setParentType((parentType) => [...parentType, {value: iter.codeId.toString(), label : iter.codeName}])
         }) 
       }
     })
@@ -88,7 +87,7 @@ const StampModal = ({
   const handleCreate = () => {
     if (onComplete) onComplete();
     if(type === 'create'){
-      // handleCreateCode(codeType);
+      handleCreateCode(codeType);
     } else {
       handleModifyCode();
     }
@@ -198,12 +197,11 @@ const StampModal = ({
                 width={'100px'}
                 placeholder={'상위 코드'}
                 items={parentType}
-                defaultValue={type==='create'? parentType : request.parentCode}
+                // defaultValue={request.parentCode}
                 onChange={(value) => {
-                  handleChangeInput('parentCode', parentType.find(ele => ele.value===value)?.label as string)
-                  console.log(parentType.find(ele => ele.value===value)?.label as string);
-                }
-                  }
+                  console.log("v : ", parentType.find(iter=>value==iter.value as number)?.label as string)
+                  handleChangeInput('parentCode', parentType.find(iter=>value==iter.value as number)?.label as string);
+                }}
               />
             }
           />
