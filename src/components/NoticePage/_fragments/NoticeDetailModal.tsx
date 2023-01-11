@@ -23,6 +23,7 @@ import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
 import { NoticeColumnType } from '../NoticePage.data';
+import { validRequest } from './NoticeDetailModal.data';
 
 interface NoticeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -63,6 +64,10 @@ const NoticeDetailModal = ({
   }, [detail]);
 
   const handleCreate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      return alert(valid.message);
+    }
     const response = await NoticeApi.postNotice(request);
     if (response.success) {
       if (onComplete) onComplete();
@@ -70,6 +75,11 @@ const NoticeDetailModal = ({
   };
 
   const handleUpdate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      return alert(valid.message);
+    }
+    console.log(request);
     const response = await NoticeApi.putNotice(request);
     if (response.success) {
       if (onComplete) onComplete();
@@ -82,6 +92,7 @@ const NoticeDetailModal = ({
   ) => {
     setRequest({ ...request, [key]: value });
   };
+
   const renderContent = () => {
     return (
       <Flex direction={'column'} rowGap={'15px'}>
@@ -90,7 +101,7 @@ const NoticeDetailModal = ({
           content={
             <InputBox
               placeholder="제목"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
@@ -101,7 +112,7 @@ const NoticeDetailModal = ({
             <TextareaBox
               placeholder="내용"
               h={'300px'}
-              defaultValue={request.content}
+              value={request.content}
               onChange={(e) => handleChangeInput('content', e.target.value)}
             />
           }
@@ -131,6 +142,9 @@ const NoticeDetailModal = ({
     );
   };
 
+  useEffect(() => {
+    console.log(request);
+  }, [request]);
   return (
     <Modal
       size={'md'}

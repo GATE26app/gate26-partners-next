@@ -30,7 +30,7 @@ import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
-import { FCM_TYPE } from './PushDetailModal.data';
+import { FCM_TYPE, validRequest } from './PushDetailModal.data';
 
 interface PushDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -68,32 +68,38 @@ const PushDetailModal = ({
   const [isAllTarget, setAllTarget] = useState<boolean>(false);
 
   const handleCreate = () => {
-    pushApi
-      .postPush({
-        ...request,
-        chatRoom: isAllTarget ? undefined : request.chatRoom,
-      })
-      .then((response) => {
-        if (response && response.noticeId) {
-          if (onComplete) onComplete();
-        }
-      });
+    const newRequest = {
+      ...request,
+      chatRoom: isAllTarget ? undefined : request.chatRoom,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      return alert(valid.message);
+    }
+    pushApi.postPush(newRequest).then((response) => {
+      if (response && response.noticeId) {
+        if (onComplete) onComplete();
+      }
+    });
   };
 
   const handleUpdate = () => {
-    pushApi
-      .putPush({
-        ...request,
-        chatRoom: isAllTarget ? undefined : request.chatRoom,
-        deleteChatRoom: isAllTarget ? 'delete' : undefined,
-        deleteFile:
-          coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
-      })
-      .then((response) => {
-        if (response && response.noticeId) {
-          if (onComplete) onComplete();
-        }
-      });
+    const newRequest = {
+      ...request,
+      chatRoom: isAllTarget ? undefined : request.chatRoom,
+      deleteChatRoom: isAllTarget ? 'delete' : undefined,
+      deleteFile:
+        coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      return alert(valid.message);
+    }
+    pushApi.putPush(newRequest).then((response) => {
+      if (response && response.noticeId) {
+        if (onComplete) onComplete();
+      }
+    });
   };
 
   const handleChangeInput = (
@@ -162,7 +168,7 @@ const PushDetailModal = ({
           content={
             <InputBox
               placeholder="제목"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
@@ -173,7 +179,7 @@ const PushDetailModal = ({
           content={
             <TextareaBox
               placeholder="내용"
-              defaultValue={request.content}
+              value={request.content}
               onChange={(e) => handleChangeInput('content', e.target.value)}
             />
           }
