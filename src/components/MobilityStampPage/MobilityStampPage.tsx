@@ -63,6 +63,17 @@ const MobilityStamp = () => {
   };
   const dispatch = useDispatch();
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '스탬프러리 관리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'size') {
@@ -82,7 +93,7 @@ const MobilityStamp = () => {
   const handleStampDelete = async (stampId: string) => {
     try {
       const response = await stampApis.deleteStamp(stampId);
-      if (!response.success) return alert('삭제 실패');
+      if (!response.success) return handleAlert('삭제 실패');
       const newRequest = { ...request };
       //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
       if (rows && rows.length - 1 === 0 && newRequest.page)
@@ -90,9 +101,9 @@ const MobilityStamp = () => {
 
       setRequest(newRequest);
       getStampList(newRequest);
-      alert('삭제 성공');
+      handleAlert('삭제 성공');
     } catch (e) {
-      alert('삭제 실패');
+      handleAlert('삭제 실패');
     }
   };
 
@@ -104,7 +115,7 @@ const MobilityStamp = () => {
         handleCloseModal();
       }
     } catch (e: any) {
-      alert('생성 실패');
+      handleAlert('생성 실패');
     }
   };
   const handleModifyStamp = async (data: StampUpdateDTOType) => {
@@ -115,7 +126,7 @@ const MobilityStamp = () => {
         handleCloseModal();
       }
     } catch (e: any) {
-      alert('생성 실패');
+      handleAlert('생성 실패');
     }
   };
 

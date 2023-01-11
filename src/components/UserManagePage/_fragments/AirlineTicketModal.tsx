@@ -61,6 +61,18 @@ const AirlineTicketModal = ({
     if (isOpen && targetId) getActivityHistory(request);
   }, [targetId, isOpen]);
 
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '항공권 인증 내역',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleOpenDialog = (airlineTicketId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -87,13 +99,13 @@ const AirlineTicketModal = ({
             newRequest.page -= 1;
 
           getActivityHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 

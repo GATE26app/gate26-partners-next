@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Flex,
@@ -12,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 import { StampDTOType, StampUpdateDTOType } from '@apis/stamp/StampApis.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -19,6 +21,10 @@ import CustomSelect from '@components/common/CustomSelect';
 import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
+
+import { SEARCH_TYPE, valideRequest } from './MobilityStampModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface StampProps extends Omit<ModalProps, 'children'> {
   isOpen: boolean;
@@ -40,13 +46,29 @@ const StampModal = ({
 }: StampProps) => {
   const [request, setRequest] = useState<StampDTOType | StampUpdateDTOType>({
     stampName: '',
-    stampType: '1',
+    stampType: SEARCH_TYPE[0].value,
     descText: '',
     useYn: 'F',
     img: undefined,
   });
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
   const [imagePath, setImagePath] = useState<string | undefined>(undefined);
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '스탬프러리 관리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
   const handleCreate = () => {
+    const valid = valideRequest(request);
+    if (!valid.success) return handleAlert(valid.message);
+
     if (type === 'create') {
       onComplete(request as StampDTOType);
     } else {
@@ -86,11 +108,7 @@ const StampModal = ({
               placeholder={'Type'}
               defaultValue={request.stampType}
               onChange={(value: any) => handleChangeInput('stampType', value)}
-              items={[
-                { value: '1', label: '항공사' },
-                { value: '2', label: '첼린지' },
-                { value: '3', label: '국가' },
-              ]}
+              items={SEARCH_TYPE}
             />
           }
         />

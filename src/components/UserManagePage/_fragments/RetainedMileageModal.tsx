@@ -63,6 +63,18 @@ const RetainedMileageModal = ({
     if (isOpen && targetId) getMileageHistory(request);
   }, [targetId, isOpen]);
 
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '보유마일리지',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleOpenDialog = (historyId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -89,13 +101,13 @@ const RetainedMileageModal = ({
             newRequest.page -= 1;
 
           getMileageHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 

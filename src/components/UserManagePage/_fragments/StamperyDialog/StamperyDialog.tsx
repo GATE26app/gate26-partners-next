@@ -55,6 +55,18 @@ const StamperyDialog = ({
     if (isOpen && targetId) getStampHistory(request);
   }, [targetId, isOpen]);
 
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '스탬프러리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleOpenDialog = (tgId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -81,13 +93,13 @@ const StamperyDialog = ({
             newRequest.page -= 1;
 
           getStampHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 
