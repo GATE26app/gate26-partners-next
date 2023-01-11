@@ -96,14 +96,7 @@ const StampModal = ({
       item.value =
         i.loungeId.toString() !== undefined ? i.loungeId.toString() : '';
       item.label = i.name.toString() !== undefined ? i.name.toString() : '';
-      // if (
-      //   i.loungeId.toString() !== undefined &&
-      //   i.name.toString() !== undefined
-      // ) {
-      //   item.value = i.loungeId.toString();
-      //   item.label = i.name.toString();
-      //   items.push(item);
-      // }
+
       items.push(item);
     });
 
@@ -190,8 +183,8 @@ const StampModal = ({
               items={item}
               defaultValue={request.loungeId}
               onChange={(value) => {
-                console.log("v: ", value as string);
-                handleChangeInput('loungeId', value as string)
+                console.log('v: ', value as string);
+                handleChangeInput('loungeId', value as string);
               }}
             />
           }
