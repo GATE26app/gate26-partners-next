@@ -40,8 +40,6 @@ export type PostCommonCodeInfo = {
 
 export type ParentCodeDTOType = {
   code?: string;
-  data?: any[];
-  message?: StringLocale;
-  count?: number;
+  data?: CommonCodeInfo[];
   success: boolean;
 }

@@ -189,9 +189,10 @@ const StampModal = ({
               placeholder={'라운지 선택'}
               items={item}
               defaultValue={request.loungeId}
-              onChange={(value) =>
+              onChange={(value) => {
+                console.log("v: ", value as string);
                 handleChangeInput('loungeId', value as string)
-              }
+              }}
             />
           }
         />
