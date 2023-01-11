@@ -30,7 +30,7 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
 
 interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
@@ -118,10 +118,10 @@ const RetainedMileageModal = ({
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
+    if (key === 'size') newRequest.page = 1;
 
     setRequest(newRequest);
-    if (key === 'limit' || key === 'page') getMileageHistory(newRequest);
+    if (key === 'size' || key === 'page') getMileageHistory(newRequest);
   };
 
   const renderContent = () => {
@@ -129,14 +129,16 @@ const RetainedMileageModal = ({
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '적립사유' },
             ],
+            searchType: request.searchType,
             keyword: request.keyword,
             onChangeLimit: (value: number) => {
-              handleChangeInput('limit', value);
+              handleChangeInput('size', value);
             },
             onChangeSearchType: (value: number) => {
               handleChangeInput('searchType', value);
@@ -148,6 +150,7 @@ const RetainedMileageModal = ({
           }}
         />
         <DataTable
+          maxH="260px"
           variant={'gray'}
           columns={MILEAGE_COLUMNS}
           rows={rows}

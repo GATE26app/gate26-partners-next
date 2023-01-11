@@ -28,7 +28,7 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
 
 interface AirlineTicketModalProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
@@ -116,25 +116,27 @@ const AirlineTicketModal = ({
   };
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 1;
+    if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'limit' || key === 'page') getActivityHistory(newRequest);
+    if (key === 'size' || key === 'page') getActivityHistory(newRequest);
   };
   const renderContent = () => {
     return (
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '출발지' },
               { value: 3, label: '도착지' },
             ],
+            searchType: request.searchType,
             keyword: request.keyword,
             onChangeLimit: (value: number) => {
-              handleChangeInput('limit', value);
+              handleChangeInput('size', value);
             },
             onChangeSearchType: (value: number) => {
               handleChangeInput('searchType', value);
@@ -145,7 +147,9 @@ const AirlineTicketModal = ({
             onClickSearch: () => getActivityHistory(request),
           }}
         />
+        {/* <Flex maxH="300px" overflowY="auto"> */}
         <DataTable
+          maxH="260px"
           variant={'gray'}
           columns={AIRLINE_TICKET_COLUMNS}
           rows={rows}

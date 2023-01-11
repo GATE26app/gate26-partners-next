@@ -3,11 +3,13 @@ import React, { useEffect } from 'react';
 import dayjs from 'dayjs';
 
 import {
+  Box,
   Flex,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Tfoot,
   Th,
   Thead,
@@ -25,6 +27,12 @@ import {
 } from './DataTable.type';
 import MenuSelect from './_fragments/MenuSelect';
 
+const getAlignStyle = ({ align }: { align?: string }) => {
+  if (align === 'left') return 'flex-start';
+  if (align === 'right') return 'flex-end';
+  else return 'center';
+};
+
 const DataTable = <T extends string>({
   columns,
   rows,
@@ -36,6 +44,7 @@ const DataTable = <T extends string>({
   onRefusal,
   onAtom,
   onRegister,
+  maxH,
 }: DataTableProps<T>) => {
   const renderHead = () => {
     return (
@@ -68,15 +77,7 @@ const DataTable = <T extends string>({
                 textAlign={col.align}
                 maxW={col.width ? col.width : undefined}
               >
-                <Flex
-                  justifyContent={
-                    col.align === 'left'
-                      ? 'flex-start'
-                      : col.align === 'right'
-                      ? 'flex-end'
-                      : 'center'
-                  }
-                >
+                <Flex justifyContent={getAlignStyle({ align: col.align })}>
                   {col.render(row)}
                 </Flex>
               </Td>
@@ -87,11 +88,11 @@ const DataTable = <T extends string>({
                 maxW={col.width ? col.width : undefined}
                 textColor={col.color ? String(col.color) : undefined}
               >
-                <span>
+                <Text textStyle="textSm">
                   {row[col.key as T] instanceof dayjs
                     ? formatDate(row[col.key as T] as dayjs.Dayjs)
                     : row[col.key as T]}
-                </span>
+                </Text>
               </Td>
             ),
           )}
@@ -112,33 +113,50 @@ const DataTable = <T extends string>({
     });
   };
   return (
-    <TableContainer
-      style={{
-        boxShadow: '0 0 0 1px ' + Light.gray[300],
-        borderRadius: '5px',
-      }}
+    <Flex
+      direction="column"
+      width="100%"
+      border="1px solid"
+      borderColor={Light.gray[300]}
+      borderRadius="5px"
     >
-      <Table variant={variant} colorScheme={'gray'}>
-        <Thead>{renderHead()}</Thead>
-        <Tbody>{renderBody()}</Tbody>
-        {paginationProps && (
+      <Box maxH={maxH} overflowY="auto">
+        <TableContainer
+          width="100%"
+          height="fit-content"
+          style={{
+            boxShadow: '0 0 0 1px ' + Light.gray[300],
+            borderRadius: '5px',
+          }}
+        >
+          <Table variant={variant} colorScheme={'gray'}>
+            <Thead>{renderHead()}</Thead>
+            <Tbody>{renderBody()}</Tbody>
+            {/* {paginationProps && (
           <Tfoot>
-            <Tr>
-              <Th colSpan={columns.length + Number(isMenu || false)}>
-                <Pagination
-                  currentPage={paginationProps.currentPage}
-                  limit={paginationProps.limit}
-                  total={paginationProps.total}
-                  onPageNumberClicked={paginationProps.onPageNumberClicked}
-                  onPreviousPageClicked={paginationProps.onPreviousPageClicked}
-                  onNextPageClicked={paginationProps.onNextPageClicked}
-                />
-              </Th>
-            </Tr>
-          </Tfoot>
-        )}
-      </Table>
-    </TableContainer>
+            <Tr> */}
+            {/* <Th colSpan={columns.length + Number(isMenu || false)}> */}
+
+            {/* </Th> */}
+            {/* </Tr>
+          </Tfoot> */}
+            {/* )} */}
+          </Table>
+        </TableContainer>
+      </Box>
+      {paginationProps && (
+        <Flex justifyContent="center" alignItems="center">
+          <Pagination
+            currentPage={paginationProps.currentPage}
+            limit={paginationProps.limit}
+            total={paginationProps.total}
+            onPageNumberClicked={paginationProps.onPageNumberClicked}
+            onPreviousPageClicked={paginationProps.onPreviousPageClicked}
+            onNextPageClicked={paginationProps.onNextPageClicked}
+          />
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

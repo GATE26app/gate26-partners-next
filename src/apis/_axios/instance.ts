@@ -7,7 +7,17 @@ import { getToken } from '@utils/localStorage/token';
 import styledConsole from '@utils/styledConsole';
 
 // import { refresh } from './refresh';
-
+export type BasicListDTO<T> = {
+  code?: string;
+  data?: {
+    content: T;
+    totalElements?: number;
+    totalPages?: number;
+  };
+  message?: string;
+  count?: number;
+  success: boolean;
+};
 export type AxiosResponseType<T> = {
   count: number;
   data: T;
