@@ -5,7 +5,7 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export type MenageCol = 'id' | 'code' | 'codeValue' | 'info';
+export type MenageCol = 'id' | 'code' | 'codeValue' | 'info' | 'parentCode';
 
 class ManageCode {
   onChange?: (key: string, value: string | number) => void;
