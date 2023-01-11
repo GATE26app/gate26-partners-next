@@ -2,8 +2,15 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
-import { CommonCodeInfo, CommonCodeInfoDTOType, PagingDTOType, ParentCodeDTOType, PostCommonCodeInfo } from './ManagementCodeApi.type';
 import { getToken } from '@utils/localStorage/token';
+
+import {
+  CommonCodeInfo,
+  CommonCodeInfoDTOType,
+  PagingDTOType,
+  ParentCodeDTOType,
+  PostCommonCodeInfo,
+} from './ManagementCodeApi.type';
 
 export class ManagementCodeApi {
   axios: AxiosInstance = instance;
@@ -12,32 +19,31 @@ export class ManagementCodeApi {
   }
 
   // 코드 목록 조회 페이징
-  getCommonCode =async (
-    params : PagingDTOType,
+  getCommonCode = async (
+    params: PagingDTOType,
   ): Promise<CommonCodeInfoDTOType> => {
     const { data } = await this.axios({
-        method: 'GET',
-        headers: {
-          'X-AUTH-TOKEN':`${getToken()}`
-        },
-        url: `http://dbackoffice.gate26.co.kr/common/codes?`,
-        params,
-      });
-      return data;
-  }
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/common/codes?`,
+      params,
+    });
+    return data;
+  };
 
   // 상위코드 목록 조회
-  getParentCommonCode =async (
-  ): Promise<ParentCodeDTOType> => {
+  getParentCommonCode = async (): Promise<ParentCodeDTOType> => {
     const { data } = await this.axios({
-        method: 'GET',
-        headers: {
-          'X-AUTH-TOKEN':`${getToken()}`
-        },
-        url: `http://dbackoffice.gate26.co.kr/common/codes/parents?`,
-      });
-      return data;
-  }
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/common/codes/parents?`,
+    });
+    return data;
+  };
 
   // 공통코드 추가하기
   postCommonCode = async (
@@ -46,9 +52,9 @@ export class ManagementCodeApi {
     const { data } = await this.axios({
       method: 'POST',
       headers: {
-        'X-AUTH-TOKEN':`${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes`,
+      url: `/common/codes`,
       data: body,
     });
     return data;
@@ -56,32 +62,31 @@ export class ManagementCodeApi {
 
   // 공통코드 수정하기
   putCommonCode = async (
-    body: CommonCodeInfo, codeId : number
+    body: CommonCodeInfo,
+    codeId: number,
   ): Promise<CommonCodeInfoDTOType> => {
     const { data } = await this.axios({
       method: 'PUT',
       headers: {
-        'X-AUTH-TOKEN':`${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/${codeId}`,
-      data : body,
-    })
+      url: `/common/codes/${codeId}`,
+      data: body,
+    });
     return data;
-  }
+  };
 
   // 공통코드 삭제하기
-  deleteCommonCode = async (
-    codeId : number,
-  ): Promise<CommonCodeInfoDTOType> => {
+  deleteCommonCode = async (codeId: number): Promise<CommonCodeInfoDTOType> => {
     const { data } = await this.axios({
       method: 'DELETE',
       headers: {
-        'X-AUTH-TOKEN':`${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/${codeId}`,
-    })
+      url: `/common/codes/${codeId}`,
+    });
     return data;
-  }
+  };
 }
 
 const managementCodeApi = new ManagementCodeApi();
