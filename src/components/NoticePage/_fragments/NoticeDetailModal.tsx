@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -15,6 +16,7 @@ import {
 
 import NoticeApi from '@apis/notice/NoticeApi';
 import { NoticeDTOType } from '@apis/notice/NoticeApi.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import DatePicker from '@components/common/DatePicker';
@@ -24,6 +26,8 @@ import TextareaBox from '@components/common/Textarea';
 
 import { NoticeColumnType } from '../NoticePage.data';
 import { validRequest } from './NoticeDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface NoticeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -52,6 +56,21 @@ const NoticeDetailModal = ({
     expiredDate: dayjs(),
   });
 
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '공지사항',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   useEffect(() => {
     const request = {
       noticeId: detail.targetId ? detail.targetId : undefined,
@@ -66,7 +85,8 @@ const NoticeDetailModal = ({
   const handleCreate = async () => {
     const valid = validRequest(request);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     const response = await NoticeApi.postNotice(request);
     if (response.success) {
@@ -77,7 +97,8 @@ const NoticeDetailModal = ({
   const handleUpdate = async () => {
     const valid = validRequest(request);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     console.log(request);
     const response = await NoticeApi.putNotice(request);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Flex,
@@ -13,6 +14,7 @@ import {
 
 import CommunityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
 import { CommunityLoungePostType } from '@apis/communityLounge/CommunityLoungeApi.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -22,6 +24,8 @@ import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
 import { validRequest } from './LoungeDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface LoungeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -51,10 +55,26 @@ const LoungeDetailModal = ({
   });
   const [url, setUrl] = useState({ imgUrl: '', coverImgUrl: '' });
 
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '라운지',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleCreate = async () => {
     const valid = validRequest(request);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     const response = await CommunityLoungeApi.postCommunityLounge(request);
     if (response.tgId) {
@@ -71,7 +91,8 @@ const LoungeDetailModal = ({
     };
     const valid = validRequest(newRequest);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     const response = await CommunityLoungeApi.putCommunityLounge(newRequest);
     if (response.tgId) {

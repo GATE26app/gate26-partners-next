@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -20,6 +21,7 @@ import {
   PushPostType,
 } from '@apis/push/Push.type';
 import pushApi from '@apis/push/PushApi';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -31,6 +33,8 @@ import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
 import { FCM_TYPE, validRequest } from './PushDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface PushDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
@@ -67,6 +71,21 @@ const PushDetailModal = ({
   const [loungeList, setLoungeList] = useState<PushLoungeListResponse[]>([]);
   const [isAllTarget, setAllTarget] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '푸쉬 알림 관리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleCreate = () => {
     const newRequest = {
       ...request,
@@ -74,7 +93,8 @@ const PushDetailModal = ({
     };
     const valid = validRequest(newRequest);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     pushApi.postPush(newRequest).then((response) => {
       if (response && response.noticeId) {
@@ -93,7 +113,8 @@ const PushDetailModal = ({
     };
     const valid = validRequest(newRequest);
     if (!valid.success) {
-      return alert(valid.message);
+      handleAlert(valid.message);
+      return;
     }
     pushApi.putPush(newRequest).then((response) => {
       if (response && response.noticeId) {
