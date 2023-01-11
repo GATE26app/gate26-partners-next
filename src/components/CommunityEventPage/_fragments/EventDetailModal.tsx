@@ -49,7 +49,18 @@ interface ReqEventDetail {
 }
 interface EventDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  detail?: {
+    eventId: string;
+    title: string;
+    content: string;
+    contentType: string;
+    startDate: dayjs.Dayjs;
+    endDate: dayjs.Dayjs;
+    img: File;
+    bannerImg: File;
+    loungeId: string;
+  };
+  targetId?: string;
   onComplete?: () => void;
 }
 const EventDetailModal = ({
@@ -72,7 +83,7 @@ const EventDetailModal = ({
 
   const handleChangeInput = (
     key: string,
-    value: string | number | dayjs.Dayjs,
+    value: string | number | dayjs.Dayjs | File,
   ) => {
     setRequest({ ...request, [key]: value });
   };
@@ -150,8 +161,22 @@ const EventDetailModal = ({
             />
           }
         />
-        <ModalRow title="배너 이미지" content={<FileUpload />} />
-        <ModalRow title="홈 이미지" content={<FileUpload />} />
+        <ModalRow
+          title="배너 이미지"
+          content={
+            <FileUpload
+            // onChange={(val) => handleChangeInput('bannerImg', val)}
+            />
+          }
+        />
+        <ModalRow
+          title="홈 이미지"
+          content={
+            <FileUpload
+            // onChange={(val) => handleChangeInput('bannerImg', val)}
+            />
+          }
+        />
         <ModalRow
           title="표시장소"
           content={

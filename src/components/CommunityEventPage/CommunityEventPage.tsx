@@ -6,6 +6,12 @@ import dayjs from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
+import eventApi from '@apis/event/EventApi';
+import {
+  EventListSeqType,
+  EventListType,
+  EventParamGetType,
+} from '@apis/event/EventApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -24,77 +30,30 @@ import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandl
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: number;
+  targetId?: string;
 }
 
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
-
-const rows: DataTableRowType<EventColumnType>[] = [
-  {
-    id: 1,
-    title: '게이트이륙 회원가입 이벤트',
-    event_content: 'http://www.event.com/',
-    type: 'URL',
-    start: dayjs(),
-    end: dayjs(),
-    banner:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    main_img:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    location: '홈',
-    order: 2,
-  },
-  {
-    id: 2,
-    title: '게이트이륙 회원가입 이벤트',
-    event_content:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    type: 'IMAGE',
-    start: dayjs(),
-    end: dayjs(),
-    banner:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    main_img:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    location: '유럽 라운지',
-    order: 1,
-  },
-  {
-    id: 3,
-    title: '게이트이륙 회원가입 이벤트',
-    event_content: `게이트 이륙이 회원가입 이벤트를 진행합니다. 앞으로 많은 관심 부탁드리며 다음과 같은 방법으로 참여 부탁드립니다!
-
-    [참여방법]...
-    `,
-    type: 'TEXT',
-    start: dayjs(),
-    end: dayjs(),
-    banner:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    main_img:
-      'https://s3-alpha-sig.figma.com/img/af4b/91de/f5c79c9f02500423d1e862608324acde?Expires=1670198400&Signature=SKieLP4jZEQuNHL7T8d2hke96TJQAaAOekCym0g~rGBrdZw1JV2SGLJ1gORDhuHoT3dTZn~BapvcS9gTpSHmTHd1ED3qkZgXKco96ialdTVZKJgJB7pPVJovX0rI5y3kpvarOWWmAYgSc7qpzTon-0n~wMokAk5fF4M-50tbaSAiMgNc~6Va981iy3Ay4GKPmj-vzwhRvfYHROtMR6NiyYnduXOjB6WBoghaXi-EqPGj4B1mGRJWfxrFVBJk9Yt4Z0LXCGmLN01VES9E88XA1WIvBK~k2naYZ0hPCsqPV9gXn6cs-~7b4mywjqNm0mb-Nx~YFzkuZhs-o2pFw2y~QA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    location: '국내 라운지',
-    order: 3,
-  },
-];
+const SEARCH_TYPE = [1, 2];
 
 function CommunityEventPage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<EventParamGetType>({
+    searchType: SEARCH_TYPE[0],
+    keyword: '',
+    page: 0,
+    size: 10,
   });
-  const [list, setList] = useState<DataTableRowType<EventColumnType>[]>();
+
+  const [list, setList] = useState<DataTableRowType<EventColumnType>[]>([]);
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
   const [listModal, setListModal] = useState<ModalProps>({ isOpen: false });
-
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
+  const [seqData, setSeqData] = useState<EventListSeqType>();
+
+  useEffect(() => {
+    getEventList();
+  }, [request]);
 
   const communityEvent = new CommunityEvent(
     handleClickListBtn,
@@ -102,25 +61,47 @@ function CommunityEventPage() {
   );
 
   function handleClickListBtn(row: DataTableRowType<EventColumnType>) {
-    setListModal({ isOpen: true, targetId: row.id as number });
+    setListModal({ isOpen: true, targetId: row.eventId as string });
   }
 
-  function handleChangeInput(key: string, value: string | number) {
+  function handleChangeInput(key: string, value: string | number, id?: string) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
+    if (key === 'seq') {
+      updateSeq(id as string, value as number);
+    }
     setRequest(newRequest);
   }
+  const updateSeq = async (id: string, value: number) => {
+    const res = await eventApi.putEventListSeq(id, value);
+    if (res.success) {
+      getEventList();
+    }
+  };
+  const getEventList = async () => {
+    const response = await eventApi.getEventList(request);
+    const { data, count, success } = response;
+    const seqResponse = await eventApi.getEventListCount();
+    const maxSeq = seqResponse?.data?.count;
+    console.log('maxSeq', maxSeq);
+    if (success) {
+      setTotal(count);
+      const newList = response.data.content.map((item) => {
+        return { ...item, maxSeq };
+      });
+      setList(newList);
+    }
+  };
 
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
   const handleEditRow = (row: DataTableRowType<EventColumnType>) => {
-    if (!row.id) {
+    if (!row.eventId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    setModal({ isOpen: true, type: 'modify', targetId: row.eventId as string });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
@@ -133,17 +114,15 @@ function CommunityEventPage() {
         message: '이벤트를 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
-        cbOk: () => {
-          console.log('삭제 처리:', row);
+        cbOk: async () => {
+          await eventApi.deleteEventList(row.eventId as string);
+          getEventList();
         },
       }),
     );
     openCustomModal();
   };
 
-  useEffect(() => {
-    setList(rows);
-  }, []);
   return (
     <>
       <Head>
@@ -164,14 +143,14 @@ function CommunityEventPage() {
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '제목' },
-              { value: 1, label: '표시장소' },
             ],
             keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) => {
               console.log('타입');
             },
@@ -193,8 +172,8 @@ function CommunityEventPage() {
           onDelete={handleDeleteRow}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page!,
+            limit: request.size!,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -214,7 +193,7 @@ function CommunityEventPage() {
       />
       <EventParticipantModal
         isOpen={listModal.isOpen}
-        targetId={listModal.targetId}
+        targetId={listModal.targetId as string}
         onClose={handleCloseListModal}
       />
     </>

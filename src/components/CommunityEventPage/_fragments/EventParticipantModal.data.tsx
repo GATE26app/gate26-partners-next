@@ -1,6 +1,12 @@
 import { DataTableColumnType } from '@components/common/DataTable';
 
-export type ParticipantColumnType = 'id' | 'name' | 'gender' | 'age' | 'email';
+export type ParticipantColumnType =
+  | 'userEventId'
+  | 'userId'
+  | 'userName'
+  | 'gender'
+  | 'age'
+  | 'email';
 export const PARTICIPANT_COLUMNS: DataTableColumnType<ParticipantColumnType>[] =
   [
     {

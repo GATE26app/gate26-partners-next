@@ -11,6 +11,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import eventApi from '@apis/event/EventApi';
+
 import Button from '@components/common/Button';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import IconButton from '@components/common/IconButton';
@@ -21,51 +23,51 @@ import {
   ParticipantColumnType,
 } from './EventParticipantModal.data';
 
-const rows: DataTableRowType<ParticipantColumnType>[] = [
-  {
-    id: 1,
-    name: '김이륙',
-    gender: '남',
-    age: 45,
-    email: 'gate26@toktokhan.dev',
-  },
-  {
-    id: 2,
-    name: '박이륙',
-    gender: '여',
-    age: 21,
-    email: 'gate26@toktokhan.dev',
-  },
-  {
-    id: 3,
-    name: '이이륙',
-    gender: '여',
-    age: 18,
-    email: 'gate26@toktokhan.dev',
-  },
-];
-
 interface EventParticipantModalProps extends Omit<ModalProps, 'children'> {
-  targetId?: number;
+  targetId: string;
 }
+const SEARCH_TYPE = [1, 2, 3, 4];
+
 const EventParticipantModal = ({
   targetId,
   onClose,
   ...props
 }: EventParticipantModalProps) => {
   const [request, setRequest] = useState({
-    page: 1,
-    limit: 10,
+    eventId: targetId,
+    searchType: SEARCH_TYPE[0],
+    keyword: '',
+    page: 0,
+    size: 10,
   });
+  const [user, setUser] = useState<DataTableRowType<ParticipantColumnType>[]>(
+    [],
+  );
   const [total, setTotal] = useState<number>(100);
 
+  useEffect(() => {
+    getParticipantList();
+  }, [request]);
+
   const handleChangeInput = (key: string, value: string | number) => {
+    console.log(value);
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
     console.log('변경: ', key, value);
+    console.log(newRequest);
     setRequest(newRequest);
+  };
+
+  const getParticipantList = async () => {
+    const res = await eventApi.getEventParticipantList(request);
+    const { data, count, success } = res;
+
+    if (success) {
+      setTotal(count);
+      setUser(data.content);
+    }
   };
 
   const renderContent = () => {
@@ -73,10 +75,16 @@ const EventParticipantModal = ({
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
-            searchTypes: [{ value: 0, label: '전체' }],
+            searchTypes: [
+              { value: 0, label: '유저이름' },
+              { value: 1, label: '성별' },
+              { value: 2, label: '나이' },
+              { value: 3, label: '이메일' },
+            ],
             keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) => {
               console.log('타입');
             },
@@ -89,10 +97,10 @@ const EventParticipantModal = ({
         <DataTable
           variant={'gray'}
           columns={PARTICIPANT_COLUMNS}
-          rows={rows}
+          rows={user}
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
