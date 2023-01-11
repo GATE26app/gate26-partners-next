@@ -1,19 +1,5 @@
-export type CommunityLoungeDTOType = {
-  title: string;
-  displayOrder: number;
-  openYn: boolean;
-  img?: File; // 홈
-  coverImg?: File; // 배너
-};
-export type CommunityLoungeListDTOType = {
-  content: {
-    tgId: string;
-    loungeName: string;
-    imagePath: string;
-    coverImg: string;
-    displayOrder: number;
-    isOpen: string;
-  }[];
+type LoungeDTOType = {
+  content: {};
   pageable: {
     sort: { empty: boolean; sorted: boolean; unsorted: boolean };
     offset: number;
@@ -32,23 +18,39 @@ export type CommunityLoungeListDTOType = {
   size: number;
   numberOfElements: number;
 };
-export type CommunityLoungeDeleteDTOType = 'T' | 'F';
+
+// 라운지 조회
 export type CommunityLoungeParamGetType = {
   searchType: number;
   keyword: string;
   page?: number;
   size?: number;
 };
-export type CommunityLoungeParamPutType = {
-  id: string;
-  data: CommunityLoungeDTOType;
-};
-export type CommunityLoungeParamPatchType = {
-  id: string;
-  data: Partial<CommunityLoungeDTOType>;
+
+export type CommunityLoungeListResponse = LoungeDTOType & {
+  content: {
+    tgId: string;
+    loungeName: string;
+    imagePath: string;
+    coverImg: string;
+    displayOrder: number;
+    isOpen: string;
+  }[];
 };
 
-export type CommunityLoungeResponseType = {
+// 라운지 등록, 수정
+export type CommunityLoungePostType = {
+  loungeId?: string; // 수정일때만 사용
+  title: string;
+  displayOrder: number;
+  openYn: boolean;
+  img?: File; // 홈
+  coverImg?: File; // 배너
+  deleteFile?: string;
+  deleteCoverFile?: string;
+};
+
+export type CommunityLoungePostResponse = {
   tgId: string;
   coverImg: string;
   createdDate: string;
@@ -62,3 +64,6 @@ export type CommunityLoungeResponseType = {
   modifiedDate: string;
   startDateTime: string;
 };
+
+// 라운지 삭제
+export type CommunityLoungeDeleteDTOType = 'T' | 'F';
