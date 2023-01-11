@@ -1,9 +1,16 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
 
+import stampApis from '@apis/stamp/StampApis';
+import {
+  StampDTOType,
+  StampListDTOType,
+  StampParamGetType,
+  StampUpdateDTOType,
+} from '@apis/stamp/StampApis.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -17,84 +24,109 @@ import MobilityStampModal from './_fragments/MobilityStampModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
   targetId?: number;
+  modifyData?: StampUpdateDTOType;
 }
-
-const rows: DataTableRowType<StampCol>[] = [
-  {
-    id: 1,
-    type: '챌린지',
-    title: '프로 여행가이드',
-    info: '-',
-    image:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answer: '사용',
-  },
-  {
-    id: 2,
-    type: '항공사',
-    title: '카고룩스 이탈리아 항공',
-    info: '카고룩스 이탈리아 항공 도착 시 얻을 수 있는 스탬프러리입니다.',
-    image:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answer: '-',
-  },
-  {
-    id: 3,
-    type: '국가',
-    title: '아랍에미리트',
-    info: '아랍에미리트 도착 시 얻을 수 있는 스탬프러리입니다.',
-    image:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    answer: '사용',
-  },
-];
 
 const MobilityStamp = () => {
   const [total, setTotal] = useState<number>(100);
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<StampParamGetType>({
+    page: 0,
+    size: 10,
   });
+  const [rows, setRows] = useState<StampListDTOType[]>([]);
   const { openCustomModal } = useCustomModalHandlerContext();
-  const stamp = new Stamp(handleChangeInput);
-  const handleEditRow = (row: DataTableRowType<StampCol>) => {
-    if (!row.id) {
-      return;
-    }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
-  };
-  const handleCloseModal = () => setModal({ isOpen: false });
-  const dispatch = useDispatch();
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+  const stamp = new Stamp(handleChangeInput);
+
+  useEffect(() => {
+    getStampList();
+  }, []);
+
+  const handleEditRow = (row: DataTableRowType<StampCol>) => {
+    const data = { ...row };
+    if (!data.stampId) return;
+    if (data.stampType === 'AIRLINE') data.stampType = '1';
+    else if (data.stampType === 'CHALLENGE') data.stampType = '2';
+    else if (data.stampType === 'COUNTRY') data.stampType = '3';
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      modifyData: data as StampUpdateDTOType,
+    });
+  };
+  const handleCloseModal = () => {
+    setModal({ isOpen: false, modifyData: undefined });
+  };
+  const dispatch = useDispatch();
   const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
+    if (key === 'size' || key === 'page') getStampList(newRequest);
   }
-  const handleDeleteRow = (row: DataTableRowType<StampCol>) => {
+
+  const getStampList = async (param?: StampParamGetType) => {
+    const response = await stampApis.getStamp({ ...param });
+    if (response.success) {
+      setTotal(response.data?.totalElements || 0);
+      setRows(response.data?.content || []);
+    }
+  };
+  const handleStampDelete = async (stampId: string) => {
+    try {
+      const response = await stampApis.deleteStamp(stampId);
+      if (!response.success) return alert('삭제 실패');
+      const newRequest = { ...request };
+      //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+      if (rows && rows.length - 1 === 0 && newRequest.page)
+        newRequest.page -= 1;
+
+      setRequest(newRequest);
+      getStampList(newRequest);
+      alert('삭제 성공');
+    } catch (e) {
+      alert('삭제 실패');
+    }
+  };
+
+  const handleCreateStamp = async (data: StampDTOType) => {
+    try {
+      const response = await stampApis.postStamp(data);
+      if (response) {
+        getStampList(request);
+        handleCloseModal();
+      }
+    } catch (e: any) {
+      alert('생성 실패');
+    }
+  };
+  const handleModifyStamp = async (data: StampUpdateDTOType) => {
+    try {
+      const response = await stampApis.putStamp(data);
+      if (response) {
+        getStampList(request);
+        handleCloseModal();
+      }
+    } catch (e: any) {
+      alert('생성 실패');
+    }
+  };
+
+  const handleDeleteRow = (stampId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '스탬프러리 관리',
         message: '스탬프러리를 삭제 하시겠습니까?',
         type: 'confirm',
         okButtonName: '삭제',
-        cbOk: () => {
-          console.log('삭제 처리:', row);
-        },
+        cbOk: () => handleStampDelete(stampId),
       }),
     );
     openCustomModal();
@@ -118,21 +150,21 @@ const MobilityStamp = () => {
         />
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '스탬프러리 제목' },
+              { value: 3, label: '스탬프러리 설명' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
-            onClickSearch: () => console.log('검색'),
+            searchType: request.searchType,
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('searchType', type),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
+            onClickSearch: () => getStampList(request),
           }}
           createButton={{
             title: '스탬프러리 추가',
@@ -144,11 +176,11 @@ const MobilityStamp = () => {
           columns={stamp.STAMP_COLUMNS}
           rows={rows}
           onEdit={handleEditRow}
-          onDelete={handleDeleteRow}
+          onDelete={({ stampId }) => handleDeleteRow(stampId as string)}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page || 0,
+            limit: request.size || 10,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -164,7 +196,9 @@ const MobilityStamp = () => {
         type={modal.type}
         targetId={modal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        modifyData={modal.modifyData}
+        onComplete={handleCreateStamp}
+        onModify={handleModifyStamp}
       />
     </>
   );
