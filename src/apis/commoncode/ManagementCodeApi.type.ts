@@ -43,3 +43,9 @@ export type ParentCodeDTOType = {
   data?: CommonCodeInfo[];
   success: boolean;
 }
+
+export type CodeDTOType = {
+  code?: string;
+  data?: CommonCodeInfo;
+  success: boolean;
+}
