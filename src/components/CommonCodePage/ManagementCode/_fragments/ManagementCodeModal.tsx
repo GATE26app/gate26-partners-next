@@ -78,30 +78,6 @@ const StampModal = ({
 
   const [code, setCode] = useState<any[]>();
 
-  useEffect(() => {
-    managementCodeApi.getParentCommonCode().then((response) => {
-      const { success, data } = response;
-      if (success) {
-        setCode(data);
-        if (data !== undefined) {
-          makeItem(data);
-        }
-      }
-    });
-  }, []);
-
-  const getParentType = () => {
-    // managementCodeApi.getParentCommonCode().then((response) => {
-    //   const { success, data } = response;
-    //   if (success) {
-    //     setCode(data);
-    //     if (data !== undefined) {
-    //       makeItem(data);
-    //     }
-    //   }
-    // });
-  };
-
   const makeItem = (data: any[]) => {
     const items: { value: string | number; label: string }[] = [];
     data.map((i) => {
@@ -128,6 +104,8 @@ const StampModal = ({
   };
 
   const handleCreateCode = (state: string) => {
+    const pCodeName = parentType.find(
+      (iter) => request.parentCode == iter.value)?.label as string
     if (state === '0') {
       const reqBody = {
         codeName: request.code,
@@ -153,23 +131,22 @@ const StampModal = ({
         codeName: request.code,
         codeValue: request.codeValue,
         descText: request.info,
-        parentCodeName: request.parentCode,
+        parentCodeName: pCodeName,
       };
-      console.log(`헤헤헤 ${reqBody.parentCodeName}`);
-      // managementCodeApi.postCommonCode(reqBody).then((response) => {
-      //   const { data, success } = response;
-      //   if (success) {
-      //     onClose();
-      //     toast({
-      //       description: '생성 완료',
-      //     });
-      //   } else {
-      //     toast({
-      //       status: 'error',
-      //       description: '생성 실패',
-      //     });
-      //   }
-      // });
+      managementCodeApi.postCommonCode(reqBody).then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '생성 완료',
+          });
+        } else {
+          toast({
+            status: 'error',
+            description: '생성 실패',
+          });
+        }
+      });
     }
     setRequest(defaultRequest);
   };
@@ -242,8 +219,7 @@ const StampModal = ({
                   );
                   handleChangeInput(
                     'parentCode',
-                    parentType.find((iter) => value == (iter.value as number))
-                      ?.label as string,
+                    value as number
                   );
                 }}
               />
@@ -285,8 +261,17 @@ const StampModal = ({
       </Flex>
     );
   };
+  
   useEffect(() => {
-    getParentType();
+    managementCodeApi.getParentCommonCode().then((response) => {
+      const { success, data } = response;
+      if (success) {
+        setCode(data);
+        if (data !== undefined) {
+          makeItem(data);
+        }
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -296,10 +281,35 @@ const StampModal = ({
 
   useEffect(() => {
     console.log('선택한 row :', targetId);
-    if (targetId !== undefined) {
+    if (targetId !== undefined && type!=='create') {
+      getOneCommonCodeInfo(targetId)
     }
   }, [targetId, type]);
 
+  const getOneCommonCodeInfo=(targetId : number) => {
+    managementCodeApi.getOneCommonCode(targetId).then((response) => {
+      const { data, success} = response;
+      if(success) {
+        
+        if(data?.codeId){
+          request.codeId = data?.codeId
+        }
+        if(data?.codeName) {
+          request.code= data?.codeName
+        }
+        if(data?.codeValue) {
+          request.codeValue= data?.codeValue
+        }
+        if(data?.codeName) {
+          request.info= data?.descText
+        }
+        if(data?.parentCodeName) {
+          request.parentCode= data?.parentCodeName
+        }
+      }
+    })
+    console.log("", request);
+  } 
   useEffect(() => {
     console.log('업데이트 : ', request);
   }, [request]);
