@@ -4,6 +4,8 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
+import { imgPath } from '@utils/format';
+
 export type ChatColumnType = 'id' | 'title' | 'thumbnail' | 'location';
 export const CHAT_COLUMNS: DataTableColumnType<ChatColumnType>[] = [
   {
@@ -17,7 +19,7 @@ export const CHAT_COLUMNS: DataTableColumnType<ChatColumnType>[] = [
     width: '34.1%',
     render: (value: DataTableRowType<ChatColumnType>) => (
       <RoundImage
-        src={value.thumbnail as string}
+        src={`${imgPath()}${value.thumbnail as string}`}
         width={'50px'}
         height={'50px'}
         isCircle
