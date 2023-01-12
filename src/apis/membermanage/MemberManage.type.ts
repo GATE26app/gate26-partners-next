@@ -86,8 +86,10 @@ export type StmaperyHitoryListDTOType = Omit<BasicGetListDTOType, 'content'> & {
     createdDate: string;
   }[];
 };
-export type StampListDTOType = Omit<BasicDTO, 'content'> & {
-  content: StampInfoDTOType[];
+export type StampListDTOType = {
+  data: StampInfoDTOType[];
+  count?: number;
+  success: boolean;
 };
 
 export type StampInfoDTOType = {

@@ -19,7 +19,10 @@ import {
   StampInfoDTOType,
   StampListGetDTOType,
 } from '@apis/membermanage/MemberManage.type';
-import { StampParamGetType } from '@apis/stamp/StampApis.type';
+import {
+  StampListDTOType,
+  StampParamGetType,
+} from '@apis/stamp/StampApis.type';
 
 import StamperyItem from '@components/UserManagePage/_fragments/StamperyDialog/_fragments/StamperyItem';
 import Button from '@components/common/Button';
@@ -60,7 +63,8 @@ const StamperyAddDialog = ({
   const getStampList = async (param: StampListGetDTOType) => {
     const response = await memberManageApi.getStampList({ ...param });
     if (response.success) {
-      setStampItems(response.data.content || []);
+      console.log(response);
+      setStampItems(response.data || []);
     }
   };
 

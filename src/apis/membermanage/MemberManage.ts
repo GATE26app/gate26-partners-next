@@ -54,7 +54,7 @@ export class MemberManageApi {
   //유저 스탬프러리 내역 조회
   getStampList = async (
     params: StampListGetDTOType,
-  ): Promise<AxiosResponseType<StampListDTOType>> => {
+  ): Promise<StampListDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
