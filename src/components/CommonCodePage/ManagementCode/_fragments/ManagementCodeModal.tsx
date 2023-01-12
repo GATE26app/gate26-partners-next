@@ -69,9 +69,11 @@ const StampModal = ({
     info: '',
     parentCode: '',
   }
+
   const [request, setRequest] = useState<ReqManageKey>(defaultRequest);
-  const [radioType, setRadioType] = useState<string>('0');
-  const [parentType, setParentType] = useState<{ value: string | number; label: string }[]>([
+  const [codeType, setCodeType] = useState<string>('0');
+  type itemType = { value: string | number; label: string };
+  const [parentType, setParentType] = useState<itemType[]>([
     { value: '', label: '' },
   ]);
   const [code, setCode] = useState<any[]>();
@@ -98,7 +100,7 @@ const StampModal = ({
   const handleCreate = () => {
     if (onComplete) onComplete();
     if (type === 'create') {
-      handleCreateCode(radioType);
+      handleCreateCode(codeType);
     } else {
       handleModifyCode();
     }
@@ -157,7 +159,7 @@ const StampModal = ({
       codeName: request.code,
       descText: request.info,
       codeValue: request.codeValue,
-      parentCodeName: request.parentCode,
+      parentCodeName: pCodeName,
     };
 
     managementCodeApi
@@ -178,8 +180,32 @@ const StampModal = ({
       });
   };
 
+  const getOneCommonCodeInfo=(targetId : number) => {
+    managementCodeApi.getOneCommonCode(targetId).then((response) => {
+      const { data, success} = response;
+      if(success) {
+        if(data?.codeId){
+          request.codeId = data?.codeId
+        }
+        if(data?.codeName) {
+          request.code= data?.codeName
+        }
+        if(data?.codeValue) {
+          request.codeValue= data?.codeValue
+        }
+        if(data?.codeName) {
+          request.info= data?.descText
+        }
+        if(data?.parentCodeName) {
+          request.parentCode= data?.parentCodeName
+        }
+      }
+    })
+    console.log("req:", request);
+  } 
+
   const handleCodeType = (e: any) => {
-    setRadioType(e);
+    setCodeType(e);
   };
   const handleChangeInput = (
     key: MenageCol,
@@ -198,19 +224,19 @@ const StampModal = ({
               group
               groupItems={RadioGroups}
               onClick={handleCodeType}
-              value={radioType}
+              value={codeType}
             />
           }
         />
-        {radioType === '0' ? null : (
+        {codeType === '0' ? null : (
           <ModalRow
             title="상위 코드"
             content={
               <CustomSelect
                 width={'100px'}
-                placeholder={'상위 코드'}
+                placeholder={request.parentCode !== undefined ? request.parentCode : ''}
                 items={parentType}
-                defaultValue={3}
+                defaultValue={request.parentCode}
                 onChange={(value) => {
                   handleChangeInput(
                     'parentCode',
@@ -258,7 +284,6 @@ const StampModal = ({
   };
   
   useEffect(() => {
-    setRadioType('0');
     managementCodeApi.getParentCommonCode().then((response) => {
       const { success, data } = response;
       if (success) {
@@ -273,34 +298,10 @@ const StampModal = ({
   useEffect(() => {
     console.log('선택한 row :', targetId, type);
     if (targetId !== undefined && type==='modify') {
-      console.log("radio:", radioType);
       getOneCommonCodeInfo(targetId)
     }
   }, [targetId, type]);
 
-  const getOneCommonCodeInfo=(targetId : number) => {
-    managementCodeApi.getOneCommonCode(targetId).then((response) => {
-      const { data, success} = response;
-      if(success) {
-        if(data?.codeId){
-          request.codeId = data?.codeId
-        }
-        if(data?.codeName) {
-          request.code= data?.codeName
-        }
-        if(data?.codeValue) {
-          request.codeValue= data?.codeValue
-        }
-        if(data?.codeName) {
-          request.info= data?.descText
-        }
-        if(data?.parentCodeName) {
-          request.parentCode= data?.parentCodeName
-        }
-      }
-    })
-    console.log("req:", request);
-  } 
   useEffect(() => {
     console.log('업데이트 : ', request);
   }, [request]);
