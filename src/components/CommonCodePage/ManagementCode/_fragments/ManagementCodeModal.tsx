@@ -68,14 +68,12 @@ const StampModal = ({
     codeValue: '',
     info: '',
     parentCode: '',
-  };
+  }
   const [request, setRequest] = useState<ReqManageKey>(defaultRequest);
-  const [codeType, setCodeType] = useState<string>('0');
-  type itemType = { value: string | number; label: string };
-  const [parentType, setParentType] = useState<itemType[]>([
+  const [radioType, setRadioType] = useState<string>('0');
+  const [parentType, setParentType] = useState<{ value: string | number; label: string }[]>([
     { value: '', label: '' },
   ]);
-
   const [code, setCode] = useState<any[]>();
 
   const makeItem = (data: any[]) => {
@@ -88,24 +86,27 @@ const StampModal = ({
 
       items.push(item);
     });
-
     setParentType(items);
+  };
 
-    console.log(items[0].value);
+  const onCloses = () => {
+    onClose();
+    setRequest(defaultRequest);
+    handleCodeType('0');
   };
 
   const handleCreate = () => {
     if (onComplete) onComplete();
     if (type === 'create') {
-      handleCreateCode(codeType);
+      handleCreateCode(radioType);
     } else {
       handleModifyCode();
     }
   };
-
+  const pCodeName = parentType.find(
+    (iter) => request.parentCode == iter.value)?.label as string
   const handleCreateCode = (state: string) => {
-    const pCodeName = parentType.find(
-      (iter) => request.parentCode == iter.value)?.label as string
+    
     if (state === '0') {
       const reqBody = {
         codeName: request.code,
@@ -115,7 +116,7 @@ const StampModal = ({
       managementCodeApi.postCommonCode(reqBody).then((response) => {
         const { data, success } = response;
         if (success) {
-          onClose();
+          onCloses();
           toast({
             description: '생성 완료',
           });
@@ -136,7 +137,7 @@ const StampModal = ({
       managementCodeApi.postCommonCode(reqBody).then((response) => {
         const { data, success } = response;
         if (success) {
-          onClose();
+          onCloses();
           toast({
             description: '생성 완료',
           });
@@ -148,7 +149,6 @@ const StampModal = ({
         }
       });
     }
-    setRequest(defaultRequest);
   };
 
   const handleModifyCode = () => {
@@ -165,7 +165,7 @@ const StampModal = ({
       .then((response) => {
         const { data, success } = response;
         if (success) {
-          onClose();
+          onCloses();
           toast({
             description: '수정 완료',
           });
@@ -179,7 +179,7 @@ const StampModal = ({
   };
 
   const handleCodeType = (e: any) => {
-    setCodeType(e);
+    setRadioType(e);
   };
   const handleChangeInput = (
     key: MenageCol,
@@ -198,11 +198,11 @@ const StampModal = ({
               group
               groupItems={RadioGroups}
               onClick={handleCodeType}
-              value={codeType}
+              value={radioType}
             />
           }
         />
-        {codeType === '0' ? null : (
+        {radioType === '0' ? null : (
           <ModalRow
             title="상위 코드"
             content={
@@ -210,13 +210,8 @@ const StampModal = ({
                 width={'100px'}
                 placeholder={'상위 코드'}
                 items={parentType}
-                defaultValue={request.parentCode}
+                defaultValue={3}
                 onChange={(value) => {
-                  console.log(
-                    'v : ',
-                    parentType.find((iter) => value == (iter.value as number))
-                      ?.label as string,
-                  );
                   handleChangeInput(
                     'parentCode',
                     value as number
@@ -263,6 +258,7 @@ const StampModal = ({
   };
   
   useEffect(() => {
+    setRadioType('0');
     managementCodeApi.getParentCommonCode().then((response) => {
       const { success, data } = response;
       if (success) {
@@ -275,13 +271,9 @@ const StampModal = ({
   }, []);
 
   useEffect(() => {
-    setCodeType('0');
-    setRequest(defaultRequest);
-  }, [onClose]);
-
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-    if (targetId !== undefined && type!=='create') {
+    console.log('선택한 row :', targetId, type);
+    if (targetId !== undefined && type==='modify') {
+      console.log("radio:", radioType);
       getOneCommonCodeInfo(targetId)
     }
   }, [targetId, type]);
@@ -290,7 +282,6 @@ const StampModal = ({
     managementCodeApi.getOneCommonCode(targetId).then((response) => {
       const { data, success} = response;
       if(success) {
-        
         if(data?.codeId){
           request.codeId = data?.codeId
         }
@@ -308,7 +299,7 @@ const StampModal = ({
         }
       }
     })
-    console.log("", request);
+    console.log("req:", request);
   } 
   useEffect(() => {
     console.log('업데이트 : ', request);
@@ -335,7 +326,7 @@ const StampModal = ({
             text="취소"
             size={'sm'}
             width={'120px'}
-            onClick={onClose}
+            onClick={onCloses}
           />
           <Button
             type="square"
