@@ -6,6 +6,8 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
+import { imgPath } from '@utils/format';
+
 import axios from 'apis/_axios/instance';
 
 export type StampCol =
@@ -58,7 +60,7 @@ class Stamp {
       width: '18.3%',
       render: (value: DataTableRowType<StampCol>) => (
         <RoundImage
-          src={`${axios.defaults.baseURL}${value.imagePath as string}`}
+          src={`${imgPath()}${value.imagePath as string}`}
           width={'90px'}
           height="90px"
         />

@@ -118,3 +118,16 @@ export const formatExamTime = (SECONDS: number) => {
   }
   return `${seconds}초`;
 };
+
+export const imgPath = () => {
+  if (DEV() === 'dev') {
+    return `http://dresource.gate26.co.kr/img/downloadFile?filePath=`;
+  } else {
+    return `https://resource.gate26.co.kr/img/downloadFile?filePath=`;
+  }
+};
+
+export const DEV = () => {
+  // return '';
+  return 'dev';
+};

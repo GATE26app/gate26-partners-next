@@ -6,6 +6,8 @@ import {
 import RoundImage from '@components/common/RoundImage';
 import SmallButton from '@components/common/SmallButton';
 
+import { imgPath } from '@utils/format';
+
 export type EventColumnType =
   | 'eventId'
   | 'title'
@@ -85,6 +87,7 @@ class CommunityEvent {
       render: (value: DataTableRowType<EventColumnType>) => (
         <RoundImage
           src={value.bannerImgPath as string}
+          // src={`${imgPath()}${value.bannerImgPath as string}`}
           width={'158px'}
           height="100px"
         />
