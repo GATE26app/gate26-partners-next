@@ -139,7 +139,6 @@ function PushManagePage() {
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
-              // { value: 1, label: '푸쉬대상' },
               { value: 2, label: '제목' },
               { value: 3, label: '푸쉬내용' },
             ],

@@ -2,16 +2,12 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 import { Flex } from '@chakra-ui/react';
 
 import eventApi from '@apis/event/EventApi';
-import {
-  EventListSeqType,
-  EventListType,
-  EventParamGetType,
-} from '@apis/event/EventApi.type';
+import { EventListSeqType, EventParamGetType } from '@apis/event/EventApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -24,7 +20,6 @@ import { CommunityEvent, EventColumnType } from './CommunityEventPage.data';
 import EventDetailModal from './_fragments/EventDetailModal';
 import EventParticipantModal from './_fragments/EventParticipantModal';
 
-// import TipDetailModal from './_fragments/TipDetailModal';
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface ParticipantModalProps {
@@ -70,7 +65,6 @@ function CommunityEventPage() {
   });
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
-  const [seqData, setSeqData] = useState<EventListSeqType>();
 
   useEffect(() => {
     getEventList();
@@ -106,7 +100,7 @@ function CommunityEventPage() {
   };
   const getEventList = async () => {
     const response = await eventApi.getEventList(request);
-    const { data, count, success } = response;
+    const { data, success } = response;
     const seqResponse = await eventApi.getEventListCount();
     const maxSeq = seqResponse?.data?.count;
 
@@ -185,10 +179,11 @@ function CommunityEventPage() {
           limit={request.size}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '제목' },
             ],
             keyword: request.keyword,
+            searchType: request.searchType,
             onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('searchType', type),
