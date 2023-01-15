@@ -10,7 +10,7 @@ interface SearchInputProps {
   placeholder?: string;
   text: string;
   onChange: (text: string) => void;
-  onSearch: () => void;
+  onSearch?: () => void;
   InputProps?: InputProps;
 }
 const SearchInput = ({

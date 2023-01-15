@@ -18,7 +18,7 @@ interface SearchProps {
   onChangeLimit: (value: number) => void;
   onChangeSearchType: (type: number) => void;
   onChangeKeyword: (keyword: string) => void;
-  onClickSearch: () => void;
+  onClickSearch?: () => void;
 }
 interface ButtonProps {
   title: string;
@@ -91,7 +91,7 @@ const TableTop = ({ total, limit, search, createButton }: TableTopProps) => {
           placeholder={'Search'}
           text={keyword || ''}
           onChange={onChangeKeyword}
-          onSearch={onClickSearch}
+          onSearch={onClickSearch ? onClickSearch : undefined}
         />
       </Flex>
     </Flex>

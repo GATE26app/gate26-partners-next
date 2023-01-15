@@ -1,9 +1,15 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex } from '@chakra-ui/react';
 
+import CommunityTipApi from '@apis/communityTip/communityTipApi';
+import {
+  TipParamGetType,
+  TipPostType,
+  TipPutType,
+} from '@apis/communityTip/communityTipApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -21,79 +27,99 @@ interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
   targetId?: number;
+  modifyData?: TipPutType;
 }
-
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
-
-const rows: DataTableRowType<TipColumnType>[] = [
-  {
-    id: 1,
-    title: '나만 아는 인생샷 스팟은 어디인가요?',
-    home: 'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    banner:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    category: '인생샷스팟',
-    show: 0,
-  },
-  {
-    id: 2,
-    title: '나만 아는 인생샷 스팟은 어디인가요?',
-    home: 'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    banner:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    category: '인생샷스팟',
-    show: 1,
-  },
-  {
-    id: 3,
-    title: '나만 아는 인생샷 스팟은 어디인가요?',
-    home: 'https://s3-alpha-sig.figma.com/img/c466/a46b/9659838dced1c10608c2819e8ce74474?Expires=1669593600&Signature=YviggbnRkPFqpjtY-e3RZikolmQU7VcDS1IEq3GUVED20C3qU~Nfmj3kDfFy11ZqpSQA4-gS5-POiMDqkW0ladIeIXMlQ1JE3CVsph6ZoOstlLf11bqVebOq3zxJLxVmhIpCMv-asgtwrZrqsXCI~zLgN7PmGbhBScucXixo0TmdOAgh02XDm1ugsEJKns5KZCfStPICJmS0IP3jeu3pigDJfCQtssRANGNF7a6T5mNpfZaoDNZoy7Q8dseTD--GkVBmAfGoT3BZoTf1peXmYO6QA1noqyoUK6b~tmKLfOfLFdyj1TziZy37KS1XMvJF7aoIn-ld-hEXbgoAoCd8xg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    banner:
-      'https://s3-alpha-sig.figma.com/img/1d42/1a4f/e7eb32eb24c1e40b63100bc17f00145c?Expires=1669593600&Signature=JzdsTVUFc7kxNFpgjvmZT3NRq3T4ipoEYZKvUrZwhg2o-TrlHP3oFXmp1cgYCslNEsn5dCb1hHO4rrLVldQPaEmYstcYtfRxeNsowBCjp22wC~Vuh~uJov-xDAcgByvRKEzS0PMbSTXCO6sjCAwCcI0jlgzIbSOaWlWT-T~wTgC1GsceLo0LliBO7XrmoMpnthUZBW9EoZ6w~D6WSvTbThF5LZPPy2aVsbyGi-3C2OVNVnEp0skd4nzv1L8B~fy~Syfjz4W5PQDqn-VvZwxUdPj3oiROflNFtrbpuQCD~KOWb3mq6d06wxloAwqyQrsTNzU8rWZ2r1W0dk79YRlU5w__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA',
-    category: '인생샷스팟',
-    show: 1,
-  },
-];
 
 function CommunityTipPage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<TipParamGetType>({
+    page: 0,
+    size: 10,
   });
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
-
+  const [rows, setRows] = useState<DataTableRowType<TipColumnType>[]>([]);
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
-  const communityTip = new CommunityTip(handleChangeInput);
+  const communityTip = new CommunityTip(handleChangeOpen);
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '여행팁 관리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+  useEffect(() => {
+    getTipList();
+  }, [request]);
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
-  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
-
-  const handleEditRow = (row: DataTableRowType<TipColumnType>) => {
-    if (!row.id) {
-      return;
+  async function handleChangeOpen(tipId: string, isOpen: string) {
+    const openYn = isOpen === 'T';
+    const response = await CommunityTipApi.putTipUpdateOpen({ tipId, openYn });
+    if (response.success) {
+      const newRows = [...rows];
+      newRows.map((row) => {
+        if (row.tipId === tipId) {
+          return { ...row, isOpen };
+        }
+        return row;
+      });
+      setRows(newRows);
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+  }
+
+  const getTipList = async () => {
+    const response = await CommunityTipApi.getCommunityTipList(request);
+    if (response.success) {
+      const { content, totalElements } = response.data;
+      setRows(content);
+      setTotal(totalElements);
+    }
   };
 
-  const handleCloseModal = () => setModal({ isOpen: false });
+  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
 
-  const handleDeleteRow = (row: DataTableRowType<TipColumnType>) => {
+  const handleEditRow = (data: DataTableRowType<TipColumnType>) => {
+    if (!data.tipId) return;
+
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      modifyData: data as TipPutType,
+    });
+  };
+
+  const handleCloseModal = () =>
+    setModal({ isOpen: false, modifyData: undefined });
+  const handleTipDelete = async (tipId: string) => {
+    try {
+      const response = await CommunityTipApi.deleteTip(tipId);
+      if (!response.success) return handleAlert('삭제 실패');
+      const newRequest = { ...request };
+      //삭제했을때 현재 페이지에 요소가 없고 첫번째 페이지가 아닐경우 페이지 -1
+      if (rows && rows.length - 1 === 0 && newRequest.page)
+        newRequest.page -= 1;
+
+      setRequest(newRequest);
+
+      handleAlert('삭제 성공');
+    } catch (e) {
+      handleAlert('삭제 실패');
+    }
+  };
+  const handleDeleteRow = (tipId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
         title: '여행팁',
@@ -101,11 +127,33 @@ function CommunityTipPage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('삭제 처리:', row);
+          handleTipDelete(tipId);
         },
       }),
     );
     openCustomModal();
+  };
+  const handleCreateTip = async (data: TipPostType) => {
+    try {
+      const response = await CommunityTipApi.postTip(data);
+      if (response) {
+        getTipList();
+        handleCloseModal();
+      }
+    } catch (e: any) {
+      handleAlert('생성 실패');
+    }
+  };
+  const handleModifyIip = async (data: TipPutType) => {
+    try {
+      const response = await CommunityTipApi.putTip(data);
+      if (response) {
+        getTipList();
+        handleCloseModal();
+      }
+    } catch (e: any) {
+      handleAlert('수정 실패');
+    }
   };
   return (
     <>
@@ -127,21 +175,20 @@ function CommunityTipPage() {
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
+              { value: 2, label: '카테고리' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
-            onClickSearch: () => console.log('검색'),
+            searchType: request.searchType,
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
+            onChangeSearchType: (searchType: number) =>
+              handleChangeInput('searchType', searchType),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
           }}
           createButton={{
             title: '여행팁 추가',
@@ -153,11 +200,11 @@ function CommunityTipPage() {
           columns={communityTip.TIP_COLUMNS}
           rows={rows}
           onEdit={handleEditRow}
-          onDelete={handleDeleteRow}
+          onDelete={({ tipId }) => handleDeleteRow(tipId as string)}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page || 0,
+            limit: request.size || 10,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -172,8 +219,11 @@ function CommunityTipPage() {
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
         targetId={modal.targetId}
+        modifyData={modal.modifyData}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={handleCreateTip}
+        onModify={handleModifyIip}
+        onOpenAlert={handleAlert}
       />
     </>
   );

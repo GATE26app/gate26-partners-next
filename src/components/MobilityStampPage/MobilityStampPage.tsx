@@ -126,7 +126,7 @@ const MobilityStamp = () => {
         handleCloseModal();
       }
     } catch (e: any) {
-      handleAlert('생성 실패');
+      handleAlert('수정 실패');
     }
   };
 
