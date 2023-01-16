@@ -127,6 +127,7 @@ export const imgPath = () => {
   }
 };
 
+// 이미지 path
 export const DEV = () => {
   // return '';
   return 'dev';
