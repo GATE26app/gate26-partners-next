@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Flex } from '@chakra-ui/react';
-
+import * as excel from 'xlsx';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
@@ -21,7 +21,13 @@ interface ReqLoungeProps {
 
 
 function UserReportPage() {
-
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '신고 목록.xlsx');
+  };
   const pageNumber = useRef(0);
   const setPage = (value: number) => {
     pageNumber.current = value;
@@ -125,8 +131,7 @@ function UserReportPage() {
           };
           setRows(row => [...row, obj])
         })
-        // setTotal(data.totalElements ? data.totalElements : 0);
-        setTotal(data.content.length ? data.content.length : 0);
+        setTotal(data.totalElements ? data.totalElements : 0);
       } else {
         setRows([]);
         console.log(message);
@@ -153,7 +158,7 @@ function UserReportPage() {
         <BreadCrumb depth={['이용자', '신고 조회']} />
         <PageTitle
           title="신고 조회"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 
