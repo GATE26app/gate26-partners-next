@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -42,7 +42,13 @@ interface AccountDetailModalProps extends Omit<ModalProps, 'type'> {
 }
 
 function AdminAccountPage() {
-
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '관리자 목록.xlsx');
+  };
   // 검색 구분
   const searchTypeList = [ 
     { value: 0, label: '전체' },
@@ -219,7 +225,7 @@ function AdminAccountPage() {
         <BreadCrumb depth={['관리자', '관리자 관리']} />
         <PageTitle
           title="관리자 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 

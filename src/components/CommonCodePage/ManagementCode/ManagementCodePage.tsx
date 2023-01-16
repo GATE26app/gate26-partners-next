@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex, useToast } from '@chakra-ui/react';
-
+import * as excel from 'xlsx';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -62,7 +62,13 @@ const ManagementCode = () => {
   const setKeyword = (value: string) => {keyword.current = value};
 
   const [rows, setRows]=useState<DataTableRowType<MenageCol>[]>([]);
-
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '공통 코드 목록.xlsx');
+  };
   const [total, setTotal] = useState<number>(100);
   const [lastPage, setLastPage] = useState<number>(0);
   const [request, setRequest] = useState<ReqLoungeProps>({
@@ -194,7 +200,7 @@ useEffect(() => {
         <BreadCrumb depth={['공통 코드', '코드 관리']} />
         <PageTitle
           title="코드 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
         <TableTop
