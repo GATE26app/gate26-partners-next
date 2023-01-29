@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as excel from 'xlsx';
+
 import { Flex } from '@chakra-ui/react';
 
 import CommunityTipApi from '@apis/communityTip/communityTipApi';
@@ -155,6 +157,14 @@ function CommunityTipPage() {
       handleAlert('수정 실패');
     }
   };
+
+  const handleExcelDown = () => {
+    if (!rows || !rows.length) return;
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '여행팁 목록.xlsx');
+  };
   return (
     <>
       <Head>
@@ -169,7 +179,7 @@ function CommunityTipPage() {
         <BreadCrumb depth={['커뮤니티', '여행팁 관리']} />
         <PageTitle
           title="여행팁 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={handleExcelDown}
           isDownload
         />
 
