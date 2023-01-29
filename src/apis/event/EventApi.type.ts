@@ -92,6 +92,7 @@ type EventParamGetType = {
 };
 type EventParticipantParamGetType = {
   eventId: string;
+  searchType?: number;
   keyword?: string;
   page?: number;
   size?: number;

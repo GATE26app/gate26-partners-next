@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import * as excel from 'xlsx';
+
 import {
   Flex,
   Modal,
@@ -46,21 +48,24 @@ const EventParticipantModal = ({
   const [total, setTotal] = useState<number>(100);
 
   useEffect(() => {
+    setRequest({ ...request, eventId: targetId });
+  }, [targetId]);
+
+  useEffect(() => {
+    if (!request.eventId) return;
     getParticipantList();
   }, [request]);
 
   const handleChangeInput = (key: string, value: string | number) => {
-    console.log(value);
     const newRequest = { ...request, [key]: value };
     if (key === 'size') {
       newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
-    console.log(newRequest);
     setRequest(newRequest);
   };
 
   const getParticipantList = async () => {
+    console.log('request', request);
     const res = await eventApi.getEventParticipantList(request);
     const { data, count, success } = res;
 
@@ -78,19 +83,17 @@ const EventParticipantModal = ({
           limit={request.size}
           search={{
             searchTypes: [
-              { value: 0, label: '유저이름' },
-              { value: 1, label: '성별' },
-              { value: 2, label: '나이' },
-              { value: 3, label: '이메일' },
+              { value: 1, label: '유저이름' },
+              { value: 2, label: '성별' },
+              { value: 3, label: '나이' },
+              { value: 4, label: '이메일' },
             ],
             keyword: '',
             onChangeLimit: (value: number) => handleChangeInput('size', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('searchType', type),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
             onClickSearch: () => console.log('검색'),
           }}
         />
@@ -115,9 +118,13 @@ const EventParticipantModal = ({
     );
   };
 
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId]);
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(user);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '이벤트 참가자 목록.xlsx');
+  };
 
   return (
     <Modal
@@ -137,7 +144,7 @@ const EventParticipantModal = ({
               size="sm"
               width="120px"
               text="내보내기"
-              onClick={() => console.log('내보내기')}
+              onClick={excelDown}
             />
           </Flex>
         </ModalHeader>

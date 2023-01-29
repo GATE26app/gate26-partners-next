@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Dayjs } from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -115,6 +116,15 @@ function PushManagePage() {
   useEffect(() => {
     getPushList();
   }, [request]);
+
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '공지사항 목록.xlsx');
+  };
+
   return (
     <>
       <Head>
@@ -129,7 +139,7 @@ function PushManagePage() {
         <BreadCrumb depth={['푸쉬알림 관리', '푸쉬알림 관리']} />
         <PageTitle
           title="푸쉬알림 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={excelDown}
           isDownload
         />
 

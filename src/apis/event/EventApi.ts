@@ -56,7 +56,7 @@ export class EventApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: '/event/list',
+      url: '/event/user/list',
       params,
     });
     return data;

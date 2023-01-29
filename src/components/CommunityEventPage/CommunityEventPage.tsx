@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Dayjs } from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -155,7 +156,13 @@ function CommunityEventPage() {
     );
     openCustomModal();
   };
-
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(list);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '이벤트 목록.xlsx');
+  };
   return (
     <>
       <Head>
@@ -168,11 +175,7 @@ function CommunityEventPage() {
         padding="20px"
       >
         <BreadCrumb depth={['커뮤니티', '이벤트 관리']} />
-        <PageTitle
-          title="이벤트 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
-          isDownload
-        />
+        <PageTitle title="이벤트 관리" onClickDownload={excelDown} isDownload />
 
         <TableTop
           total={total}
