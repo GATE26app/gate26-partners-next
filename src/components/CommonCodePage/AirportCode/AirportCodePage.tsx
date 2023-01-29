@@ -169,7 +169,7 @@ const MobilityStamp = () => {
     const ws = excel?.utils?.json_to_sheet(rows);
     const wb = excel?.utils?.book_new();
     excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '앱 버전 목록.xlsx');
+    excel?.writeFile(wb, '공항 코드 목룍.xlsx');
   };
 
   const handleDeleteRow = (row: DataTableRowType<AirPortCol>) => {
@@ -210,7 +210,7 @@ const MobilityStamp = () => {
         <BreadCrumb depth={['공통 코드', '공항 코드']} />
         <PageTitle
           title="공항 코드"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
         <TableTop
