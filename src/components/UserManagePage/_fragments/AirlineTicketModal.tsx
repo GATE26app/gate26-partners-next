@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as excel from 'xlsx';
+
 import {
   Flex,
   Modal,
@@ -28,7 +30,7 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
 
 interface AirlineTicketModalProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
@@ -133,6 +135,14 @@ const AirlineTicketModal = ({
     setRequest(newRequest);
     if (key === 'size' || key === 'page') getActivityHistory(newRequest);
   };
+
+  const handleExcelDown = () => {
+    if (!rows.length) return;
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '항공권 인증 내역.xlsx');
+  };
   const renderContent = () => {
     return (
       <div>
@@ -204,7 +214,7 @@ const AirlineTicketModal = ({
               size="sm"
               width="120px"
               text="내보내기"
-              onClick={() => console.log('내보내기')}
+              onClick={handleExcelDown}
             />
           </Flex>
         </ModalHeader>

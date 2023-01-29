@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as excel from 'xlsx';
+
 import {
   Flex,
   Modal,
@@ -150,7 +152,13 @@ const StamperyDialog = ({
       }
     }
   };
-
+  const handleExcelDown = () => {
+    if (!rows || !rows.length) return;
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '스탬프러리 목록.xlsx');
+  };
   const renderContent = () => {
     return (
       <div>
@@ -227,7 +235,7 @@ const StamperyDialog = ({
                 size="sm"
                 width="120px"
                 text="내보내기"
-                onClick={() => console.log('내보내기')}
+                onClick={handleExcelDown}
               />
             </Flex>
           </ModalHeader>

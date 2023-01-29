@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
+import * as excel from 'xlsx';
 
 import {
   Flex,
@@ -30,7 +31,7 @@ import {
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
-interface SearchParam extends Omit<SearchGetDTOType, 'userId'> { }
+interface SearchParam extends Omit<SearchGetDTOType, 'userId'> {}
 
 interface RetainedMileageModalProps extends Omit<ModalProps, 'children'> {
   targetId?: string;
@@ -136,6 +137,14 @@ const RetainedMileageModal = ({
     if (key === 'size' || key === 'page') getMileageHistory(newRequest);
   };
 
+  const handleExcelDown = () => {
+    if (!rows.length) return;
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '보유마일리지 목록.xlsx');
+  };
+
   const renderContent = () => {
     return (
       <div>
@@ -204,7 +213,7 @@ const RetainedMileageModal = ({
               size="sm"
               width="120px"
               text="내보내기"
-              onClick={() => console.log('내보내기')}
+              onClick={handleExcelDown}
             />
           </Flex>
         </ModalHeader>
