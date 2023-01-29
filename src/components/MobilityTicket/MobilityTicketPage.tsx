@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { min } from 'lodash';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -92,7 +93,13 @@ const MobilityTicketPage = () => {
     }
     setModal({ isOpen: true, type: 'atom', targetId: row.id as number });
   };
-
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '항공권 목록.xlsx');
+  };
   //거절
   const handleRefusal = (row: DataTableRowType<TiketCol>) => {
     if (!row.id) {
@@ -123,7 +130,7 @@ const MobilityTicketPage = () => {
         <BreadCrumb depth={['모빌리티', '항공권 인증']} />
         <PageTitle
           title="항공권 인증"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
         <TableTop
