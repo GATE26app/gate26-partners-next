@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { group } from 'console';
 import dayjs from 'dayjs';
 
 import {
@@ -12,7 +13,10 @@ import {
   ModalOverlay,
   ModalProps,
   Text,
+  useToast,
 } from '@chakra-ui/react';
+
+import airlineCodeApi from '@apis/airline/AirlineCodeApi';
 
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
@@ -27,55 +31,149 @@ import TextareaBox from '@components/common/Textarea';
 
 import { AirLineCol } from '../AirLineCode.data';
 
+const RadioGroups = [
+  {
+    value: '0',
+    label: '국내',
+  },
+  {
+    value: '1',
+    label: '국외',
+  },
+];
 interface ReqAirportKey {
-  nameKr: string;
-  nameEng: string;
-  iata: string;
-  icao: string;
-  airportUrl: string;
-  pageUrl: string;
-  selfUrl: string;
-  dutyUrl: string;
-  repNum: string;
-  korYn: string;
-  answer: string;
+  id?: string;
+  iata?: string;
+  icao?: string;
+  nameKr?: string;
+  nameEng?: string;
+  imageUrl?: string;
+  pageUrl?: string;
+  selfUrl?: string;
+  dutyUrl?: string;
+  repNum?: string;
+  korYn?: boolean;
+  answer?: boolean;
 }
-interface StampProps extends Omit<ModalProps, 'children'> {
+interface AirlineProps extends Omit<ModalProps, 'children'> {
   type?: string;
   targetId?: number;
   onComplete?: () => void;
 }
-const StampModal = ({
+const AirlineCodeModal = ({
   type,
   targetId,
   onClose,
   onComplete,
   ...props
-}: StampProps) => {
+}: AirlineProps) => {
+  const toast = useToast();
+
   const [request, setRequest] = useState<ReqAirportKey>({
-    nameKr: '',
-    nameEng: '',
+    id: '',
     iata: '',
     icao: '',
-    airportUrl: '',
+    nameKr: '',
+    nameEng: '',
+    imageUrl: '',
     pageUrl: '',
     selfUrl: '',
     dutyUrl: '',
     repNum: '',
-    korYn: '',
-    answer: '',
+    korYn: false,
+    answer: false,
   });
 
   const handleCreate = () => {
     if (onComplete) onComplete();
+    if (type === 'create') {
+      handleCreateCode();
+    } else {
+      handleModifyCode();
+    }
   };
+
+  const handleCreateCode = () => {
+    const body = {
+      airlineId: request.iata,
+      airlineCode: request.icao,
+      name: request.nameKr,
+      englishName: request.nameEng,
+      imageUrl: request.imageUrl,
+      homepageUrl: request.pageUrl,
+      selfCheckInUrl: request.selfUrl,
+      dutyFreeShopUrl: request.dutyUrl,
+      phoneNumber: request.repNum,
+      domestic: request.korYn,
+      useYn: request.answer,
+    };
+
+    airlineCodeApi
+      .postAddAirlineCode(body)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '생성 완료',
+          });
+        } else {
+          toast({
+            description: '생성 실패',
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          description: '생성 실패',
+        });
+      });
+  };
+
+  const handleModifyCode = () => {
+    const body = {
+      airlineCode: request.icao,
+      name: request.nameKr,
+      englishName: request.nameEng,
+      imageUrl: request.imageUrl,
+      homepageUrl: request.pageUrl,
+      selfCheckInUrl: request.selfUrl,
+      dutyFreeShopUrl: request.dutyUrl,
+      phoneNumber: request.repNum,
+      domestic: request.korYn,
+      useYn: request.answer,
+    };
+
+    airlineCodeApi
+      .putModifyAirlineCode(body, request.iata)
+      .then((response) => {
+        const { data, success } = response;
+        if (success) {
+          onClose();
+          toast({
+            description: '수정 완료',
+          });
+        } else {
+          toast({
+            description: '수정 실패',
+          });
+        }
+      })
+      .catch(() => {
+        toast({
+          description: '수정 실패',
+        });
+      });
+  };
+
   const handleCodeType = (e: any) => {
     setCodeType(e);
   };
+
   const [codeType, setCodeType] = useState<boolean>(false);
   const handleChangeInput = (
     key: AirLineCol,
-    value: string | number | dayjs.Dayjs,
+    value: string | number | boolean | dayjs.Dayjs,
   ) => {
     setRequest({ ...request, [key]: value });
   };
@@ -87,8 +185,8 @@ const StampModal = ({
           content={
             <InputBox
               placeholder="항공사명 (국문)"
-              defaultValue={request.nameEng}
-              onChange={(e) => handleChangeInput('nameEng', e.target.value)}
+              defaultValue={request.nameKr}
+              onChange={(e) => handleChangeInput('nameKr', e.target.value)}
             />
           }
         />
@@ -103,16 +201,20 @@ const StampModal = ({
             />
           }
         />
-        <ModalRow
-          title="IATA"
-          content={
-            <InputBox
-              placeholder="IATA"
-              defaultValue={request.iata}
-              onChange={(e) => handleChangeInput('iata', e.target.value)}
-            />
-          }
-        />
+        {type === 'create' ? (
+          <ModalRow
+            title="IATA"
+            content={
+              <InputBox
+                placeholder="IATA"
+                defaultValue={request.iata}
+                onChange={(e) => handleChangeInput('iata', e.target.value)}
+              />
+            }
+          />
+        ) : (
+          <></>
+        )}
         <ModalRow
           title="ICAO"
           content={
@@ -128,8 +230,8 @@ const StampModal = ({
           content={
             <InputBox
               placeholder="항공사 이미지 URL"
-              defaultValue={request.airportUrl}
-              onChange={(e) => handleChangeInput('airportUrl', e.target.value)}
+              defaultValue={request.imageUrl}
+              onChange={(e) => handleChangeInput('imageUrl', e.target.value)}
             />
           }
         />
@@ -175,22 +277,28 @@ const StampModal = ({
         />
         <ModalRow
           title="국내외여부"
-          content={<RadioButton group groupLabel={['국내', '국회']} />}
-        />
-        <ModalRow
-          title="대표번호"
           content={
-            <InputBox
-              placeholder="대표번호"
-              defaultValue={request.repNum}
-              onChange={(e) => handleChangeInput('repNum', e.target.value)}
+            <RadioButton
+              group
+              groupItems={RadioGroups}
+              onClick={(e) =>
+                e == 0
+                  ? handleChangeInput('korYn', true)
+                  : handleChangeInput('korYn', false)
+              }
             />
           }
         />
         <ModalRow
           title="사용 여부"
           content={
-            <CheckBox checked={codeType} onClick={() => setCodeType(!codeType)}>
+            <CheckBox
+              checked={request.answer}
+              onClick={() => {
+                setCodeType(!codeType);
+                handleChangeInput('answer', codeType);
+              }}
+            >
               {'사용'}
             </CheckBox>
           }
@@ -201,6 +309,35 @@ const StampModal = ({
 
   useEffect(() => {
     console.log('선택한 row :', targetId);
+    if (targetId !== undefined) {
+      airlineCodeApi
+        .getAirlineCode(targetId)
+        .then((response) => {
+          const { message, data, success } = response;
+          console.log(response);
+          if (success) {
+            setRequest({
+              id: data?.airlineId,
+              iata: data?.airlineId,
+              icao: data?.airlineCode,
+              nameKr: data?.name,
+              nameEng: data?.englishName,
+              imageUrl: data?.imageUrl,
+              pageUrl: data?.homepageUrl,
+              selfUrl: data?.selfCheckInUrl,
+              dutyUrl: data?.dutyFreeShopUrl,
+              repNum: data?.phoneNumber,
+              korYn: data?.domestic,
+              answer: data?.useYn,
+            });
+          } else {
+            console.log('항공사 코드 불러오기 실패');
+          }
+        })
+        .catch((err) => console.log('hihihiihi' + err));
+    } else {
+      setRequest({} as ReqAirportKey);
+    }
   }, [targetId, type]);
 
   useEffect(() => {
@@ -218,7 +355,7 @@ const StampModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {type === 'create' ? '코드 추가' : '코드 수정'}
+          {type === 'create' ? '공항사 코드 추가' : '공항사 코드 수정'}
         </ModalHeader>
 
         <ModalBody>{renderContent()}</ModalBody>
@@ -243,4 +380,4 @@ const StampModal = ({
   );
 };
 
-export default StampModal;
+export default AirlineCodeModal;

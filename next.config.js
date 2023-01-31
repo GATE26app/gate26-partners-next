@@ -25,8 +25,8 @@ module.exports = {
     return [
       {
         source: '/backoffice/:path*',
-        destination: 'http://localhost:40004/:path*',
-        //destination: 'http://dbackoffice.gate26.co.kr/:path*',
+        // destination: 'http://localhost:40004/:path*',
+        destination: 'http://dbackoffice.gate26.co.kr/:path*',
         permanent: false,
       },
     ];

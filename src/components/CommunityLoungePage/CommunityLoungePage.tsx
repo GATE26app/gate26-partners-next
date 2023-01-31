@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as excel from 'xlsx';
+
 import { Flex } from '@chakra-ui/react';
 
 import CommunityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
@@ -22,7 +24,14 @@ import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandl
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: string;
+  detail?: {
+    targetId: string;
+    title: string;
+    coverImg: string;
+    img: string;
+    displayOrder: number;
+    openYn: boolean;
+  };
 }
 
 function CommunityLoungePage() {
@@ -35,14 +44,15 @@ function CommunityLoungePage() {
   const [rows, setRows] = useState<DataTableRowType<LoungeColumnType>[]>([]);
   const [total, setTotal] = useState<number>(100);
   const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+  const [displayMax, setDisplayMax] = useState<number>(0);
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
     setRequest(newRequest);
   };
@@ -53,7 +63,18 @@ function CommunityLoungePage() {
     if (!row.tgId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.tgId as string });
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      detail: {
+        targetId: row.tgId as string,
+        title: row.loungeName as string,
+        coverImg: row.coverImg as string,
+        img: row.imagePath as string,
+        displayOrder: row.displayOrder as number,
+        openYn: row.isOpen === 'T' ? true : false,
+      },
+    });
   };
 
   const handleCloseModal = () => setModal({ isOpen: false });
@@ -84,6 +105,15 @@ function CommunityLoungePage() {
         const { data } = response;
         setTotal(data.totalElements);
         setRows(data.content);
+        getLoungeDisplayOrderMax();
+      }
+    });
+  };
+
+  const getLoungeDisplayOrderMax = () => {
+    CommunityLoungeApi.getDisplayOrderMax().then((count) => {
+      if (count > 0) {
+        setDisplayMax(count);
       }
     });
   };
@@ -91,6 +121,13 @@ function CommunityLoungePage() {
     getLoungeList();
   }, [request]);
 
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '라운지 목록.xlsx');
+  };
   return (
     <>
       <Head>
@@ -103,21 +140,19 @@ function CommunityLoungePage() {
         padding="20px"
       >
         <BreadCrumb depth={['커뮤니티', '라운지 관리']} />
-        <PageTitle
-          title="라운지 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
-          isDownload
-        />
+        <PageTitle title="라운지 관리" onClickDownload={excelDown} isDownload />
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '라운지명' },
             ],
+            searchType: request.searchType,
             keyword: request.keyword,
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('searchType', type),
             onChangeKeyword: (keyword: string) =>
@@ -152,9 +187,13 @@ function CommunityLoungePage() {
       <LoungeDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal.detail}
+        displayMax={displayMax}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => {
+          handleCloseModal();
+          getLoungeList();
+        }}
       />
     </>
   );

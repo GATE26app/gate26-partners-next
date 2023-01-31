@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
@@ -35,13 +35,28 @@ interface ReqLoungeProps {
 interface ModalProps {
   isOpen: boolean;
   type?: ModalType;
-  targetId?: number;
+  targetId?: number | string;
 }
 interface AccountDetailModalProps extends Omit<ModalProps, 'type'> {
   type?: 'create' | 'modify';
 }
 
 function AdminAccountPage() {
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '관리자 목록.xlsx');
+  };
+  // 검색 구분
+  const searchTypeList = [ 
+    { value: 0, label: '전체' },
+    { value: 1, label: 'ID' },
+    { value: 2, label: '이름' },
+    { value: 3, label: '이메일' },
+  ];
+
   // 데이터 타입 정의 
   const pageNumber = useRef(0);
   const setPage = (value: number) => {
@@ -51,7 +66,29 @@ function AdminAccountPage() {
   const pageSize = useRef(10);
   const setPageSize = (value: number) => {
     pageSize.current = value;
-  }
+  };
+
+  const searchType = useRef('');
+  const setSearchType = (value: number) => {
+    switch (value) {
+      case 1:
+        searchType.current = 'adminId'; // ID 검색
+        return;
+      case 2:
+        searchType.current = 'adminName'; // 이름 검색
+        return;
+      case 3:
+        searchType.current = 'adminEmail'; // 이메일 검색
+        return;
+      default:
+        searchType.current = ''; // 전체 검색
+        return;
+    }
+  };
+
+  const keyword = useRef('');
+  const setKeyword = (value: string) => {keyword.current = value};
+
   const [rows, setRows] = useState<DataTableRowType<AdminAccountColumnType>[]>([]);
 
   const [request, setRequest] = useState<ReqLoungeProps>({
@@ -65,28 +102,18 @@ function AdminAccountPage() {
   const [authModal, setAuthModal] = useState<ModalProps>({
     isOpen: false,
   });
+
   const userColumns = new AdminAccountColumns(handleAuthChangeModalOpen);
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
   
-
-  // // 전체 건수 API 불러오기 
-  const getAdminInfoAll = useCallback(() => {
-    adminAccountApi.getAdminAll().then((response) => {
-      const { success, data, message } = response;
-      if (data) {
-        setTotal(data.content.length);
-      } else {
-        console.log(message);
-      }
-    })
-  }, []);
-  
-  
   // // 페이징 API 불러오기 
-  const getAdminInfoPagin = useCallback(() => {
-    let params = { page: pageNumber.current, size: pageSize.current
-    
+  const getAdminInfoPaging = useCallback(() => {
+    let params = { 
+      page: pageNumber.current, 
+      size: pageSize.current,
+      keyword: keyword.current,
+      type: searchType.current
     };
     adminAccountApi.getAdminAccount(params).then((response) => {
           const { success, data, message } = response;
@@ -97,20 +124,34 @@ function AdminAccountPage() {
               const obj :DataTableRowType<AdminAccountColumnType> = { 'id': count++,
               'userId': iter.adminId, 
               'name': iter.adminName,'email': iter.adminEmail, 
-              'createdAt': iter.createdDate, 'useStatus': iter.useYn, 
-              'authority': iter.authId};
+              'createdAt': iter.createdDate, 'useStatus': iter.useYn
+              };
+              // 'authority': iter.authId};
               setRows(row => [...row, obj])
-            })
+            });
+            setTotal(data.totalElements);
           } else {
             console.log(message);
           }
         });
   },[]);
 
-  // // useEffect 최초 호출
+  // 어드민 삭제하기
+  const removeAdminInfo = useCallback((adminId: string) => {
+    adminAccountApi.removeAdminAccount(adminId).then((response) => {
+          const { success, data, message } = response;
+          if (success) {
+            console.log("삭제 성공");
+            
+          } else {
+            console.log(message);
+          }
+        });
+  },[]);
+
+  // useEffect 최초 호출
   useEffect(() => {
-    getAdminInfoAll();
-    getAdminInfoPagin();
+    getAdminInfoPaging();
   }, []);
 
   function handleChangeInput(key: string, value: string | number) {
@@ -121,9 +162,16 @@ function AdminAccountPage() {
       setPageSize(value as number);
     } else if(key === 'page'){
       setPage(value as number);
+    } else if (key === 'searchType') {
+      setPage(0);
+      setSearchType(value as  number);
+    } else if (key === 'keyword') {
+      console.log("키워드 바뀜");
+      setPage(0);
+      setKeyword(value as  string);
     }
     setRequest(newRequest);
-    getAdminInfoPagin();
+    getAdminInfoPaging();
   }
 
   function handleAuthChangeModalOpen(
@@ -142,11 +190,11 @@ function AdminAccountPage() {
     if (!row.userId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.userId as number });
+    setModal({ isOpen: true, type: 'modify', targetId: row.userId as number});
   };
 
   const handleCreateRow = () => {
-    setModal({ isOpen: true, type: 'create' });
+    setModal({ isOpen: true, type: 'create'});
   };
 
   const handleDeleteRow = (row: DataTableRowType<AdminAccountColumnType>) => {
@@ -157,7 +205,7 @@ function AdminAccountPage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('삭제 처리:', row);
+          removeAdminInfo(row.userId as string);
         },
       }),
     );
@@ -177,25 +225,21 @@ function AdminAccountPage() {
         <BreadCrumb depth={['관리자', '관리자 관리']} />
         <PageTitle
           title="관리자 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={() => excelDown()}
           isDownload
         />
 
         <TableTop
           total={total}
           search={{
-            searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '카테고리' },
-            ],
-            keyword: '',
+            searchTypes: searchTypeList,
+            keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {
-              console.log('타입');
+              handleChangeInput('searchType', type);
             },
             onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
+              handleChangeInput('keyword', keyword);
             },
             onClickSearch: () => console.log('검색'),
           }}
@@ -229,7 +273,7 @@ function AdminAccountPage() {
         type={modal.type}
         targetId={modal.targetId}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => handleCloseModal()}
       />
       <AuthChangeModal
         isOpen={authModal.isOpen}

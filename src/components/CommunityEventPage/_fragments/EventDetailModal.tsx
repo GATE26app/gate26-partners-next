@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
 
@@ -13,6 +14,12 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import eventApi from '@apis/event/EventApi';
+import { EventPostType } from '@apis/event/EventApi.type';
+import { PushLoungeListResponse } from '@apis/push/Push.type';
+import pushApi from '@apis/push/PushApi';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
+
 import Button from '@components/common/Button';
 import RadioButton from '@components/common/CustomRadioButton/RadioButton';
 import CustomSelect from '@components/common/CustomSelect';
@@ -22,48 +29,108 @@ import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
-interface ReqEventDetail {
-  title: string;
-  eventContent: string;
-  type: string;
-  start: dayjs.Dayjs;
-  end: dayjs.Dayjs;
-  banner: File | null;
-  home: File | null;
-  location: string;
-}
+import { RadioGroups, validRequest } from './EventDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+
 interface EventDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: number;
+  detail: {
+    targetId: string;
+    title: string;
+    content: string;
+    contentType: string;
+    startDate: dayjs.Dayjs;
+    endDate: dayjs.Dayjs;
+    img?: string;
+    bannerImg?: string;
+    loungeId?: string;
+  } | null;
+  targetId?: string;
   onComplete?: () => void;
 }
 const EventDetailModal = ({
+  isOpen,
   type,
-  targetId,
+  detail,
   onClose,
   onComplete,
   ...props
 }: EventDetailProps) => {
-  const [request, setRequest] = useState<ReqEventDetail>({
+  const [request, setRequest] = useState<EventPostType>({
     title: '',
-    eventContent: '',
-    type: '0',
-    start: dayjs('2022-09-21 09:00'),
-    end: dayjs('2022-09-21 09:00'),
-    banner: null,
-    home: null,
-    location: '',
+    content: '',
+    contentType: '0',
+    startDate: dayjs(),
+    endDate: dayjs(),
   });
+  const [url, setUrl] = useState({ imgUrl: '', bannerImgUrl: '' });
+  const [loungeList, setLoungeList] = useState<PushLoungeListResponse[]>([]);
 
-  const handleChangeInput = (
-    key: string,
-    value: string | number | dayjs.Dayjs,
-  ) => {
-    setRequest({ ...request, [key]: value });
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '이벤트',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
   };
 
   const handleCreate = () => {
-    if (onComplete) onComplete();
+    const contentType = RadioGroups.find(
+      (item) => item.value === request.contentType,
+    )?.label;
+    if (!contentType) return;
+
+    const newRequest = { ...request, contentType };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    eventApi.postEvent(newRequest).then((response) => {
+      if (response && response.eventId) {
+        if (onComplete) onComplete();
+      }
+    });
+  };
+
+  const handleUpdate = () => {
+    const contentType = RadioGroups.find(
+      (item) => item.value === request.contentType,
+    )?.label;
+    if (!contentType) return;
+
+    const newRequest = {
+      ...request,
+      contentType,
+      deleteFile: url.imgUrl === '' && !request.img ? 'delete' : undefined,
+      deleteBannerFile:
+        url.bannerImgUrl === '' && !request.bannerImg ? 'delete' : undefined,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    eventApi.putEvent(newRequest).then((response) => {
+      if (response && response.success) {
+        if (onComplete) onComplete();
+      }
+    });
+  };
+
+  const handleChangeInput = (
+    key: string,
+    value: string | number | dayjs.Dayjs | File | null,
+  ) => {
+    setRequest({ ...request, [key]: value });
   };
 
   const renderContent = () => {
@@ -74,8 +141,9 @@ const EventDetailModal = ({
           content={
             <RadioButton
               group
-              groupLabel={['URL', 'IMAGE', 'TEXT']}
-              onClick={(idx) => handleChangeInput('type', idx)}
+              groupItems={RadioGroups}
+              value={request.contentType}
+              onClick={(value) => handleChangeInput('contentType', value)}
             />
           }
         />
@@ -92,36 +160,32 @@ const EventDetailModal = ({
         <ModalRow
           title="이벤트 내용"
           content={
-            request.type === '0' ? (
+            request.contentType === '0' ? (
               <InputBox
                 placeholder="http://"
-                defaultValue={request.eventContent}
-                onChange={(e) =>
-                  handleChangeInput('eventContent', e.target.value)
-                }
+                defaultValue={request.content}
+                onChange={(e) => handleChangeInput('content', e.target.value)}
               />
-            ) : request.type === '1' ? (
+            ) : request.contentType === '1' ? (
               <FileUpload />
             ) : (
               <TextareaBox
                 placeholder="이벤트 내용"
                 h={'300px'}
-                defaultValue={request.eventContent}
-                onChange={(e) =>
-                  handleChangeInput('eventContent', e.target.value)
-                }
+                defaultValue={request.content}
+                onChange={(e) => handleChangeInput('content', e.target.value)}
               />
             )
           }
-          height={request.type === '2' ? '300px' : undefined}
+          height={request.contentType === '2' ? '300px' : undefined}
         />
         <ModalRow
           title="시작일자"
           content={
             <DatePicker
               type="datetime"
-              curDate={request.start}
-              onApply={(val) => handleChangeInput('start', val)}
+              curDate={request.startDate}
+              onApply={(val) => handleChangeInput('startDate', val)}
             />
           }
         />
@@ -130,22 +194,43 @@ const EventDetailModal = ({
           content={
             <DatePicker
               type="datetime"
-              curDate={request.end}
-              onApply={(val) => handleChangeInput('end', val)}
+              curDate={request.endDate}
+              onApply={(val) => handleChangeInput('endDate', val)}
             />
           }
         />
-        <ModalRow title="배너 이미지" content={<FileUpload />} />
-        <ModalRow title="홈 이미지" content={<FileUpload />} />
+        <ModalRow
+          title="배너 이미지"
+          content={
+            <FileUpload
+              fileValue={url.bannerImgUrl}
+              onChange={(file) => handleChangeInput('bannerImg', file)}
+              onDelete={() => setUrl({ ...url, bannerImgUrl: '' })}
+            />
+          }
+        />
+        <ModalRow
+          title="홈 이미지"
+          content={
+            <FileUpload
+              fileValue={url.imgUrl}
+              onChange={(file) => handleChangeInput('img', file)}
+              onDelete={() => setUrl({ ...url, imgUrl: '' })}
+            />
+          }
+        />
         <ModalRow
           title="표시장소"
           content={
             <CustomSelect
               size="sm"
-              items={[]}
-              defaultValue={request.location}
+              items={loungeList.map((item) => ({
+                value: item.tgId,
+                label: item.loungeName,
+              }))}
+              defaultValue={request.loungeId}
               onChange={(value) =>
-                handleChangeInput('location', value as string)
+                handleChangeInput('loungeId', value as string)
               }
             />
           }
@@ -154,15 +239,63 @@ const EventDetailModal = ({
     );
   };
 
+  const resetData = () => {
+    setRequest({
+      title: '',
+      content: '',
+      contentType: '0',
+      startDate: dayjs(),
+      endDate: dayjs(),
+      loungeId: '',
+    });
+    setUrl({ imgUrl: '', bannerImgUrl: '' });
+  };
+
   useEffect(() => {
-    if (type !== 'modify') {
-      return;
+    if (type === 'modify') {
+      if (!detail) return;
+
+      const contentType = RadioGroups.find(
+        (item) => item.label === detail.contentType,
+      )?.value;
+      setRequest({
+        eventId: detail.targetId,
+        title: detail.title,
+        content: detail.content,
+        contentType: contentType ? contentType : '0',
+        startDate: dayjs(detail.startDate),
+        endDate: dayjs(detail.endDate),
+        loungeId: detail.loungeId,
+      });
+      setUrl({
+        imgUrl: detail.img ? detail.img : '',
+        bannerImgUrl: detail.bannerImg ? detail.bannerImg : '',
+      });
+    } else {
+      resetData();
     }
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
+  }, [detail, type]);
+
+  useEffect(() => {
+    if (!isOpen) resetData();
+  }, [isOpen]);
+
+  useEffect(() => {
+    pushApi.getPushLoungeList().then((response) => {
+      if (response.success) {
+        setLoungeList(response.data);
+      }
+    });
+  }, []);
 
   return (
-    <Modal isCentered variant={'simple'} onClose={onClose} {...props}>
+    <Modal
+      isOpen={isOpen}
+      isCentered
+      variant={'simple'}
+      onClose={onClose}
+      {...props}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -182,7 +315,7 @@ const EventDetailModal = ({
             text={type === 'create' ? '추가' : '수정'}
             size={'sm'}
             width={'120px'}
-            onClick={handleCreate}
+            onClick={type === 'create' ? handleCreate : handleUpdate}
           />
         </ModalFooter>
       </ModalContent>

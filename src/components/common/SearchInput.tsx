@@ -10,7 +10,7 @@ interface SearchInputProps {
   placeholder?: string;
   text: string;
   onChange: (text: string) => void;
-  onSearch: () => void;
+  onSearch?: () => void;
   InputProps?: InputProps;
 }
 const SearchInput = ({
@@ -35,7 +35,7 @@ const SearchInput = ({
         autoComplete="off"
         {...InputProps}
       />
-      <InputRightElement h={'100%'} onClick={onSearch}>
+      <InputRightElement h={'100%'} onClick={onSearch} cursor="pointer">
         <SearchIcon strokeColor={Light.gray[500]} />
       </InputRightElement>
     </InputGroup>

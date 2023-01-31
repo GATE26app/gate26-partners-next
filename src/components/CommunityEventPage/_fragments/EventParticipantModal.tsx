@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import * as excel from 'xlsx';
+
 import {
   Flex,
   Modal,
@@ -11,6 +13,8 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import eventApi from '@apis/event/EventApi';
+
 import Button from '@components/common/Button';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import IconButton from '@components/common/IconButton';
@@ -21,51 +25,54 @@ import {
   ParticipantColumnType,
 } from './EventParticipantModal.data';
 
-const rows: DataTableRowType<ParticipantColumnType>[] = [
-  {
-    id: 1,
-    name: '김이륙',
-    gender: '남',
-    age: 45,
-    email: 'gate26@toktokhan.dev',
-  },
-  {
-    id: 2,
-    name: '박이륙',
-    gender: '여',
-    age: 21,
-    email: 'gate26@toktokhan.dev',
-  },
-  {
-    id: 3,
-    name: '이이륙',
-    gender: '여',
-    age: 18,
-    email: 'gate26@toktokhan.dev',
-  },
-];
-
 interface EventParticipantModalProps extends Omit<ModalProps, 'children'> {
-  targetId?: number;
+  targetId: string;
 }
+const SEARCH_TYPE = [1, 2, 3, 4];
+
 const EventParticipantModal = ({
   targetId,
   onClose,
   ...props
 }: EventParticipantModalProps) => {
   const [request, setRequest] = useState({
-    page: 1,
-    limit: 10,
+    eventId: targetId,
+    searchType: SEARCH_TYPE[0],
+    keyword: '',
+    page: 0,
+    size: 10,
   });
+  const [user, setUser] = useState<DataTableRowType<ParticipantColumnType>[]>(
+    [],
+  );
   const [total, setTotal] = useState<number>(100);
+
+  useEffect(() => {
+    setRequest({ ...request, eventId: targetId });
+  }, [targetId]);
+
+  useEffect(() => {
+    if (!request.eventId) return;
+    getParticipantList();
+  }, [request]);
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
+  };
+
+  const getParticipantList = async () => {
+    console.log('request', request);
+    const res = await eventApi.getEventParticipantList(request);
+    const { data, count, success } = res;
+
+    if (success) {
+      setTotal(count);
+      setUser(data.content);
+    }
   };
 
   const renderContent = () => {
@@ -73,26 +80,31 @@ const EventParticipantModal = ({
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
-            searchTypes: [{ value: 0, label: '전체' }],
+            searchTypes: [
+              { value: 1, label: '유저이름' },
+              { value: 2, label: '성별' },
+              { value: 3, label: '나이' },
+              { value: 4, label: '이메일' },
+            ],
             keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('searchType', type),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
             onClickSearch: () => console.log('검색'),
           }}
         />
         <DataTable
           variant={'gray'}
           columns={PARTICIPANT_COLUMNS}
-          rows={rows}
+          rows={user}
+          maxH="270px"
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -106,9 +118,13 @@ const EventParticipantModal = ({
     );
   };
 
-  useEffect(() => {
-    console.log('선택한 row :', targetId);
-  }, [targetId]);
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(user);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '이벤트 참가자 목록.xlsx');
+  };
 
   return (
     <Modal
@@ -128,7 +144,7 @@ const EventParticipantModal = ({
               size="sm"
               width="120px"
               text="내보내기"
-              onClick={() => console.log('내보내기')}
+              onClick={excelDown}
             />
           </Flex>
         </ModalHeader>

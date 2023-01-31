@@ -11,7 +11,7 @@ export type AirLineCol =
   | 'nameEng'
   | 'iata'
   | 'icao'
-  | 'airportUrl'
+  | 'imageUrl'
   | 'pageUrl'
   | 'selfUrl'
   | 'dutyUrl'
@@ -20,14 +20,14 @@ export type AirLineCol =
   | 'answer';
 
 class AirLineCode {
-  onChange?: (key: string, value: string | number) => void;
+  onChange?: (key: string, value: string | number | boolean) => void;
 
-  constructor(event: (key: string, value: string | number) => void) {
+  constructor(event: (key: string, value: string | number | boolean) => void) {
     if (event) {
       this.onChange = event;
     }
   }
-  readonly TIP_COLUMNS: DataTableColumnType<AirLineCol>[] = [
+  readonly STAMP_COLUMNS: DataTableColumnType<AirLineCol>[] = [
     {
       key: 'nameKr',
       name: '항공사명 (국문)',
@@ -50,7 +50,7 @@ class AirLineCode {
       width: '4.1%',
     },
     {
-      key: 'airportUrl',
+      key: 'imageUrl',
       name: '항공사 이미지 URL',
       width: '11.25%',
     },

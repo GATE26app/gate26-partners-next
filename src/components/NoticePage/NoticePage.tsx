@@ -2,6 +2,9 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { Dayjs } from 'dayjs';
+import * as excel from 'xlsx';
+
 import { Flex } from '@chakra-ui/react';
 
 import noticeApi from '@apis/notice/NoticeApi';
@@ -23,13 +26,17 @@ interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
   targetId?: string;
+  title?: string;
+  content?: string;
+  startDate?: Dayjs;
+  expiredDate?: Dayjs;
 }
 
 const SEARCH_TYPE = ['ALL', 'TITLE', 'CONTENT'];
 
 function NoticePage() {
   const [request, setRequest] = useState<NoticeParamGetType>({
-    page: 1,
+    page: 0,
     limit: 10,
     search: '',
     filter: SEARCH_TYPE[0],
@@ -44,9 +51,8 @@ function NoticePage() {
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
     if (key === 'limit') {
-      newRequest.page = 1;
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
@@ -60,6 +66,10 @@ function NoticePage() {
       isOpen: true,
       type: 'modify',
       targetId: row.noticeId as string,
+      title: row.title as string,
+      content: row.content as string,
+      startDate: row.startDate as Dayjs,
+      expiredDate: row.expiredDate as Dayjs,
     });
   };
 
@@ -73,10 +83,8 @@ function NoticePage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: async () => {
-          const response = await noticeApi.deleteNotice(row.noticeId as string);
-          if (response.success) {
-            console.log('삭제 처리:', row);
-          }
+          await noticeApi.deleteNotice(row.noticeId as string);
+          getNoticeList();
         },
       }),
     );
@@ -95,6 +103,14 @@ function NoticePage() {
     getNoticeList();
   }, [request]);
 
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '공지사항 목록.xlsx');
+  };
+
   return (
     <>
       <Head>
@@ -107,21 +123,19 @@ function NoticePage() {
         padding="20px"
       >
         <BreadCrumb depth={['공지사항']} />
-        <PageTitle
-          title="공지사항"
-          onClickDownload={() => console.log('다운로드 클릭')}
-          isDownload
-        />
+        <PageTitle title="공지사항" onClickDownload={excelDown} isDownload />
 
         <TableTop
           total={total}
+          limit={request.limit}
           search={{
             searchTypes: [
               { value: 0, label: '전체' },
               { value: 1, label: '제목' },
               { value: 2, label: '내용' },
             ],
-            keyword: '',
+            searchType: SEARCH_TYPE.indexOf(request.filter),
+            keyword: request.search,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('filter', SEARCH_TYPE[type]),
@@ -157,9 +171,12 @@ function NoticePage() {
       <NoticeDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal}
         onClose={handleCloseModal}
-        onComplete={getNoticeList}
+        onComplete={() => {
+          handleCloseModal();
+          getNoticeList();
+        }}
       />
     </>
   );

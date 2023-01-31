@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as excel from 'xlsx';
+
 import {
   Flex,
   Modal,
@@ -13,7 +15,10 @@ import {
 } from '@chakra-ui/react';
 
 import memberManageApi from '@apis/membermanage/MemberManage';
-import { SearchGetDTOType } from '@apis/membermanage/MemberManage.type';
+import {
+  SearchGetDTOType,
+  StampHistoryCreateDTOType,
+} from '@apis/membermanage/MemberManage.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
@@ -55,6 +60,18 @@ const StamperyDialog = ({
     if (isOpen && targetId) getStampHistory(request);
   }, [targetId, isOpen]);
 
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '스탬프러리',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
   const handleOpenDialog = (tgId: string) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -81,22 +98,22 @@ const StamperyDialog = ({
             newRequest.page -= 1;
 
           getStampHistory(newRequest);
-          alert('삭제 성공');
+          handleAlert('삭제 성공');
         } else {
-          alert('삭제 실패');
+          handleAlert('삭제 실패');
         }
       })
       .catch(() => {
-        alert('삭제 실패');
+        handleAlert('삭제 실패');
       });
   };
 
   const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') newRequest.page = 0;
+    if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'limit' || key === 'page') getStampHistory(newRequest);
+    if (key === 'size' || key === 'page') getStampHistory(newRequest);
   };
 
   const getStampHistory = (param: SearchParam) => {
@@ -118,13 +135,36 @@ const StamperyDialog = ({
 
   const handleModalClose = () => {
     setIsAddDialogOpen(false);
+    getStampHistory(request);
   };
 
+  const handleCreate = async (stampId: string) => {
+    if (targetId) {
+      const param: StampHistoryCreateDTOType = {
+        userId: targetId,
+        stampId,
+      };
+
+      const response = await memberManageApi.postStampHistory(param);
+      if (response.success) {
+        getStampHistory(request);
+        handleModalClose();
+      }
+    }
+  };
+  const handleExcelDown = () => {
+    if (!rows || !rows.length) return;
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '스탬프러리 목록.xlsx');
+  };
   const renderContent = () => {
     return (
       <div>
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
               { value: 1, label: '전체' },
@@ -132,8 +172,9 @@ const StamperyDialog = ({
               { value: 3, label: '스탬프러리 명 ' },
             ],
             keyword: request.keyword,
+            searchType: request.searchType,
             onChangeLimit: (value: number) => {
-              handleChangeInput('limit', value);
+              handleChangeInput('size', value);
             },
             onChangeSearchType: (value: number) => {
               handleChangeInput('searchType', value);
@@ -152,6 +193,7 @@ const StamperyDialog = ({
           }}
         />
         <DataTable
+          maxH="260px"
           variant={'gray'}
           columns={STAMPERY_COLUMNS}
           rows={rows}
@@ -193,7 +235,7 @@ const StamperyDialog = ({
                 size="sm"
                 width="120px"
                 text="내보내기"
-                onClick={() => console.log('내보내기')}
+                onClick={handleExcelDown}
               />
             </Flex>
           </ModalHeader>
@@ -216,7 +258,11 @@ const StamperyDialog = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <StamperyAddDialog isOpen={isAddDialogOpen} onClose={handleModalClose} />
+      <StamperyAddDialog
+        isOpen={isAddDialogOpen}
+        onClose={handleModalClose}
+        handleCreate={handleCreate}
+      />
     </>
   );
 };

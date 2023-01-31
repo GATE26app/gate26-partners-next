@@ -4,6 +4,8 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
+import { imgPath } from '@utils/format';
+
 import axios from 'apis/_axios/instance';
 
 export type LoungeColumnType =
@@ -26,7 +28,8 @@ export const LOUNGE_COLUMNS: DataTableColumnType<LoungeColumnType>[] = [
     width: '28.3%',
     render: (value: DataTableRowType<LoungeColumnType>) => (
       <RoundImage
-        src={`${axios.defaults.baseURL}${value.coverImg as string}`}
+        src={`${imgPath()}${value.coverImg as string}`}
+        // src={`${axios.defaults.baseURL}${value.coverImg as string}`}
         width={'187px'}
         height="100px"
       />
@@ -38,7 +41,7 @@ export const LOUNGE_COLUMNS: DataTableColumnType<LoungeColumnType>[] = [
     width: '26.6%',
     render: (value: DataTableRowType<LoungeColumnType>) => (
       <RoundImage
-        src={`${axios.defaults.baseURL}${value.imagePath as string}`}
+        src={`${imgPath()}${value.imagePath as string}`}
         width={'94px'}
         height="100px"
       />

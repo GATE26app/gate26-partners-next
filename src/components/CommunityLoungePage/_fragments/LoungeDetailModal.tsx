@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Flex,
@@ -11,6 +12,10 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import CommunityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
+import { CommunityLoungePostType } from '@apis/communityLounge/CommunityLoungeApi.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
+
 import Button from '@components/common/Button';
 import CheckBox from '@components/common/CheckBox';
 import CustomSelect from '@components/common/CustomSelect';
@@ -18,39 +23,92 @@ import FileUpload from '@components/common/FileUpload/FileUpload';
 import InputBox from '@components/common/Input';
 import ModalRow from '@components/common/ModalRow';
 
-interface ReqLoungeDetail {
-  title: string;
-  banner: File | null;
-  home: File | null;
-  order: string;
-  enable: boolean;
-}
+import { validRequest } from './LoungeDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+
 interface LoungeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: string;
+  detail?: {
+    targetId: string;
+    title: string;
+    coverImg: string;
+    img: string;
+    displayOrder: number;
+    openYn: boolean;
+  };
+  displayMax: number;
   onComplete?: () => void;
 }
 const LoungeDetailModal = ({
   type,
-  targetId,
+  detail,
+  displayMax,
   onClose,
   onComplete,
   ...props
 }: LoungeDetailProps) => {
-  const [request, setRequest] = useState<ReqLoungeDetail>({
+  const [request, setRequest] = useState<CommunityLoungePostType>({
     title: '',
-    banner: null,
-    home: null,
-    order: '0',
-    enable: false,
+    displayOrder: detail?.displayOrder ? detail?.displayOrder : 0,
+    openYn: false,
   });
-  const handleChangeInput = (key: string, value: string | number | boolean) => {
+  const [url, setUrl] = useState({ imgUrl: '', coverImgUrl: '' });
+
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '라운지',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
+  const handleCreate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    const response = await CommunityLoungeApi.postCommunityLounge(request);
+    if (response.tgId) {
+      if (onComplete) onComplete();
+    }
+  };
+
+  const handleUpdate = async () => {
+    const newRequest = {
+      ...request,
+      deleteFile: url.imgUrl === '' && !request.img ? 'delete' : undefined,
+      deleteCoverFile:
+        url.coverImgUrl === '' && !request.coverImg ? 'delete' : undefined,
+    };
+    const valid = validRequest(newRequest);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    const response = await CommunityLoungeApi.putCommunityLounge(newRequest);
+    if (response.tgId) {
+      if (onComplete) onComplete();
+    }
+  };
+
+  const handleChangeInput = (
+    key: string,
+    value: string | number | boolean | File | null,
+  ) => {
     setRequest({ ...request, [key]: value });
   };
-  const handleCreate = () => {
-    if (onComplete) onComplete();
-  };
+
   const renderContent = () => {
+    console.log(request);
     return (
       <Flex direction={'column'} rowGap={'15px'}>
         <ModalRow
@@ -58,21 +116,47 @@ const LoungeDetailModal = ({
           content={
             <InputBox
               placeholder="라운지명"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
         />
-        <ModalRow title="배너 이미지" content={<FileUpload />} />
-        <ModalRow title="홈 이미지" content={<FileUpload />} />
+        <ModalRow
+          title="배너 이미지"
+          content={
+            <FileUpload
+              fileValue={url.coverImgUrl}
+              onChange={(file) => handleChangeInput('coverImg', file)}
+              onDelete={() => setUrl({ ...url, coverImgUrl: '' })}
+            />
+          }
+        />
+        <ModalRow
+          title="홈 이미지"
+          content={
+            <FileUpload
+              fileValue={url.imgUrl}
+              onChange={(file) => handleChangeInput('img', file)}
+              onDelete={() => setUrl({ ...url, imgUrl: '' })}
+            />
+          }
+        />
         <ModalRow
           title="라운지 노출 순서"
           content={
             <CustomSelect
               size="sm"
-              items={[]}
-              defaultValue={request.order}
-              onChange={(value) => handleChangeInput('order', value as string)}
+              items={
+                displayMax > 0
+                  ? Array.from({ length: displayMax }, (_, idx) => {
+                      return { value: idx + 1, label: String(idx + 1) };
+                    })
+                  : []
+              }
+              defaultValue={request.displayOrder}
+              onChange={(value) =>
+                handleChangeInput('displayOrder', value as string)
+              }
             />
           }
         />
@@ -80,8 +164,8 @@ const LoungeDetailModal = ({
           title="활성화 여부"
           content={
             <CheckBox
-              checked={request.enable}
-              onClick={() => handleChangeInput('enable', !request.enable)}
+              checked={request.openYn}
+              onClick={() => handleChangeInput('openYn', !request.openYn)}
             />
           }
         ></ModalRow>
@@ -89,12 +173,28 @@ const LoungeDetailModal = ({
     );
   };
 
+  const resetData = () => {
+    setRequest({
+      title: '',
+      displayOrder: 0,
+      openYn: false,
+    });
+    setUrl({ imgUrl: '', coverImgUrl: '' });
+  };
+
   useEffect(() => {
-    if (type !== 'modify') {
-      return;
+    if (type === 'modify') {
+      if (!detail) return;
+      const { targetId: loungeId, title, displayOrder, openYn } = detail;
+      setRequest({ loungeId, title, displayOrder, openYn });
+      setUrl({
+        imgUrl: detail.img ? detail.img : '',
+        coverImgUrl: detail.coverImg ? detail.coverImg : '',
+      });
+    } else {
+      resetData();
     }
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
+  }, [detail]);
 
   return (
     <Modal isCentered variant={'simple'} onClose={onClose} {...props}>
@@ -117,7 +217,7 @@ const LoungeDetailModal = ({
             text="추가"
             size={'sm'}
             width={'120px'}
-            onClick={handleCreate}
+            onClick={type === 'create' ? handleCreate : handleUpdate}
           />
         </ModalFooter>
       </ModalContent>

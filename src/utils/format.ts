@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 export const intComma = (x: number | string) => {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -55,6 +55,18 @@ export const formatDateTime = (d: any) => {
   )} ${hour}:${`0${min}`.slice(-2)}`;
 };
 
+export const formatDateTimeDash = (d: Dayjs) => {
+  const date = d.toDate();
+  const day = `0${date.getDate()}`.slice(-2);
+  const month = `0${date.getMonth() + 1}`.slice(-2);
+  const year = date.getFullYear();
+  const hour = `0${date.getHours()}`.slice(-2);
+  const min = `0${date.getMinutes()}`.slice(-2);
+  const second = `0${date.getSeconds()}`.slice(-2);
+
+  return `${year}-${month}-${day} ${hour}:${min}:${second}`;
+};
+
 export const getDays = (d: any) => {
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   let date = null;
@@ -105,4 +117,18 @@ export const formatExamTime = (SECONDS: number) => {
     return `${minutes}분 ${seconds}초`;
   }
   return `${seconds}초`;
+};
+
+export const imgPath = () => {
+  if (DEV() === 'dev') {
+    return `http://dresource.gate26.co.kr/img/downloadFile?filePath=`;
+  } else {
+    return `https://resource.gate26.co.kr/img/downloadFile?filePath=`;
+  }
+};
+
+// 이미지 path
+export const DEV = () => {
+  // return '';
+  return 'dev';
 };

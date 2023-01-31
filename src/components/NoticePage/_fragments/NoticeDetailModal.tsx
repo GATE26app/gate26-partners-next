@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import {
   Flex,
@@ -15,6 +16,7 @@ import {
 
 import NoticeApi from '@apis/notice/NoticeApi';
 import { NoticeDTOType } from '@apis/notice/NoticeApi.type';
+import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import Button from '@components/common/Button';
 import DatePicker from '@components/common/DatePicker';
@@ -23,28 +25,69 @@ import ModalRow from '@components/common/ModalRow';
 import TextareaBox from '@components/common/Textarea';
 
 import { NoticeColumnType } from '../NoticePage.data';
+import { validRequest } from './NoticeDetailModal.data';
+
+import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface NoticeDetailProps extends Omit<ModalProps, 'children'> {
   type?: 'create' | 'modify';
-  targetId?: string;
+  detail: {
+    targetId?: string;
+    title?: string;
+    content?: string;
+    startDate?: Dayjs;
+    expiredDate?: Dayjs;
+  };
+
   onComplete?: () => void;
 }
 const NoticeDetailModal = ({
   type,
-  targetId,
+  detail,
   onClose,
   onComplete,
   ...props
 }: NoticeDetailProps) => {
   const [request, setRequest] = useState<NoticeDTOType>({
-    noticeId: targetId ? targetId : undefined,
+    noticeId: '',
     title: '',
     content: '',
-    startDate: dayjs('2022-09-21 09:00'),
-    expiredDate: dayjs('2022-09-21 09:00'),
+    startDate: dayjs(),
+    expiredDate: dayjs(),
   });
 
+  const dispatch = useDispatch();
+  const { openCustomModal } = useCustomModalHandlerContext();
+
+  const handleAlert = (message?: string) => {
+    if (!message) return;
+    dispatch(
+      customModalSliceAction.setMessage({
+        title: '공지사항',
+        message,
+        type: 'alert',
+      }),
+    );
+    openCustomModal();
+  };
+
+  useEffect(() => {
+    const request = {
+      noticeId: detail.targetId ? detail.targetId : undefined,
+      title: detail.title ? detail.title : '',
+      content: detail.content ? detail.content : '',
+      startDate: detail.startDate ? dayjs(detail.startDate) : dayjs(),
+      expiredDate: detail.expiredDate ? dayjs(detail.expiredDate) : dayjs(),
+    };
+    setRequest(request);
+  }, [detail]);
+
   const handleCreate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
     const response = await NoticeApi.postNotice(request);
     if (response.success) {
       if (onComplete) onComplete();
@@ -52,6 +95,12 @@ const NoticeDetailModal = ({
   };
 
   const handleUpdate = async () => {
+    const valid = validRequest(request);
+    if (!valid.success) {
+      handleAlert(valid.message);
+      return;
+    }
+    console.log(request);
     const response = await NoticeApi.putNotice(request);
     if (response.success) {
       if (onComplete) onComplete();
@@ -64,6 +113,7 @@ const NoticeDetailModal = ({
   ) => {
     setRequest({ ...request, [key]: value });
   };
+
   const renderContent = () => {
     return (
       <Flex direction={'column'} rowGap={'15px'}>
@@ -72,7 +122,7 @@ const NoticeDetailModal = ({
           content={
             <InputBox
               placeholder="제목"
-              defaultValue={request.title}
+              value={request.title}
               onChange={(e) => handleChangeInput('title', e.target.value)}
             />
           }
@@ -83,7 +133,7 @@ const NoticeDetailModal = ({
             <TextareaBox
               placeholder="내용"
               h={'300px'}
-              defaultValue={request.content}
+              value={request.content}
               onChange={(e) => handleChangeInput('content', e.target.value)}
             />
           }
@@ -114,16 +164,8 @@ const NoticeDetailModal = ({
   };
 
   useEffect(() => {
-    if (type !== 'modify') {
-      return;
-    }
-    console.log('선택한 row :', targetId);
-  }, [targetId, type]);
-
-  useEffect(() => {
-    console.log('업데이트 : ', request);
+    console.log(request);
   }, [request]);
-
   return (
     <Modal
       size={'md'}

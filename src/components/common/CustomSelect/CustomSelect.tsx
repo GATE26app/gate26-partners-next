@@ -33,6 +33,8 @@ const CustomSelect = ({
   ...props
 }: CustomSelectProps & ReactSelectProps) => {
   const theme = useTheme();
+  const id = (Math.random() * 7).toString(7);
+
   const handleChange = (e: any) => {
     if (onChange) {
       onChange(e.value);
@@ -46,6 +48,7 @@ const CustomSelect = ({
     >
       <StyledReactSelect
         className="select-container"
+        key={`${id}_${defaultValue}`}
         {...props}
         isDisabled={disabled}
         placeholder={placeholder}
@@ -57,7 +60,7 @@ const CustomSelect = ({
         options={items}
         defaultValue={
           defaultValue !== undefined
-            ? items.find((item) => item.value === defaultValue)
+            ? items.find((item) => item.value == defaultValue)
             : items[0]
         }
         size={size}
@@ -116,6 +119,10 @@ const StyledReactSelect = styled(Select)<StyledReactSelectProps>`
       border-width: ${(props) => (props.noBorder ? 0 : '1px')};
       &--menu-is-open {
         border-color: #ff5942;
+      }
+      &--is-disabled {
+        border-color: ${(props) => props.customTheme.colors.gray[500]};
+        background-color: ${(props) => props.customTheme.colors.gray[100]};
       }
       &:hover {
         border-color: #ff5942;

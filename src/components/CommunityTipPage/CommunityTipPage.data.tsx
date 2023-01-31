@@ -1,3 +1,5 @@
+import { Text } from '@chakra-ui/react';
+
 import CustomSelect from '@components/common/CustomSelect';
 import {
   DataTableColumnType,
@@ -5,18 +7,34 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
+import { imgPath } from '@utils/format';
+
+interface ICategoty {
+  [key: string]: string; // index signature 추가, key는 정해진 키워드가 아니며 변경 가능하다.
+}
+
+const categoryLabel: ICategoty = {
+  HOTPLACE: '핫플레이스',
+  FOOD: '로컬맛집',
+  TOUR: '투어/액티비티',
+  FLIGHT: '항공',
+  SHOPPING: '쇼핑템',
+  HOTEL: '숙소뷰',
+  OOTD: '여행룩',
+};
+
 export type TipColumnType =
-  | 'id'
-  | 'title'
-  | 'home'
-  | 'banner'
-  | 'show'
-  | 'category';
+  | 'tipId'
+  | 'tipTitle'
+  | 'homeImage'
+  | 'bannerImage'
+  | 'category'
+  | 'isOpen';
 
 class CommunityTip {
-  onChange?: (key: string, value: string | number) => void;
+  onChange?: (tipId: string, isOpen: string) => void;
 
-  constructor(event: (key: string, value: string | number) => void) {
+  constructor(event: (tipId: string, isOpen: string) => void) {
     if (event) {
       this.onChange = event;
     }
@@ -24,25 +42,29 @@ class CommunityTip {
 
   readonly TIP_COLUMNS: DataTableColumnType<TipColumnType>[] = [
     {
-      key: 'title',
+      key: 'tipTitle',
       name: '제목',
       width: '29.1%',
     },
     {
-      key: 'home',
+      key: 'homeImage',
       name: '홈 이미지',
       width: '25.4%',
       render: (value: DataTableRowType<TipColumnType>) => (
-        <RoundImage src={value.home as string} width={'264px'} height="100px" />
+        <RoundImage
+          src={`${imgPath()}${value.homeImage as string}`}
+          width={'264px'}
+          height="100px"
+        />
       ),
     },
     {
-      key: 'banner',
+      key: 'bannerImage',
       name: '배너 이미지',
       width: '15%',
       render: (value: DataTableRowType<TipColumnType>) => (
         <RoundImage
-          src={value.banner as string}
+          src={`${imgPath()}${value.bannerImage as string}`}
           width={'98px'}
           height="100px"
         />
@@ -53,9 +75,13 @@ class CommunityTip {
       key: 'category',
       name: '카테고리',
       width: '15%',
+      render: (value: DataTableRowType<TipColumnType>) => (
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        <Text>{categoryLabel[value.category! as string]}</Text>
+      ),
     },
     {
-      key: 'show',
+      key: 'isOpen',
       name: '노출여부',
       width: '9.4%',
       render: (value: DataTableRowType<TipColumnType>) => (
@@ -63,13 +89,15 @@ class CommunityTip {
           width={'65px'}
           size="sm"
           items={[
-            { value: 1, label: '노출' },
-            { value: 0, label: '비활성' },
+            { value: 'T', label: '노출' },
+            { value: 'F', label: '비활성' },
           ]}
-          defaultValue={value.show}
+          defaultValue={value.isOpen}
           noBorder
-          onChange={(value) =>
-            this.onChange ? this.onChange('show', value as number) : undefined
+          onChange={(isOpen) =>
+            this.onChange
+              ? this.onChange(value.tipId as string, isOpen as string)
+              : undefined
           }
         />
       ),

@@ -4,10 +4,17 @@ import {
 } from '@components/common/DataTable';
 import RoundImage from '@components/common/RoundImage';
 
-export type ChatColumnType = 'id' | 'title' | 'thumbnail' | 'location';
+import { imgPath } from '@utils/format';
+
+export type ChatColumnType =
+  | 'roomId'
+  | 'roomName'
+  | 'thumbnail'
+  | 'loungeName'
+  | 'loungeId';
 export const CHAT_COLUMNS: DataTableColumnType<ChatColumnType>[] = [
   {
-    key: 'title',
+    key: 'roomName',
     name: '채팅명',
     width: '28.3%',
   },
@@ -15,17 +22,20 @@ export const CHAT_COLUMNS: DataTableColumnType<ChatColumnType>[] = [
     key: 'thumbnail',
     name: '썸네일 사진',
     width: '34.1%',
-    render: (value: DataTableRowType<ChatColumnType>) => (
-      <RoundImage
-        src={value.thumbnail as string}
-        width={'50px'}
-        height={'50px'}
-        isCircle
-      />
-    ),
+    render: (value: DataTableRowType<ChatColumnType>) =>
+      value.thumbnail ? (
+        <RoundImage
+          src={`${imgPath()}${value.thumbnail as string}`}
+          width={'50px'}
+          height={'50px'}
+          isCircle
+        />
+      ) : (
+        <></>
+      ),
   },
   {
-    key: 'location',
+    key: 'loungeName',
     name: '라운지 위치',
     width: '31.6%',
   },

@@ -6,26 +6,31 @@ import {
 import RoundImage from '@components/common/RoundImage';
 import SmallButton from '@components/common/SmallButton';
 
+import { imgPath } from '@utils/format';
+
 export type EventColumnType =
-  | 'id'
+  | 'eventId'
   | 'title'
-  | 'event_content'
-  | 'type'
-  | 'start'
-  | 'end'
-  | 'main_img'
-  | 'banner'
-  | 'location'
-  | 'order'
-  | 'location';
+  | 'content'
+  | 'contentType'
+  | 'bannerImgPath'
+  | 'imgPath'
+  | 'seq'
+  | 'loungeId'
+  | 'loungeName'
+  | 'startDate'
+  | 'endDate'
+  | 'createdDate'
+  | 'modifiedDate'
+  | 'maxSeq';
 
 class CommunityEvent {
   onClick?: (row: DataTableRowType<EventColumnType>) => void;
-  onChange?: (key: string, value: string | number) => void;
-
+  onChange?: (key: string, value: string | number, id?: string) => void;
+  onChangeSeq?: (id: string, seq: number) => void;
   constructor(
     onClick: (row: DataTableRowType<EventColumnType>) => void,
-    onChange: (key: string, value: string | number) => void,
+    onChange: (key: string, value: string | number, id?: string) => void,
   ) {
     this.onClick = onClick;
     this.onChange = onChange;
@@ -39,21 +44,19 @@ class CommunityEvent {
       align: 'left',
     },
     {
-      key: 'event_content',
+      key: 'content',
       name: '이벤트 내용',
       width: '20%',
       align: 'left',
       render: (value: DataTableRowType<EventColumnType>) => {
-        if (value.type === 'URL' || value.type === 'TEXT') {
+        if (value.contentType === 'URL' || value.contentType === 'TEXT') {
           return (
-            <span style={{ whiteSpace: 'break-spaces' }}>
-              {value.event_content}
-            </span>
+            <span style={{ whiteSpace: 'break-spaces' }}>{value.content}</span>
           );
         } else {
           return (
             <RoundImage
-              src={value.event_content as string}
+              src={value.content as string}
               width={'124px'}
               height="100px"
             />
@@ -62,73 +65,81 @@ class CommunityEvent {
       },
     },
     {
-      key: 'type',
+      key: 'contentType',
       name: '타입',
       width: '5%',
     },
 
     {
-      key: 'start',
+      key: 'startDate',
       name: '시작일자',
       width: '7.5%',
     },
     {
-      key: 'end',
+      key: 'endDate',
       name: '종료일자',
       width: '7.5%',
     },
     {
-      key: 'banner',
+      key: 'bannerImgPath',
       name: '배너 이미지',
       width: '15%',
       render: (value: DataTableRowType<EventColumnType>) => (
         <RoundImage
-          src={value.banner as string}
+          src={value.bannerImgPath as string}
+          // src={`${imgPath()}${value.bannerImgPath as string}`}
           width={'158px'}
           height="100px"
         />
       ),
     },
     {
-      key: 'main_img',
+      key: 'imgPath',
       name: '메인 이미지',
       width: '12.5%',
       render: (value: DataTableRowType<EventColumnType>) => (
         <RoundImage
-          src={value.main_img as string}
+          src={value.imgPath as string}
           width={'124px'}
           height="100px"
         />
       ),
     },
     {
-      key: 'location',
+      key: 'loungeName',
       name: '표시 장소',
       width: '6.6%',
+      render: (value: DataTableRowType<EventColumnType>) => (
+        <span>{value.loungeId ? value.loungeName : '홈'}</span>
+      ),
     },
     {
-      key: 'order',
+      key: 'seq',
       name: '노출순서',
       width: '5.4%',
       render: (value: DataTableRowType<EventColumnType>) => (
         <CustomSelect
           width={'65px'}
           size="sm"
-          items={[
-            { value: 1, label: '1' },
-            { value: 2, label: '2' },
-            { value: 3, label: '3' },
-          ]}
-          defaultValue={value.order}
+          defaultValue={value.seq}
+          items={
+            value.maxSeq > 0
+              ? Array.from({ length: value.maxSeq as number }, (_, idx) => {
+                  return { value: idx + 1, label: String(idx + 1) };
+                })
+              : []
+          }
           noBorder
-          onChange={(value) =>
-            this.onChange ? this.onChange('order', value as number) : undefined
+          onChange={(seq) =>
+            this.onChange
+              ? this.onChange('seq', seq as number, value.eventId as string)
+              : undefined
           }
         />
       ),
     },
     {
-      key: 'list_btn',
+      key: 'eventId',
       name: '참가자 목록',
       width: '7%',
       render: (value: DataTableRowType<EventColumnType>) => (

@@ -1,23 +1,28 @@
-import { DataTableColumnType } from '@components/common/DataTable';
+import {
+  DataTableColumnType,
+  DataTableRowType,
+} from '@components/common/DataTable';
 
 export type AlarmColumnType =
-  | 'id'
-  | 'target'
-  | 'push_type'
+  | 'noticeId'
+  | 'type'
   | 'title'
   | 'content'
-  | 'reserve';
+  | 'noticeDate'
+  | 'chatRoomId'
+  | 'chatRoomName'
+  | 'loungeId'
+  | 'loungeName'
+  | 'imagePath';
 
 export const LIST_COLUMNS: DataTableColumnType<AlarmColumnType>[] = [
   {
-    key: 'target',
+    key: 'chatRoom',
     name: '푸쉬 대상',
     width: '10.8%',
-  },
-  {
-    key: 'push_type',
-    name: '푸쉬유형',
-    width: '14.1%',
+    render: (value: DataTableRowType<AlarmColumnType>) => (
+      <span>{value.chatRoomId ? value.chatRoomName : '전체'}</span>
+    ),
   },
   {
     key: 'title',
@@ -30,7 +35,7 @@ export const LIST_COLUMNS: DataTableColumnType<AlarmColumnType>[] = [
     width: '34.1%',
   },
   {
-    key: 'reserve',
+    key: 'noticeDate',
     name: '예약발송',
     width: '10%',
   },

@@ -1,11 +1,14 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
+import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
+import { PushParamGetType } from '@apis/push/Push.type';
+import pushApi from '@apis/push/PushApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -15,80 +18,74 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { AlarmColumnType, LIST_COLUMNS } from './PushManagePage.data';
-import NoticeDetailModal from './_fragments/PushDetailModal';
+import PushDetailModal from './_fragments/PushDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface ModalProps {
   isOpen: boolean;
   type?: 'create' | 'modify';
-  targetId?: number;
+  detail: {
+    targetId: string;
+    fcmType: string;
+    chatRoomId: string;
+    loungeId: string;
+    title: string;
+    content: string;
+    coverImg?: string;
+    noticeDate: Dayjs;
+  } | null;
 }
-
-interface ReqLoungeProps {
-  keyword?: string;
-  searchType?: number;
-  page: number;
-  limit: number;
-}
-
-const rows: DataTableRowType<AlarmColumnType>[] = [
-  {
-    id: 1,
-    target: '전체',
-    push_type: '모빌리티-공항정보',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 2,
-    target: '특정 채팅방',
-    push_type: '채팅_라운지',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-  {
-    id: 3,
-    target: '특정 채팅방',
-    push_type: '모빌리티_항공',
-    title: '제목',
-    content: '푸쉬내용',
-    reserve: dayjs('2022-10-22 09:00'),
-  },
-];
 
 function PushManagePage() {
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 1,
-    limit: 10,
+  const [request, setRequest] = useState<PushParamGetType>({
+    page: 0,
+    size: 10,
+    keyword: '',
+    searchType: 1,
   });
   const [total, setTotal] = useState<number>(100);
-  const [modal, setModal] = useState<ModalProps>({ isOpen: false });
+  const [rows, setRows] = useState<DataTableRowType<AlarmColumnType>[]>([]);
+  const [modal, setModal] = useState<ModalProps>({
+    isOpen: false,
+    detail: null,
+  });
 
   const dispatch = useDispatch();
   const { openCustomModal } = useCustomModalHandlerContext();
 
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };
-    if (key === 'limit') {
-      newRequest.page = 1;
+    if (key === 'size') {
+      newRequest.page = 0;
     }
-    console.log('변경: ', key, value);
     setRequest(newRequest);
   }
 
-  const handleCreateRow = () => setModal({ isOpen: true, type: 'create' });
+  const handleCreateRow = () =>
+    setModal({ isOpen: true, type: 'create', detail: null });
 
   const handleEditRow = (row: DataTableRowType<AlarmColumnType>) => {
-    if (!row.id) {
+    if (!row.noticeId) {
       return;
     }
-    setModal({ isOpen: true, type: 'modify', targetId: row.id as number });
+    setModal({
+      isOpen: true,
+      type: 'modify',
+      detail: {
+        targetId: row.noticeId as string,
+        fcmType: row.type as string,
+        loungeId: row.loungeId as string,
+        chatRoomId: row.chatRoomId as string,
+        noticeDate: row.noticeDate as Dayjs,
+        coverImg: row.imagePath ? (row.imagePath as string) : undefined,
+        title: row.title as string,
+        content: row.content as string,
+      },
+    });
   };
 
-  const handleCloseModal = () => setModal({ isOpen: false });
+  const handleCloseModal = () => setModal({ isOpen: false, detail: null });
 
   const handleDeleteRow = (row: DataTableRowType<AlarmColumnType>) => {
     dispatch(
@@ -98,12 +95,36 @@ function PushManagePage() {
         type: 'confirm',
         okButtonName: '삭제',
         cbOk: () => {
-          console.log('삭제 처리:', row);
+          pushApi.deletePush(row.noticeId as string).then((response) => {
+            if (response.success) getPushList();
+          });
         },
       }),
     );
     openCustomModal();
   };
+
+  const getPushList = async () => {
+    const response = await pushApi.getPushList(request);
+    if (response.success) {
+      const { data } = response;
+      setTotal(data.totalElements);
+      setRows(data.content);
+    }
+  };
+
+  useEffect(() => {
+    getPushList();
+  }, [request]);
+
+  const excelDown = () => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(rows);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '공지사항 목록.xlsx');
+  };
+
   return (
     <>
       <Head>
@@ -118,27 +139,26 @@ function PushManagePage() {
         <BreadCrumb depth={['푸쉬알림 관리', '푸쉬알림 관리']} />
         <PageTitle
           title="푸쉬알림 관리"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={excelDown}
           isDownload
         />
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: [
-              { value: 0, label: '전체' },
-              { value: 1, label: '푸쉬대상' },
-              { value: 1, label: '제목' },
-              { value: 1, label: '푸쉬내용' },
+              { value: 1, label: '전체' },
+              { value: 2, label: '제목' },
+              { value: 3, label: '푸쉬내용' },
             ],
-            keyword: '',
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
-            onChangeSearchType: (type: number) => {
-              console.log('타입');
-            },
-            onChangeKeyword: (keyword: string) => {
-              console.log('키워드');
-            },
+            searchType: request.searchType,
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
+            onChangeSearchType: (type: number) =>
+              handleChangeInput('searchType', type),
+            onChangeKeyword: (keyword: string) =>
+              handleChangeInput('keyword', keyword),
             onClickSearch: () => console.log('검색'),
           }}
           createButton={{
@@ -154,8 +174,8 @@ function PushManagePage() {
           onDelete={handleDeleteRow}
           isMenu
           paginationProps={{
-            currentPage: request.page,
-            limit: request.limit,
+            currentPage: request.page!,
+            limit: request.size!,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),
@@ -166,12 +186,15 @@ function PushManagePage() {
           }}
         />
       </Flex>
-      <NoticeDetailModal
+      <PushDetailModal
         isOpen={modal.isOpen && modal.type !== undefined}
         type={modal.type}
-        targetId={modal.targetId}
+        detail={modal.detail}
         onClose={handleCloseModal}
-        onComplete={() => console.log('데이터 생성 후 처리')}
+        onComplete={() => {
+          handleCloseModal();
+          getPushList();
+        }}
       />
     </>
   );

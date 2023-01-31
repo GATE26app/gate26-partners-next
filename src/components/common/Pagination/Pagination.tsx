@@ -18,6 +18,15 @@ function Pagination({
   onPreviousPageClicked,
   onNextPageClicked,
 }: PaginationProps) {
+  const handlePreviousClicked = (page: number) => {
+    if (page < 0) return;
+    onPreviousPageClicked(page);
+  };
+  const handleNextsClicked = (page: number) => {
+    const pagesLength = Math.ceil(total / limit);
+    if (pagesLength <= page) return;
+    onNextPageClicked(page);
+  };
   const renderNumbers = () => {
     const pagesLength = Math.ceil(total / limit);
 
@@ -63,7 +72,7 @@ function Pagination({
         className="page-button left"
         alignItems="center"
         justifyContent="center"
-        onClick={() => onPreviousPageClicked(currentPage - 1)}
+        onClick={() => handlePreviousClicked(currentPage - 1)}
       >
         <ArrowLeftIcon maxH="24px" maxW="24px" width="2em" height="2em" />
       </Flex>
@@ -74,7 +83,7 @@ function Pagination({
         className="page-button right"
         alignItems="center"
         justifyContent="center"
-        onClick={() => onNextPageClicked(currentPage + 1)}
+        onClick={() => handleNextsClicked(currentPage + 1)}
       >
         <ArrowRightIcon maxH="24px" maxW="24px" width="2em" height="2em" />
       </Flex>
@@ -84,6 +93,7 @@ function Pagination({
 
 const PageContainer = styled(Flex)`
   width: 100%;
+  padding: 21.5px 0;
   .page-item {
     width: 8px;
     height: 27px;
