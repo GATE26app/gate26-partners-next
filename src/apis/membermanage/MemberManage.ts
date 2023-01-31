@@ -32,7 +32,7 @@ export class MemberManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/users/all`,
+      url: `/users/all`,
       params,
     });
     return data;

@@ -25,7 +25,7 @@ export class UserReportApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/report/${category}?`,
+      url: `/report/${category}?`,
       params,
     });
     return data;

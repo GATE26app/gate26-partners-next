@@ -41,7 +41,7 @@ export class ManagementCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/common/codes/${codeId}`,
+      url: `/common/codes/${codeId}`,
     });
     return data;
   };

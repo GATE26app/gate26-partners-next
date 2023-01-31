@@ -24,7 +24,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/users/inquires`,
+      url: `/users/inquires`,
       params,
     });
     return data;
@@ -36,7 +36,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/users/inquires/${inquiryId}`,
+      url: `/users/inquires/${inquiryId}`,
     });
     return data;
   };
@@ -49,7 +49,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: '/backoffice/users/inquires',
+      url: '/users/inquires',
       data: body,
     });
     return data;

@@ -27,7 +27,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu`,
+      url: `/admin/menu`,
       params: params,
     });
     return data;
@@ -40,7 +40,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu/parents`,
+      url: `/admin/menu/parents`,
     });
     return data;
   };
@@ -52,7 +52,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu/${id}`,
+      url: `/admin/menu/${id}`,
     });
     return data;
   };
@@ -66,7 +66,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu`,
+      url: `/admin/menu`,
       data: body,
     });
     return data;
@@ -82,7 +82,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu/${id}`,
+      url: `/admin/menu/${id}`,
       data: body,
     });
     return data;
@@ -95,7 +95,7 @@ export class AdminMenuApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/menu/${id}`,
+      url: `/admin/menu/${id}`,
     });
     return data;
   };

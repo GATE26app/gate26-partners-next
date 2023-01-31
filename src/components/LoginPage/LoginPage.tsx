@@ -32,19 +32,8 @@ function LoginPage() {
       adminPwd: request.adminPwd,
     };
     // //TEST LOGIN
-    authApi.postTestLogin().then((response) => {
-      console.log(response);
-      if (response.success) {
-        if (response.data !== undefined) {
-          setToken(response.data?.accessToken);
-          setNickName(response.data?.adminName);
-          router.push('/user/list');
-        }
-      } else {
-        console.log('오류');
-      }
-    });
-    // authApi.postLogin(body).then((response) => {
+    // authApi.postTestLogin().then((response) => {
+    //   console.log(response);
     //   if (response.success) {
     //     if (response.data !== undefined) {
     //       setToken(response.data?.accessToken);
@@ -55,6 +44,17 @@ function LoginPage() {
     //     console.log('오류');
     //   }
     // });
+    authApi.postLogin(body).then((response) => {
+      if (response.success) {
+        if (response.data !== undefined) {
+          setToken(response.data?.accessToken);
+          setNickName(response.data?.adminName);
+          router.push('/user/list');
+        }
+      } else {
+        console.log('오류');
+      }
+    });
   };
   function handleChangeInput(key: string, value: string | number) {
     const newRequest = { ...request, [key]: value };

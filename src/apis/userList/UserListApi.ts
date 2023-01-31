@@ -19,7 +19,7 @@ export class UserListApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/users/active`,
+      url: `/users/active`,
       params,
     });
     return data;

@@ -78,7 +78,9 @@ function UserManagePage() {
     keyword.current = value;
   };
 
-  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>();
+  const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>(
+    [],
+  );
 
   // 페이지 세팅
   const [request, setRequest] = useState<ReqLoungeProps>({
@@ -109,8 +111,10 @@ function UserManagePage() {
       setPage(0);
       setPageSize(value as number);
     } else if (key === 'searchType') {
+      setPage(0);
       setSearchType(value as number);
     } else if (key === 'keyword') {
+      setPage(0);
       setKeyword(value as string);
     }
     setRequest(newRequest);
@@ -140,8 +144,8 @@ function UserManagePage() {
     const requestParams = {
       page: pageNumber.current,
       limit: pageSize.current,
-      keyword: '',
-      type: '',
+      keyword: keyword.current,
+      type: searchType.current,
     };
     setRequest(requestParams);
     memberManageApi

@@ -26,7 +26,7 @@ export class AppManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/app/version`,
+      url: `/app/version`,
       data: body,
     });
     return data;
@@ -41,7 +41,7 @@ export class AppManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/app/version`,
+      url: `/app/version`,
       params,
     });
     return data;
@@ -54,7 +54,7 @@ export class AppManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/app/version/${id}`,
+      url: `/app/version/${id}`,
     });
     return data;
   };
@@ -68,7 +68,7 @@ export class AppManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/app/version`,
+      url: `/app/version`,
       data: body,
     });
     return data;
@@ -81,7 +81,7 @@ export class AppManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/app/version/${id}`,
+      url: `/app/version/${id}`,
     });
     return data;
   };

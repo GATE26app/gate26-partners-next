@@ -24,7 +24,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin`,
+      url: `/admin`,
       params,
     });
     return data;
@@ -33,7 +33,7 @@ export class AdminAccountApi {
   getAdminAll = async (): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `/backoffice/admin?page=0&size=10000`,
+      url: `/admin?page=0&size=10000`,
     });
     return data;
   };
@@ -47,7 +47,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/${adminId}`,
+      url: `/admin/${adminId}`,
     });
     return data;
   };
@@ -61,7 +61,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/${body?.adminId}`,
+      url: `/admin/${body?.adminId}`,
       data: body,
     });
     return data;
@@ -76,7 +76,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin`,
+      url: `/admin`,
       data: body,
     });
     return data;
@@ -91,7 +91,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/backoffice/admin/${adminId}`,
+      url: `/admin/${adminId}`,
     });
     return data;
   };
