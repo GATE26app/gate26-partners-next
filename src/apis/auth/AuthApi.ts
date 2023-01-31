@@ -14,7 +14,7 @@ export class AuthApi {
   postLogin = async (body: LoginDTOType): Promise<LoginDTO> => {
     const { data } = await this.axios({
       method: 'POST',
-      url: `http://dbackoffice.gate26.co.kr/admin/login`,
+      url: `https://backoffice.gate26.co.kr/admin/login`,
       data: body,
     });
     return data;

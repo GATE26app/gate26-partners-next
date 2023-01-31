@@ -31,7 +31,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes?type=${type}&keyword=${codeName}`,
+      url: `/backoffice/common/codes?type=${type}&keyword=${codeName}`,
     });
     return data;
   };
@@ -47,7 +47,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airport`,
+      url: `/backoffice/common/codes/airport`,
       params,
     });
     return data;
@@ -60,7 +60,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airport/${code}`,
+      url: `/backoffice/common/codes/airport/${code}`,
     });
     return data;
   };
@@ -72,7 +72,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airport`,
+      url: `/backoffice/common/codes/airport`,
       data: body,
     });
     return data;
@@ -90,7 +90,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airport/${code}`,
+      url: `/backoffice/common/codes/airport/${code}`,
       data: body,
     });
     return data;
@@ -105,7 +105,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airport/${code}`,
+      url: `/backoffice/common/codes/airport/${code}`,
     });
     return data;
   };
@@ -119,7 +119,7 @@ export class CommonApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/lounges`,
+      url: `/backoffice/lounges`,
     });
     return data;
   };

@@ -24,7 +24,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/users/inquires`,
+      url: `/backoffice/users/inquires`,
       params,
     });
     return data;
@@ -36,7 +36,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/users/inquires/${inquiryId}`,
+      url: `/backoffice/users/inquires/${inquiryId}`,
     });
     return data;
   };
@@ -49,7 +49,7 @@ export class OneQuestionApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: 'http://dbackoffice.gate26.co.kr/users/inquires',
+      url: '/backoffice/users/inquires',
       data: body,
     });
     return data;

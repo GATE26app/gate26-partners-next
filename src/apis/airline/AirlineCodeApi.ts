@@ -27,7 +27,7 @@ export class AirlineCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline`,
+      url: `/backoffice/common/codes/airline`,
       params: params,
     });
     return data;
@@ -39,7 +39,7 @@ export class AirlineCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `/backoffice/common/codes/airline/${airlineId}`,
     });
     return data;
   };
@@ -53,7 +53,7 @@ export class AirlineCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline`,
+      url: `/backoffice/common/codes/airline`,
       data: body,
     });
     return data;
@@ -69,7 +69,7 @@ export class AirlineCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `/backoffice/common/codes/airline/${airlineId}`,
       data: body,
     });
     return data;
@@ -82,7 +82,7 @@ export class AirlineCodeApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/common/codes/airline/${airlineId}`,
+      url: `/backoffice/common/codes/airline/${airlineId}`,
     });
     return data;
   };

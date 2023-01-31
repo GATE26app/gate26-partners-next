@@ -27,9 +27,7 @@ export type AxiosResponseType<T> = {
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: isDev
-    ? 'http://dbackoffice.gate26.co.kr'
-    : 'http://dbackoffice.gate26.co.kr',
+  baseURL: isDev ? '/backoffice' : '/backoffice',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',

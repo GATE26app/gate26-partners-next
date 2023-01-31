@@ -32,7 +32,7 @@ export class MemberManageApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/users/all`,
+      url: `/backoffice/users/all`,
       params,
     });
     return data;

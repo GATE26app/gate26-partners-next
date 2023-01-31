@@ -4,7 +4,12 @@ import instance from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { DefaultDTOType, PagingDTOType, AdminAccountDetailInfoDTOType, AdminCreatOrUpdateDTO } from './AdminAccountApi.type';
+import {
+  AdminAccountDetailInfoDTOType,
+  AdminCreatOrUpdateDTO,
+  DefaultDTOType,
+  PagingDTOType,
+} from './AdminAccountApi.type';
 
 export class AdminAccountApi {
   axios: AxiosInstance = instance;
@@ -19,7 +24,7 @@ export class AdminAccountApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/admin`,
+      url: `/backoffice/admin`,
       params,
     });
     return data;
@@ -28,35 +33,35 @@ export class AdminAccountApi {
   getAdminAll = async (): Promise<DefaultDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `http://dbackoffice.gate26.co.kr/admin?page=0&size=10000`,
+      url: `/backoffice/admin?page=0&size=10000`,
     });
     return data;
   };
 
   // 관리자 상세 조회
   getAdminAccountByAdminId = async (
-    adminId?: string
+    adminId?: string,
   ): Promise<AdminAccountDetailInfoDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {
-        'X-AUTH-TOKEN': `${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/admin/${adminId}`,
+      url: `/backoffice/admin/${adminId}`,
     });
     return data;
   };
 
   // 관리자 정보 수정
   updateAdminAccount = async (
-    body: AdminCreatOrUpdateDTO
+    body: AdminCreatOrUpdateDTO,
   ): Promise<AdminAccountDetailInfoDTOType> => {
     const { data } = await this.axios({
       method: 'PUT',
       headers: {
-        'X-AUTH-TOKEN': `${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/admin/${body?.adminId}`,
+      url: `/backoffice/admin/${body?.adminId}`,
       data: body,
     });
     return data;
@@ -64,14 +69,14 @@ export class AdminAccountApi {
 
   // 관리자 생성
   createAdminAccount = async (
-    body: AdminCreatOrUpdateDTO
+    body: AdminCreatOrUpdateDTO,
   ): Promise<AdminAccountDetailInfoDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
       headers: {
-        'X-AUTH-TOKEN': `${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/admin`,
+      url: `/backoffice/admin`,
       data: body,
     });
     return data;
@@ -79,14 +84,14 @@ export class AdminAccountApi {
 
   // 관리자 삭제
   removeAdminAccount = async (
-    adminId?: string
+    adminId?: string,
   ): Promise<AdminAccountDetailInfoDTOType> => {
     const { data } = await this.axios({
       method: 'DELETE',
       headers: {
-        'X-AUTH-TOKEN': `${getToken()}`
+        'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/admin/${adminId}`,
+      url: `/backoffice/admin/${adminId}`,
     });
     return data;
   };

@@ -35,18 +35,16 @@ export class ManagementCodeApi {
   };
 
   //공통 코드 상세 조회
-  getOneCommonCode =async (
-    codeId : number,
-  ): Promise<CodeDTOType> => {
+  getOneCommonCode = async (codeId: number): Promise<CodeDTOType> => {
     const { data } = await this.axios({
-        method: 'GET',
-        headers: {
-          'X-AUTH-TOKEN':`${getToken()}`
-        },
-        url: `http://dbackoffice.gate26.co.kr/common/codes/${codeId}`,
-      });
-      return data;
-  }
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/backoffice/common/codes/${codeId}`,
+    });
+    return data;
+  };
 
   // 상위코드 목록 조회
   getParentCommonCode = async (): Promise<ParentCodeDTOType> => {

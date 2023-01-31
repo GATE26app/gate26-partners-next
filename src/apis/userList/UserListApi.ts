@@ -19,7 +19,7 @@ export class UserListApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `http://dbackoffice.gate26.co.kr/users/active`,
+      url: `/backoffice/users/active`,
       params,
     });
     return data;
