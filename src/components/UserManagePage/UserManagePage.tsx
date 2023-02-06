@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
 import * as excel from 'xlsx';
@@ -14,6 +15,8 @@ import DataTable, { DataTableRowType } from '@components/common/DataTable';
 import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
+import { crypto } from '@utils/crypto';
+
 import {
   ModalType,
   UserManageColumnType,
@@ -27,7 +30,7 @@ interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
   page: number;
-  limit: number;
+  size: number;
 }
 interface ModalProps {
   isOpen: boolean;
@@ -45,81 +48,51 @@ function UserManagePage() {
     { value: 3, label: '이메일' },
   ];
 
-  const pageNumber = useRef(0);
-  const setPage = (value: number) => {
-    pageNumber.current = value;
-  };
-
-  const pageSize = useRef(10);
-  const setPageSize = (value: number) => {
-    pageSize.current = value;
-  };
-
-  const searchType = useRef('');
-  const setSearchType = (value: number) => {
-    switch (value) {
-      case 1:
-        searchType.current = 'name'; // 이름 검색
-        return;
-      case 2:
-        searchType.current = 'nickName'; // 닉네임 검색
-        return;
-      case 3:
-        searchType.current = 'emailAddress'; // 이메일 검색
-        return;
-      default: // 전체 검색
-        searchType.current = '';
-        return;
-    }
-  };
-
-  const keyword = useRef('');
-  const setKeyword = (value: string) => {
-    keyword.current = value;
-  };
-
+  // 페이지 세팅
+  const [request, setRequest] = useState<ReqLoungeProps>({
+    searchType: 0,
+    keyword: '',
+    page: 0,
+    size: 10,
+  });
   const [rows, setRows] = useState<DataTableRowType<UserManageColumnType>[]>(
     [],
   );
 
-  // 페이지 세팅
-  const [request, setRequest] = useState<ReqLoungeProps>({
-    page: 0,
-    limit: 10,
-  });
-
+  const [Excelrow, setExcelRow] = useState<
+    DataTableRowType<UserManageColumnType>[]
+  >([]);
   const [total, setTotal] = useState<number>(100);
-  const userColumns = new UserManageColumns(
-    handleClickListBtn,
-    handleChangeInput,
-  );
-
-  // 최초 조회
-  useEffect(() => {
-    getMemberInfo();
-  }, []);
-
   const [listModal, setListModal] = useState<ModalProps>({
     isOpen: false,
     total: 0,
   });
-  function handleChangeInput(key: string, value: string | number) {
+
+  const handleChangeInput = (key: string, value: string | number) => {
     const newRequest = { ...request, [key]: value };
-    if (key === 'page') {
-      setPage(value as number);
-    } else if (key === 'limit') {
-      setPage(0);
-      setPageSize(value as number);
-    } else if (key === 'searchType') {
-      setPage(0);
-      setSearchType(value as number);
-    } else if (key === 'keyword') {
-      setPage(0);
-      setKeyword(value as string);
+    if (key === 'size') {
+      newRequest.page = 0;
     }
     setRequest(newRequest);
-    getMemberInfo(); // 페이징 요청
-  }
+  };
+
+  const getMemberInfo = () => {
+    memberManageApi
+      .getMemberInfo(request)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          setTotal(data.totalElements);
+          setRows(data.content);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getMemberInfo();
+  }, [request]);
+
   function handleClickListBtn(
     row: DataTableRowType<UserManageColumnType>,
     type: ModalType,
@@ -140,41 +113,38 @@ function UserManagePage() {
     });
   }
 
-  const getMemberInfo = useCallback(() => {
-    const requestParams = {
-      page: pageNumber.current,
-      limit: pageSize.current,
-      keyword: keyword.current,
-      type: searchType.current,
-    };
-    setRequest(requestParams);
-    memberManageApi
-      .getMemberInfo(requestParams)
-      .then((response) => {
-        const { success, data, message } = response;
-        let listData: DataTableRowType<UserManageColumnType>[] = [];
-        if (data) {
-          data?.content.forEach((element) => {
-            listData.push(element);
-          });
-          setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
-        } else {
-          listData = [];
-          console.log('이용자 > 회원 목록 리스트 호출 실패');
-        }
-        setRows(listData);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const Excelrows: DataTableRowType<UserManageColumnType>[] = [];
+  const userColumns = new UserManageColumns(
+    handleClickListBtn,
+    handleChangeInput,
+  );
 
   const excelDown = () => {
-    // console.log('다운로드 클릭' + excel);
-    // const ws = excel?.utils?.json_to_sheet(rows);
-    // const wb = excel?.utils?.book_new();
-    // excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    // excel?.writeFile(wb, '회원관리 목록.xlsx');
+    const req = {
+      page: 0,
+      size: total,
+    };
+    memberManageApi
+      .getMemberInfo(req)
+      .then((response) => {
+        const listData: DataTableRowType<UserManageColumnType>[] = [];
+        if (response.success) {
+          const { data } = response;
+          data?.content.forEach((element) => {
+            element.name = crypto.decrypt(element.name as string);
+            listData.push(element);
+          });
+          excelDownload(data.content);
+          // crypto.decrypt(data.content[0].name as string);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  const excelDownload = (data: any) => {
+    console.log('다운로드 클릭' + excel);
+    const ws = excel?.utils?.json_to_sheet(data);
+    const wb = excel?.utils?.book_new();
+    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
+    excel?.writeFile(wb, '회원관리 목록.xlsx');
   };
 
   return (
@@ -192,15 +162,19 @@ function UserManagePage() {
         <PageTitle
           title="회원 관리"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={() => excelDown()}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop
           total={total}
+          limit={request.size}
           search={{
             searchTypes: searchTypeList,
-            keyword: request.keyword as string,
-            onChangeLimit: (value: number) => handleChangeInput('limit', value),
+            searchType: request.searchType,
+            keyword: request.keyword,
+            onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) => {
               handleChangeInput('searchType', type);
             },
@@ -215,7 +189,7 @@ function UserManagePage() {
           rows={rows}
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),

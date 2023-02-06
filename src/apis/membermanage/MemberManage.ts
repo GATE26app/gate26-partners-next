@@ -4,6 +4,7 @@ import instance, { AxiosResponseType } from '@apis/_axios/instance';
 
 import { getToken } from '@utils/localStorage/token';
 
+import { BasicListDTO } from './../_axios/instance';
 import {
   ActivitHitoryListDTOType,
   BasicDTO,
@@ -17,6 +18,8 @@ import {
   StampListDTOType,
   StampListGetDTOType,
   StmaperyHitoryListDTOType,
+  UserManageDTO,
+  UserManageListResponse,
 } from './MemberManage.type';
 
 export class MemberManageApi {
@@ -26,7 +29,9 @@ export class MemberManageApi {
   }
 
   // 회원 관리 조회
-  getMemberInfo = async (params?: RequestDTOType): Promise<BasicDTO> => {
+  getMemberInfo = async (
+    params?: RequestDTOType,
+  ): Promise<AxiosResponseType<UserManageListResponse>> => {
     const { data } = await this.axios({
       method: 'GET',
       headers: {

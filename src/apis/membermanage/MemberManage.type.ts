@@ -1,5 +1,26 @@
 import dayjs from 'dayjs';
 
+type MemberDTOType = {
+  content: {};
+  pageable: {
+    sort: { empty: boolean; sorted: boolean; unsorted: boolean };
+    offset: number;
+    pageSize: number;
+    pageNumber: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  number: number;
+  sort: { empty: boolean; sorted: boolean; unsorted: boolean };
+  size: number;
+  numberOfElements: number;
+};
+
 export type BasicDTO = {
   code?: string;
   data?: {
@@ -130,7 +151,21 @@ export type UserManageDTO = {
 };
 export type RequestDTOType = {
   page: number;
-  limit: number;
+  size: number;
   type?: string;
   keyword?: string;
+};
+
+export type UserManageListResponse = MemberDTOType & {
+  content: {
+    activeUser: string;
+    emailAddress: string;
+    name: string;
+    leaveDate: string;
+    reportedCount: number;
+    stampCount: number;
+    ticketAuthCount: number;
+    totalMileage: number;
+    userId: string;
+  }[];
 };
