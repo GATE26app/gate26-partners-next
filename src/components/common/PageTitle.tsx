@@ -5,14 +5,18 @@ import IconButton from './IconButton';
 interface PageTitleProps {
   title: string;
   isDownload?: boolean;
+  isAllDownLoad?: boolean;
   noMargin?: boolean;
   onClickDownload?: () => void;
+  onClickAllDownload?: () => void;
 }
 const PageTitle = ({
   title,
   isDownload,
+  isAllDownLoad,
   noMargin,
   onClickDownload,
+  onClickAllDownload,
 }: PageTitleProps) => {
   return (
     <Flex
@@ -30,15 +34,28 @@ const PageTitle = ({
       >
         {title}
       </Text>
-      {isDownload && (
-        <IconButton
-          type="download"
-          size="sm"
-          width="120px"
-          text="내보내기"
-          onClick={onClickDownload}
-        />
-      )}
+      <Flex>
+        {isDownload && (
+          <IconButton
+            type="download"
+            size="sm"
+            width="120px"
+            text="현페이지다운"
+            onClick={onClickDownload}
+          />
+        )}
+        {isAllDownLoad && (
+          <Flex ml="20px">
+            <IconButton
+              type="download"
+              size="sm"
+              width="120px"
+              text="전체다운"
+              onClick={onClickAllDownload}
+            />
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   );
 };

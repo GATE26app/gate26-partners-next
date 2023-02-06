@@ -136,6 +136,7 @@ function UserListPage() {
           title="회원 목록"
           onClickDownload={() => console.log('다운로드 클릭')}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop
