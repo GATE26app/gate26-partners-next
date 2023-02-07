@@ -24,6 +24,7 @@ import AuthChangeModal from './_fragments/AuthChangeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import adminAccountApi from '@apis/admin/AdminAccountApi';
+import useExcelDown from '@hooks/useExcelDown';
 
 
 interface ReqLoungeProps {
@@ -43,11 +44,7 @@ interface AccountDetailModalProps extends Omit<ModalProps, 'type'> {
 
 function AdminAccountPage() {
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '관리자 목록.xlsx');
+    useExcelDown(rows, '관리자 목록');
   };
   // 검색 구분
   const searchTypeList = [ 

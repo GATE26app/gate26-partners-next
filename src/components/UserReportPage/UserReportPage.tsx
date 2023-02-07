@@ -159,7 +159,9 @@ function UserReportPage() {
         <PageTitle
           title="신고 조회"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={() => excelDown()}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop
