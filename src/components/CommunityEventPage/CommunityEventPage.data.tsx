@@ -6,8 +6,6 @@ import {
 import RoundImage from '@components/common/RoundImage';
 import SmallButton from '@components/common/SmallButton';
 
-import { imgPath } from '@utils/format';
-
 export type EventColumnType =
   | 'eventId'
   | 'title'

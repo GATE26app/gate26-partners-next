@@ -2,8 +2,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import * as excel from 'xlsx';
-
 import { Flex } from '@chakra-ui/react';
 
 import communityChatApi from '@apis/CommunityChat/CommunityChatApi';
@@ -20,6 +18,7 @@ import { CHAT_COLUMNS, ChatColumnType } from './CommunityChatPage.data';
 import ChatDetailModal from './_fragments/ChatDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -111,11 +110,24 @@ function CommunityChatPage() {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '공지사항 목록.xlsx');
+    useExcelDown(rows, '오픈채팅');
+  };
+  const excelAllDown = () => {
+    const req = {
+      searchType : request.searchType,
+      keyword : request.keyword,
+      page: 0,
+      size: total,
+    };
+    communityChatApi
+      .getCommunityChatList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 오픈채팅');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -133,7 +145,9 @@ function CommunityChatPage() {
         <PageTitle
           title="오픈채팅 관리"
           onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop
@@ -143,7 +157,7 @@ function CommunityChatPage() {
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '채팅명' },
-              { value: 3, label: '라운지 위치' },
+              { value: 3, label: '라운지' },
             ],
             keyword: request.keyword,
             searchType: request.searchType,

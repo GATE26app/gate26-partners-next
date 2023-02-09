@@ -119,6 +119,9 @@ function UserManagePage() {
     handleChangeInput,
   );
 
+  const excelDown = () => {
+    useExcelDown(rows, '회원 관리');
+  };
   const excelAllDown = () => {
     const req = {
       page: 0,
@@ -134,14 +137,11 @@ function UserManagePage() {
             element.name = crypto.decrypt(element.name as string);
             listData.push(element);
           });
-          useExcelDown(data.content, '회원 관리 목록');
+          useExcelDown(data.content, '전체 회원 관리');
           // crypto.decrypt(data.content[0].name as string);
         }
       })
       .catch((err) => console.log(err));
-  };
-  const excelDown = () => {
-    useExcelDown(rows, '회원 관리 목록');
   };
 
   return (
@@ -158,8 +158,8 @@ function UserManagePage() {
         <BreadCrumb depth={['이용자', '회원 관리']} />
         <PageTitle
           title="회원 관리"
-          onClickDownload={() => excelDown()}
-          onClickAllDownload={() => excelAllDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
           isAllDownLoad
         />

@@ -25,6 +25,7 @@ import { Stamp, StampCol } from './MobilityStamp.data';
 import MobilityStampModal from './_fragments/MobilityStampModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -48,13 +49,6 @@ const MobilityStamp = () => {
     getStampList();
   }, []);
 
-  const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '스탬프러리 목록.xlsx');
-  };
 
   const handleEditRow = (row: DataTableRowType<StampCol>) => {
     const data = { ...row };
@@ -152,6 +146,26 @@ const MobilityStamp = () => {
     );
     openCustomModal();
   };
+
+  const excelDown = () => {
+    useExcelDown(rows, '스탬프러리');
+  };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    stampApis
+      .getStamp(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 스탬프러리');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -167,7 +181,9 @@ const MobilityStamp = () => {
         <PageTitle
           title="스탬프러리 관리"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
         <TableTop
           total={total}

@@ -2,8 +2,6 @@ import Head from 'next/head';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
-import * as excel from 'xlsx';
-
 import { Flex } from '@chakra-ui/react';
 
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
@@ -25,7 +23,8 @@ import AuthChangeModal from './_fragments/AuthChangeModal';
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import adminAccountApi from '@apis/admin/AdminAccountApi';
 import useExcelDown from '@hooks/useExcelDown';
-
+import { crypto } from '@utils/crypto';
+import { AdminAccountInfo } from '@apis/admin/AdminAccountApi.type';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -43,9 +42,6 @@ interface AccountDetailModalProps extends Omit<ModalProps, 'type'> {
 }
 
 function AdminAccountPage() {
-  const excelDown = () => {
-    useExcelDown(rows, '관리자 목록');
-  };
   // 검색 구분
   const searchTypeList = [ 
     { value: 0, label: '전체' },
@@ -208,10 +204,28 @@ function AdminAccountPage() {
     );
     openCustomModal();
   };
+
+  const excelDown = () => { useExcelDown(rows, '관리자') };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    adminAccountApi
+      .getAdminAccount(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 관리자');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  
   return (
     <>
       <Head>
-        <title>회원 관리</title>
+        <title>관리자 관리</title>
       </Head>
       <Flex
         className="community-lounge-wrapper"
@@ -222,8 +236,10 @@ function AdminAccountPage() {
         <BreadCrumb depth={['관리자', '관리자 관리']} />
         <PageTitle
           title="관리자 관리"
-          onClickDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop

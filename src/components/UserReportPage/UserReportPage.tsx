@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Flex } from '@chakra-ui/react';
-import * as excel from 'xlsx';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
@@ -11,23 +10,17 @@ import TableTop from '@components/common/TableTop';
 
 import { UserReportColumnType, UserReportColumns } from './UserReportPage.data';
 import userReportApi from '@apis/userReport/UserReportApi';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
   searchType?: number;
   page: number;
-  limit: number;
+  size: number;
 }
 
 
 function UserReportPage() {
-  const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '신고 목록.xlsx');
-  };
   const pageNumber = useRef(0);
   const setPage = (value: number) => {
     pageNumber.current = value;
@@ -64,7 +57,7 @@ function UserReportPage() {
 
   const [request, setRequest] = useState<ReqLoungeProps>({
     page: 0,
-    limit: 10,
+    size: 10,
   });
   const [total, setTotal] = useState<number>(100);
 
@@ -92,21 +85,21 @@ function UserReportPage() {
   const getTypeFromCategory = (category:string) => {
     switch(category){
       case category='user':
-        return '유저 신고';
+        return '유저';
       case category='accompany':
-        return '동행 신고';
+        return '동행';
       case category='post':
-        return '게시물 신고';
+        return '게시물';
       case category='tip':
-        return '여행팁 신고';
+        return '여행팁';
       case category='message':
-        return '채팅 메세지 신고';
+        return '채팅 메세지';
       default:
         return '';
     }
   }
   const getReportInfo = useCallback((category : string) => {
-    const params = { page: pageNumber.current, limit: pageSize.current,
+    const params = { page: pageNumber.current, size: pageSize.current,
       keyword: keyword.current
     };
     setRequest(params);
@@ -144,6 +137,26 @@ function UserReportPage() {
   useEffect(() => {
     getReportInfo(searchType.current);
   }, []);
+
+  const excelDown = () => {
+    useExcelDown(rows, `${getTypeFromCategory(searchType.current)} 신고`);
+  };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    userReportApi
+      .getReportInfo(req, searchType.current)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, `${getTypeFromCategory(searchType.current)} 신고`);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  
   return (
     <>
       <Head>
@@ -158,8 +171,8 @@ function UserReportPage() {
         <BreadCrumb depth={['이용자', '신고 조회']} />
         <PageTitle
           title="신고 조회"
-          onClickDownload={() => excelDown()}
-          onClickAllDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
           isAllDownLoad
         />
@@ -190,7 +203,7 @@ function UserReportPage() {
           rows={rows}
           paginationProps={{
             currentPage: request.page,
-            limit: request.limit,
+            limit: request.size,
             total: total,
             onPageNumberClicked: (page: number) =>
               handleChangeInput('page', page),

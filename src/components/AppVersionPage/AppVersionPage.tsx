@@ -23,6 +23,7 @@ import {
 } from './AppVersionPage.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqAppVersionProps {
   keyword?: string;
@@ -199,11 +200,23 @@ function AppVersionPagePage() {
   }, []);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '앱 버전 목록.xlsx');
+    useExcelDown(rows, '앱 버젼');
+  };
+  const excelAllDown = () => {
+    const req = {
+      inquireType: request.searchType,
+      keyword: request.keyword,
+      page: 0,
+      size: total,
+    };
+    appManageApi.getAppVersionList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 앱 버전');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -220,8 +233,10 @@ function AppVersionPagePage() {
         <BreadCrumb depth={['앱 관리', '앱 버전 관리']} />
         <PageTitle
           title="앱 버전 관리"
-          onClickDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop

@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Flex, useToast } from '@chakra-ui/react';
-import * as excel from 'xlsx';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -17,6 +16,7 @@ import CodeManagementModal from './_fragments/ManagementCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import managementCodeApi from '@apis/commoncode/ManagementCodeApi';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -62,13 +62,6 @@ const ManagementCode = () => {
   const setKeyword = (value: string) => {keyword.current = value};
 
   const [rows, setRows]=useState<DataTableRowType<MenageCol>[]>([]);
-  const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '공통 코드 목록.xlsx');
-  };
   const [total, setTotal] = useState<number>(100);
   const [lastPage, setLastPage] = useState<number>(0);
   const [request, setRequest] = useState<ReqLoungeProps>({
@@ -186,6 +179,25 @@ useEffect(() => {
   getCommonCodeInfoPagin();
 }, []);
 
+const excelDown = () => {
+  useExcelDown(rows, '공통 코드');
+};
+const excelAllDown = () => {
+  const req = {
+    page: 0,
+    size: total,
+  };
+  managementCodeApi
+    .getCommonCode(req)
+    .then((response) => {
+      if (response.success) {
+        const { data } = response;
+        useExcelDown(data?.content, '전체 공통 코드');
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
   return (
     <>
       <Head>
@@ -201,7 +213,9 @@ useEffect(() => {
         <PageTitle
           title="코드 관리"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={() => excelAllDown()}
           isDownload
+          isAllDownLoad
         />
         <TableTop
           total={total}
