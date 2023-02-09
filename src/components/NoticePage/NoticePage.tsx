@@ -21,6 +21,7 @@ import { LIST_COLUMNS, NoticeColumnType } from './NoticePage.data';
 import NoticeDetailModal from './_fragments/NoticeDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -104,11 +105,24 @@ function NoticePage() {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '공지사항 목록.xlsx');
+    useExcelDown(rows, '공지사항');
+  };
+  const excelAllDown = () => {
+    const req = {
+      filter: request.filter,
+      search: request.search,
+      page: 0,
+      size: total,
+    };
+    noticeApi
+      .getNoticeList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data, '전체 공지사항');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -123,7 +137,11 @@ function NoticePage() {
         padding="20px"
       >
         <BreadCrumb depth={['공지사항']} />
-        <PageTitle title="공지사항" onClickDownload={excelDown} isDownload />
+        <PageTitle title="공지사항" 
+        onClickDownload={excelDown} 
+        onClickAllDownload={excelAllDown}
+        isDownload
+        isAllDownLoad />
 
         <TableTop
           total={total}

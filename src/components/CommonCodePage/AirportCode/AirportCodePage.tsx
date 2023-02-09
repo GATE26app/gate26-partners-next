@@ -2,8 +2,6 @@ import Head from 'next/head';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import * as excel from 'xlsx';
-
 import { Flex } from '@chakra-ui/react';
 
 import commonApi from '@apis/common/CommonApi';
@@ -19,6 +17,7 @@ import { AirPortCol, AirportCode } from './AirportCode.data';
 import AirportCodeModal from './_fragments/AirportCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 // 기본 페이징 Props
 interface ReqLoungeProps {
@@ -164,14 +163,6 @@ const MobilityStamp = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '공항 코드 목룍.xlsx');
-  };
-
   const handleDeleteRow = (row: DataTableRowType<AirPortCol>) => {
     dispatch(
       customModalSliceAction.setMessage({
@@ -196,6 +187,26 @@ const MobilityStamp = () => {
       alert(`${success}`);
     });
   };
+
+  const excelDown = () => {
+    useExcelDown(rows, '공항 코드');
+  };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    commonApi
+      .getAirportList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 공항 코드');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -211,7 +222,9 @@ const MobilityStamp = () => {
         <PageTitle
           title="공항 코드"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={() => excelAllDown()}
           isDownload
+          isAllDownLoad
         />
         <TableTop
           total={total}

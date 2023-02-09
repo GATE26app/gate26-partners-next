@@ -105,10 +105,10 @@ export const MenuRouter: MenuType[] = [
         name: '스탬프러리 관리',
         path: '/mobility/stamp',
       },
-      {
-        name: '항공권 인증',
-        path: '/mobility/ticket',
-      },
+      // {
+      //   name: '항공권 인증',
+      //   path: '/mobility/ticket',
+      // },
     ],
   },
   {

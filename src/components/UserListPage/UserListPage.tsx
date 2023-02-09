@@ -13,6 +13,8 @@ import PageTitle from '@components/common/PageTitle';
 import TableTop from '@components/common/TableTop';
 
 import { UserColumnType, UserColumns } from './UserListPage.data';
+import userListApi from '@apis/userList/UserListApi';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -120,6 +122,27 @@ function UserListPage() {
     getUserInfoList(); // 페이징 요청
   }
 
+  const excelDown = () => {
+    useExcelDown(rows, '회원');
+  };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    userListApi
+      .getUserList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 회원');
+          // crypto.decrypt(data.content[0].name as string);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  
+
   return (
     <>
       <Head>
@@ -134,7 +157,8 @@ function UserListPage() {
         <BreadCrumb depth={['이용자', '회원 목록']} />
         <PageTitle
           title="회원 목록"
-          onClickDownload={() => console.log('다운로드 클릭')}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
           isAllDownLoad
         />

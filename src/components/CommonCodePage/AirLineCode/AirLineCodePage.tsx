@@ -2,8 +2,6 @@ import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import * as excel from 'xlsx';
-
 import { Flex, useToast } from '@chakra-ui/react';
 
 import airlineCodeApi, { AirlineCodeApi } from '@apis/airline/AirlineCodeApi';
@@ -20,6 +18,7 @@ import { AirLineCode, AirLineCol } from './AirLineCode.data';
 import AirLineCodeModal from './_fragments/AirLineCodeModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -194,11 +193,22 @@ const AirlineCodePage = () => {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '항공사코드.xlsx');
+    useExcelDown(rows, '항공사 코드');
+  };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    airlineCodeApi
+      .getAirlineCodeList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 항공사 코드');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -216,7 +226,9 @@ const AirlineCodePage = () => {
         <PageTitle
           title="항공사 코드"
           onClickDownload={() => excelDown()}
+          onClickAllDownload={() => excelAllDown()}
           isDownload
+          isAllDownLoad
         />
         <TableTop
           total={total}

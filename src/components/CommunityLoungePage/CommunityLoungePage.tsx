@@ -20,6 +20,8 @@ import { LOUNGE_COLUMNS, LoungeColumnType } from './CommunityLoungePage.data';
 import LoungeDetailModal from './_fragments/LoungeDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
+import communityLoungeApi from '@apis/communityLounge/CommunityLoungeApi';
 
 interface ModalProps {
   isOpen: boolean;
@@ -122,12 +124,25 @@ function CommunityLoungePage() {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '라운지 목록.xlsx');
+    useExcelDown(rows, '라운지');
   };
+  const excelAllDown = () => {
+    const req = {
+      searchType: request.searchType,
+      keyword: request.keyword, 
+      page: 0,
+      size: total,
+    };
+    communityLoungeApi.getCommunityLoungeList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 라운지');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -140,7 +155,12 @@ function CommunityLoungePage() {
         padding="20px"
       >
         <BreadCrumb depth={['커뮤니티', '라운지 관리']} />
-        <PageTitle title="라운지 관리" onClickDownload={excelDown} isDownload />
+        <PageTitle 
+          title="라운지 관리" 
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
+          isDownload
+          isAllDownLoad />
 
         <TableTop
           total={total}
