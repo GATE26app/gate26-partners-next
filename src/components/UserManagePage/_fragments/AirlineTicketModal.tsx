@@ -63,6 +63,10 @@ const AirlineTicketModal = ({
     if (isOpen && targetId) getActivityHistory(request);
   }, [targetId, isOpen]);
 
+  useEffect(() => {
+    if (isOpen) getActivityHistory(request);
+  }, [request]);
+
   const handleAlert = (message?: string) => {
     if (!message) return;
     dispatch(
@@ -133,7 +137,6 @@ const AirlineTicketModal = ({
     if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'size' || key === 'page') getActivityHistory(newRequest);
   };
 
   const handleExcelDown = () => {
@@ -166,12 +169,12 @@ const AirlineTicketModal = ({
             onChangeKeyword: (value: string) => {
               handleChangeInput('keyword', value);
             },
-            onClickSearch: () => getActivityHistory(request),
           }}
         />
         {/* <Flex maxH="300px" overflowY="auto"> */}
         <DataTable
           maxH="260px"
+          height="260px"
           variant={'gray'}
           columns={AIRLINE_TICKET_COLUMNS}
           rows={rows}

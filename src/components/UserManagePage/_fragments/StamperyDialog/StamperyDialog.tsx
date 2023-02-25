@@ -60,6 +60,10 @@ const StamperyDialog = ({
     if (isOpen && targetId) getStampHistory(request);
   }, [targetId, isOpen]);
 
+  useEffect(() => {
+    if (isOpen) getStampHistory(request);
+  }, [request]);
+
   const handleAlert = (message?: string) => {
     if (!message) return;
     dispatch(
@@ -113,7 +117,6 @@ const StamperyDialog = ({
     if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'size' || key === 'page') getStampHistory(newRequest);
   };
 
   const getStampHistory = (param: SearchParam) => {
@@ -182,7 +185,6 @@ const StamperyDialog = ({
             onChangeKeyword: (value: string) => {
               handleChangeInput('keyword', value);
             },
-            onClickSearch: () => getStampHistory(request),
           }}
           createButton={{
             title: '스탬프러리 추가',
@@ -194,6 +196,7 @@ const StamperyDialog = ({
         />
         <DataTable
           maxH="260px"
+          height="260px"
           variant={'gray'}
           columns={STAMPERY_COLUMNS}
           rows={rows}
