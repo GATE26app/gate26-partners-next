@@ -73,7 +73,7 @@ export class PushApi {
     formData.append('type', body.type);
     formData.append('title', body.title);
     formData.append('content', body.content);
-    formData.append('noticeDate', body.noticeDate.toISOString());
+    formData.append('noticeDate', formatDateTimeDash(body.noticeDate));
     if (body.chatRoom) formData.append('chatRoom', body.chatRoom);
     if (body.coverImg) formData.append('coverImg', body.coverImg);
 
@@ -93,12 +93,11 @@ export class PushApi {
   putPush = async (body: PushPostType): Promise<PushPostResponse> => {
     const formData = new FormData();
 
-    console.log(body);
     formData.append('noticeId', body.noticeId!);
     formData.append('type', body.type);
     formData.append('title', body.title);
     formData.append('content', body.content);
-    formData.append('noticeDate', body.noticeDate.toISOString());
+    formData.append('noticeDate', formatDateTimeDash(body.noticeDate));
     if (body.chatRoom) formData.append('chatRoom', body.chatRoom);
     if (body.coverImg) formData.append('coverImg', body.coverImg);
     if (body.deleteChatRoom)
