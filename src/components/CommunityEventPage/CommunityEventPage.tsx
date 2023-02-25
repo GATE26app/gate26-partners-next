@@ -7,8 +7,9 @@ import { Dayjs } from 'dayjs';
 import { Flex } from '@chakra-ui/react';
 
 import eventApi from '@apis/event/EventApi';
-import { EventListSeqType, EventParamGetType } from '@apis/event/EventApi.type';
+import { EventParamGetType } from '@apis/event/EventApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -21,7 +22,6 @@ import EventDetailModal from './_fragments/EventDetailModal';
 import EventParticipantModal from './_fragments/EventParticipantModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
-import useExcelDown from '@hooks/useExcelDown';
 
 interface ParticipantModalProps {
   isOpen: boolean;
@@ -188,11 +188,13 @@ function CommunityEventPage() {
         padding="20px"
       >
         <BreadCrumb depth={['커뮤니티', '이벤트 관리']} />
-        <PageTitle title="이벤트 관리" 
-        onClickDownload={excelDown} 
-        onClickAllDownload={excelAllDown}
-        isDownload
-        isAllDownLoad />
+        <PageTitle
+          title="이벤트 관리"
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
+          isDownload
+          isAllDownLoad
+        />
 
         <TableTop
           total={total}
@@ -201,6 +203,7 @@ function CommunityEventPage() {
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '제목' },
+              { value: 3, label: '표시장소' },
             ],
             keyword: request.keyword,
             searchType: request.searchType,

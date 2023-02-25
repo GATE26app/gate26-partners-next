@@ -9,6 +9,7 @@ import { Flex } from '@chakra-ui/react';
 import { PushParamGetType } from '@apis/push/Push.type';
 import pushApi from '@apis/push/PushApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -20,7 +21,6 @@ import { AlarmColumnType, LIST_COLUMNS } from './PushManagePage.data';
 import PushDetailModal from './_fragments/PushDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
-import useExcelDown from '@hooks/useExcelDown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -127,7 +127,8 @@ function PushManagePage() {
       page: 0,
       size: total,
     };
-    pushApi.getPushList(req)
+    pushApi
+      .getPushList(req)
       .then((response) => {
         if (response.success) {
           const { data } = response;
@@ -165,6 +166,7 @@ function PushManagePage() {
               { value: 1, label: '전체' },
               { value: 2, label: '제목' },
               { value: 3, label: '푸쉬내용' },
+              { value: 4, label: '푸쉬대상' },
             ],
             searchType: request.searchType,
             keyword: request.keyword,
