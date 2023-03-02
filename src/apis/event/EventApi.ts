@@ -85,8 +85,8 @@ export class EventApi {
     formData.append('title', body.title);
     formData.append('content', body.content);
     formData.append('contentType', body.contentType);
-    formData.append('startDate', body.startDate.toISOString());
-    formData.append('endDate', body.endDate.toISOString());
+    formData.append('startDate', formatDateTimeDash(body.startDate));
+    formData.append('endDate', formatDateTimeDash(body.endDate));
     if (body.img) formData.append('img', body.img);
     if (body.bannerImg) formData.append('bannerImg', body.bannerImg);
     if (body.loungeId) formData.append('loungeId', body.loungeId);
@@ -112,8 +112,8 @@ export class EventApi {
     formData.append('title', body.title);
     formData.append('content', body.content);
     formData.append('contentType', body.contentType);
-    formData.append('startDate', body.startDate.toISOString());
-    formData.append('endDate', body.endDate.toISOString());
+    formData.append('startDate', formatDateTimeDash(body.startDate));
+    formData.append('endDate', formatDateTimeDash(body.endDate));
     if (body.img) formData.append('img', body.img);
     if (body.bannerImg) formData.append('bannerImg', body.bannerImg);
     if (body.loungeId) formData.append('loungeId', body.loungeId);

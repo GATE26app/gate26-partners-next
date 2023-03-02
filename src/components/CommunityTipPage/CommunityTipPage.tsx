@@ -2,8 +2,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import * as excel from 'xlsx';
-
 import { Flex } from '@chakra-ui/react';
 
 import CommunityTipApi from '@apis/communityTip/communityTipApi';
@@ -24,6 +22,8 @@ import { CommunityTip, TipColumnType } from './CommunityTipPage.data';
 import TipDetailModal from './_fragments/TipDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
+import communityTipApi from '@apis/communityTip/communityTipApi';
 
 interface ModalProps {
   isOpen: boolean;
@@ -158,13 +158,25 @@ function CommunityTipPage() {
     }
   };
 
-  const handleExcelDown = () => {
-    if (!rows || !rows.length) return;
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '여행팁 목록.xlsx');
+  const excelDown = () => {
+    useExcelDown(rows, '여행팁');
   };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    communityTipApi
+      .getCommunityTipList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 여행팁');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -179,8 +191,10 @@ function CommunityTipPage() {
         <BreadCrumb depth={['커뮤니티', '여행팁 관리']} />
         <PageTitle
           title="여행팁 관리"
-          onClickDownload={handleExcelDown}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop

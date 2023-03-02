@@ -25,6 +25,7 @@ import {
 import AirlineTicketModal from './_fragments/AirlineTicketModal';
 import RetainedMileageModal from './_fragments/RetainedMileageModal';
 import StamperyDialog from './_fragments/StamperyDialog/StamperyDialog';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -119,6 +120,9 @@ function UserManagePage() {
   );
 
   const excelDown = () => {
+    useExcelDown(rows, '회원 관리');
+  };
+  const excelAllDown = () => {
     const req = {
       page: 0,
       size: total,
@@ -133,18 +137,11 @@ function UserManagePage() {
             element.name = crypto.decrypt(element.name as string);
             listData.push(element);
           });
-          excelDownload(data.content);
+          useExcelDown(data.content, '전체 회원 관리');
           // crypto.decrypt(data.content[0].name as string);
         }
       })
       .catch((err) => console.log(err));
-  };
-  const excelDownload = (data: any) => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(data);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '회원관리 목록.xlsx');
   };
 
   return (
@@ -161,8 +158,8 @@ function UserManagePage() {
         <BreadCrumb depth={['이용자', '회원 관리']} />
         <PageTitle
           title="회원 관리"
-          onClickDownload={() => excelDown()}
-          onClickAllDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
           isAllDownLoad
         />

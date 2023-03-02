@@ -21,6 +21,8 @@ import Question, { QuestionColumnType } from './OneQuestionPage.data';
 import AnswerModal from './_fragments/AnswerModal';
 
 import { List } from 'reselect/es/types';
+import useExcelDown from '@hooks/useExcelDown';
+import oneQuestionApi from '@apis/oneQuestion/OneQuestionApi';
 
 interface ModalProps {
   isOpen: boolean;
@@ -167,11 +169,23 @@ function QuestionPage() {
   const handleCloseModal = () => setListModal({ isOpen: false });
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '문의목록.xlsx');
+    useExcelDown(rows, '1:1문의');
+  };
+  const excelAllDown = () => {
+    const req = {
+      inquireType: request.searchType,
+      keyword: request.keyword,
+      page: 0,
+      size: total,
+    };
+    oneQuestionApi.getInquiryList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 1:1문의');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -188,8 +202,10 @@ function QuestionPage() {
         <BreadCrumb depth={['1:1 문의']} />
         <PageTitle
           title="1:1 문의"
-          onClickDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop

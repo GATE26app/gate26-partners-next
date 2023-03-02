@@ -64,6 +64,10 @@ const RetainedMileageModal = ({
     if (isOpen && targetId) getMileageHistory(request);
   }, [targetId, isOpen]);
 
+  useEffect(() => {
+    if (isOpen) getMileageHistory(request);
+  }, [request]);
+
   const handleAlert = (message?: string) => {
     if (!message) return;
     dispatch(
@@ -134,7 +138,6 @@ const RetainedMileageModal = ({
     if (key === 'size') newRequest.page = 0;
 
     setRequest(newRequest);
-    if (key === 'size' || key === 'page') getMileageHistory(newRequest);
   };
 
   const handleExcelDown = () => {
@@ -167,11 +170,11 @@ const RetainedMileageModal = ({
             onChangeKeyword: (value: string) => {
               handleChangeInput('keyword', value);
             },
-            onClickSearch: () => getMileageHistory(request),
           }}
         />
         <DataTable
           maxH="260px"
+          height="260px"
           variant={'gray'}
           columns={MILEAGE_COLUMNS}
           rows={rows}

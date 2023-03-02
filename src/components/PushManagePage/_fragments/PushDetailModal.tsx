@@ -97,7 +97,7 @@ const PushDetailModal = ({
       return;
     }
     pushApi.postPush(newRequest).then((response) => {
-      if (response && response.noticeId) {
+      if (response && response.tgId) {
         if (onComplete) onComplete();
       }
     });
@@ -117,7 +117,7 @@ const PushDetailModal = ({
       return;
     }
     pushApi.putPush(newRequest).then((response) => {
-      if (response && response.noticeId) {
+      if (response && response.tgId) {
         if (onComplete) onComplete();
       }
     });

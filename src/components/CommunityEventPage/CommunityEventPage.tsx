@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Dayjs } from 'dayjs';
-import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
 import eventApi from '@apis/event/EventApi';
-import { EventListSeqType, EventParamGetType } from '@apis/event/EventApi.type';
+import { EventParamGetType } from '@apis/event/EventApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -156,13 +156,26 @@ function CommunityEventPage() {
     );
     openCustomModal();
   };
+
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(list);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '이벤트 목록.xlsx');
+    useExcelDown(list, '이벤트');
   };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    eventApi
+      .getEventList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data?.content, '전체 이벤트');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Head>
@@ -175,7 +188,13 @@ function CommunityEventPage() {
         padding="20px"
       >
         <BreadCrumb depth={['커뮤니티', '이벤트 관리']} />
-        <PageTitle title="이벤트 관리" onClickDownload={excelDown} isDownload />
+        <PageTitle
+          title="이벤트 관리"
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
+          isDownload
+          isAllDownLoad
+        />
 
         <TableTop
           total={total}
@@ -184,6 +203,7 @@ function CommunityEventPage() {
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '제목' },
+              { value: 3, label: '표시장소' },
             ],
             keyword: request.keyword,
             searchType: request.searchType,

@@ -57,7 +57,7 @@ export type PushPostType = {
 };
 
 export type PushPostResponse = {
-  noticeId: string;
+  tgId: string;
   title: string;
   content: string;
   createDate: Date;

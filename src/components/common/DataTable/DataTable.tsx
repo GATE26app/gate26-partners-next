@@ -45,6 +45,7 @@ const DataTable = <T extends string>({
   onAtom,
   onRegister,
   maxH,
+  height,
 }: DataTableProps<T>) => {
   const renderHead = () => {
     return (
@@ -120,7 +121,7 @@ const DataTable = <T extends string>({
       borderColor={Light.gray[300]}
       borderRadius="5px"
     >
-      <Box maxH={maxH} overflowY="auto">
+      <Box maxH={maxH} h={height} overflowY="auto">
         <TableContainer
           width="100%"
           height="fit-content"

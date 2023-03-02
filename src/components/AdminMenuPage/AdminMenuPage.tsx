@@ -2,9 +2,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import dayjs from 'dayjs';
-import * as excel from 'xlsx';
-
 import { Flex, Toast, useToast } from '@chakra-ui/react';
 
 import adminMenuApi from '@apis/menu/AdminMenuApi';
@@ -21,6 +18,7 @@ import TableTop from '@components/common/TableTop';
 import { AdminMenuColumnType, AdminMenuColumns } from './AdminMenuPage.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
+import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqMenuProps {
   keyword?: string;
@@ -190,12 +188,25 @@ function AdminMenuPage() {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '관리자메뉴.xlsx');
+    useExcelDown(rows, '메뉴');
   };
+  const excelAllDown = () => {
+    const req = {
+      page: 0,
+      size: total,
+    };
+    adminMenuApi
+      .getAdminMenuList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 메뉴');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+  
+
   return (
     <>
       <Head>
@@ -210,8 +221,10 @@ function AdminMenuPage() {
         <BreadCrumb depth={['관리자', '메뉴 관리']} />
         <PageTitle
           title="메뉴 관리"
-          onClickDownload={() => excelDown()}
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop

@@ -20,7 +20,7 @@ export type UserReportInfoDTOType = {
   
   export type PagingDTOType = {
     page: number;
-    limit: number;
+    size: number;
     type?: string;
     keyword?: string;
   };

@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Dayjs } from 'dayjs';
-import * as excel from 'xlsx';
 
 import { Flex } from '@chakra-ui/react';
 
 import { PushParamGetType } from '@apis/push/Push.type';
 import pushApi from '@apis/push/PushApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -118,11 +118,24 @@ function PushManagePage() {
   }, [request]);
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(rows);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '공지사항 목록.xlsx');
+    useExcelDown(rows, '푸쉬알림');
+  };
+  const excelAllDown = () => {
+    const req = {
+      searchType: request.searchType,
+      keyword: request.keyword,
+      page: 0,
+      size: total,
+    };
+    pushApi
+      .getPushList(req)
+      .then((response) => {
+        if (response.success) {
+          const { data } = response;
+          useExcelDown(data.content, '전체 푸쉬알림');
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -140,7 +153,9 @@ function PushManagePage() {
         <PageTitle
           title="푸쉬알림 관리"
           onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
           isDownload
+          isAllDownLoad
         />
 
         <TableTop
@@ -151,6 +166,7 @@ function PushManagePage() {
               { value: 1, label: '전체' },
               { value: 2, label: '제목' },
               { value: 3, label: '푸쉬내용' },
+              { value: 4, label: '푸쉬대상' },
             ],
             searchType: request.searchType,
             keyword: request.keyword,
