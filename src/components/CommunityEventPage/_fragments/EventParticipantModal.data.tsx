@@ -1,4 +1,10 @@
-import { DataTableColumnType } from '@components/common/DataTable';
+import CustomSelect from '@components/common/CustomSelect';
+import {
+  DataTableColumnType,
+  DataTableRowType,
+} from '@components/common/DataTable';
+
+import { crypto } from '@utils/crypto';
 
 export type ParticipantColumnType =
   | 'id'
@@ -6,15 +12,32 @@ export type ParticipantColumnType =
   | 'nickName'
   | 'gender'
   | 'birthDate'
+  | 'phone'
   | 'emailAddress'
   | 'prize'
   | 'isWinner';
-export const PARTICIPANT_COLUMNS: DataTableColumnType<ParticipantColumnType>[] =
-  [
+
+class ParticipantEvent {
+  onClick?: (key: string, value: string | number) => void;
+  onChange?: (id: string, isWinner: string) => void;
+
+  constructor(
+    onClick: (key: string, value: string | number) => void,
+    event: (id: string, isWinner: string) => void,
+  ) {
+    if (event) {
+      this.onChange = event;
+    }
+    this.onClick = onClick;
+  }
+  readonly PARTICIPANT_COLUMNS: DataTableColumnType<ParticipantColumnType>[] = [
     {
       key: 'name',
       name: '이름',
       width: '9.1%',
+      render: (value: DataTableRowType<ParticipantColumnType>) => {
+        return crypto.decrypt(value.name as string);
+      },
     },
     {
       key: 'nickName',
@@ -31,6 +54,17 @@ export const PARTICIPANT_COLUMNS: DataTableColumnType<ParticipantColumnType>[] =
       key: 'birthDate',
       name: '나이',
       width: '5%',
+      render: (value: DataTableRowType<ParticipantColumnType>) => {
+        return crypto.decrypt(value.birthDate as string);
+      },
+    },
+    {
+      key: 'phone',
+      name: '연락처',
+      width: '7.5%',
+      render: (value: DataTableRowType<ParticipantColumnType>) => {
+        return crypto.decrypt(value.phone as string);
+      },
     },
     {
       key: 'emailAddress',
@@ -47,5 +81,25 @@ export const PARTICIPANT_COLUMNS: DataTableColumnType<ParticipantColumnType>[] =
       key: 'isWinner',
       name: '당첨여부',
       width: '7.5%',
+      render: (value: DataTableRowType<ParticipantColumnType>) => (
+        <CustomSelect
+          width={'65px'}
+          size="sm"
+          items={[
+            { value: 'true', label: '당첨' },
+            { value: 'false', label: '미당첨' },
+          ]}
+          defaultValue={value.isWinner === true ? 'true' : 'false'}
+          noBorder
+          onChange={(isWinner) =>
+            this.onChange
+              ? this.onChange(value.id as string, isWinner as string)
+              : undefined
+          }
+        />
+      ),
     },
   ];
+}
+
+export { ParticipantEvent };

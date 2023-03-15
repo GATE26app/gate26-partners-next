@@ -45,6 +45,7 @@ type EventParticipantList = EventListDTOType & {
     name: string;
     nickName: string;
     gender: string;
+    phone: string;
     birthDate: number;
     emailAddress: string;
     prize: string;

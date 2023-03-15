@@ -25,15 +25,19 @@ const FileUpload = ({ onClick, fileValue, onChange, onDelete }: FileProps) => {
     const target = e.currentTarget;
     const file = (target.files as FileList)[0];
     setFileName(file?.name);
-    alert('aaaaa');
     const formData = new FormData();
     formData.append('file', file);
 
     eventApi.postEventParticipantList(formData).then((response) => {
       console.log(`response ${response.success}`);
-    });
 
-    if (onChange) onChange(file);
+      if (response.success) {
+        alert('엑셀 업로드 완료!');
+        if (onChange) onChange(file);
+      } else {
+        alert('업로드에 실패하였습니다. 잠시 후 다시 시도해주세요');
+      }
+    });
   };
 
   const fileUpload = () => {

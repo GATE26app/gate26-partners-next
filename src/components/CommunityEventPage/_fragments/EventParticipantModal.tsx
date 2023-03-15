@@ -4,7 +4,6 @@ import * as excel from 'xlsx';
 
 import {
   Flex,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,8 +23,8 @@ import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
 import {
-  PARTICIPANT_COLUMNS,
   ParticipantColumnType,
+  ParticipantEvent,
 } from './EventParticipantModal.data';
 
 interface EventParticipantModalProps extends Omit<ModalProps, 'children'> {
@@ -40,7 +39,7 @@ const EventParticipantModal = ({
 }: EventParticipantModalProps) => {
   const [request, setRequest] = useState({
     eventId: targetId,
-    searchType: '',
+    searchType: SEARCH_TYPE[0],
     keyword: '',
     page: 0,
     size: 10,
@@ -61,7 +60,6 @@ const EventParticipantModal = ({
   }, [request]);
 
   const handleChangeInput = (key: string, value: string | number) => {
-    alert('변경되었습니다!');
     const newRequest = { ...request, [key]: value };
     if (key === 'size') {
       newRequest.page = 0;
@@ -79,6 +77,11 @@ const EventParticipantModal = ({
       setUser(data.content);
     }
   };
+
+  const participantEvent = new ParticipantEvent(
+    handleChangeInput,
+    handleChangeOpen,
+  );
 
   const renderContent = () => {
     return (
@@ -104,7 +107,7 @@ const EventParticipantModal = ({
         />
         <DataTable
           variant={'gray'}
-          columns={PARTICIPANT_COLUMNS}
+          columns={participantEvent.PARTICIPANT_COLUMNS}
           rows={user}
           maxH="270px"
           paginationProps={{
@@ -122,10 +125,23 @@ const EventParticipantModal = ({
       </div>
     );
   };
-
   const excelDown = () => {
-    useExcelDown(user, '이벤트 참여자 목록');
+    useExcelDown(user, '이벤트 참여자');
   };
+
+  async function handleChangeOpen(id: string, isWinner: string) {
+    const response = await eventApi.putEventParicipantUpdateOpen(isWinner);
+    if (response.success) {
+      const newRows = [...user];
+      newRows.map((row) => {
+        if (row.id === id) {
+          return { ...row, isWinner };
+        }
+        return row;
+      });
+      setUser(newRows);
+    }
+  }
 
   return (
     <Modal
@@ -144,7 +160,6 @@ const EventParticipantModal = ({
               <FileUpload
                 fileValue={excel}
                 onChange={(file) => handleChangeInput('xlsx', excel)}
-                // onDelete={() => setImgUrl('')}
               />
               <Flex ml="10px" />
               <IconButton
