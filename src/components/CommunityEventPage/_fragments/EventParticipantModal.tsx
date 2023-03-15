@@ -4,6 +4,7 @@ import * as excel from 'xlsx';
 
 import {
   Flex,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,9 +15,11 @@ import {
 } from '@chakra-ui/react';
 
 import eventApi from '@apis/event/EventApi';
+import useExcelDown from '@hooks/useExcelDown';
 
 import Button from '@components/common/Button';
 import DataTable, { DataTableRowType } from '@components/common/DataTable';
+import FileUpload from '@components/common/ExcelUpload/ExcelUpload';
 import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
@@ -37,7 +40,7 @@ const EventParticipantModal = ({
 }: EventParticipantModalProps) => {
   const [request, setRequest] = useState({
     eventId: targetId,
-    searchType: SEARCH_TYPE[0],
+    searchType: '',
     keyword: '',
     page: 0,
     size: 10,
@@ -46,6 +49,7 @@ const EventParticipantModal = ({
     [],
   );
   const [total, setTotal] = useState<number>(100);
+  const [excel, setExcel] = useState<string>('');
 
   useEffect(() => {
     setRequest({ ...request, eventId: targetId });
@@ -57,6 +61,7 @@ const EventParticipantModal = ({
   }, [request]);
 
   const handleChangeInput = (key: string, value: string | number) => {
+    alert('변경되었습니다!');
     const newRequest = { ...request, [key]: value };
     if (key === 'size') {
       newRequest.page = 0;
@@ -119,11 +124,7 @@ const EventParticipantModal = ({
   };
 
   const excelDown = () => {
-    console.log('다운로드 클릭' + excel);
-    const ws = excel?.utils?.json_to_sheet(user);
-    const wb = excel?.utils?.book_new();
-    excel?.utils?.book_append_sheet(wb, ws, 'Sheet1');
-    excel?.writeFile(wb, '이벤트 참가자 목록.xlsx');
+    useExcelDown(user, '이벤트 참여자 목록');
   };
 
   return (
@@ -139,13 +140,21 @@ const EventParticipantModal = ({
         <ModalHeader>
           <Flex justifyContent={'space-between'}>
             <span>참가자 목록</span>
-            <IconButton
-              type="download"
-              size="sm"
-              width="120px"
-              text="내보내기"
-              onClick={excelDown}
-            />
+            <Flex>
+              <FileUpload
+                fileValue={excel}
+                onChange={(file) => handleChangeInput('xlsx', excel)}
+                // onDelete={() => setImgUrl('')}
+              />
+              <Flex ml="10px" />
+              <IconButton
+                type="download"
+                size="sm"
+                width="120px"
+                text="내보내기"
+                onClick={excelDown}
+              />
+            </Flex>
           </Flex>
         </ModalHeader>
         <ModalBody>{renderContent()}</ModalBody>

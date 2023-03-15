@@ -6,6 +6,7 @@ import {
 } from '@components/common/DataTable';
 
 import { crypto } from '@utils/crypto';
+import { imgPath } from '@utils/format';
 
 export type UserColumnType =
   | 'userId'
@@ -38,7 +39,7 @@ class UserColumns {
       render: (value: DataTableRowType<UserColumnType>) => (
         <Image
           // src={value.profileImagePath as string}
-          src={`http://dresource.gate26.co.kr/img/downloadFile?filePath=${value.profileImagePath}`}
+          src={`${imgPath()}${value.profileImagePath}`}
           w="40px"
           h="40px"
           borderRadius="50%"

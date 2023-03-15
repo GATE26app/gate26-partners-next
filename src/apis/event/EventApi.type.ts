@@ -41,12 +41,14 @@ type EventListType = EventListDTOType & {
 
 type EventParticipantList = EventListDTOType & {
   content: {
-    userEventId: string;
-    userId: string;
-    userName: string;
+    id: string;
+    name: string;
+    nickName: string;
     gender: string;
-    age: number;
-    email: string;
+    birthDate: number;
+    emailAddress: string;
+    prize: string;
+    isWinner: boolean;
   }[];
 };
 
@@ -92,7 +94,7 @@ type EventParamGetType = {
 };
 type EventParticipantParamGetType = {
   eventId: string;
-  searchType?: number;
+  searchType?: number | any;
   keyword?: string;
   page?: number;
   size?: number;

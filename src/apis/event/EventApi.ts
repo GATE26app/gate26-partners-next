@@ -56,7 +56,7 @@ export class EventApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: '/event/user/list',
+      url: '/event/users',
       params,
     });
     return data;
@@ -140,6 +140,20 @@ export class EventApi {
       },
       url: `/event`,
       params: { eventId },
+    });
+    return data;
+  };
+
+  postEventParticipantList = async (
+    body: FormData,
+  ): Promise<AxiosResponseType<any>> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      data: body,
+      url: '/event/users/upload',
     });
     return data;
   };
