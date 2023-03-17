@@ -1,6 +1,6 @@
 # Next.js starter2
 
-똑똑한개발자에서 진행하는 프로젝트의 스타터 프로젝트 next-init 2.0.4입니다.
+똑똑한개발자에서 진행하는 프로젝트의 스타터 프로젝트 next-init 2.0.5입니다.
 
 # 🚀 Quick Start
 
