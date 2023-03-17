@@ -160,14 +160,14 @@ export class EventApi {
   };
 
   putEventParicipantUpdateOpen = async (
-    isWinner: string,
+    isWinner: string, userId: string
   ): Promise<AxiosResponseType<boolean>> => {
     const { data } = await this.axios({
       method: 'PUT',
       headers: {
         'X-AUTH-TOKEN': `${getToken()}`,
       },
-      url: `/event/users/{${getUserId()}`,
+      url: `/event/users/${userId}`,
       data: isWinner,
     });
     return data;

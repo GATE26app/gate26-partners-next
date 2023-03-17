@@ -26,6 +26,7 @@ import {
   ParticipantColumnType,
   ParticipantEvent,
 } from './EventParticipantModal.data';
+import { crypto } from '@utils/crypto';
 
 interface EventParticipantModalProps extends Omit<ModalProps, 'children'> {
   targetId: string;
@@ -73,7 +74,19 @@ const EventParticipantModal = ({
     const { data, count, success } = res;
 
     if (success) {
-      setTotal(count);
+      data.content.map((ele) => {
+        /* age : 실제 세는 나이 */
+        const today = new Date();
+        const birthArray = crypto.decrypt(ele.birthDate).split('-');
+        const birthDate = new Date(parseInt(birthArray[0]), parseInt(birthArray[1])-1, parseInt(birthArray[2]))
+        let age = today.getFullYear() - birthDate.getFullYear()+1
+        
+        /* 이름, 날짜, 연락처 복호화 */
+        ele.birthDate = age
+        ele.name = crypto.decrypt(ele.name as string);
+        ele.phone = crypto.decrypt(ele.phone as string);
+      })
+      setTotal(data.totalElements);
       setUser(data.content);
     }
   };
@@ -91,12 +104,13 @@ const EventParticipantModal = ({
           limit={request.size}
           search={{
             searchTypes: [
-              { value: 1, label: '유저이름' },
+              // { value: 1, label: '유저이름' },
               { value: 2, label: '성별' },
-              { value: 3, label: '나이' },
+              // { value: 3, label: '나이' },
               { value: 4, label: '이메일' },
             ],
-            keyword: '',
+            keyword: request.keyword,
+            searchType: request.searchType,
             onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('searchType', type),
@@ -130,16 +144,9 @@ const EventParticipantModal = ({
   };
 
   async function handleChangeOpen(id: string, isWinner: string) {
-    const response = await eventApi.putEventParicipantUpdateOpen(isWinner);
+    const response = await eventApi.putEventParicipantUpdateOpen(isWinner, id);
     if (response.success) {
-      const newRows = [...user];
-      newRows.map((row) => {
-        if (row.id === id) {
-          return { ...row, isWinner };
-        }
-        return row;
-      });
-      setUser(newRows);
+      getParticipantList();
     }
   }
 
@@ -159,7 +166,8 @@ const EventParticipantModal = ({
             <Flex>
               <FileUpload
                 fileValue={excel}
-                onChange={(file) => handleChangeInput('xlsx', excel)}
+                onChange={() => handleChangeInput('xlsx', excel)}
+                onClick={() => handleChangeInput('xlsx', excel)}
               />
               <Flex ml="10px" />
               <IconButton
