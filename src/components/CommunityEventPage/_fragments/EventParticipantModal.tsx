@@ -4,7 +4,6 @@ import * as excel from 'xlsx';
 
 import {
   Flex,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,9 +23,10 @@ import IconButton from '@components/common/IconButton';
 import TableTop from '@components/common/TableTop';
 
 import {
-  PARTICIPANT_COLUMNS,
   ParticipantColumnType,
+  ParticipantEvent,
 } from './EventParticipantModal.data';
+import { crypto } from '@utils/crypto';
 
 interface EventParticipantModalProps extends Omit<ModalProps, 'children'> {
   targetId: string;
@@ -40,7 +40,7 @@ const EventParticipantModal = ({
 }: EventParticipantModalProps) => {
   const [request, setRequest] = useState({
     eventId: targetId,
-    searchType: '',
+    searchType: SEARCH_TYPE[0],
     keyword: '',
     page: 0,
     size: 10,
@@ -61,7 +61,6 @@ const EventParticipantModal = ({
   }, [request]);
 
   const handleChangeInput = (key: string, value: string | number) => {
-    alert('변경되었습니다!');
     const newRequest = { ...request, [key]: value };
     if (key === 'size') {
       newRequest.page = 0;
@@ -75,10 +74,27 @@ const EventParticipantModal = ({
     const { data, count, success } = res;
 
     if (success) {
-      setTotal(count);
+      data.content.map((ele) => {
+        /* age : 실제 세는 나이 */
+        const today = new Date();
+        const birthArray = crypto.decrypt(ele.birthDate).split('-');
+        const birthDate = new Date(parseInt(birthArray[0]), parseInt(birthArray[1])-1, parseInt(birthArray[2]))
+        let age = today.getFullYear() - birthDate.getFullYear()+1
+        
+        /* 이름, 날짜, 연락처 복호화 */
+        ele.birthDate = age
+        ele.name = crypto.decrypt(ele.name as string);
+        ele.phone = crypto.decrypt(ele.phone as string);
+      })
+      setTotal(data.totalElements);
       setUser(data.content);
     }
   };
+
+  const participantEvent = new ParticipantEvent(
+    handleChangeInput,
+    handleChangeOpen,
+  );
 
   const renderContent = () => {
     return (
@@ -88,12 +104,13 @@ const EventParticipantModal = ({
           limit={request.size}
           search={{
             searchTypes: [
-              { value: 1, label: '유저이름' },
+              // { value: 1, label: '유저이름' },
               { value: 2, label: '성별' },
-              { value: 3, label: '나이' },
+              // { value: 3, label: '나이' },
               { value: 4, label: '이메일' },
             ],
-            keyword: '',
+            keyword: request.keyword,
+            searchType: request.searchType,
             onChangeLimit: (value: number) => handleChangeInput('size', value),
             onChangeSearchType: (type: number) =>
               handleChangeInput('searchType', type),
@@ -104,7 +121,7 @@ const EventParticipantModal = ({
         />
         <DataTable
           variant={'gray'}
-          columns={PARTICIPANT_COLUMNS}
+          columns={participantEvent.PARTICIPANT_COLUMNS}
           rows={user}
           maxH="270px"
           paginationProps={{
@@ -122,10 +139,16 @@ const EventParticipantModal = ({
       </div>
     );
   };
-
   const excelDown = () => {
-    useExcelDown(user, '이벤트 참여자 목록');
+    useExcelDown(user, '이벤트 참여자');
   };
+
+  async function handleChangeOpen(id: string, isWinner: string) {
+    const response = await eventApi.putEventParicipantUpdateOpen(isWinner, id);
+    if (response.success) {
+      getParticipantList();
+    }
+  }
 
   return (
     <Modal
@@ -143,8 +166,8 @@ const EventParticipantModal = ({
             <Flex>
               <FileUpload
                 fileValue={excel}
-                onChange={(file) => handleChangeInput('xlsx', excel)}
-                // onDelete={() => setImgUrl('')}
+                onChange={() => handleChangeInput('xlsx', excel)}
+                onClick={() => handleChangeInput('xlsx', excel)}
               />
               <Flex ml="10px" />
               <IconButton

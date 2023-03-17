@@ -5,6 +5,7 @@ import instance, { AxiosResponseType } from '@apis/_axios/instance';
 import { formatDateTimeDash } from '@utils/format';
 import { getToken } from '@utils/localStorage/token';
 
+import { getUserId } from './../../utils/localStorage/token/index';
 import {
   EventListDTOType,
   EventListType,
@@ -154,6 +155,20 @@ export class EventApi {
       },
       data: body,
       url: '/event/users/upload',
+    });
+    return data;
+  };
+
+  putEventParicipantUpdateOpen = async (
+    isWinner: string, userId: string
+  ): Promise<AxiosResponseType<boolean>> => {
+    const { data } = await this.axios({
+      method: 'PUT',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/event/users/${userId}`,
+      data: isWinner,
     });
     return data;
   };

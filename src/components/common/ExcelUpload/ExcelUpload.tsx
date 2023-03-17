@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Input } from '@chakra-ui/react';
+import { Flex, Input } from '@chakra-ui/react';
 
 import eventApi from '@apis/event/EventApi';
-
-import IconButton from '@components/common/IconButton';
 
 import SmallButton from '../SmallButton';
 import { FileInputArea, FileWrapper, IconArea } from './ExcelUpload.Style';
@@ -25,15 +23,19 @@ const FileUpload = ({ onClick, fileValue, onChange, onDelete }: FileProps) => {
     const target = e.currentTarget;
     const file = (target.files as FileList)[0];
     setFileName(file?.name);
-    alert('aaaaa');
     const formData = new FormData();
     formData.append('file', file);
 
     eventApi.postEventParticipantList(formData).then((response) => {
       console.log(`response ${response.success}`);
-    });
 
-    if (onChange) onChange(file);
+      if (response.success) {
+        alert('엑셀 업로드 완료!');
+        if (onChange) onChange(file);
+      } else {
+        alert('업로드에 실패하였습니다. 잠시 후 다시 시도해주세요');
+      }
+    });
   };
 
   const fileUpload = () => {
@@ -59,15 +61,20 @@ const FileUpload = ({ onClick, fileValue, onChange, onDelete }: FileProps) => {
   }, [fileValue]);
 
   return (
-    <FileWrapper>
-      <SmallButton
-        width="57px"
-        text="파일선택"
-        color="file"
-        height="26px"
-        label={`file-${id}`}
-      />
-      <FileInputArea>
+    <FileWrapper
+      style={{ "height":"100%"}}
+    >
+      {/* <FileInputArea
+      > */}
+        <input
+          style={{"display":"none"}}
+          type="file"
+          id={`file-${id}`}
+          onChange={onFileInputChange}
+          ref={file}
+          accept=".xlsx"
+        />
+         
         <Input
           placeholder="선택된 파일 없음"
           isInvalid={true}
@@ -83,14 +90,15 @@ const FileUpload = ({ onClick, fileValue, onChange, onDelete }: FileProps) => {
           padding={0}
           defaultValue={fileName}
         />
-        <input
-          type="file"
-          id={`file-${id}`}
-          onChange={onFileInputChange}
-          ref={file}
-          accept=".xlsx"
+        <SmallButton
+          width="120px"
+          height='100%'
+          color={"blue"}
+          text="파일선택"
+          onClick={() => onFileInputChange}
+          label={`file-${id}`}
         />
-      </FileInputArea>
+      {/* </FileInputArea> */}
     </FileWrapper>
   );
 };
