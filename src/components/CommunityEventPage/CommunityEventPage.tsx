@@ -203,7 +203,6 @@ function CommunityEventPage() {
             searchTypes: [
               { value: 1, label: '전체' },
               { value: 2, label: '제목' },
-              { value: 3, label: '표시장소' },
             ],
             keyword: request.keyword,
             searchType: request.searchType,

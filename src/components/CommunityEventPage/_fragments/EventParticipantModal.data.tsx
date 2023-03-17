@@ -35,9 +35,6 @@ class ParticipantEvent {
       key: 'name',
       name: '이름',
       width: '9.1%',
-      render: (value: DataTableRowType<ParticipantColumnType>) => {
-        return crypto.decrypt(value.name as string);
-      },
     },
     {
       key: 'nickName',
@@ -49,22 +46,22 @@ class ParticipantEvent {
       key: 'gender',
       name: '성별',
       width: '20%',
+      render: (value: DataTableRowType<ParticipantColumnType>) => {
+        console.log(value.gender as string)
+        if(value.gender as string == 'M') {
+          return '남'
+        } else return '여'
+      },
     },
     {
       key: 'birthDate',
       name: '나이',
       width: '5%',
-      render: (value: DataTableRowType<ParticipantColumnType>) => {
-        return crypto.decrypt(value.birthDate as string);
-      },
     },
     {
       key: 'phone',
       name: '연락처',
       width: '7.5%',
-      render: (value: DataTableRowType<ParticipantColumnType>) => {
-        return crypto.decrypt(value.phone as string);
-      },
     },
     {
       key: 'emailAddress',
