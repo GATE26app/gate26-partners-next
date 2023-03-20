@@ -15,6 +15,7 @@ import TableTop from '@components/common/TableTop';
 import { UserColumnType, UserColumns } from './UserListPage.data';
 import userListApi from '@apis/userList/UserListApi';
 import useExcelDown from '@hooks/useExcelDown';
+import { crypto } from '@utils/crypto';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -94,7 +95,11 @@ function UserListPage() {
         let listData: DataTableRowType<UserColumnType>[] = [];
         if (success) {
           data?.content.forEach((element) => {
+            element.birthDate = crypto.decrypt(element.birthDate);
+            element.name = crypto.decrypt(element.name as string);
+            element.phone = crypto.decrypt(element.phone as string);
             listData.push(element);
+
           });
           setTotal(data?.totalElements === undefined ? 0 : data?.totalElements);
         } else {
@@ -135,6 +140,11 @@ function UserListPage() {
       .then((response) => {
         if (response.success) {
           const { data } = response;
+          data?.content.forEach((element) => {
+            element.birthDate = crypto.decrypt(element.birthDate);
+            element.name = crypto.decrypt(element.name as string);
+            element.phone = crypto.decrypt(element.phone as string);
+          });
           useExcelDown(data?.content, '전체 회원');
           // crypto.decrypt(data.content[0].name as string);
         }

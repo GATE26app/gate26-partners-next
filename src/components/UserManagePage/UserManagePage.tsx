@@ -83,6 +83,9 @@ function UserManagePage() {
       .then((response) => {
         if (response.success) {
           const { data } = response;
+          data?.content.forEach((element) => {
+            element.name = crypto.decrypt(element.name as string);
+          });
           setTotal(data.totalElements);
           setRows(data.content);
         }
@@ -138,7 +141,6 @@ function UserManagePage() {
             listData.push(element);
           });
           useExcelDown(data.content, '전체 회원 관리');
-          // crypto.decrypt(data.content[0].name as string);
         }
       })
       .catch((err) => console.log(err));
