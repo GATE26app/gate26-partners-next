@@ -45,9 +45,6 @@ class UserManageColumns {
       key: 'name',
       name: '이름',
       width: '11.67%',
-      render: (value: DataTableRowType<UserManageColumnType>) => {
-        return crypto.decrypt(value.name as string);
-      },
     },
     {
       key: 'emailAddress',

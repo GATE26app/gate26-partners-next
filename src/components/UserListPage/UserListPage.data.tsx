@@ -51,9 +51,6 @@ class UserColumns {
       key: 'name',
       name: '이름',
       width: '6.67%',
-      render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.name as string);
-      },
     },
     {
       key: 'nickName',
@@ -91,17 +88,11 @@ class UserColumns {
       key: 'phone',
       name: '핸드폰 번호',
       width: '10%',
-      render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.phone as string);
-      },
     },
     {
       key: 'birthDate',
       name: '생년월일',
       width: '8.33%',
-      render: (value: DataTableRowType<UserColumnType>) => {
-        return crypto.decrypt(value.birthDate as string);
-      },
     },
     {
       key: 'signupPath',
