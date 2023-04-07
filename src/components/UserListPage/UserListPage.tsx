@@ -43,21 +43,17 @@ function UserListPage() {
     pageSize.current = value;
   };
 
-  const searchType = useRef('');
+  const searchType = useRef(0);
   const setSearchType = (value: number) => {
-    switch (value) {
+    switch(value){
       case 1:
-        searchType.current = 'name'; // 이름 검색
-        return;
+        searchType.current = value
       case 2:
-        searchType.current = 'nickName'; // 닉네임 검색
-        return;
+        searchType.current = value
       case 3:
-        searchType.current = 'emailAddress'; // 이메일 검색
-        return;
-      default: // 전체 검색
-        searchType.current = '';
-        return;
+        searchType.current = value
+      default:
+        return
     }
   };
 
@@ -67,6 +63,8 @@ function UserListPage() {
   };
 
   const [request, setRequest] = useState<ReqLoungeProps>({
+    searchType: 0,
+    keyword: '',
     page: 0,
     size: 10,
   });
@@ -177,6 +175,7 @@ function UserListPage() {
           total={total}
           search={{
             searchTypes: searchTypeList,
+            searchType: searchType.current,
             keyword: request.keyword as string,
             onChangeLimit: (value: number) => handleChangeInput('limit', value),
             onChangeSearchType: (type: number) => {

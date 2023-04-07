@@ -28,6 +28,6 @@ export type UserInfoDTO = {
 export type RequestDTOType = {
   page: number;
   size: number;
-  type?: string;
+  type?: number;
   keyword?: string;
 };
