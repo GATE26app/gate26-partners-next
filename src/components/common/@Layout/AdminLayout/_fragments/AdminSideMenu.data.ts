@@ -29,6 +29,11 @@ export const MenuRouter: MenuType[] = [
         name: '신고 조회',
         path: '/user/report',
       },
+
+      // {
+      //   name: '앱 회원 통계',
+      //   path: '/statistics/user',
+      // },
     ],
   },
   {

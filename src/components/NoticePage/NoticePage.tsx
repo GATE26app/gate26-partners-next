@@ -10,6 +10,7 @@ import { Flex } from '@chakra-ui/react';
 import noticeApi from '@apis/notice/NoticeApi';
 import { NoticeParamGetType } from '@apis/notice/NoticeApi.type';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
 import BreadCrumb from '@components/common/BreadCrumb';
@@ -21,7 +22,6 @@ import { LIST_COLUMNS, NoticeColumnType } from './NoticePage.data';
 import NoticeDetailModal from './_fragments/NoticeDetailModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
-import useExcelDown from '@hooks/useExcelDown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -137,11 +137,13 @@ function NoticePage() {
         padding="20px"
       >
         <BreadCrumb depth={['공지사항']} />
-        <PageTitle title="공지사항" 
-        onClickDownload={excelDown} 
-        onClickAllDownload={excelAllDown}
-        isDownload
-        isAllDownLoad />
+        <PageTitle
+          title="공지사항"
+          onClickDownload={excelDown}
+          onClickAllDownload={excelAllDown}
+          isDownload
+          isAllDownLoad
+        />
 
         <TableTop
           total={total}

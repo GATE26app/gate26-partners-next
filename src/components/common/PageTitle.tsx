@@ -3,7 +3,7 @@ import { Flex, Text } from '@chakra-ui/react';
 import IconButton from './IconButton';
 
 interface PageTitleProps {
-  title: string;
+  title?: string;
   isDownload?: boolean;
   isAllDownLoad?: boolean;
   noMargin?: boolean;

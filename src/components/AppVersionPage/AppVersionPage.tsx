@@ -9,6 +9,7 @@ import { Flex } from '@chakra-ui/react';
 
 import appManageApi from '@apis/appmanage/AppManageApi';
 import { customModalSliceAction } from '@features/customModal/customModalSlice';
+import useExcelDown from '@hooks/useExcelDown';
 
 import VersionEditModal from '@components/AppVersionPage/_fragments/VersionEditModal';
 import withAdminLayout from '@components/common/@Layout/AdminLayout';
@@ -23,7 +24,6 @@ import {
 } from './AppVersionPage.data';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
-import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqAppVersionProps {
   keyword?: string;
@@ -209,7 +209,8 @@ function AppVersionPagePage() {
       page: 0,
       size: total,
     };
-    appManageApi.getAppVersionList(req)
+    appManageApi
+      .getAppVersionList(req)
       .then((response) => {
         if (response.success) {
           const { data } = response;
