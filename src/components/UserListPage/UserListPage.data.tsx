@@ -19,6 +19,7 @@ export type UserColumnType =
   | 'birthDate'
   | 'phone'
   | 'emailAddress'
+  | 'recommendeeNickname'
   | 'createdDate'
   | 'lastAccessDate';
 
@@ -98,6 +99,11 @@ class UserColumns {
       key: 'signupPath',
       name: '가입경로',
       width: '8.33%',
+    },
+    {
+      key: 'recommendeeNickname',
+      name: '추천인',
+      width: '10%',
     },
     {
       key: 'createdDate',

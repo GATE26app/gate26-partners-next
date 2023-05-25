@@ -21,6 +21,7 @@ export type UserInfoDTO = {
   birthDate: string;
   phone: string;
   emailAddress: string;
+  recommendeeNickname: string;
   createdDate: string;
   lastAccessDate: string;
 };
