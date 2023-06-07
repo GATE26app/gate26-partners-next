@@ -70,3 +70,25 @@ export type CommunityChatPostResponse = {
 
 // 오픈채팅 삭제
 export type CommunityChatDeleteDTOType = 'T' | 'F';
+
+export type ChatroomListInfo = {
+  roomId: string;
+  roomName: string;
+}
+
+// 채팅방 데이터 조회 파라미터
+export type ChatMessageRequestType = {
+  roomId: string;
+  roomName?: string;
+  startDate: string;
+  endDate: string;
+};
+
+// 채팅방 데이터 응답
+export type ChatMessageResponseType = {
+  senderId: string;
+  senderName: string;
+  message: string;
+  sentDate: string;
+};
+

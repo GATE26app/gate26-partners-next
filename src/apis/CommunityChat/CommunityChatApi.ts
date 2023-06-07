@@ -11,6 +11,9 @@ import {
   CommunityChatParamGetType,
   CommunityChatPostResponse,
   CommunityChatPostType,
+  ChatroomListInfo,
+  ChatMessageRequestType,
+  ChatMessageResponseType
 } from './CommunityChatApi.type';
 
 export class CommunityChatApi {
@@ -86,6 +89,34 @@ export class CommunityChatApi {
       },
       url: `/chatroom/delete`,
       params: { roomId },
+    });
+    return data;
+  };
+
+  getChatroomListByRoomType = async (
+    roomType: string,
+  ): Promise<AxiosResponseType<ChatroomListInfo[]>> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/chatroom/type`,
+      params: { roomType },
+    });
+    return data;
+  };
+
+  getMessagesByRoomIdAndDate = async (
+    params: ChatMessageRequestType,
+  ): Promise<AxiosResponseType<Map<string, ChatMessageResponseType>>> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken()}`,
+      },
+      url: `/chat/messages`,
+      params
     });
     return data;
   };
