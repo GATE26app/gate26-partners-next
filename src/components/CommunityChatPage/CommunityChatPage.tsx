@@ -16,6 +16,7 @@ import TableTop from '@components/common/TableTop';
 
 import { CHAT_COLUMNS, ChatColumnType } from './CommunityChatPage.data';
 import ChatDetailModal from './_fragments/ChatDetailModal';
+import MessageDownloadModal from './_fragments/MessageDownloadModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import useExcelDown from '@hooks/useExcelDown';
@@ -57,6 +58,9 @@ function CommunityChatPage() {
   };
 
   const handleCreateRow = () =>
+    setModal({ isOpen: true, type: 'create', detail: null });
+
+  const handleDownloadBtn = () =>
     setModal({ isOpen: true, type: 'create', detail: null });
 
   const handleEditRow = (row: DataTableRowType<ChatColumnType>) => {
@@ -173,6 +177,11 @@ function CommunityChatPage() {
             width: '103px',
             onClickCreate: handleCreateRow,
           }}
+          extraButton={{
+            title: '대화 다운받기',
+            width: '120px',
+            onClickOpen: handleDownloadBtn,
+          }}
         />
         <DataTable
           columns={CHAT_COLUMNS}
@@ -201,6 +210,14 @@ function CommunityChatPage() {
         onComplete={() => {
           handleCloseModal();
           getChatList();
+        }}
+      />
+      <MessageDownloadModal
+        isOpen={modal.isOpen && modal.type !== undefined}
+        detail={modal.detail}
+        onClose={handleCloseModal}
+        onComplete={() => {
+          handleCloseModal();
         }}
       />
     </>

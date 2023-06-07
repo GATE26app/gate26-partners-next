@@ -24,14 +24,16 @@ interface ButtonProps {
   title: string;
   width?: string;
   onClickCreate?: () => void;
+  onClickOpen?: () => void;
 }
 interface TableTopProps {
   total: number;
   limit?: number;
   search: SearchProps;
   createButton?: ButtonProps;
+  extraButton?: ButtonProps;
 }
-const TableTop = ({ total, limit, search, createButton }: TableTopProps) => {
+const TableTop = ({ total, limit, search, createButton, extraButton }: TableTopProps) => {
   const {
     searchTypes,
     searchType,
@@ -43,7 +45,10 @@ const TableTop = ({ total, limit, search, createButton }: TableTopProps) => {
   } = search;
   const buttonWidth = createButton?.width;
   const buttonTitle = createButton?.title;
+  const extraBtnWidth = extraButton?.width;
+  const extraBtnTitle = extraButton?.title;
   const onClickCreate = createButton?.onClickCreate;
+  const onClickOpen = extraButton?.onClickOpen;
   return (
     <Flex
       justifyContent={'space-between'}
@@ -73,6 +78,15 @@ const TableTop = ({ total, limit, search, createButton }: TableTopProps) => {
             width={buttonWidth ? buttonWidth : undefined}
             text={buttonTitle ? buttonTitle : ''}
             onClick={onClickCreate}
+          />
+        )}
+        {extraButton && (
+          <IconButton
+            type={'download'}
+            size="md"
+            width={extraBtnWidth ? extraBtnWidth : undefined}
+            text={extraBtnTitle ? extraBtnTitle : ''}
+            onClick={onClickOpen}
           />
         )}
       </Flex>
