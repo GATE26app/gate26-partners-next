@@ -45,6 +45,7 @@ function UserListPage() {
 
   const searchType = useRef('');
   const setSearchType = (value: string) => {
+    console.log(value);
     switch(value){
       case 'name':
         searchType.current = value
@@ -53,6 +54,7 @@ function UserListPage() {
       case 'emailAddress':
         searchType.current = value
       default:
+        searchType.current = value
         return
     }
   };
