@@ -11,6 +11,7 @@ import { crypto } from '@utils/crypto';
 export type UserManageColumnType =
   | 'userId'
   | 'name'
+  | 'nickName'
   | 'emailAddress'
   | 'activeUser'
   | 'leaveDate'
@@ -49,6 +50,11 @@ class UserManageColumns {
     {
       key: 'emailAddress',
       name: '이메일',
+      width: '19.17%',
+    },
+    {
+      key: 'nickName',
+      name: '닉네임',
       width: '19.17%',
     },
     {
