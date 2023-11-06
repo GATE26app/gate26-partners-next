@@ -19,7 +19,7 @@ import { crypto } from '@utils/crypto';
 
 interface ReqLoungeProps {
   keyword?: string;
-  searchType?: number;
+  searchType?: string;
   page: number;
   size: number;
 }
@@ -27,10 +27,10 @@ interface ReqLoungeProps {
 function UserListPage() {
   // 검색 구분
   const searchTypeList = [
-    { value: 0, label: '전체' },
-    { value: 1, label: '이름' },
-    { value: 2, label: '닉네임' },
-    { value: 3, label: '이메일' },
+    { value: '', label: '전체' },
+    { value: 'name', label: '이름' },
+    { value: 'nickName', label: '닉네임' },
+    { value: 'emailAddress', label: '이메일' },
   ];
 
   const pageNumber = useRef(0);
@@ -43,14 +43,14 @@ function UserListPage() {
     pageSize.current = value;
   };
 
-  const searchType = useRef(0);
-  const setSearchType = (value: number) => {
+  const searchType = useRef('');
+  const setSearchType = (value: string) => {
     switch(value){
-      case 1:
+      case 'name':
         searchType.current = value
-      case 2:
+      case 'nickName':
         searchType.current = value
-      case 3:
+      case 'emailAddress':
         searchType.current = value
       default:
         return
@@ -63,7 +63,7 @@ function UserListPage() {
   };
 
   const [request, setRequest] = useState<ReqLoungeProps>({
-    searchType: 0,
+    searchType: '',
     keyword: '',
     page: 0,
     size: 10,
@@ -84,7 +84,7 @@ function UserListPage() {
       page: pageNumber.current,
       size: pageSize.current,
       keyword: keyword.current,
-      type: searchType.current,
+      searchType: searchType.current,
     };
     setRequest(requestParams);
     UserListApi.getUserList(requestParams)
@@ -117,7 +117,7 @@ function UserListPage() {
       setPage(0);
       setPageSize(value as number);
     } else if (key === 'searchType') {
-      setSearchType(value as number);
+      setSearchType(value as string);
     } else if (key === 'keyword') {
       setKeyword(value as string);
     }

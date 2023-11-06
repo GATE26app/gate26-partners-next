@@ -29,6 +29,6 @@ export type UserInfoDTO = {
 export type RequestDTOType = {
   page: number;
   size: number;
-  type?: number;
+  searchType?: string;
   keyword?: string;
 };
