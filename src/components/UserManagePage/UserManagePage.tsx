@@ -29,7 +29,7 @@ import useExcelDown from '@hooks/useExcelDown';
 
 interface ReqLoungeProps {
   keyword?: string;
-  searchType?: number;
+  searchType?: number | string;
   page: number;
   size: number;
 }
@@ -43,15 +43,15 @@ interface ModalProps {
 function UserManagePage() {
   // 검색 구분
   const searchTypeList = [
-    { value: 0, label: '전체' },
-    { value: 1, label: '이름' },
-    { value: 2, label: '닉네임' },
-    { value: 3, label: '이메일' },
+    { value: '', label: '전체' },
+    { value: 'name', label: '이름' },
+    { value: 'nickName', label: '닉네임' },
+    { value: 'emailAddress', label: '이메일' },
   ];
 
   // 페이지 세팅
   const [request, setRequest] = useState<ReqLoungeProps>({
-    searchType: 0,
+    searchType: '',
     keyword: '',
     page: 0,
     size: 10,
@@ -180,7 +180,10 @@ function UserManagePage() {
             onChangeKeyword: (keyword: string) => {
               handleChangeInput('keyword', keyword);
             },
-            onClickSearch: () => console.log('검색'),
+            onClickSearch: () => {
+              console.log('검색');
+              getMemberInfo();
+            }
           }}
         />
         <DataTable

@@ -161,6 +161,7 @@ export type UserManageListResponse = MemberDTOType & {
     activeUser: string;
     emailAddress: string;
     name: string;
+    nickName: string;
     leaveDate: string;
     reportedCount: number;
     stampCount: number;

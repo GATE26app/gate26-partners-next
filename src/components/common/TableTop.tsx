@@ -8,12 +8,12 @@ import styled from '@emotion/styled';
 import { Light } from '@theme/foundations/colors';
 
 interface SearchTypeProps {
-  value: number;
+  value: number | string;
   label: string;
 }
 interface SearchProps {
   searchTypes: SearchTypeProps[];
-  searchType?: number;
+  searchType?: number | string;
   keyword?: string;
   onChangeLimit: (value: number) => void;
   onChangeSearchType: (type: number) => void;
