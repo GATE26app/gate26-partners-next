@@ -6,6 +6,7 @@ import userSlice from '@features/user/userSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
 import customModalSlice from './customModal/customModalSlice';
+import orderModalSlice from './orderModal/orderModalSlice';
 
 export function makeStore() {
   return configureStore({
@@ -15,6 +16,7 @@ export function makeStore() {
       [userSlice.name]: userSlice.reducer,
       [modalSlice.name]: modalSlice.reducer,
       [customModalSlice.name]: customModalSlice.reducer,
+      [orderModalSlice.name]: orderModalSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ serializableCheck: false }),

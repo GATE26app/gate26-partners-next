@@ -46,7 +46,6 @@ const MenuSelect = ({
   const handleClickRefusal = (e: any) => {
     if (onClickRefusal) {
       onClickRefusal();
-      console.log(state);
     }
   };
   const handleClickAtom = (e: any) => {

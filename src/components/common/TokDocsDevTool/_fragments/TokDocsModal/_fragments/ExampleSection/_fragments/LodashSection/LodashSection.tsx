@@ -19,7 +19,6 @@ function LodashSection({ ...basisProps }: LodashPageContentProps) {
   // 검색 api 호출 시 debounce를 통하여 불필요한 통신을 막아줍니다.
   // sendQuery를 react-query로 바꿔서 사용할 수 있습니다.
   const sendQuery = React.useCallback((query: string) => {
-    console.log('debounceResult : ', { query });
     if (!query.length) return;
     const debounceResult = DATA.find((d) => d.includes(query));
     if (!debounceResult) return setResult('');
@@ -33,7 +32,6 @@ function LodashSection({ ...basisProps }: LodashPageContentProps) {
 
   const handleSearchChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(event.target.value);
       setSearchValue(event.target.value);
       delayedQueryCall(event.target.value);
     },

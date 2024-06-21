@@ -1,6 +1,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react';
 
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 import {
   Box,
@@ -11,7 +12,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { formatDate } from '@utils/format';
+import { formatDate, formatDated } from '@utils/format';
 
 import { PickerGrid } from './_fragments/DatePicker.style';
 import DateTimePicker from './_fragments/DateTimePicker';
@@ -29,6 +30,8 @@ interface CalendarProps {
   width?: string;
   onApply?: (val: dayjs.Dayjs) => void;
   disabled?: boolean;
+  minDateTime?: string;
+  maxDateTime?: string;
 }
 
 const DatePicker = ({
@@ -37,6 +40,8 @@ const DatePicker = ({
   width,
   onApply,
   disabled,
+  minDateTime,
+  maxDateTime,
 }: CalendarProps) => {
   const originDate = curDate?.clone();
   const [date, setDate] = useState<dayjs.Dayjs>(curDate);
@@ -73,7 +78,13 @@ const DatePicker = ({
       >
         <PopoverTrigger>
           <Box w={width}>
-            <PickerInput disabled={disabled} text={formatDate(date)} />
+            <PickerInput
+              disabled={disabled}
+              text={
+                formatDated(date) == 'Invalid Date' ? '' : formatDated(date)
+              }
+              placeholder="날짜선택"
+            />
           </Box>
         </PopoverTrigger>
         <PopoverContent bg={'white'} w={'100%'} maxH={'430px'}>
@@ -83,6 +94,8 @@ const DatePicker = ({
                 date={date}
                 setDate={setDate}
                 onDayClick={handleDayClick}
+                minDateTime={minDateTime}
+                maxDateTime={maxDateTime}
               />
               {type === 'datetime' && (
                 <DateTimePicker date={date} onTimeClick={handleDayClick} />

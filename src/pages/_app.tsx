@@ -1,3 +1,7 @@
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
+import { ReactElement, ReactNode, useEffect } from 'react';
+
 import {
   ThemeProvider,
   useBreakpoint,
@@ -9,28 +13,54 @@ import ModalContainer from '@components/common/ModalContainer';
 import ToggleColorModeButton from '@components/common/ToggleColorModeButton';
 import TokDocsDevTools from '@components/common/TokDocsDevTool';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { mode } from '@theme/foundations/colors';
 
 import withAppProvider from 'contexts/app/app.provider';
 import { withCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import { withGlobalModalHandlerContext } from 'contexts/modal/useGlobalModalHandler.context';
 
-function MyApp({ Component, pageProps }: any) {
+// import { withOrderModalHandlerContext } from 'contexts/modal/useOrderModalHandler.context';
+
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const theme = useTheme();
   const { colorMode } = useColorMode();
   const br = useBreakpoint();
 
+  const getLayout = Component.getLayout ?? ((page) => page);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then((registration) => {
+          console.log(
+            'Service Worker registered with scope:',
+            registration.scope,
+          );
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
   return (
     // Provide the client to your App
     <ThemeProvider
       theme={{ ...theme, colors: { ...theme.colors, ...mode[colorMode] } }}
     >
       {/* <ToggleColorModeButton /> */}
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <ModalContainer />
-      <TokDocsDevTools />
+      {/* <OrderModalContainer /> */}
+      {/* <TokDocsDevTools /> */}
     </ThemeProvider>
   );
 }

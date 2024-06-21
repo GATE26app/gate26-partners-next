@@ -1,0 +1,176 @@
+import React, { MouseEvent, useRef, useState } from 'react';
+
+import { Box, Flex, Text } from '@chakra-ui/react';
+
+import {
+  GodsListItemDataListProps,
+  GoodsListItemProps,
+  GoodsListResponseProps,
+} from '@apis/goods/GoodsApi.type';
+
+import {
+  ColorBlack,
+  ColorDataTableBorderTop,
+  ColorGrayBorder,
+} from '@utils/_Palette';
+
+import GoodsCard from './GoodsCard';
+
+const listheader = [
+  {
+    id: 'id',
+    name: '번호',
+    width: 3,
+  },
+  {
+    id: 'management',
+    name: '관리',
+    width: 10,
+  },
+  {
+    id: 'code',
+    name: '상품코드',
+    width: 7,
+  },
+  {
+    id: 'country',
+    name: '나라/도시',
+    width: 7,
+  },
+  {
+    id: 'catagory',
+    name: '카테고리',
+    width: 8,
+  },
+  {
+    id: 'goods',
+    name: '상품정보',
+    width: 23,
+  },
+  {
+    id: 'date',
+    name: '등록일',
+    width: 8,
+  },
+  {
+    id: 'req',
+    name: '상품승인',
+    width: 5,
+  },
+  {
+    id: 'reqDate',
+    name: `승인요청\n 완료일`,
+    width: 8,
+  },
+  {
+    id: 'state',
+    name: '노출상태',
+    width: 6,
+  },
+  {
+    id: 'goodsDate',
+    name: '상품노출기간',
+    width: 9,
+  },
+  {
+    id: 'saleStatus',
+    name: '판매상태',
+    width: 6,
+  },
+];
+
+interface DataTableHeaderProps {
+  name: string;
+  width: number;
+}
+interface ListProps {
+  itemCode: string;
+  items: GoodsListItemProps[];
+}
+interface Props {
+  data: GoodsListResponseProps;
+  setOnSubmit: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export type { DataTableHeaderProps, ListProps };
+function GoodsDataTable({ data, setOnSubmit }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const [clickPoint, setClickPoint] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDownEvent = (e: MouseEvent<HTMLDivElement>) => {
+    setDragging(true);
+    if (scrollRef.current) {
+      setClickPoint(e.pageX);
+      setScrollLeft(scrollRef.current.scrollLeft);
+    }
+  };
+
+  const handleMouseMoveEvent = (e: MouseEvent<HTMLDivElement>) => {
+    if (!dragging) return;
+    e.preventDefault();
+    if (scrollRef.current) {
+      const walk = e.pageX - clickPoint;
+      scrollRef.current.scrollLeft = scrollLeft - walk;
+    }
+  };
+  return (
+    <Box
+      overflowX={'scroll'}
+      ref={scrollRef}
+      onMouseDown={handleMouseDownEvent}
+      onMouseLeave={() => setDragging(false)}
+      onMouseUp={() => setDragging(false)}
+      onMouseMove={handleMouseMoveEvent}
+    >
+      <Flex
+        flexDirection={'row'}
+        minW={'1550px'}
+        borderTopColor={ColorDataTableBorderTop}
+        borderBottomColor={ColorGrayBorder}
+        borderBottomWidth={1}
+        borderTopWidth={1}
+        mt={'15px'}
+        justifyContent={'center'}
+      >
+        {listheader.map((item: DataTableHeaderProps, index: number) => {
+          return (
+            <Flex
+              w={`${item.width}%`}
+              alignItems={'center'}
+              justifyContent={'center'}
+              h={'64px'}
+              key={index}
+            >
+              <Text
+                color={ColorBlack}
+                fontSize={'15px'}
+                fontWeight={700}
+                whiteSpace={'pre-wrap'}
+              >
+                {item.name}
+              </Text>
+            </Flex>
+          );
+        })}
+      </Flex>
+      {data &&
+        data?.data !== undefined &&
+        data?.data.map((itemData: GodsListItemDataListProps, index: number) => {
+          return (
+            <GoodsCard
+              key={index}
+              item={itemData}
+              header={listheader}
+              index={index}
+              totalCount={data.totalCount}
+              pageNo={data.pageNo}
+              setOnSubmit={setOnSubmit}
+            />
+          );
+        })}
+    </Box>
+  );
+}
+
+export default GoodsDataTable;

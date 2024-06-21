@@ -1,24 +1,23 @@
 import { StringLocale } from 'yup/lib/locale';
 
+export type TokenType = NullAble<{
+  access: string;
+  refresh: string;
+  // isRegister: boolean;
+}>;
+
 export type LoginDTOType = {
-  adminId: string;
-  adminPwd: string;
+  loginId: string;
+  password: string;
 };
 
 export type LoginDTO = {
-  code?: string;
   data?: LoginInfo;
   message?: string;
-  count?: number;
   success: boolean;
 };
 
 export type LoginInfo = {
-  adminId: number;
-  adminName: string;
-  adminEmail: number;
-  authId: number;
-  useYn: number;
-  createdDate: string;
   accessToken: string;
+  refreshToken: string;
 };

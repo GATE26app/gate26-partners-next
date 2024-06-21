@@ -1,6 +1,6 @@
-import { MutationHookParams } from '@apis/type';
+import { useMutation } from 'react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { MutationHookParams } from '@apis/type';
 
 import s3FileUploaderApi from './S3FileUploaderApi';
 

@@ -1,10 +1,10 @@
-import { AxiosError } from 'axios';
-
 import {
   UseInfiniteQueryOptions,
   UseMutationOptions,
   UseQueryOptions,
-} from '@tanstack/react-query';
+} from 'react-query';
+
+import { AxiosError } from 'axios';
 
 export type QueryHookParams<
   T extends CustomRequestFn,

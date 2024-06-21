@@ -106,7 +106,6 @@ function S3FileUploadSection() {
       file: url,
       files: fulfilled,
     };
-    console.log({ formData });
     toast({
       status: 'success',
       description: `mutateAsync 로 실행시점에 muate 의 결과 값을 가져올 수 있습니다. 콘솔 확인하기`,
@@ -121,14 +120,6 @@ function S3FileUploadSection() {
     }
     setter();
   }, [currentFile]);
-
-  // For : Console Log Current Fullfiled Muataion Data
-  React.useEffect(() => {
-    console.log(
-      'useMuattion 에서도 최근에 실행된 mutate 의 결과값을 useQuery 처럼 data 값으로 가져올 수 있습니다.',
-      { uploadedFileData, uploadedFilesData },
-    );
-  }, [uploadedFileData, uploadedFilesData]);
 
   return (
     <Box w="500px">

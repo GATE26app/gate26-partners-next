@@ -6,12 +6,12 @@ import { Button, ButtonProps } from '@chakra-ui/react';
  * @see Docs https://chakra-ui.com/docs/typography/text
  * @see Docs https://nextjs.org/docs/api-reference/next/link
  */
-
-export interface LinkButtonProps
-  extends LinkProps,
-    Omit<ButtonProps, 'as' | 'onMouseEnter' | 'onClick'> {
-  target?: React.AnchorHTMLAttributes<HTMLAnchorElement>['target'];
-}
+// LinkButtonProps 타입스크립트에러 any로 대체
+// export interface LinkButtonProps
+//   extends LinkProps,
+//     Omit<ButtonProps, 'as' | 'onMouseEnter' | 'onClick'> {
+//   target?: React.AnchorHTMLAttributes<HTMLAnchorElement>['target'];
+// }
 
 const LinkButton = ({
   href, // Next Link Props
@@ -25,7 +25,7 @@ const LinkButton = ({
   target,
 
   ...props
-}: LinkButtonProps) => {
+}: any) => {
   return (
     <Link //
       href={href}

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { InputGroup, InputRightElement } from '@chakra-ui/react';
 
 import CalendarIcon from '@components/common/@Icons/Admin/Calendar';
@@ -24,7 +26,13 @@ const PickerInput = ({ placeholder, text, disabled }: PickerInputProps) => {
         isReadOnly
       />
       <InputRightElement h={'100%'}>
-        <CalendarIcon strokeColor={disabled ? Light.gray[500] : 'black'} />
+        <Image
+          src={'/images/Page/input_date.png'}
+          alt="달력"
+          width={20}
+          height={20}
+        />
+        {/* <CalendarIcon strokeColor={disabled ? Light.gray[500] : 'black'} /> */}
       </InputRightElement>
     </InputGroup>
   );

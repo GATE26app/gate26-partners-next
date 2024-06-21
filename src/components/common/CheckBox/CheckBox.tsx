@@ -1,6 +1,9 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
+
+import { ColorBlack } from '@utils/_Palette';
 
 import { CheckBoxProps } from './CheckBox.type';
 
@@ -27,14 +30,29 @@ const CheckBox = ({
       onClick={() => onClick && onClick()}
     >
       {disabled ? (
-        <CheckedDisableIcon w={width} h={height} />
+        <Image
+          src={'/images/icon_check_off.png'}
+          width={21}
+          height={21}
+          alt="checkbox"
+        />
       ) : checked ? (
-        <CheckedOnIcon w={width} h={height} />
+        <Image
+          src={'/images/icon_check_on.png'}
+          width={21}
+          height={21}
+          alt="checkbox"
+        />
       ) : (
-        <CheckedOffIcon w={width} h={height} />
+        <Image
+          src={'/images/icon_check_off.png'}
+          width={21}
+          height={21}
+          alt="checkbox"
+        />
       )}
       {typeof children === 'string' ? (
-        <Text fontSize={'15px'} ml="8px" color="black">
+        <Text fontSize={'15px'} ml="10px" color={ColorBlack}>
           {children}
         </Text>
       ) : (

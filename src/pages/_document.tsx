@@ -71,10 +71,11 @@ class MyDocument extends Document {
           <meta name="twitter:site" content={SITE_NAME} />
           <meta name="twitter:title" content={SITE_TITLE} />
           <meta name="twitter:description" content={SITE_DESCRIPTION} />
-          <meta
+          {/* https로 리다이렉트 하게 하는것 , http 서버 사용시 절대 주석 풀지마세요. */}
+          {/* <meta
             httpEquiv="Content-Security-Policy"
             content="upgrade-insecure-requests"
-          />
+          /> */}
           <meta property="twitter:image" content={SITE_IMAGE} />
           <meta
             name="format-detection"

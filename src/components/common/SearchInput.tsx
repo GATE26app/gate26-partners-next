@@ -1,8 +1,18 @@
-import { InputGroup, InputProps, InputRightElement } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputProps,
+  InputRightElement,
+} from '@chakra-ui/react';
 
 import InputBox from '@components/common/Input';
 
 import { Light } from '@theme/foundations/colors';
+import { ColorGray700, ColorInputBorder, ColorWhite } from '@utils/_Palette';
 
 import SearchIcon from './@Icons/Admin/Search';
 
@@ -26,19 +36,59 @@ const SearchInput = ({
     }
   };
   return (
-    <InputGroup w={'315px'} h={'40px'}>
-      <InputBox
-        h={'100%'}
-        placeholder={placeholder || ''}
-        onChange={handleChangeInput}
+    <Flex
+      borderRadius={'10px'}
+      borderWidth={1}
+      borderColor={ColorInputBorder}
+      bgColor={ColorWhite}
+      alignItems={'center'}
+      width={'100%'}
+    >
+      <Box px={'15px'}>
+        <Image
+          src={'/images/Page/input_search.png'}
+          width={'18px'}
+          height={'18px'}
+          alt="select arrow"
+          // px={'15px'}
+        />
+      </Box>
+      <input
         value={text}
-        autoComplete="off"
-        {...InputProps}
+        style={{
+          marginRight: '15px',
+          outline: 'none',
+          color: ColorGray700,
+          fontSize: '15px',
+          lineHeight: '15px',
+        }}
+        placeholder={placeholder !== '' ? placeholder : ''}
+        onChange={handleChangeInput}
       />
-      <InputRightElement h={'100%'} onClick={onSearch} cursor="pointer">
-        <SearchIcon strokeColor={Light.gray[500]} />
-      </InputRightElement>
-    </InputGroup>
+    </Flex>
+    // <InputGroup h={'45px'}>
+    //   <InputLeftElement>
+    //     <Image
+    //       src={'/images/Page/input_search.png'}
+    //       width={'18px'}
+    //       height={'18px'}
+    //       alt="select arrow"
+    //     />
+    //   </InputLeftElement>
+    //   <input
+    //     // _active={{ height: '45px' }}
+    //     value={text}
+    //     onChange={handleChangeInput}
+    //     placeholder={placeholder || ''}
+    //   />
+    //   {/* <InputBox
+    //     // h={'100%'}
+    //     placeholder={placeholder || ''}
+    //     onChange={handleChangeInput}
+    //     value={text}
+    //     autoComplete="off"
+    //   /> */}
+    // </InputGroup>
   );
 };
 

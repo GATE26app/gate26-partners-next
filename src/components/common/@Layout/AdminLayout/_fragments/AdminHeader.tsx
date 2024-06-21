@@ -7,12 +7,7 @@ import { useDisclosure, useOutsideClick } from '@chakra-ui/react';
 import ArrowDownIcon from '@components/common/@Icons/Admin/ArrowDown';
 
 import styled from '@emotion/styled';
-import {
-  deleteNickName,
-  deleteToken,
-  deleteUserId,
-  getNickName,
-} from '@utils/localStorage/token';
+import { deleteToken, deleteUserId } from '@utils/localStorage/token';
 
 const AdminHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,7 +22,6 @@ const AdminHeader = () => {
   const onClickLogout = () => {
     deleteUserId();
     deleteToken();
-    deleteNickName();
     alert('로그아웃 완료!');
     Logout();
   };
@@ -53,7 +47,7 @@ const AdminHeader = () => {
       <div className="admin-header-profile" onClick={onOpen}>
         <Image src="/images/header/profile.png" w="30px" h="30px" />
         <div className="profile-name">
-          {getNickName() !== undefined && getNickName()} 님
+          {/* {getNickName() !== undefined && getNickName()} 님 */}
         </div>
         <ArrowDownIcon
           color="white"

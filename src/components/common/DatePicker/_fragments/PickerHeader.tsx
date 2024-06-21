@@ -1,6 +1,7 @@
 import React from 'react';
 
 import dayjs from 'dayjs';
+import moment from 'moment';
 
 import { Center, Flex, Text } from '@chakra-ui/react';
 

@@ -13,9 +13,9 @@ export class AuthApi {
   // 로그인
   postLogin = async (body: LoginDTOType): Promise<LoginDTO> => {
     const { data } = await this.axios({
-      method: 'POST',
-      url: `/admin/login`,
-      data: body,
+      method: 'post',
+      url: '/partner/member/login',
+      data: JSON.stringify(body),
     });
     return data;
   };
