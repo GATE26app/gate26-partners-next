@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         source: '/backoffice/:path*',
-        destination: 'http://192.168.0.20:40009/:path*',
+        destination: 'http://cdpartners.gate26.co.kr/:path*',
       },
     ];
   },
