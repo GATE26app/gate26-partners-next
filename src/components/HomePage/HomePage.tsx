@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { ReactElement, useEffect } from 'react';
 
-import { Box, BoxProps, Text, getToken } from '@chakra-ui/react';
+import { Box, BoxProps, Text } from '@chakra-ui/react';
+
+import { getToken } from '@utils/localStorage/token';
 
 import MainLayout from 'layout/MainLayout';
 import RootLayout from 'layout/layout';
@@ -17,7 +19,15 @@ import RootLayout from 'layout/layout';
 function HomePageContent() {
   const router = useRouter();
   useEffect(() => {
-    router.push('/goodslist');
+    if (
+      getToken().access == '' &&
+      getToken().access == undefined &&
+      getToken().access == null
+    ) {
+      router.push('/login');
+    } else {
+      router.push('/goodslist');
+    }
   }, []);
 
   // useEffect(() => {

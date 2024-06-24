@@ -11,7 +11,7 @@ import {
   ColorMainBackBule,
   ColorWhite,
 } from '@utils/_Palette';
-import { deleteUserInfo } from '@utils/localStorage/token';
+import { deleteToken, deleteUserInfo } from '@utils/localStorage/token';
 
 import AlarmModal from '../ModalContainer/_fragments/AlarmModal';
 
@@ -23,6 +23,7 @@ function MainHeader() {
   const [alramModal, setAlramModal] = useState(false);
   const onLogout = () => {
     deleteUserInfo();
+    deleteToken();
     router.push('/login');
   };
   return (

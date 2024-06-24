@@ -134,7 +134,7 @@ function OrderDataTable({ list, setChekcList, CheckList }: Props) {
 
   return (
     <Box
-      overflowX={'scroll'}
+      overflowX={'auto'}
       ref={scrollRef}
       onMouseDown={handleMouseDownEvent}
       onMouseLeave={() => setDragging(false)}

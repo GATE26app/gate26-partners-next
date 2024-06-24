@@ -116,7 +116,7 @@ function GoodsDataTable({ data, setOnSubmit }: Props) {
   };
   return (
     <Box
-      overflowX={'scroll'}
+      overflowX={'auto'}
       ref={scrollRef}
       onMouseDown={handleMouseDownEvent}
       onMouseLeave={() => setDragging(false)}

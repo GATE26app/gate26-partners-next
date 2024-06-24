@@ -9,6 +9,7 @@ export type TokenType = NullAble<{
 export type LoginDTOType = {
   loginId: string;
   password: string;
+  fcmToken: string;
 };
 
 export type LoginDTO = {

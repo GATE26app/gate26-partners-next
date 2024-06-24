@@ -148,6 +148,7 @@ function LoginPage() {
     const body = {
       loginId: request.loginId,
       password: request.password,
+      fcmToken : fcmtoken,
     };
 
     loginMutate(body);

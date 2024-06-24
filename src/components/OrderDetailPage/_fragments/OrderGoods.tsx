@@ -100,7 +100,7 @@ function OrderGoods({ info }: Props) {
         주문상품
       </Text>
       <Box
-        overflowX={'scroll'}
+        overflowX={'auto'}
         ref={scrollRef}
         onMouseDown={handleMouseDownEvent}
         onMouseLeave={() => setDragging(false)}
