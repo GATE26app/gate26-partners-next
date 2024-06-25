@@ -172,7 +172,7 @@ export type AxiosResponseType<T> = {
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: isDev ? '/backoffice' : '/backoffice',
+  baseURL: isDev ? '/api/backoffice' : '/api/backoffice',
   // timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
