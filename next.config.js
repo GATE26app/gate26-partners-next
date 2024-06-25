@@ -26,21 +26,20 @@ module.exports = {
         source: '/sitemap.xml',
         destination: '/api/sitemap',
       },
-      {
-        source: '/api/backoffice/:path*',
-        destination: 'http://cdpartners.gate26.co.kr/:path*',
-      },
+      // {
+      //   source: '/api/backoffice/:path*',
+      //   destination: 'https://cdpartners.gate26.co.kr/:path*',
+      // },
     ];
   },
 
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/backoffice/:path*',
-  //       // destination: 'http://localhost:40004/:path*',
-  //       destination: 'http://192.168.0.63:40009/:path*',
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
+  async redirects() {
+    return [
+      {
+        source: '/api/backoffice/:path*',
+        destination: 'https://cdpartners.gate26.co.kr/:path*',
+        permanent: false,
+      },
+    ];
+  },
 };
