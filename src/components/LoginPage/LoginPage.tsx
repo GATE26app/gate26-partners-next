@@ -57,12 +57,12 @@ function LoginPage() {
   useEffect(() => {
     fcm();
   }, []);
-  console.log('fcmtoken,', fcmtoken);
+  // console.log('fcmtoken,', fcmtoken);
   const fcm = async () => {
     const fcmToken = await getFcmToken();
     if (fcmToken) {
       setFcmToken(fcmToken);
-      console.log('FCM Token:', fcmToken);
+      // console.log('FCM Token:', fcmToken);
       // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
     }
 
@@ -148,7 +148,7 @@ function LoginPage() {
     const body = {
       loginId: request.loginId,
       password: request.password,
-      fcmToken : fcmtoken,
+      fcmToken: fcmtoken,
     };
 
     loginMutate(body);

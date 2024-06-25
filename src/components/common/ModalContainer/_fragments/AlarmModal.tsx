@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import {
@@ -26,14 +27,17 @@ import {
   ColorWhite,
 } from '@utils/_Palette';
 
+import { useAlarmZuInfo } from '_store/AlarmInfo';
+
 interface Props extends Omit<ModalProps, 'children'> {
   onClose: () => void;
 }
 
 function AlarmModal({ onClose, ...props }: Props) {
+  const router = useRouter();
   const [list, setList] = useState<AlarmListDataType[]>([]);
   const [obj, setObj] = useState({ pageNo: 1, pageSize: 10 });
-
+  const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
   const {
     data: alarmListData,
     error,
@@ -44,8 +48,16 @@ function AlarmModal({ onClose, ...props }: Props) {
   } = useGetAlarmLitQuery(obj, { totalCount: list.length });
 
   useEffect(() => {
+    setAlarmInfo({ alarm: false });
+  }, []);
+  useEffect(() => {
     if (alarmListData !== undefined) {
-      if (
+      if (list.length <= 0) {
+        setList(
+          alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
+            .alarms,
+        );
+      } else if (
         alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
           .alarms.length > 0
       ) {
@@ -67,23 +79,42 @@ function AlarmModal({ onClose, ...props }: Props) {
   });
 
   //알림 읽음처리
-  const onClickAlarm = (item: number) => {
-    ClickAlarmMutate(item);
+  const onClickAlarm = (
+    alramId: number,
+    orderId: string,
+    target: string,
+    itemCode: string,
+  ) => {
+    ClickAlarmMutate(alramId);
+    if (target == 'ITEM') {
+      //상품
+      router.push(`/updateGoods?itemcode=${itemCode}`);
+      onClose();
+    } else if (target == 'ORDER') {
+      //주문
+      router.push(`orderdetail?orderId=${orderId}`);
+      onClose();
+    } else if (target == 'CANCEL_ORDER') {
+      //취소
+      router.push(`/canceldetail?orderId=${orderId}`);
+      onClose();
+    }
   };
   const { mutate: ClickAlarmMutate, isLoading: isLoading } =
     usePatchAlarmMutation({
       options: {
         onSuccess: (res) => {
           if (res.success) {
-            console.log('알림 클릭 res', res);
+            // console.log('알림 클릭 res', res);
           } else {
           }
           // setDetailData(res);
-          console.log('Mutation res.', res);
-          console.log('Mutation data.', res.data);
+          // console.log('Mutation res.', res);
+          // console.log('Mutation data.', res.data);
         },
       },
     });
+  console.log('list', list);
   return (
     <Box
       w={'357px'}
@@ -130,7 +161,14 @@ function AlarmModal({ onClose, ...props }: Props) {
                 borderTopWidth={1}
                 borderTopColor={ColoLineGray}
                 bgColor={item.level == 2 ? ColorWhite : ColorRed50}
-                onClick={() => onClickAlarm(item.alarmId)}
+                onClick={() =>
+                  onClickAlarm(
+                    item.alarmId,
+                    item.orderId,
+                    item.target,
+                    item.itemCode,
+                  )
+                }
               >
                 <Text
                   fontSize={'12px'}
@@ -144,12 +182,20 @@ function AlarmModal({ onClose, ...props }: Props) {
                   fontSize={'15px'}
                   fontWeight={600}
                   color={ColorBlack}
+                  pb={'5px'}
+                >
+                  {item.title}
+                </Text>
+                <Text
+                  fontSize={'12px'}
+                  fontWeight={400}
+                  color={ColorBlack}
                   pb={'10px'}
                 >
-                  신규 주문이 들어왔습니다. 예약확정이 필요합니다
+                  {item.content}
                 </Text>
                 <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-                  2024-04-30 00:00
+                  {item.createdDate}
                 </Text>
               </Flex>
             );
@@ -178,136 +224,6 @@ function AlarmModal({ onClose, ...props }: Props) {
           </Flex>
         )}
 
-        {/* <Flex
-          flexDirection={'column'}
-          p={'20px'}
-          borderTopWidth={1}
-          borderTopColor={ColoLineGray}
-        >
-          <Text
-            fontSize={'12px'}
-            fontWeight={400}
-            color={ColorGray900}
-            mb={'6px'}
-          >
-            주문번호 1234566789
-          </Text>
-          <Text
-            fontSize={'15px'}
-            fontWeight={600}
-            color={ColorBlack}
-            pb={'10px'}
-          >
-            신규 주문이 들어왔습니다. 예약확정이 필요합니다
-          </Text>
-          <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-            2024-04-30 00:00
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection={'column'}
-          p={'20px'}
-          borderTopWidth={1}
-          borderTopColor={ColoLineGray}
-        >
-          <Text
-            fontSize={'12px'}
-            fontWeight={400}
-            color={ColorGray900}
-            mb={'6px'}
-          >
-            주문번호 1234566789
-          </Text>
-          <Text
-            fontSize={'15px'}
-            fontWeight={600}
-            color={ColorBlack}
-            pb={'10px'}
-          >
-            신규 주문이 들어왔습니다. 예약확정이 필요합니다
-          </Text>
-          <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-            2024-04-30 00:00
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection={'column'}
-          p={'20px'}
-          borderTopWidth={1}
-          borderTopColor={ColoLineGray}
-        >
-          <Text
-            fontSize={'12px'}
-            fontWeight={400}
-            color={ColorGray900}
-            mb={'6px'}
-          >
-            주문번호 1234566789
-          </Text>
-          <Text
-            fontSize={'15px'}
-            fontWeight={600}
-            color={ColorBlack}
-            pb={'10px'}
-          >
-            신규 주문이 들어왔습니다. 예약확정이 필요합니다
-          </Text>
-          <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-            2024-04-30 00:00
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection={'column'}
-          p={'20px'}
-          borderTopWidth={1}
-          borderTopColor={ColoLineGray}
-        >
-          <Text
-            fontSize={'12px'}
-            fontWeight={400}
-            color={ColorGray900}
-            mb={'6px'}
-          >
-            주문번호 1234566789
-          </Text>
-          <Text
-            fontSize={'15px'}
-            fontWeight={600}
-            color={ColorBlack}
-            pb={'10px'}
-          >
-            신규 주문이 들어왔습니다. 예약확정이 필요합니다
-          </Text>
-          <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-            2024-04-30 00:00
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection={'column'}
-          p={'20px'}
-          borderTopWidth={1}
-          borderTopColor={ColoLineGray}
-        >
-          <Text
-            fontSize={'12px'}
-            fontWeight={400}
-            color={ColorGray900}
-            mb={'6px'}
-          >
-            주문번호 1234566789
-          </Text>
-          <Text
-            fontSize={'15px'}
-            fontWeight={600}
-            color={ColorBlack}
-            pb={'10px'}
-          >
-            신규 주문이 들어왔습니다. 예약확정이 필요합니다
-          </Text>
-          <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-            2024-04-30 00:00
-          </Text>
-        </Flex> */}
         {hasNextPage && <Box ref={fetchNextPageTarget} />}
       </Flex>
     </Box>

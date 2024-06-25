@@ -57,18 +57,25 @@ function StatusComponent({ list, setList }: Props) {
       }
     }
   }, [list]);
+
   useEffect(() => {
     if (sState) {
       setList({
         ...list,
-        viewStartDate: `${dayjs(startDay).format('YYYY-MM-DD')} 00:00:00`,
+        viewStartDate:
+          dayjs(startDay).format('YYYY-MM-DD') == 'Invalid Date'
+            ? ''
+            : `${dayjs(startDay).format('YYYY-MM-DD')} 00:00:00`,
       });
       setSState(false);
     }
     if (eState) {
       setList({
         ...list,
-        viewEndDate: `${dayjs(endDay).format('YYYY-MM-DD')} 23:59:59`,
+        viewEndDate:
+          dayjs(endDay).format('YYYY-MM-DD') == 'Invalid Date'
+            ? ''
+            : `${dayjs(endDay).format('YYYY-MM-DD')} 23:59:59`,
       });
       setEState(false);
     }

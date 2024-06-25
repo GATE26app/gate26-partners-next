@@ -75,8 +75,8 @@ function CancelInfo({ info }: Props) {
             });
           }
           // setDetailData(res);
-          console.log('Mutation res.', res);
-          console.log('Mutation data.', res.data);
+          // console.log('Mutation res.', res);
+          // console.log('Mutation data.', res.data);
         },
       },
     });

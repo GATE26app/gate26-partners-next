@@ -109,10 +109,11 @@ function OptionPlus({
   // }, [router.query.type]);
 
   useEffect(() => {
-    if (router.pathname == '/saveGoods' && optionInputList.length > 0) {
+    if (optionInputList.length > 0) {
       // if()
       const nameList: string[] = [];
       const valueList: string[] = [];
+
       setOptionCnt(String(optionInputList.length));
       optionInputList.forEach((item) => {
         if (item.inputKey !== '' && item.inputValue !== '') {

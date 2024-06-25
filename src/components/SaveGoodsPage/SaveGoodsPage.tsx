@@ -317,7 +317,7 @@ function SaveGoodsPage() {
       }
       if (
         locationList.length == 0 &&
-        (router.query.type == '3' || router.query.type == '2')
+        (BasicInfo?.optionType == 3 || BasicInfo?.optionType == 2)
       ) {
         ToastComponent('지역을 선택해주세요.');
       }
@@ -339,12 +339,12 @@ function SaveGoodsPage() {
       if (imageList.length == 1) {
         ToastComponent('상품 이미지를 선택해주세요.');
       }
-      if (policyList.length == 0 && router.query.type == '3') {
+      if (policyList.length == 0 && BasicInfo?.optionType == 3) {
         ToastComponent('취소/환불 규정을 입력해주세요.');
       }
       if (
         policyList.filter((item) => item.type == 1).length == 0 &&
-        router.query.type == '3'
+        BasicInfo?.optionType == 3
       ) {
         ToastComponent('취소/환불 기본 규정을 입력해주세요.');
       }
@@ -541,7 +541,7 @@ function SaveGoodsPage() {
             getList={CateGetList}
             setGetList={setCateGetList}
           />
-          {(router.query.type == '3' || router.query.type == '2') && (
+          {(BasicInfo?.optionType == 3 || BasicInfo?.optionType == 2) && (
             <>
               <CountryComponent
                 list={locationList}
@@ -554,7 +554,7 @@ function SaveGoodsPage() {
           <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />
           <PriceComponent list={BasicInfo} setList={setBasicInfo} />
           <ImageComponent list={imageList} setList={setImageList} />
-          {router.query.type == '3' && (
+          {BasicInfo?.optionType == 3 && (
             <DivisionComponent
               list={attributeList}
               setList={setAttributeList}
@@ -562,7 +562,7 @@ function SaveGoodsPage() {
           )}
           <InfoComponent list={BasicInfo} setList={setBasicInfo} />
           <DetailComponent list={BasicInfo} setList={setBasicInfo} />
-          {router.query.type == '3' && (
+          {BasicInfo?.optionType == 3 && (
             <>
               <PlanComponent list={planList} setList={setPlanList} />
               <BookingCheckComponent list={BasicInfo} setList={setBasicInfo} />

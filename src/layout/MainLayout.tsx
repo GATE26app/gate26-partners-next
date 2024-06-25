@@ -11,6 +11,8 @@ import { ColorMainBackBule, ColorWhite } from '@utils/_Palette';
 
 import { getFcmToken, onMessageListener } from '../../firebase';
 
+import { useAlarmZuInfo } from '_store/AlarmInfo';
+
 // import firebase from 'firebase';
 export default function MainLayout({
   children,
@@ -18,7 +20,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-
+  const { setAlarmInfo } = useAlarmZuInfo((state) => state);
   function requestPermission() {
     console.log('권한 요청 중...');
     if (typeof Notification !== 'undefined') {
@@ -38,6 +40,7 @@ export default function MainLayout({
   onMessageListener()
     .then((payload) => {
       console.log('Message received. ', payload);
+      setAlarmInfo({ alarm: true });
       // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
     })
     .catch((err) => console.log('Failed to receive message: ', err));

@@ -33,7 +33,7 @@ export class AlarmApi {
     //type : code 또는 parentCode
 
     const { data } = await this.axios({
-      method: 'GET',
+      method: 'PATCH',
       url: `/partner/alarms/${alarmId}`,
       headers: {
         'X-AUTH-TOKEN': `${getToken().access}`,

@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
+import { useGetUserQuery } from '@apis/user/UserApi.query';
+
 import {
   ColorBlack,
   ColorGray400,
@@ -11,12 +13,16 @@ import {
   ColorMainBackBule,
   ColorWhite,
 } from '@utils/_Palette';
+import { imgPath } from '@utils/format';
 import { deleteToken, deleteUserInfo } from '@utils/localStorage/token';
 
 import AlarmModal from '../ModalContainer/_fragments/AlarmModal';
 
+import { useAlarmZuInfo } from '_store/AlarmInfo';
+
 function MainHeader() {
   const router = useRouter();
+  const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
   const [alram, setAlram] = useState(false);
   const [chat, setChat] = useState(false);
   const [logout, setLogout] = useState(false);
@@ -26,6 +32,21 @@ function MainHeader() {
     deleteToken();
     router.push('/login');
   };
+
+  console.log('alarmInfo,', alarmInfo);
+  const { data } = useGetUserQuery({
+    options: {
+      onSuccess: (res) => {
+        if (res.success == true) {
+          console.log('res.data', res);
+          //  setAllList(res.data);
+          //    if (res.data) {
+          //   setLocationList(res.data);
+          // }
+        }
+      },
+    },
+  });
   return (
     <>
       <Flex
@@ -46,7 +67,11 @@ function MainHeader() {
           pr={'25px'}
         >
           <Image
-            src={'/images/header/icon_header_user.png'}
+            src={
+              data?.data.images !== undefined && data?.data.images.length > 0
+                ? `${imgPath}${data?.data.images[0].thumbnailImagePath}`
+                : '/images/header/icon_header_user.png'
+            }
             width={32}
             height={32}
             alt="로고"
@@ -58,7 +83,7 @@ function MainHeader() {
             pl={'10px'}
             pr={'5px'}
           >
-            파트너사님 반갑습니다.
+            {data?.data.title}님 반갑습니다.
           </Text>
           <Image
             src={'/images/header/icon_arrow_down.png'}
@@ -102,7 +127,7 @@ function MainHeader() {
           )}
         </Box> */}
         <Box cursor={'pointer'}>
-          {alram ? (
+          {alarmInfo.alarm ? (
             <Image
               src={'/images/header/icon_alarm_on.png'}
               width={49}
