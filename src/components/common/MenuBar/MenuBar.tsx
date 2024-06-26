@@ -138,14 +138,14 @@ function MenuBar() {
       >
         {menu == 1 ? (
           <Image
-            src={'/images/menu/icon_menu_calendar_on.png'}
+            src={'/images/Menu/icon_menu_calendar_on.png'}
             width={40}
             height={40}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_calendar_off.png'}
+            src={'/images/Menu/icon_menu_calendar_off.png'}
             width={40}
             height={40}
             alt="로고"
@@ -173,14 +173,14 @@ function MenuBar() {
         <Flex alignItems={'center'}>
           {menu == 2 ? (
             <Image
-              src={'/images/menu/icon_menu_order_on.png'}
+              src={'/images/Menu/icon_menu_order_on.png'}
               width={40}
               height={40}
               alt="로고"
             />
           ) : (
             <Image
-              src={'/images/menu/icon_menu_order_off.png'}
+              src={'/images/Menu/icon_menu_order_off.png'}
               width={40}
               height={40}
               alt="로고"
@@ -197,14 +197,14 @@ function MenuBar() {
         </Flex>
         {menu == 2 ? (
           <Image
-            src={'/images/menu/icon_menu_up.png'}
+            src={'/images/Menu/icon_menu_up.png'}
             width={16}
             height={16}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_down.png'}
+            src={'/images/Menu/icon_menu_down.png'}
             width={16}
             height={16}
             alt="로고"
@@ -253,14 +253,14 @@ function MenuBar() {
         <Flex alignItems={'center'}>
           {menu == 3 ? (
             <Image
-              src={'/images/menu/icon_menu_calculate_on.png'}
+              src={'/images/Menu/icon_menu_calculate_on.png'}
               width={40}
               height={40}
               alt="로고"
             />
           ) : (
             <Image
-              src={'/images/menu/icon_menu_calculate_off.png'}
+              src={'/images/Menu/icon_menu_calculate_off.png'}
               width={40}
               height={40}
               alt="로고"
@@ -278,14 +278,14 @@ function MenuBar() {
         </Flex>
         {menu == 3 ? (
           <Image
-            src={'/images/menu/icon_menu_up.png'}
+            src={'/images/Menu/icon_menu_up.png'}
             width={16}
             height={16}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_down.png'}
+            src={'/images/Menu/icon_menu_down.png'}
             width={16}
             height={16}
             alt="로고"
@@ -321,14 +321,14 @@ function MenuBar() {
         >
           {menu == 4 ? (
             <Image
-              src={'/images/menu/icon_menu_goods_on.png'}
+              src={'/images/Menu/icon_menu_goods_on.png'}
               width={40}
               height={40}
               alt="로고"
             />
           ) : (
             <Image
-              src={'/images/menu/icon_menu_goods_off.png'}
+              src={'/images/Menu/icon_menu_goods_off.png'}
               width={40}
               height={40}
               alt="로고"
@@ -357,14 +357,14 @@ function MenuBar() {
       >
         {menu == 5 ? (
           <Image
-            src={'/images/menu/icon_menu_review_on.png'}
+            src={'/images/Menu/icon_menu_review_on.png'}
             width={40}
             height={40}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_review_off.png'}
+            src={'/images/Menu/icon_menu_review_off.png'}
             width={40}
             height={40}
             alt="로고"
@@ -388,14 +388,14 @@ function MenuBar() {
       >
         {menu == 6 ? (
           <Image
-            src={'/images/menu/icon_menu_setting_on.png'}
+            src={'/images/Menu/icon_menu_setting_on.png'}
             width={40}
             height={40}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_setting_off.png'}
+            src={'/images/Menu/icon_menu_setting_off.png'}
             width={40}
             height={40}
             alt="로고"
@@ -419,14 +419,14 @@ function MenuBar() {
       >
         {menu == 7 ? (
           <Image
-            src={'/images/menu/icon_menu_chat_on.png'}
+            src={'/images/Menu/icon_menu_chat_on.png'}
             width={40}
             height={40}
             alt="로고"
           />
         ) : (
           <Image
-            src={'/images/menu/icon_menu_chat_off.png'}
+            src={'/images/Menu/icon_menu_chat_off.png'}
             width={40}
             height={40}
             alt="로고"
