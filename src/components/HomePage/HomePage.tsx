@@ -26,9 +26,9 @@ function HomePageContent() {
     ) {
       router.push('/login');
     } else {
-      router.push('/goodslist');
+      router.push('/orderlist');
     }
-  }, []);
+  }, [getToken().access]);
 
   // useEffect(() => {
   //   async function fetchToken() {

@@ -208,12 +208,44 @@ function OptionPlus({
           DateList.forEach((date) => {
             optionNames.forEach((name, index) => {
               const values = optionValues[index].split(','); // 문자열을 배열로 변환
+              console.log('values', values);
+              if (values.includes('') || values.includes(' ')) {
+                ToastComponent('옵션값을 다시 확인해주세요.');
+              } else {
+                values.forEach((value) => {
+                  resultArray.push({
+                    sort: index,
+                    type: optionType,
+                    depth: optionInputType == 0 ? 1 : Number(optionCnt),
+                    useDateTime: `${date} 12:00:00`,
+                    firstKey: name,
+                    firstValue: value.trim(),
+                    secondKey: '',
+                    secondValue: '',
+                    thirdKey: '',
+                    thirdValue: '',
+                    stockCnt: stock == 0 ? 0 : stock,
+                    price: price == 0 ? 0 : price,
+                  });
+                });
+              }
+            });
+          });
+
+          setOptionList(resultArray);
+          setOptions(resultArray);
+        } else {
+          optionNames.forEach((name, index) => {
+            const values = optionValues[index].split(','); // 문자열을 배열로 변환
+            if (values.includes('') || values.includes(' ')) {
+              ToastComponent('옵션값을 다시 확인해주세요.');
+            } else {
               values.forEach((value) => {
                 resultArray.push({
                   sort: index,
                   type: optionType,
                   depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                  useDateTime: `${date} 12:00:00`,
+                  useDateTime: '',
                   firstKey: name,
                   firstValue: value.trim(),
                   secondKey: '',
@@ -224,30 +256,7 @@ function OptionPlus({
                   price: price == 0 ? 0 : price,
                 });
               });
-            });
-          });
-
-          setOptionList(resultArray);
-          setOptions(resultArray);
-        } else {
-          optionNames.forEach((name, index) => {
-            const values = optionValues[index].split(','); // 문자열을 배열로 변환
-            values.forEach((value) => {
-              resultArray.push({
-                sort: index,
-                type: optionType,
-                depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                useDateTime: '',
-                firstKey: name,
-                firstValue: value.trim(),
-                secondKey: '',
-                secondValue: '',
-                thirdKey: '',
-                thirdValue: '',
-                stockCnt: stock == 0 ? 0 : stock,
-                price: price == 0 ? 0 : price,
-              });
-            });
+            }
           });
           setOptionList(resultArray);
           setOptions(resultArray);
@@ -268,42 +277,50 @@ function OptionPlus({
     const firstOptions = optionValues[0].split(',');
     if (DateList.length > 0) {
       DateList.forEach((date) => {
+        if (firstOptions.includes('') || firstOptions.includes(' ')) {
+          ToastComponent('옵션값을 다시 확인해주세요.');
+        } else {
+          firstOptions.forEach((firstValue) => {
+            resultArray.push({
+              sort: 1,
+              type: optionType,
+              depth: optionInputType == 0 ? 1 : Number(optionCnt),
+              useDateTime: `${date} 12:00:00`,
+              firstKey: optionNames[0],
+              firstValue: firstValue.trim(),
+              secondKey: '',
+              secondValue: '',
+              thirdKey: '',
+              thirdValue: '',
+              stockCnt: stock == 0 ? 0 : stock,
+              price: price == 0 ? 0 : price,
+            });
+          });
+        }
+      });
+      setOptionList(resultArray);
+      setOptions(resultArray);
+    } else {
+      if (firstOptions.includes('') || firstOptions.includes(' ')) {
+        ToastComponent('옵션값을 다시 확인해주세요.');
+      } else {
         firstOptions.forEach((firstValue) => {
           resultArray.push({
-            sort: 1,
             type: optionType,
             depth: optionInputType == 0 ? 1 : Number(optionCnt),
-            useDateTime: `${date} 12:00:00`,
+            useDateTime: '',
             firstKey: optionNames[0],
             firstValue: firstValue.trim(),
             secondKey: '',
             secondValue: '',
             thirdKey: '',
             thirdValue: '',
+            sort: 1,
             stockCnt: stock == 0 ? 0 : stock,
             price: price == 0 ? 0 : price,
           });
         });
-      });
-      setOptionList(resultArray);
-      setOptions(resultArray);
-    } else {
-      firstOptions.forEach((firstValue) => {
-        resultArray.push({
-          type: optionType,
-          depth: optionInputType == 0 ? 1 : Number(optionCnt),
-          useDateTime: '',
-          firstKey: optionNames[0],
-          firstValue: firstValue.trim(),
-          secondKey: '',
-          secondValue: '',
-          thirdKey: '',
-          thirdValue: '',
-          sort: 1,
-          stockCnt: stock == 0 ? 0 : stock,
-          price: price == 0 ? 0 : price,
-        });
-      });
+      }
       setOptionList(resultArray);
       setOptions(resultArray);
     }
@@ -315,12 +332,51 @@ function OptionPlus({
     const secondOptions = optionValues[1].split(',');
     if (DateList.length > 0) {
       DateList.forEach((date) => {
+        if (
+          firstOptions.includes('') ||
+          secondOptions.includes('') ||
+          firstOptions.includes(' ') ||
+          secondOptions.includes(' ')
+        ) {
+          ToastComponent('옵션값을 다시 확인해주세요.');
+        } else {
+          firstOptions.forEach((firstValue) => {
+            secondOptions.forEach((secondValue) => {
+              resultArray.push({
+                type: optionType,
+                depth: optionInputType == 0 ? 1 : Number(optionCnt),
+                useDateTime: `${date} 12:00:00`,
+                firstKey: optionNames[0],
+                firstValue: firstValue.trim(),
+                secondKey: optionNames[1],
+                secondValue: secondValue.trim(),
+                thirdKey: '',
+                thirdValue: '',
+                sort: 1,
+                stockCnt: stock == 0 ? 0 : stock,
+                price: price == 0 ? 0 : price,
+              });
+            });
+          });
+        }
+      });
+      setOptionList(resultArray);
+      setOptions(resultArray);
+    } else {
+      if (
+        firstOptions.includes('') ||
+        secondOptions.includes('') ||
+        firstOptions.includes(' ') ||
+        secondOptions.includes(' ')
+      ) {
+        ToastComponent('옵션값을 다시 확인해주세요.');
+      } else {
         firstOptions.forEach((firstValue) => {
           secondOptions.forEach((secondValue) => {
             resultArray.push({
               type: optionType,
               depth: optionInputType == 0 ? 1 : Number(optionCnt),
-              useDateTime: `${date} 12:00:00`,
+              useDateTime: '',
               firstKey: optionNames[0],
               firstValue: firstValue.trim(),
               secondKey: optionNames[1],
@@ -333,30 +389,10 @@ function OptionPlus({
             });
           });
         });
-      });
-      setOptionList(resultArray);
-      setOptions(resultArray);
-    } else {
-      firstOptions.forEach((firstValue) => {
-        secondOptions.forEach((secondValue) => {
-          resultArray.push({
-            type: optionType,
-            depth: optionInputType == 0 ? 1 : Number(optionCnt),
-            useDateTime: '',
-            firstKey: optionNames[0],
-            firstValue: firstValue.trim(),
-            secondKey: optionNames[1],
-            secondValue: secondValue.trim(),
-            thirdKey: '',
-            thirdValue: '',
-            sort: 1,
-            stockCnt: stock == 0 ? 0 : stock,
-            price: price == 0 ? 0 : price,
-          });
-        });
-      });
-      setOptionList(resultArray);
-      setOptions(resultArray);
+
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     }
   };
 
@@ -367,13 +403,58 @@ function OptionPlus({
     const thirdOptions = optionValues[2].split(',');
     if (DateList.length > 0) {
       DateList.forEach((date) => {
+        if (
+          firstOptions.includes('') ||
+          secondOptions.includes('') ||
+          thirdOptions.includes('') ||
+          firstOptions.includes(' ') ||
+          secondOptions.includes(' ') ||
+          thirdOptions.includes(' ')
+        ) {
+          ToastComponent('옵션값을 다시 확인해주세요.');
+        } else {
+          firstOptions.forEach((firstValue) => {
+            secondOptions.forEach((secondValue) => {
+              thirdOptions.forEach((thirdValue) => {
+                resultArray.push({
+                  type: optionType,
+                  depth: optionInputType == 0 ? 1 : Number(optionCnt),
+                  useDateTime: `${date} 12:00:00`,
+                  firstKey: optionNames[0],
+                  firstValue: firstValue.trim(),
+                  secondKey: optionNames[1],
+                  secondValue: secondValue.trim(),
+                  thirdKey: optionNames[2],
+                  thirdValue: thirdValue.trim(),
+                  sort: 1,
+                  stockCnt: stock == 0 ? 0 : stock,
+                  price: price == 0 ? 0 : price,
+                });
+              });
+            });
+          });
+        }
+      });
+      setOptionList(resultArray);
+      setOptions(resultArray);
+    } else {
+      if (
+        firstOptions.includes('') ||
+        secondOptions.includes('') ||
+        thirdOptions.includes('') ||
+        firstOptions.includes(' ') ||
+        secondOptions.includes(' ') ||
+        thirdOptions.includes(' ')
+      ) {
+        ToastComponent('옵션값을 다시 확인해주세요.');
+      } else {
         firstOptions.forEach((firstValue) => {
           secondOptions.forEach((secondValue) => {
             thirdOptions.forEach((thirdValue) => {
               resultArray.push({
                 type: optionType,
                 depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                useDateTime: `${date} 12:00:00`,
+                useDateTime: '',
                 firstKey: optionNames[0],
                 firstValue: firstValue.trim(),
                 secondKey: optionNames[1],
@@ -387,30 +468,7 @@ function OptionPlus({
             });
           });
         });
-      });
-      setOptionList(resultArray);
-      setOptions(resultArray);
-    } else {
-      firstOptions.forEach((firstValue) => {
-        secondOptions.forEach((secondValue) => {
-          thirdOptions.forEach((thirdValue) => {
-            resultArray.push({
-              type: optionType,
-              depth: optionInputType == 0 ? 1 : Number(optionCnt),
-              useDateTime: '',
-              firstKey: optionNames[0],
-              firstValue: firstValue.trim(),
-              secondKey: optionNames[1],
-              secondValue: secondValue.trim(),
-              thirdKey: optionNames[2],
-              thirdValue: thirdValue.trim(),
-              sort: 1,
-              stockCnt: stock == 0 ? 0 : stock,
-              price: price == 0 ? 0 : price,
-            });
-          });
-        });
-      });
+      }
       setOptionList(resultArray);
       setOptions(resultArray);
     }

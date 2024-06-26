@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { MouseEvent, useRef, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
@@ -11,6 +12,7 @@ import {
 import {
   ColorBlack,
   ColorDataTableBorderTop,
+  ColorGray100,
   ColorGrayBorder,
 } from '@utils/_Palette';
 
@@ -154,21 +156,47 @@ function GoodsDataTable({ data, setOnSubmit }: Props) {
           );
         })}
       </Flex>
-      {data &&
-        data?.data !== undefined &&
-        data?.data.map((itemData: GodsListItemDataListProps, index: number) => {
-          return (
-            <GoodsCard
-              key={index}
-              item={itemData}
-              header={listheader}
-              index={index}
-              totalCount={data.totalCount}
-              pageNo={data.pageNo}
-              setOnSubmit={setOnSubmit}
-            />
-          );
-        })}
+      {data && data?.totalCount !== undefined && data?.totalCount !== 0 ? (
+        <>
+          {data &&
+            data?.data !== undefined &&
+            data?.data.map(
+              (itemData: GodsListItemDataListProps, index: number) => {
+                return (
+                  <GoodsCard
+                    key={index}
+                    item={itemData}
+                    header={listheader}
+                    index={index}
+                    totalCount={data.totalCount}
+                    pageNo={data.pageNo}
+                    setOnSubmit={setOnSubmit}
+                  />
+                );
+              },
+            )}
+        </>
+      ) : (
+        <Flex
+          bgColor={ColorGray100}
+          mt={'20px'}
+          py={'42px'}
+          minW={'1550px'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+        >
+          <Image
+            width={80}
+            height={80}
+            src={'/images/Page/no_data.png'}
+            alt="데이터 없음"
+          />
+          <Text fontSize={'14px'} fontWeight={'400'} color={ColorBlack}>
+            상품이 없습니다.
+          </Text>
+        </Flex>
+      )}
     </Box>
   );
 }

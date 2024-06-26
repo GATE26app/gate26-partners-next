@@ -8,6 +8,7 @@ import { OrderListItemType, OrderListResType } from '@apis/order/OrderApi.type';
 import {
   ColorBlack,
   ColorDataTableBorderTop,
+  ColorGray100,
   ColorGrayBorder,
 } from '@utils/_Palette';
 
@@ -196,18 +197,42 @@ function CancelDataTable({ list, setChekcList, CheckList }: Props) {
           );
         })}
       </Flex>
-      {list &&
-        list?.orders.map((item: OrderListItemType, index: number) => {
-          return (
-            <CancelListCard
-              key={index}
-              item={item}
-              header={cancellistheader}
-              CheckList={CheckList}
-              setChekcList={setChekcList}
-            />
-          );
-        })}
+      {list && list?.totalCount !== undefined && list?.totalCount !== 0 ? (
+        <>
+          {list &&
+            list?.orders.map((item: OrderListItemType, index: number) => {
+              return (
+                <CancelListCard
+                  key={index}
+                  item={item}
+                  header={cancellistheader}
+                  CheckList={CheckList}
+                  setChekcList={setChekcList}
+                />
+              );
+            })}
+        </>
+      ) : (
+        <Flex
+          bgColor={ColorGray100}
+          mt={'20px'}
+          py={'42px'}
+          minW={'1550px'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          alignItems={'center'}
+        >
+          <Image
+            width={80}
+            height={80}
+            src={'/images/Page/no_data.png'}
+            alt="데이터 없음"
+          />
+          <Text fontSize={'14px'} fontWeight={'400'} color={ColorBlack}>
+            취소 내용이 없습니다.
+          </Text>
+        </Flex>
+      )}
     </Box>
   );
 }

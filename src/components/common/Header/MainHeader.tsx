@@ -14,7 +14,11 @@ import {
   ColorWhite,
 } from '@utils/_Palette';
 import { imgPath } from '@utils/format';
-import { deleteToken, deleteUserInfo } from '@utils/localStorage/token';
+import {
+  deleteToken,
+  deleteUserInfo,
+  getToken,
+} from '@utils/localStorage/token';
 
 import AlarmModal from '../ModalContainer/_fragments/AlarmModal';
 
@@ -36,6 +40,9 @@ function MainHeader() {
   console.log('alarmInfo,', alarmInfo);
   const { data } = useGetUserQuery({
     options: {
+      enabled: !!getToken().access,
+      staleTime: Infinity, // 데이터가 절대 오래되었다고 간주되지 않음
+      refetchInterval: false, // 자동 새로 고침 비활성화
       onSuccess: (res) => {
         if (res.success == true) {
           console.log('res.data', res);

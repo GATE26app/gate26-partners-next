@@ -27,6 +27,7 @@ import { setToken, setUserInfo } from '@utils/localStorage/token';
 
 import { getFcmToken, onMessageListener } from '../../../firebase';
 
+import { useAlarmZuInfo } from '_store/AlarmInfo';
 import { useUserZuInfo } from '_store/UserZuInfo';
 import BottomLayout from 'layout/BottomLayout';
 
@@ -54,9 +55,27 @@ function LoginPage() {
   const { setUserZuInfo } = useUserZuInfo((state) => state);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [fcmtoken, setFcmToken] = useState('');
+  const { setAlarmInfo } = useAlarmZuInfo((state) => state);
+
   useEffect(() => {
     fcm();
   }, []);
+  function requestPermission() {
+    console.log('권한 요청 중...');
+    if (typeof Notification !== 'undefined') {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          console.log('알림 권한이 허용됨');
+
+          // FCM 메세지 처리
+        } else {
+          console.log('알림 권한 허용 안됨');
+        }
+      });
+    }
+  }
+  requestPermission();
+
   // console.log('fcmtoken,', fcmtoken);
   const fcm = async () => {
     const fcmToken = await getFcmToken();
@@ -69,6 +88,7 @@ function LoginPage() {
     onMessageListener()
       .then((payload) => {
         console.log('Message received. ', payload);
+        setAlarmInfo({ alarm: true });
         // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
       })
       .catch((err) => console.log('Failed to receive message: ', err));

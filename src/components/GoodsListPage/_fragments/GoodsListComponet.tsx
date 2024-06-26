@@ -173,9 +173,9 @@ function GoodsListComponet({
           /> */}
         </Flex>
       </Flex>
-      {data?.totalCount !== undefined ? (
-        <GoodsDataTable data={data} setOnSubmit={setOnSubmit} />
-      ) : (
+      {/* {data && data?.totalCount !== undefined && data?.totalCount !== 0 ? ( */}
+      <GoodsDataTable data={data} setOnSubmit={setOnSubmit} />
+      {/* ) : (
         <Flex
           bgColor={ColorGray100}
           mt={'20px'}
@@ -194,20 +194,22 @@ function GoodsListComponet({
             조회한 내용이 없습니다.
           </Text>
         </Flex>
-      )}
-      {data?.totalCount !== undefined && paginationProps && (
-        <Flex justifyContent="center" alignItems="center">
-          <Pagination
-            currentPage={request.pageNo}
-            limit={request.pageSize}
-            total={paginationProps.total}
-            onPageNumberClicked={paginationProps.onPageNumberClicked}
-            onPreviousPageClicked={paginationProps.onPreviousPageClicked}
-            onNextPageClicked={paginationProps.onNextPageClicked}
-            // setOnSubmit={setOnSubmit}
-          />
-        </Flex>
-      )}
+      )} */}
+      {data?.totalCount !== undefined &&
+        data?.totalCount !== 0 &&
+        paginationProps && (
+          <Flex justifyContent="center" alignItems="center">
+            <Pagination
+              currentPage={request.pageNo}
+              limit={request.pageSize}
+              total={paginationProps.total}
+              onPageNumberClicked={paginationProps.onPageNumberClicked}
+              onPreviousPageClicked={paginationProps.onPreviousPageClicked}
+              onNextPageClicked={paginationProps.onNextPageClicked}
+              // setOnSubmit={setOnSubmit}
+            />
+          </Flex>
+        )}
     </Box>
   );
 }

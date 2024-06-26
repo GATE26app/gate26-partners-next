@@ -39,6 +39,7 @@ import { Option } from '@components/Goods/_fragments/Option/OptionPlus';
 import StatusComponent from '@components/Goods/_fragments/StatusComponent';
 import CustomButton from '@components/common/CustomButton';
 import LogSelectBox from '@components/common/LogSelectBox';
+import LoadingModal from '@components/common/ModalContainer/_fragments/LoadingModal';
 import SelectBox from '@components/common/SelectBox';
 
 import {
@@ -126,7 +127,7 @@ function UpdateGoodsPage() {
     optionInputEndDate: '', //상품 옵션입력 이용일시 생성구간 종료일,
     autoConfirm: 0, //자동예약확정: 활성화 비활성화
   });
-
+  const [isLoadingModal, setLoadingModal] = useState(false);
   const [imageList, setImageList] = useState<GoodsListItemImageProps[]>([]);
   const [policyList, setPolicyList] = useState<GoodsPoliciesListProps[]>([]);
   const [planList, setPlanList] = useState<GoodsSchedulesListProps[]>([
@@ -152,7 +153,7 @@ function UpdateGoodsPage() {
   const [logDisable, setLogDisable] = useState(false);
 
   //상품상세
-  const { data: detailData, isLoading } = useQuery(
+  const { data: detailData } = useQuery(
     ['GET_GOODSDETAIL', itemCode],
     () => goodsApi.getGoodsDetail(itemCode),
     {
@@ -221,25 +222,31 @@ function UpdateGoodsPage() {
     }
   }, [BasicInfo]);
   //상품 수정[버전변경]
-  const { mutate: PatchUpdateGoodsMutate } = usePatchUpdateGoodsStatusMutation({
-    options: {
-      onSuccess: (res) => {
-        if (res.success == true) {
-          router.back();
-        } else {
-          toast({
-            position: 'top',
-            duration: 3000,
-            render: () => (
-              <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-                {`${res.message}`}
-              </Box>
-            ),
-          });
-        }
+  const { mutate: PatchUpdateGoodsMutate, isLoading } =
+    usePatchUpdateGoodsStatusMutation({
+      options: {
+        onSuccess: (res) => {
+          if (res.success == true) {
+            router.back();
+          } else {
+            toast({
+              position: 'top',
+              duration: 3000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {`${res.message}`}
+                </Box>
+              ),
+            });
+          }
+        },
       },
-    },
-  });
+    });
   //노출여부, 노출기간, 판매여부
   const { mutate: PatchStstusMutate } = usePatchGoodsStatusMutation({
     options: {
@@ -424,9 +431,16 @@ function UpdateGoodsPage() {
       optionModifyMutate(body);
     }
   };
-
+  useEffect(() => {
+    setLoadingModal(isLoading);
+  }, [isLoading]);
   return (
     <>
+      <LoadingModal
+        children={isLoadingModal}
+        isOpen={isLoadingModal}
+        onClose={() => setLoadingModal(false)}
+      />
       {detailData?.success == true ? (
         <Flex
           w={'100%'}
