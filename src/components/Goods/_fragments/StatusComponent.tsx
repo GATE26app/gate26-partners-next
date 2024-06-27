@@ -38,11 +38,19 @@ function StatusComponent({ list, setList }: Props) {
   // const [eDate, setEDate] = useState(new Date());
 
   const [startDay, setStartDay] = useState<dayjs.Dayjs>(() =>
-    dayjs(list.viewStartDate.split(' ')[0]),
+    dayjs(
+      list.viewStartDate !== '' && list.viewStartDate !== null
+        ? list.viewStartDate.split(' ')[0]
+        : '',
+    ),
   );
 
   const [endDay, setEndDay] = useState<dayjs.Dayjs>(() =>
-    dayjs(list.viewEndDate.split(' ')[0]),
+    dayjs(
+      list.viewEndDate !== '' && list.viewEndDate !== null
+        ? list.viewEndDate.split(' ')[0]
+        : '',
+    ),
   );
   const [sState, setSState] = useState(false);
   const [eState, setEState] = useState(false);

@@ -12,6 +12,7 @@ import { ColorMainBackBule, ColorWhite } from '@utils/_Palette';
 import { getFcmToken, onMessageListener } from '../../firebase';
 
 import { useAlarmZuInfo } from '_store/AlarmInfo';
+import { useUserZuInfo } from '_store/UserZuInfo';
 
 // import firebase from 'firebase';
 export default function MainLayout({
@@ -20,7 +21,17 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const { userZuInfo } = useUserZuInfo((state) => state);
 
+  useEffect(() => {
+    if (
+      userZuInfo.accessToken == '' ||
+      userZuInfo.accessToken == undefined ||
+      userZuInfo.accessToken == null
+    ) {
+      router.replace('/login');
+    }
+  }, []);
   return (
     <Flex flexDirection={'row'} width={'100vw'} minH={'100vh'}>
       <MenuBar />
