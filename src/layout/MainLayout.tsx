@@ -8,6 +8,7 @@ import MainHeader from '@components/common/Header/MainHeader';
 import MenuBar from '@components/common/MenuBar/MenuBar';
 
 import { ColorMainBackBule, ColorWhite } from '@utils/_Palette';
+import { getToken } from '@utils/localStorage/token';
 
 import { getFcmToken, onMessageListener } from '../../firebase';
 
@@ -25,9 +26,9 @@ export default function MainLayout({
 
   useEffect(() => {
     if (
-      userZuInfo.accessToken == '' ||
-      userZuInfo.accessToken == undefined ||
-      userZuInfo.accessToken == null
+      getToken().access == '' ||
+      getToken().access == undefined ||
+      getToken().access == null
     ) {
       router.replace('/login');
     }

@@ -15,9 +15,9 @@ function HomePageContent() {
 
   useEffect(() => {
     if (
-      userZuInfo.accessToken == '' ||
-      userZuInfo.accessToken == undefined ||
-      userZuInfo.accessToken == null
+      getToken().access == '' ||
+      getToken().access == undefined ||
+      getToken().access == null
     ) {
       router.replace('/login');
     } else {
