@@ -62,6 +62,10 @@ const MapModal: React.FC<MapModalProps> = ({
   //     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   //   });
 
+  // console.log('placePredictions', placePredictions);
+  console.log('location,', location);
+  console.log('modal open');
+
   const handleComplete = () => {
     onComplete(location);
     onClose();
@@ -71,6 +75,7 @@ const MapModal: React.FC<MapModalProps> = ({
   };
   const onPlaceChanged = () => {
     const place = autocomplete?.getPlace();
+    console.log('place,', place);
     if (place && place.geometry) {
       const lat = place.geometry.location?.lat() || 0;
       const lng = place.geometry.location?.lng() || 0;

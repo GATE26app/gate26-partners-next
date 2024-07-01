@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 
 import {
   Editable,
@@ -570,4 +570,4 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
   );
 }
 
-export default OptionList;
+export default memo(OptionList);

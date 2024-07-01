@@ -1,12 +1,13 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
-import { Box, CircularProgress, Flex, Text } from '@chakra-ui/react';
+import { Box, CircularProgress, Flex, Text, useToast } from '@chakra-ui/react';
 
 import { usePostImageMutation } from '@apis/goods/GoodsApi.mutation';
 import { GoodsListItemImageProps } from '@apis/goods/GoodsApi.type';
 
 import ButtonModal from '@components/common/ModalContainer/_fragments/ButtonModal';
+import ToastComponent from '@components/common/Toast/ToastComponent';
 
 import {
   ColorBlack,
@@ -34,6 +35,7 @@ interface ImagetPathProps {
 }
 
 function ImageComponent({ list, setList }: Props) {
+  const toast = useToast();
   const { goodsInfo } = useGoodsStateZuInfo((state) => state);
   const [open, setOpen] = useState(true);
   const [imagePath, setImagePath] = useState<string>('');
@@ -78,13 +80,36 @@ function ImageComponent({ list, setList }: Props) {
   const handleUploadImage = (e: any) => {
     //이미지 미리보기 기능
     const reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      setImagePath(reader.result as string);
-      const formData = new FormData();
-      formData.append('image', e.target.files[0]);
-      ItemCodeMutate(formData);
-    };
+    if (
+      e.target.files[0].name.split('.')[1] !== 'jpg' &&
+      e.target.files[0].name.split('.')[1] !== 'JPG' &&
+      e.target.files[0].name.split('.')[1] !== 'jpeg' &&
+      e.target.files[0].name.split('.')[1] !== 'JPEG' &&
+      e.target.files[0].name.split('.')[1] !== 'png' &&
+      e.target.files[0].name.split('.')[1] !== 'PNG' &&
+      e.target.files[0].name.split('.')[1] !== 'gif' &&
+      e.target.files[0].name.split('.')[1] !== 'GIF' &&
+      e.target.files[0].name.split('.')[1] !== 'bmp' &&
+      e.target.files[0].name.split('.')[1] !== 'BMP'
+    ) {
+      toast({
+        position: 'top',
+        duration: 2000,
+        render: () => (
+          <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+            {'jpg, jpeg, png, gif, bmp 확장자만 등록 가능합니다.'}
+          </Box>
+        ),
+      });
+    } else {
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = () => {
+        setImagePath(reader.result as string);
+        const formData = new FormData();
+        formData.append('image', e.target.files[0]);
+        ItemCodeMutate(formData);
+      };
+    }
   };
 
   const onDeleteImg = (index: number) => {
