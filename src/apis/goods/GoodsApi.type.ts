@@ -216,6 +216,8 @@ export type GoodsSchedulesListProps = {
   durationTime: string;
   location: string;
   info: string;
+  lat: number;
+  lng: number;
   images: ScheduleImageProps[];
 };
 export type OptionProps = {

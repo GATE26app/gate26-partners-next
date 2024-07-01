@@ -138,6 +138,8 @@ function UpdateGoodsPage() {
       durationTime: '',
       location: '',
       info: '',
+      lng: 0,
+      lat: 0,
       images: [
         {
           imagePath: '',

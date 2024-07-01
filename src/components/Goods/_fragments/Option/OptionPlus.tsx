@@ -208,7 +208,6 @@ function OptionPlus({
           DateList.forEach((date) => {
             optionNames.forEach((name, index) => {
               const values = optionValues[index].split(','); // 문자열을 배열로 변환
-              console.log('values', values);
               if (values.includes('') || values.includes(' ')) {
                 ToastComponent('옵션값을 다시 확인해주세요.');
               } else {
@@ -231,9 +230,12 @@ function OptionPlus({
               }
             });
           });
-
-          setOptionList(resultArray);
-          setOptions(resultArray);
+          if (resultArray.length > 500) {
+            ToastComponent('500개 이하의 옵션을 선택해주세요.');
+          } else {
+            setOptionList(resultArray);
+            setOptions(resultArray);
+          }
         } else {
           optionNames.forEach((name, index) => {
             const values = optionValues[index].split(','); // 문자열을 배열로 변환
@@ -258,8 +260,12 @@ function OptionPlus({
               });
             }
           });
-          setOptionList(resultArray);
-          setOptions(resultArray);
+          if (resultArray.length > 500) {
+            ToastComponent('500개 이하의 옵션을 선택해주세요.');
+          } else {
+            setOptionList(resultArray);
+            setOptions(resultArray);
+          }
         }
       } else {
         if (Number(optionCnt) == 1) {
@@ -298,8 +304,12 @@ function OptionPlus({
           });
         }
       });
-      setOptionList(resultArray);
-      setOptions(resultArray);
+      if (resultArray.length > 500) {
+        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      } else {
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     } else {
       if (firstOptions.includes('') || firstOptions.includes(' ')) {
         ToastComponent('옵션값을 다시 확인해주세요.');
@@ -321,8 +331,12 @@ function OptionPlus({
           });
         });
       }
-      setOptionList(resultArray);
-      setOptions(resultArray);
+      if (resultArray.length > 500) {
+        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      } else {
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     }
   };
 
@@ -360,8 +374,12 @@ function OptionPlus({
           });
         }
       });
-      setOptionList(resultArray);
-      setOptions(resultArray);
+      if (resultArray.length > 500) {
+        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      } else {
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     } else {
       if (
         firstOptions.includes('') ||
@@ -390,8 +408,12 @@ function OptionPlus({
           });
         });
 
-        setOptionList(resultArray);
-        setOptions(resultArray);
+        if (resultArray.length > 500) {
+          ToastComponent('500개 이하의 옵션을 선택해주세요.');
+        } else {
+          setOptionList(resultArray);
+          setOptions(resultArray);
+        }
       }
     }
   };
@@ -435,8 +457,12 @@ function OptionPlus({
           });
         }
       });
-      setOptionList(resultArray);
-      setOptions(resultArray);
+      if (resultArray.length > 500) {
+        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      } else {
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     } else {
       if (
         firstOptions.includes('') ||
@@ -469,8 +495,12 @@ function OptionPlus({
           });
         });
       }
-      setOptionList(resultArray);
-      setOptions(resultArray);
+      if (resultArray.length > 500) {
+        ToastComponent('500 이하의 옵션을 선택해주세요.');
+      } else {
+        setOptionList(resultArray);
+        setOptions(resultArray);
+      }
     }
   };
 

@@ -125,6 +125,8 @@ function SaveGoodsPage() {
       durationTime: '',
       location: '',
       info: '',
+      lat: 0,
+      lng: 0,
       images: [
         {
           imagePath: '',

@@ -101,7 +101,7 @@ function CreateGoodsPage() {
     priceDcPer: 0, //상품 기본할인율
     priceDc: 0, //상품 기본할인금액
     price: 0, //상품 판매금액, 기본할인후
-    optionType: 1, //상품 옵션유형, 1=>일반형, 2=>날짜지정형
+    optionType: Number(router.query.type) == 3 ? 2 : 1, //상품 옵션유형, 1=>일반형, 2=>날짜지정형
     // optionType: router.query.type == '3' || router.query.type == '2' ? 2 : 1, //상품 옵션유형, 1=>일반형, 2=>날짜지정형
     optionInputType: 0, //상품 옵션입력 유형, 0=>단독형, 1=>조합형
     optionInputStartDate: '', //상품 옵션입력 이용일시 생성구간 시작일
@@ -131,6 +131,8 @@ function CreateGoodsPage() {
       durationTime: '',
       location: '',
       info: '',
+      lat: 0,
+      lng: 0,
       images: [
         {
           imagePath: '',

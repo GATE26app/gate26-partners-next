@@ -49,7 +49,6 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
       }
     });
   };
-  console.log('item', item);
   return (
     <Flex
       minW={'1550px'}

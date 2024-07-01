@@ -37,7 +37,6 @@ function MainHeader() {
     router.push('/login');
   };
 
-  console.log('alarmInfo,', alarmInfo);
   const { data } = useGetUserQuery({
     options: {
       enabled: !!getToken().access,
@@ -45,7 +44,6 @@ function MainHeader() {
       refetchInterval: false, // 자동 새로 고침 비활성화
       onSuccess: (res) => {
         if (res.success == true) {
-          console.log('res.data', res);
           //  setAllList(res.data);
           //    if (res.data) {
           //   setLocationList(res.data);

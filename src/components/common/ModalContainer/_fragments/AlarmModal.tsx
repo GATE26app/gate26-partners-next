@@ -105,7 +105,6 @@ function AlarmModal({ onClose, ...props }: Props) {
       options: {
         onSuccess: (res) => {
           if (res.success) {
-            // console.log('알림 클릭 res', res);
           } else {
           }
           // setDetailData(res);
@@ -114,7 +113,6 @@ function AlarmModal({ onClose, ...props }: Props) {
         },
       },
     });
-  console.log('list', list);
   return (
     <Box
       w={'357px'}
