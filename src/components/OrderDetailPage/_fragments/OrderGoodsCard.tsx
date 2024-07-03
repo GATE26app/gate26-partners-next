@@ -11,7 +11,7 @@ import {
   usePutOrderCancelRequestMutation,
 } from '@apis/order/OrderApi.mutation';
 import { OrderDetailItemType } from '@apis/order/OrderApi.type';
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import { orderModalSliceAction } from '@features/orderModal/orderModalSlice';
 
 import CancelModal from '@components/common/ModalContainer/_fragments/CancelModal';
@@ -49,6 +49,16 @@ function OrderGoodsCard({ header, item }: Props) {
   const [modalInfo, setModalInfo] = useState({
     type: '',
     title: '',
+  });
+
+  const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [ModalState, setModalState] = useState({
+    type: '',
+    title: '',
+    okButtonName: '',
+    message: '',
+    cbOk: () => {},
+    cbCancel: () => {},
   });
 
   useEffect(() => {
@@ -100,30 +110,51 @@ function OrderGoodsCard({ header, item }: Props) {
       });
       setCancelModal(true);
     } else if (type == '취소요청' && item.cancelStatusName !== '') {
-      dispatch(
-        customModalSliceAction.setMessage({
-          title: '상태값 변경',
-          message: `이미 취소요청이 되어 있습니다.`,
-          type: 'confirm',
-          okButtonName: '확인',
-          cbOk: () => {},
-        }),
-      );
-      openCustomModal();
+      // dispatch(
+      //   customModalSliceAction.setMessage({
+      //     title: '상태값 변경',
+      //     message: `이미 취소요청이 되어 있습니다.`,
+      //     type: 'confirm',
+      //     okButtonName: '확인',
+      //     cbOk: () => {},
+      //   }),
+      // );
+      // openCustomModal();
+      setOpenAlertModal(true);
+      setModalState({
+        ...ModalState,
+        title: '상태값 변경',
+        message: `이미 취소요청이 되어 있습니다.`,
+        type: 'confirm',
+        okButtonName: '확인',
+        cbOk: () => {},
+      });
     } else {
-      dispatch(
-        customModalSliceAction.setMessage({
-          title: '상태값 변경',
-          message: `${type}으로 변경하시겠습니까?`,
-          type: 'confirm',
-          okButtonName: '변경',
-          cbOk: () => {
-            setSelectState(type);
-            // removeAdminInfo(row.userId as string);
-          },
-        }),
-      );
-      openCustomModal();
+      setOpenAlertModal(true);
+      setModalState({
+        ...ModalState,
+        title: '상태값 변경',
+        message: `${type}으로 변경하시겠습니까?`,
+        type: 'confirm',
+        okButtonName: '변경',
+        cbOk: () => {
+          setSelectState(type);
+          // removeAdminInfo(row.userId as string);
+        },
+      });
+      // dispatch(
+      //   customModalSliceAction.setMessage({
+      //     title: '상태값 변경',
+      //     message: `${type}으로 변경하시겠습니까?`,
+      //     type: 'confirm',
+      //     okButtonName: '변경',
+      //     cbOk: () => {
+      //       setSelectState(type);
+      //       // removeAdminInfo(row.userId as string);
+      //     },
+      //   }),
+      // );
+      // openCustomModal();
     }
   };
 

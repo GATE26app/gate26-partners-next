@@ -61,6 +61,22 @@ function OrderFIlter({ request, setRequest }: Props) {
       // ToastComponent('기간조회 유형을 선택해주세요.');
     } else {
       router.push(`/orderlist?page=1`);
+      setRequest({
+        ...request,
+        searchType: request.searchType !== undefined ? request.searchType : '',
+        searchKeyword:
+          request.searchKeyword !== undefined ? request.searchKeyword : '',
+        orderType: request.orderType !== undefined ? request.orderType : 0,
+        orderStatus:
+          request.orderStatus !== undefined ? request.orderStatus : 0,
+        cancelStatus:
+          request.cancelStatus !== undefined ? request.cancelStatus : [],
+        periodType: request.periodType !== undefined ? request.periodType : '',
+        periodStartDate:
+          request.periodStartDate !== undefined ? request.periodStartDate : '',
+        periodEndDate:
+          request.periodEndDate !== undefined ? request.periodEndDate : '',
+      });
       setOrderFilterInfo({
         ...orderFilterInfo,
         searchType: request.searchType !== undefined ? request.searchType : '',

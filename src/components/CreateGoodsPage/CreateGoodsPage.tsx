@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch } from 'react-redux';
@@ -24,7 +24,7 @@ import {
   StatusProps,
   optionInputsProps,
 } from '@apis/goods/GoodsApi.type';
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import useCustomBack from '@hooks/useCustomBack';
 
 import BookingCheckComponent from '@components/Goods/_fragments/BookingCheckComponent';
@@ -55,7 +55,6 @@ import {
   ColorWhite,
 } from '@utils/_Palette';
 
-import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 import OrderLayout from 'layout/GoodsLayout';
 
 interface CategoryListProps {
@@ -68,7 +67,7 @@ export type { CategoryListProps, LocationListProps };
 
 function CreateGoodsPage() {
   const dispatch = useDispatch();
-  const { openCustomModal } = useCustomModalHandlerContext();
+
   const router = useRouter();
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
@@ -282,18 +281,18 @@ function CreateGoodsPage() {
   };
   const handleBack = () => {
     // 커스텀
-    dispatch(
-      customModalSliceAction.setMessage({
-        title: '상품 등록',
-        message: `작성중인 내용을 취소하시겠습니까?`,
-        type: 'confirm',
-        okButtonName: '확인',
-        cbOk: () => {
-          router.back();
-        },
-      }),
-    );
-    openCustomModal();
+    // dispatch(
+    //   customModalSliceAction.setMessage({
+    //     title: '상품 등록',
+    //     message: `작성중인 내용을 취소하시겠습니까?`,
+    //     type: 'confirm',
+    //     okButtonName: '확인',
+    //     cbOk: () => {
+    //       router.back();
+    //     },
+    //   }),
+    // );
+    // openCustomModal();
   };
   // useCustomBack(handleBack);
   // useEffect(() => {
@@ -319,6 +318,7 @@ function CreateGoodsPage() {
   //     window.removeEventListener('popstate', handleBack);
   //   };
   // }, []);
+
   return (
     <>
       <ButtonModal

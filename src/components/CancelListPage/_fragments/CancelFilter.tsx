@@ -60,6 +60,21 @@ function CancelFilter({ request, setRequest }: Props) {
       });
     } else {
       router.push(`/cancellist?page=1`);
+      setRequest({
+        ...request,
+        searchType: request.searchType !== undefined ? request.searchType : '',
+        searchKeyword:
+          request.searchKeyword !== undefined ? request.searchKeyword : '',
+        orderType: request.orderType !== undefined ? request.orderType : 0,
+        orderStatus:
+          request.orderStatus !== undefined ? request.orderStatus : 0,
+        cancelStatus: request.cancelStatus ? request.cancelStatus : [1, 2, 3],
+        periodType: request.periodType !== undefined ? request.periodType : '',
+        periodStartDate:
+          request.periodStartDate !== undefined ? request.periodStartDate : '',
+        periodEndDate:
+          request.periodEndDate !== undefined ? request.periodEndDate : '',
+      });
       setCancelFilterInfo({
         ...cancelFilterInfo,
         searchType: request.searchType !== undefined ? request.searchType : '',

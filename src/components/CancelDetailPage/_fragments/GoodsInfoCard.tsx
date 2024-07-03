@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import { orderModalSliceAction } from '@features/orderModal/orderModalSlice';
 
 import { ItemProps } from '@components/OrderListPage/_fragments/OrderDataTable';
@@ -27,7 +27,6 @@ import {
 import { formatDated, formatPhone, imgPath, intComma } from '@utils/format';
 
 // import OrderStateSelectBox from './OrderStateSelectBox';
-import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface headerProps {
   id: string;

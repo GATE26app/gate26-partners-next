@@ -28,7 +28,7 @@ function PriceComponent({ list, setList }: Props) {
   const { goodsInfo } = useGoodsStateZuInfo((state) => state);
   const originalPriceNum = list?.price / (1 - list?.priceDcPer / 100);
   useEffect(() => {
-    if (list?.price !== 0 || list?.priceDcPer !== 0) {
+    if (list?.price !== 0) {
       setList({
         ...list,
         priceNet: list?.price / (1 - list?.priceDcPer / 100),

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 import {
+  GoodsBasicProps,
   GoodsOptionStockModifyType,
   OptionItemProps,
 } from '@apis/goods/GoodsApi.type';
@@ -33,6 +34,7 @@ import { useGoodsStateZuInfo } from '_store/StateZuInfo';
 // import { Option } from './OptionPlus';
 
 interface Props {
+  list: GoodsBasicProps;
   optionList: OptionItemProps[];
   setOptionList: React.Dispatch<React.SetStateAction<OptionItemProps[]>>;
   optionModifyList: GoodsOptionStockModifyType[];
@@ -41,6 +43,7 @@ interface Props {
   >;
 }
 function ModifyOptionComponent({
+  list,
   optionList,
   setOptionList,
   optionModifyList,
@@ -67,6 +70,7 @@ function ModifyOptionComponent({
     }
   };
 
+  console.log('optionList', optionList);
   return (
     <Flex
       borderRadius={'12px'}
@@ -85,11 +89,9 @@ function ModifyOptionComponent({
           flexDirection={'row'}
           h={'60px'}
           w="100%"
-          // borderBottomColor={ColorGray400}
-          // borderBottomWidth={1}
         >
-          {optionList[1].useDateTime !== '' &&
-            optionList[1].useDateTime !== null && (
+          {optionList[0].useDateTime !== '' &&
+            optionList[0].useDateTime !== null && (
               <Flex
                 py={'20px'}
                 w={'300px'}
@@ -103,9 +105,76 @@ function ModifyOptionComponent({
                 </Text>
               </Flex>
             )}
-
-          {/* {optionList[0].firstKey !== null && ( */}
-          <Flex
+          {list.optionInputType == 1 ? (
+            <>
+              <Flex
+                w={'300px'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRightWidth={1}
+                borderRightColor={ColorGray400}
+              >
+                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                  {optionList[0].firstKey}
+                </Text>
+              </Flex>
+              {optionList[0].secondKey !== null &&
+                optionList[0].secondKey !== '' && (
+                  <Flex
+                    w={'300px'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    borderRightWidth={1}
+                    borderRightColor={ColorGray400}
+                  >
+                    <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                      {optionList[0].secondKey}
+                    </Text>
+                  </Flex>
+                )}
+              {optionList[0].thirdKey !== null &&
+                optionList[0].thirdKey !== '' && (
+                  <Flex
+                    w={'300px'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    borderRightWidth={1}
+                    borderRightColor={ColorGray400}
+                  >
+                    <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                      {optionList[0].thirdKey}
+                    </Text>
+                  </Flex>
+                )}
+            </>
+          ) : (
+            <>
+              {/* 단독형 */}
+              <Flex
+                w={'300px'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRightWidth={1}
+                borderRightColor={ColorGray400}
+              >
+                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                  옵션명
+                </Text>
+              </Flex>
+              <Flex
+                w={'300px'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRightWidth={1}
+                borderRightColor={ColorGray400}
+              >
+                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                  옵션값
+                </Text>
+              </Flex>
+            </>
+          )}
+          {/* <Flex
             py={'20px'}
             w={'300px'}
             alignItems={'center'}
@@ -114,13 +183,13 @@ function ModifyOptionComponent({
             borderRightWidth={1}
           >
             <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-              {optionList[1].type == 1 ? '옵션명' : optionList[1].firstKey}
+              {optionList[0].type == 1 ? '옵션명' : optionList[1].firstKey}
             </Text>
           </Flex>
-          {/* )} */}
-          {optionList[1].type == 2 &&
-          optionList[1].secondKey !== null &&
-          optionList[1].secondKey !== '' ? (
+      
+          {optionList[0].type == 2 &&
+          optionList[0].secondKey !== null &&
+          optionList[0].secondKey !== '' ? (
             <Flex
               w={'300px'}
               alignItems={'center'}
@@ -140,7 +209,7 @@ function ModifyOptionComponent({
           ) : (
             <></>
           )}
-          {optionList[1].type == 1 && (
+          {optionList[0].type == 1 && (
             <Flex
               w={'300px'}
               alignItems={'center'}
@@ -159,7 +228,7 @@ function ModifyOptionComponent({
             </Flex>
           )}
 
-          {optionList[1].thirdKey !== null && optionList[1].thirdKey !== '' && (
+          {optionList[0].thirdKey !== null && optionList[0].thirdKey !== '' && (
             <Flex
               w={'300px'}
               alignItems={'center'}
@@ -172,7 +241,7 @@ function ModifyOptionComponent({
                 {optionList[0].thirdKey}
               </Text>
             </Flex>
-          )}
+          )} */}
           {optionList[0].price !== null && (
             <Flex
               w={'300px'}
@@ -187,7 +256,7 @@ function ModifyOptionComponent({
               </Text>
             </Flex>
           )}
-          {optionList[1].stockCnt !== null && (
+          {optionList[0].stockCnt !== null && (
             <Flex
               w={'300px'}
               alignItems={'center'}
@@ -207,15 +276,311 @@ function ModifyOptionComponent({
       {/* 바디 */}
       <Flex bgColor={ColorWhite} flexDirection={'column'}>
         {optionList.length > 0 &&
+          optionList.map((item: Option, index: number) => {
+            return (
+              <Flex
+                flexDirection={'row'}
+                borderTopColor={ColorGray400}
+                borderTopWidth={1}
+                key={index}
+              >
+                {optionList[0].useDateTime !== '' &&
+                  optionList[0].useDateTime !== null && (
+                    <Flex
+                      // w={'300px'}
+                      // alignItems={'center'}
+                      // justifyContent={'center'}
+                      // borderRightWidth={1}
+                      // borderRightColor={ColorGray400}
+                      w={'300px'}
+                      alignItems={'center'}
+                      bgColor={ColorGray100}
+                      justifyContent={'center'}
+                      borderRightColor={ColorGray400}
+                      borderRightWidth={1}
+                      borderTopColor={ColorGray400}
+                      borderTopWidth={1}
+                    >
+                      <Text
+                        fontSize={'15px'}
+                        fontWeight={700}
+                        color={ColorBlack}
+                        py={'16px'}
+                      >
+                        {DashDate(item.useDateTime)}
+                      </Text>
+                    </Flex>
+                  )}
+                {/* 옵션타입 optionInputType 0=> 단독형 1 =>조합형 */}
+                {list.optionInputType == 1 ? (
+                  <>
+                    <Flex
+                      // w={'300px'}
+                      // alignItems={'center'}
+                      // justifyContent={'center'}
+                      // borderRightWidth={1}
+                      // borderRightColor={ColorGray400}
+                      w={'300px'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      bgColor={ColorGray100}
+                      borderRightColor={ColorGray400}
+                      borderRightWidth={1}
+                      borderTopColor={ColorGray400}
+                      borderTopWidth={1}
+                    >
+                      <Text
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        color={ColorGray700}
+                        py={'17px'}
+                      >
+                        {item.firstValue}
+                      </Text>
+                      {/* <Editable
+                        w={'100%'}
+                        key={item.firstValue}
+                        value={item.firstValue}
+                        textAlign={'center'}
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        isPreviewFocusable={false}
+                        selectAllOnFocus={false}
+                        isDisabled={goodsInfo.LogItemDisable}
+                        onChange={(e) =>
+                          handleInputChange(index, 'firstValue', e)
+                        }
+                      >
+                        <EditablePreview py={'17px'} color={ColorGray700} />
+                        <EditableInput
+                          py={'17px'}
+                          color={ColorBlack}
+                          disabled={goodsInfo.LogItemDisable}
+                        />
+                      </Editable> */}
+                    </Flex>
+                    {item.secondValue !== null && item.secondValue !== '' && (
+                      <Flex
+                        w={'300px'}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        bgColor={ColorGray100}
+                        borderRightColor={ColorGray400}
+                        borderRightWidth={1}
+                        borderTopColor={ColorGray400}
+                        borderTopWidth={1}
+                      >
+                        <Text
+                          fontSize={'15px'}
+                          fontWeight={500}
+                          color={ColorGray700}
+                          py={'17px'}
+                        >
+                          {item.secondValue}
+                        </Text>
+                        {/* <Editable
+                          w={'100%'}
+                          key={item.secondValue}
+                          value={item.secondValue}
+                          textAlign={'center'}
+                          fontSize={'15px'}
+                          fontWeight={500}
+                          isPreviewFocusable={false}
+                          selectAllOnFocus={false}
+                          isDisabled={goodsInfo.LogItemDisable}
+                          onChange={(e) =>
+                            handleInputChange(index, 'secondValue', e)
+                          }
+                        >
+                          <EditablePreview py={'17px'} color={ColorGray700} />
+                          <EditableInput
+                            py={'17px'}
+                            color={ColorBlack}
+                            disabled={goodsInfo.LogItemDisable}
+                          />
+                        </Editable> */}
+                      </Flex>
+                    )}
+                    {item.thirdValue !== null && item.thirdValue !== '' && (
+                      <Flex
+                        w={'300px'}
+                        alignItems={'center'}
+                        justifyContent={'center'}
+                        bgColor={ColorGray100}
+                        borderRightColor={ColorGray400}
+                        borderRightWidth={1}
+                        borderTopColor={ColorGray400}
+                        borderTopWidth={1}
+                      >
+                        <Text
+                          fontSize={'15px'}
+                          fontWeight={500}
+                          color={ColorGray700}
+                          py={'17px'}
+                        >
+                          {item.thirdValue}
+                        </Text>
+                        {/* <Editable
+                          w={'100%'}
+                          key={item.thirdValue}
+                          value={item.thirdValue}
+                          textAlign={'center'}
+                          fontSize={'15px'}
+                          fontWeight={500}
+                          isPreviewFocusable={false}
+                          selectAllOnFocus={false}
+                          isDisabled={goodsInfo.LogItemDisable}
+                          onChange={(e) =>
+                            handleInputChange(index, 'thirdValue', e)
+                          }
+                        >
+                          <EditablePreview py={'17px'} color={ColorGray700} />
+                          <EditableInput
+                            py={'17px'}
+                            color={ColorBlack}
+                            disabled={goodsInfo.LogItemDisable}
+                          />
+                        </Editable> */}
+                      </Flex>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* 단독형 */}
+                    <Flex
+                      w={'300px'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      bgColor={ColorGray100}
+                      borderRightColor={ColorGray400}
+                      borderRightWidth={1}
+                      borderTopColor={ColorGray400}
+                      borderTopWidth={1}
+                    >
+                      <Text
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        color={ColorGray700}
+                        py={'17px'}
+                      >
+                        {item.firstKey}
+                      </Text>
+                      {/* <Editable
+                        w={'100%'}
+                        key={item.firstKey}
+                        // defaultValue={item.firstKey}
+                        value={item.firstKey}
+                        textAlign={'center'}
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        isPreviewFocusable={false}
+                        selectAllOnFocus={false}
+                        isDisabled={goodsInfo.LogItemDisable}
+                        onChange={(e) => {
+                          handleInputChange(index, 'firstKey', e);
+                        }}
+                      >
+                        <EditablePreview py={'17px'} color={ColorGray700} />
+                        <EditableInput py={'17px'} color={ColorBlack} />
+                      </Editable> */}
+                    </Flex>
+                    <Flex
+                      w={'300px'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      bgColor={ColorGray100}
+                      borderRightColor={ColorGray400}
+                      borderRightWidth={1}
+                      borderTopColor={ColorGray400}
+                      borderTopWidth={1}
+                    >
+                      <Text
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        color={ColorGray700}
+                        py={'17px'}
+                      >
+                        {item.firstValue}
+                      </Text>
+                    </Flex>
+                  </>
+                )}
+
+                {item.price !== null && (
+                  <Flex
+                    w={'300px'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    bgColor={ColorGray100}
+                    // borderRightColor={ColorGray400}
+                    // borderRightWidth={1}
+                    borderTopColor={ColorGray400}
+                    borderTopWidth={1}
+                  >
+                    <Text
+                      fontSize={'15px'}
+                      fontWeight={500}
+                      color={ColorGray700}
+                      py={'17px'}
+                    >
+                      {item.price}
+                    </Text>
+                  </Flex>
+                )}
+                {item.stockCnt !== null && (
+                  <Flex
+                    w={'300px'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    borderWidth={1}
+                    borderTopColor={
+                      focus == String(index) ? ColorBlack : ColorGray400
+                    }
+                    borderLeftColor={
+                      focus == String(index) ? ColorBlack : ColorGray400
+                    }
+                    borderRightColor={
+                      focus == String(index) ? ColorBlack : ColorGray400
+                    }
+                    // borderRightColor={ColorGray400}
+                  >
+                    <Editable
+                      w={'100%'}
+                      key={item.stockCnt}
+                      defaultValue={String(item.stockCnt)}
+                      textAlign={'center'}
+                      fontSize={'15px'}
+                      fontWeight={500}
+                      isPreviewFocusable={true}
+                      selectAllOnFocus={false}
+                      isDisabled={goodsInfo.LogItemDisable}
+                      // handleInputChange
+                      onChange={(e) =>
+                        handleInputChange(String(item.optionId), Number(e))
+                      }
+                    >
+                      <EditablePreview py={'17px'} color={ColorGray700} />
+                      <EditableInput
+                        py={'17px'}
+                        type="number"
+                        color={ColorBlack}
+                      />
+                    </Editable>
+                  </Flex>
+                )}
+              </Flex>
+            );
+          })}
+      </Flex>
+      {/* <Flex bgColor={ColorWhite} flexDirection={'column'}>
+        {optionList.length > 0 &&
           optionList.map((item: OptionItemProps, index: number) => {
             return (
               <Flex
                 flexDirection={'row'}
-                // borderTopColor={ColorGray400}
-                // borderTopWidth={1}
               >
-                {optionList[1].useDateTime !== '' &&
-                  optionList[1].useDateTime !== null && (
+                {optionList[0].useDateTime !== '' &&
+                  optionList[0].useDateTime !== null && (
                     <Flex
                       w={'300px'}
                       alignItems={'center'}
@@ -234,12 +599,6 @@ function ModifyOptionComponent({
                       >
                         {DashDate(item.useDateTime)}
                       </Text>
-                      {/* <Input
-                        value={item.optionDate}
-                        fontSize={'16px'}
-                        fontWeight={700}
-                        color={ColorBlack}
-                      /> */}
                     </Flex>
                   )}
 
@@ -262,9 +621,9 @@ function ModifyOptionComponent({
                     {item.type == 1 ? item.firstKey : item.firstValue}
                   </Text>
                 </Flex>
-                {optionList[1].type == 2 &&
-                optionList[1].secondKey !== null &&
-                optionList[1].secondKey !== '' ? (
+                {optionList[0].type == 2 &&
+                optionList[0].secondKey !== null &&
+                optionList[0].secondKey !== '' ? (
                   <Flex
                     w={'300px'}
                     alignItems={'center'}
@@ -287,7 +646,7 @@ function ModifyOptionComponent({
                 ) : (
                   <></>
                 )}
-                {optionList[1].type == 1 && (
+                {optionList[0].type == 1 && (
                   <Flex
                     w={'300px'}
                     alignItems={'center'}
@@ -427,20 +786,11 @@ function ModifyOptionComponent({
                       />
                     </Editable>
                   </Flex>
-                  //   {/* <Text
-                  //     fontSize={'15px'}
-                  //     fontWeight={500}
-                  //     color={ColorGray700}
-                  //     py={'17px'}
-                  //   >
-                  //     {item.stockCnt}
-                  //   </Text> */}
-                  // // </Flex>
                 )}
               </Flex>
             );
           })}
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 }

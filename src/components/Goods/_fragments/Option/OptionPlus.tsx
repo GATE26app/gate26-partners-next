@@ -65,11 +65,13 @@ function OptionPlus({
   optionInputList,
   setOptionInputList,
 }: Props) {
+  const router = useRouter();
+  const pathname = router.pathname;
   const [startDay, setStartDay] = useState<dayjs.Dayjs>(() =>
     dayjs(new Date()),
   );
   const { goodsInfo } = useGoodsStateZuInfo((state) => state);
-  const router = useRouter();
+
   const [endDay, setEndDay] = useState<dayjs.Dayjs>(() =>
     dayjs(new Date()).add(7, 'day'),
   );
@@ -109,20 +111,22 @@ function OptionPlus({
   // }, [router.query.type]);
 
   useEffect(() => {
-    if (optionInputList.length > 0) {
-      // if()
-      const nameList: string[] = [];
-      const valueList: string[] = [];
+    if (pathname !== '/creategoods') {
+      if (optionInputList.length > 0) {
+        // if()
+        const nameList: string[] = [];
+        const valueList: string[] = [];
 
-      setOptionCnt(String(optionInputList.length));
-      optionInputList.forEach((item) => {
-        if (item.inputKey !== '' && item.inputValue !== '') {
-          nameList.push(item.inputKey);
-          valueList.push(item.inputValue);
-        }
-        setOptionNames(nameList);
-        setOptionValues(valueList);
-      });
+        setOptionCnt(String(optionInputList.length));
+        optionInputList.forEach((item) => {
+          if (item.inputKey !== '' && item.inputValue !== '') {
+            nameList.push(item.inputKey);
+            valueList.push(item.inputValue);
+          }
+          setOptionNames(nameList);
+          setOptionValues(valueList);
+        });
+      }
     }
   }, [optionInputList]);
 

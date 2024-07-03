@@ -32,13 +32,14 @@ import {
   StatusProps,
   optionInputsProps,
 } from '@apis/goods/GoodsApi.type';
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import OptionComponent from '@components/Goods/_fragments/Option/OptionComponent';
 import { Option } from '@components/Goods/_fragments/Option/OptionPlus';
 import StatusComponent from '@components/Goods/_fragments/StatusComponent';
 import CustomButton from '@components/common/CustomButton';
 import LogSelectBox from '@components/common/LogSelectBox';
+import AlertModal from '@components/common/ModalContainer/_fragments/AlertModal';
 import LoadingModal from '@components/common/ModalContainer/_fragments/LoadingModal';
 import SelectBox from '@components/common/SelectBox';
 
@@ -92,6 +93,15 @@ function UpdateGoodsPage() {
     level: 0,
     viewStartDate: '',
     viewEndDate: '',
+  });
+  const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [ModalState, setModalState] = useState({
+    type: '',
+    title: '',
+    okButtonName: '',
+    message: '',
+    cbOk: () => {},
+    cbCancel: () => {},
   });
 
   const [attributeList, setAttributeList] = useState<GoodsAttributeListProps[]>(
@@ -443,6 +453,11 @@ function UpdateGoodsPage() {
         isOpen={isLoadingModal}
         onClose={() => setLoadingModal(false)}
       />
+      <AlertModal
+        isOpen={isOpenAlertModal}
+        ModalState={ModalState}
+        onClose={() => setOpenAlertModal(false)}
+      />
       {detailData?.success == true ? (
         <Flex
           w={'100%'}
@@ -502,19 +517,31 @@ function UpdateGoodsPage() {
                     bgColor={ColorWhite}
                     fontSize="15px"
                     onClick={() => {
-                      dispatch(
-                        customModalSliceAction.setMessage({
-                          title: '상품 수정',
-                          message: `작성중인 내용을 취소하시겠습니까?`,
-                          type: 'confirm',
-                          okButtonName: '확인',
-                          cbOk: () => {
-                            router.back();
-                            // window.history.back();
-                          },
-                        }),
-                      );
-                      openCustomModal();
+                      setOpenAlertModal(true);
+                      setModalState({
+                        ...ModalState,
+                        title: '상품 수정',
+                        message: `작성중인 내용을 취소하시겠습니까?`,
+                        type: 'confirm',
+                        okButtonName: '확인',
+                        cbOk: () => {
+                          router.back();
+                          // window.history.back();
+                        },
+                      });
+                      // dispatch(
+                      //   customModalSliceAction.setMessage({
+                      //     title: '상품 수정',
+                      //     message: `작성중인 내용을 취소하시겠습니까?`,
+                      //     type: 'confirm',
+                      //     okButtonName: '확인',
+                      //     cbOk: () => {
+                      //       router.back();
+                      //       // window.history.back();
+                      //     },
+                      //   }),
+                      // );
+                      // openCustomModal();
                     }}
                   />
                 )}
@@ -528,21 +555,35 @@ function UpdateGoodsPage() {
                   bgColor={ColorRed}
                   fontSize="15px"
                   onClick={() => {
-                    dispatch(
-                      customModalSliceAction.setMessage({
-                        title: '상품 수정',
-                        message: `상품을 ${
-                          selectMenu == 1 ? '저장' : '업데이트'
-                        }하시겠습니까?`,
-                        type: 'confirm',
-                        okButtonName: '확인',
-                        cbOk: () => {
-                          onSubmit(selectMenu);
-                          // window.history.back();
-                        },
-                      }),
-                    );
-                    openCustomModal();
+                    setOpenAlertModal(true);
+                    setModalState({
+                      ...ModalState,
+                      title: '상품 수정',
+                      message: `상품을 ${
+                        selectMenu == 1 ? '저장' : '업데이트'
+                      }하시겠습니까?`,
+                      type: 'confirm',
+                      okButtonName: '확인',
+                      cbOk: () => {
+                        onSubmit(selectMenu);
+                        // window.history.back();
+                      },
+                    });
+                    // dispatch(
+                    //   customModalSliceAction.setMessage({
+                    //     title: '상품 수정',
+                    //     message: `상품을 ${
+                    //       selectMenu == 1 ? '저장' : '업데이트'
+                    //     }하시겠습니까?`,
+                    //     type: 'confirm',
+                    //     okButtonName: '확인',
+                    //     cbOk: () => {
+                    //       onSubmit(selectMenu);
+                    //       // window.history.back();
+                    //     },
+                    //   }),
+                    // );
+                    // openCustomModal();
                   }}
                 />
               </Flex>
@@ -727,6 +768,7 @@ function UpdateGoodsPage() {
             )}
             {selectMenu == 3 && (
               <ModifyOptionComponent
+                list={BasicInfo}
                 optionList={optionList}
                 setOptionList={setOptionList}
                 optionModifyList={optionModifyList}

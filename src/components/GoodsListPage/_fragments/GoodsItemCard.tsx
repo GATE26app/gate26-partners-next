@@ -26,6 +26,16 @@ function GoodsItemCard({ header, item }: Props) {
   const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = '/images/Page/no_data.png';
   };
+
+  const ImageFnc = () => {
+    if (item.images.length > 0) {
+      return `${imgPath()}${
+        item.images.filter((arr) => arr.sort == 1)[0].thumbnailImagePath
+      }`;
+    } else {
+      return '/images/Page/no_data.png';
+    }
+  };
   return (
     <>
       <Flex
@@ -166,11 +176,7 @@ function GoodsItemCard({ header, item }: Props) {
               height: '80px',
               objectFit: 'cover',
             }}
-            src={
-              item?.images.length == 0
-                ? '/images/Page/no_data.png'
-                : `${imgPath()}${item?.images[0].thumbnailImagePath}`
-            }
+            src={ImageFnc()}
             onError={addDefaultImg}
             // src={imagePath[]}
             // src={`${imgPath()}${

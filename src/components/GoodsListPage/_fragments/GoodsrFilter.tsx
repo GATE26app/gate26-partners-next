@@ -28,7 +28,6 @@ import RightBox from './RightBox';
 
 import { useGoodsFilterZuInfo } from '_store/GoodsFilterInfo';
 import { useGoodsStateZuInfo } from '_store/StateZuInfo';
-import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface Props {
   request: GoodsListParamGetType;
@@ -57,6 +56,16 @@ function GoodsFilter({ request, setRequest, setOnSubmit }: Props) {
       // ToastComponent('기간조회 유형을 선택해주세요.');
     } else {
       router.push(`/goodslist?page=1`);
+      setRequest({
+        ...request,
+        pageNo: 0,
+        searchType: request.searchType !== undefined ? request.searchType : '',
+        searchKeyword:
+          request.searchKeyword !== undefined ? request.searchKeyword : '',
+        level: request.level !== undefined ? request.level : 0,
+        forSale: request.forSale !== undefined ? request.forSale : 0,
+        status: request.status !== undefined ? request.status : null,
+      });
       setGoodsFilterInfo({
         ...goodsFilterInfo,
         pageNo: 0,
@@ -100,6 +109,7 @@ function GoodsFilter({ request, setRequest, setOnSubmit }: Props) {
           onClick={() => {
             setRequest({
               ...request,
+              pageNo: 0,
               status: null,
               level: 0,
               forSale: 0,

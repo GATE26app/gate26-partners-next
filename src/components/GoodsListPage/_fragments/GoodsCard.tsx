@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Box, Flex, Text, useToast } from '@chakra-ui/react';
@@ -10,8 +10,8 @@ import {
   GodsListItemDataListProps,
   GoodsListItemProps,
 } from '@apis/goods/GoodsApi.type';
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import CustomButton from '@components/common/CustomButton';
 
 import {
@@ -28,7 +28,6 @@ import { DataTableHeaderProps, ListProps } from './GoodsDataTable';
 import GoodsItemCard from './GoodsItemCard';
 
 import { useGoodsStateZuInfo } from '_store/StateZuInfo';
-import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
 interface Props {
   header: Array<DataTableHeaderProps>;
@@ -49,7 +48,15 @@ function GoodsCard({
   const dispatch = useDispatch();
   const router = useRouter();
   const toast = useToast();
-  const { openCustomModal } = useCustomModalHandlerContext();
+  const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [ModalState, setModalState] = useState({
+    type: '',
+    title: '',
+    okButtonName: '',
+    message: '',
+    cbOk: () => {},
+    cbCancel: () => {},
+  });
   const { setGoodsInfo } = useGoodsStateZuInfo((state) => state);
   const { mutate: deleteMutate } = useGoodsDeleteMutation({
     options: {
@@ -77,22 +84,37 @@ function GoodsCard({
       itemCode: itemCode,
       itemId: itemId,
     };
-    dispatch(
-      customModalSliceAction.setMessage({
-        title: '상품 삭제',
-        message: `삭제하시겠습니까?`,
-        type: 'confirm',
-        okButtonName: '삭제',
-        cbOk: () => {
-          deleteMutate(body);
+    setOpenAlertModal(true);
+    setModalState({
+      ...ModalState,
+      title: '상품 삭제',
+      message: `삭제하시겠습니까?`,
+      type: 'confirm',
+      okButtonName: '삭제',
+      cbOk: () => {
+        deleteMutate(body);
 
-          // setOnSubmit(true);
-          // setSelectState(type);
-          // removeAdminInfo(row.userId as string);
-        },
-      }),
-    );
-    openCustomModal();
+        // setOnSubmit(true);
+        // setSelectState(type);
+        // removeAdminInfo(row.userId as string);
+      },
+    });
+    // dispatch(
+    //   customModalSliceAction.setMessage({
+    //     title: '상품 삭제',
+    //     message: `삭제하시겠습니까?`,
+    //     type: 'confirm',
+    //     okButtonName: '삭제',
+    //     cbOk: () => {
+    //       deleteMutate(body);
+
+    //       // setOnSubmit(true);
+    //       // setSelectState(type);
+    //       // removeAdminInfo(row.userId as string);
+    //     },
+    //   }),
+    // );
+    // openCustomModal();
 
     // deleteMutate(body);
   };

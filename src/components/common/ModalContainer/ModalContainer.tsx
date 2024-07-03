@@ -26,7 +26,7 @@ function ModalContainer({ ...props }: ModalContainerProps) {
   }, [isOpenModal, isOrderOpenModal]);
   return (
     <>
-      <AlertModal isOpen={isOpenModal} onClose={() => closeCustomModal()} />
+      {/* <AlertModal isOpen={isOpenModal} onClose={() => closeCustomModal()} /> */}
       <OrderModal isOpen={isOrderOpenModal} onClose={() => closeOrderModal()} />
     </>
   );

@@ -12,13 +12,21 @@ import useAppStore from '@features/useAppStore';
 
 import styled from '@emotion/styled';
 
+interface ModalStateType {
+  title: string;
+  message: string;
+  okButtonName?: string;
+  type: string;
+  cbOk?: () => void; // alert, confirm OK 버튼 콜백
+  cbCancel?: () => void; // confirm Cancel 버튼 콜백
+}
+
 interface AlertModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
+  ModalState: ModalStateType;
 }
-function AlertModal({ onClose, ...props }: AlertModalProps) {
-  const { title, message, type, okButtonName, cbOk, cbCancel } = useAppStore(
-    (store) => store.CUSTOM_MODAL,
-  );
+function AlertModal({ onClose, ModalState, ...props }: AlertModalProps) {
+  const { title, message, type, okButtonName, cbOk, cbCancel } = ModalState;
 
   const handleClickOK = () => {
     if (cbOk) {

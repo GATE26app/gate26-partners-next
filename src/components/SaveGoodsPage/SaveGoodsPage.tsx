@@ -28,8 +28,8 @@ import {
   StatusProps,
   optionInputsProps,
 } from '@apis/goods/GoodsApi.type';
-import { customModalSliceAction } from '@features/customModal/customModalSlice';
 
+// import { customModalSliceAction } from '@features/customModal/customModalSlice';
 import BookingCheckComponent from '@components/Goods/_fragments/BookingCheckComponent';
 import CancleComponent from '@components/Goods/_fragments/CancleComponent';
 import CatagoryComponent from '@components/Goods/_fragments/CatagoryComponent';
