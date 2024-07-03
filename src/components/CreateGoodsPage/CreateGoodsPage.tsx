@@ -253,8 +253,6 @@ function CreateGoodsPage() {
         ToastComponent('제목을 입력해주세요.');
       } else if (BasicInfo.price == 0) {
         ToastComponent('판매가를 입력해주세요.');
-      } else if (BasicInfo.priceDcPer == 0) {
-        ToastComponent('할인율을 입력해주세요.');
       } else if (imageList.length == 0) {
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {

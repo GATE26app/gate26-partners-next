@@ -425,12 +425,12 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       <Editable
                         w={'100%'}
                         key={item.firstKey}
-                        // defaultValue={item.firstKey}
                         value={item.firstKey}
+                        // value={item.firstKey}
                         textAlign={'center'}
                         fontSize={'15px'}
                         fontWeight={500}
-                        isPreviewFocusable={true}
+                        isPreviewFocusable={false}
                         selectAllOnFocus={false}
                         isDisabled={goodsInfo.LogItemDisable}
                         onChange={(e) => {
@@ -451,11 +451,11 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       <Editable
                         w={'100%'}
                         key={item.firstValue}
-                        defaultValue={item.firstValue}
+                        value={item.firstValue}
                         textAlign={'center'}
                         fontSize={'15px'}
                         fontWeight={500}
-                        isPreviewFocusable={true}
+                        isPreviewFocusable={false}
                         selectAllOnFocus={false}
                         isDisabled={goodsInfo.LogItemDisable}
                         onChange={(e) =>

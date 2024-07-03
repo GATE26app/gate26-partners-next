@@ -427,6 +427,8 @@ function UpdateGoodsPage() {
         itemCode: itemCode,
         itemId: detailData?.data.itemId,
         data: {
+          autoConfirm: BasicInfo.autoConfirm,
+          orderSameDay: BasicInfo.orderSameDay,
           level: BasicInfo.level,
           forSale: BasicInfo.forSale,
           viewStartDate: BasicInfo.viewStartDate,

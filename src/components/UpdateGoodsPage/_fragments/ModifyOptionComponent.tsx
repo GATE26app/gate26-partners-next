@@ -29,7 +29,21 @@ import { DashDate } from '@utils/format';
 import { useGoodsStateZuInfo } from '_store/StateZuInfo';
 
 // import { Option } from './OptionPlus';
-
+interface Option {
+  sort: number;
+  type: number;
+  depth: number;
+  useDateTime: string;
+  firstKey: string;
+  firstValue: string;
+  secondKey: string;
+  secondValue: string;
+  thirdKey: string;
+  thirdValue: string;
+  stockCnt: number;
+  price: number;
+  optionId: string;
+}
 interface Props {
   list: GoodsBasicProps;
   optionList: OptionItemProps[];

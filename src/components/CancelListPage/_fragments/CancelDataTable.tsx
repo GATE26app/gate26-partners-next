@@ -41,7 +41,7 @@ export const cancellistheader = [
   },
   {
     id: 'rest',
-    name: '상품주분번호',
+    name: '상품주문번호',
     width: '10%',
   },
   {

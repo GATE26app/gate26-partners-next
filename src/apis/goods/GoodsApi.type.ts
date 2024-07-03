@@ -346,6 +346,8 @@ export type PatchUpdateGoodsStatusParmaType = {
 export type PathGoodsType = {
   level: number;
   forSale: number;
+  autoConfirm: number;
+  orderSameDay: number;
   viewStartDate: string;
   viewEndDate: string;
 };
