@@ -89,7 +89,9 @@ function OrderResevationInfo({ info }: Props) {
             기타
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            파트너사에게 내용 입력
+            {info.orderRequestDetail !== null && info.orderRequestDetail !== ''
+              ? info.orderRequestDetail
+              : '-'}
           </Text>
         </Flex>
       </Flex>

@@ -255,7 +255,7 @@ function CancelInfo({ info }: Props) {
             </Flex>
           ) : (
             <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-              '-'
+              -
             </Text>
           )}
         </Flex>
