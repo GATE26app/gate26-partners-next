@@ -15,9 +15,6 @@ import {
   OptionItemProps,
 } from '@apis/goods/GoodsApi.type';
 
-import { Option } from '@components/Goods/_fragments/Option/OptionPlus';
-import CustomButton from '@components/common/CustomButton';
-
 import {
   ColorBlack,
   ColorGray100,
@@ -276,7 +273,7 @@ function ModifyOptionComponent({
       {/* 바디 */}
       <Flex bgColor={ColorWhite} flexDirection={'column'}>
         {optionList.length > 0 &&
-          optionList.map((item: Option, index: number) => {
+          optionList.map((item: OptionItemProps, index: number) => {
             return (
               <Flex
                 flexDirection={'row'}
