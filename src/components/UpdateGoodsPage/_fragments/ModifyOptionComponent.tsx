@@ -570,7 +570,11 @@ function ModifyOptionComponent({
                         handleInputChange(String(item.optionId), Number(e))
                       }
                     >
-                      <EditablePreview py={'17px'} color={ColorGray700} />
+                      <EditablePreview
+                        py={'17px'}
+                        color={ColorGray700}
+                        width="full"
+                      />
                       <EditableInput
                         py={'17px'}
                         type="number"

@@ -493,7 +493,11 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       isDisabled={goodsInfo.LogItemDisable}
                       onChange={(e) => handleInputChange(index, 'price', e)}
                     >
-                      <EditablePreview py={'17px'} color={ColorGray700} />
+                      <EditablePreview
+                        py={'17px'}
+                        color={ColorGray700}
+                        width="full"
+                      />
                       <EditableInput
                         py={'17px'}
                         type="number"
@@ -520,10 +524,14 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       key={item.stockCnt}
                       isPreviewFocusable={true}
                       selectAllOnFocus={false}
-                      isDisabled={goodsInfo.LogItemDisable}
+                      // isDisabled={goodsInfo.LogItemDisable}
                       onChange={(e) => handleInputChange(index, 'stockCnt', e)}
                     >
-                      <EditablePreview py={'17px'} color={ColorGray700} />
+                      <EditablePreview
+                        py={'17px'}
+                        color={ColorGray700}
+                        width="full"
+                      />
                       <EditableInput
                         py={'17px'}
                         type="number"
