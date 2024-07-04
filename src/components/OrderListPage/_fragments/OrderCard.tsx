@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -39,6 +39,10 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
       }
     });
   };
+  const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = '/images/Page/no_data.png';
+  };
+
   return (
     <Flex
       minW={'1550px'}
@@ -118,19 +122,42 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
           overflow={'hidden'}
           ml={'10px'}
         >
-          <Image
+          <img
+            // width={'80px'}
+            // height={'80px'}
+            style={{
+              width: '80px',
+              height: '80px',
+              objectFit: 'cover',
+            }}
+            src={
+              item.orderThumbnailImagePath !== null ||
+              item.orderThumbnailImagePath !== ''
+                ? `${imgPath()}${item.orderThumbnailImagePath}`
+                : '/images/no_img.png'
+            }
+            onError={addDefaultImg}
+            // src={imagePath[]}
+            // src={`${imgPath()}${
+            //   data[imageIndex].images[0].thumbnailImagePath
+            // }`}
+            alt="이미지 업로드"
+          />
+          {/* <Image
             width={80}
             height={80}
             src={
-              item.orderThumbnailImagePath !== null
+              item.orderThumbnailImagePath !== null ||
+              item.orderThumbnailImagePath !== ''
                 ? `${imgPath()}${item.orderThumbnailImagePath}`
                 : '/images/no_img.png'
             }
             // src={'/images/Page/ex_image_1.jpg'}
             alt="상품이미지"
             objectFit={'cover'}
+            onError={addDefaultImg}
             // fill
-          />
+          /> */}
         </Box>
         {/* 상품정보 */}
         <Flex flexDirection={'column'}>
@@ -226,10 +253,16 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
         w={header[6]?.width}
         alignItems={'center'}
         justifyContent={'center'}
+        flexDirection={'column'}
       >
         <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
           {item.orderStatusName}
         </Text>
+        {item.cancelStatusName !== null && item.cancelStatusName !== '' && (
+          <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
+            {`(${item.cancelStatusName})`}
+          </Text>
+        )}
       </Flex>
       <Flex
         w={header[7]?.width}

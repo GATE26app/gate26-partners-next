@@ -62,7 +62,7 @@ function OrderGoodsCard({ header, item }: Props) {
   });
 
   useEffect(() => {
-    if (item.cancelStatusName == '') {
+    if (item.cancelStatusName == '' || item.cancelStatusName == null) {
       if (
         (item.orderStatusName == '결제완료' && item.orderType == 1) ||
         (item.orderStatusName == '결제완료' && item.orderType == 2)
@@ -84,6 +84,7 @@ function OrderGoodsCard({ header, item }: Props) {
     }
   }, [item.orderStatusName, item.cancelStatusName]);
 
+  console.log('selectState', selectState);
   const [itemData, setItemData] = useState({
     orderId: item.orderId,
     orderThumbnailImagePath: item.orderThumbnailImagePath,
