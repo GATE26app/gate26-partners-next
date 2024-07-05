@@ -148,8 +148,8 @@ function UpdateGoodsPage() {
       durationTime: '',
       location: '',
       info: '',
-      lng: 0,
-      lat: 0,
+      lng: '',
+      lat: '',
       images: [
         {
           imagePath: '',

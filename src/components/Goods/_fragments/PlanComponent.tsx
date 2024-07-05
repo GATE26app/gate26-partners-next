@@ -52,8 +52,8 @@ interface ScheduleItemProps {
   durationTime: string;
   location: string;
   info: string;
-  lat: number;
-  lng: number;
+  lat: string;
+  lng: string;
   images: ImageItemProps[];
 }
 interface ImageItemProps {
@@ -80,8 +80,8 @@ function PlanComponent({ list, setList }: Props) {
   const [addressModal, setAddressModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [location, setLocation] = useState<{
-    lat: number;
-    lng: number;
+    lat: string;
+    lng: string;
     address: string;
   } | null>(null);
 
@@ -126,12 +126,12 @@ function PlanComponent({ list, setList }: Props) {
   };
 
   const handleComplete = (location: {
-    lat: number;
-    lng: number;
+    lat: string;
+    lng: string;
     address: string;
   }) => {
-    list[addressIndex].lat = location.lat;
-    list[addressIndex].lng = location.lng;
+    list[addressIndex].lat = String(location.lat);
+    list[addressIndex].lng = String(location.lng);
     list[addressIndex].location = location.address;
     // setList({
     //   ...list,
@@ -171,8 +171,8 @@ function PlanComponent({ list, setList }: Props) {
       durationTime: '',
       location: '',
       info: '',
-      lng: 0,
-      lat: 0,
+      lng: '',
+      lat: '',
       images: [
         {
           imagePath: '',
@@ -205,6 +205,18 @@ function PlanComponent({ list, setList }: Props) {
         } else {
           console.log('error 코드 생성 에러', res.code);
         }
+      },
+      onError: (req) => {
+        console.log('req', req);
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => (
+            <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+              {'이미지 업로드가 불가능합니다.'}
+            </Box>
+          ),
+        });
       },
     },
   });
@@ -266,8 +278,8 @@ function PlanComponent({ list, setList }: Props) {
       const updatedObject = {
         ...newLocations[index],
         location: '',
-        lat: 0,
-        lng: 0,
+        lat: '',
+        lng: '',
       };
       newLocations[index] = updatedObject;
       return newLocations;

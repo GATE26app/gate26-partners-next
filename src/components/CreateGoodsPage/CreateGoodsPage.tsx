@@ -130,8 +130,8 @@ function CreateGoodsPage() {
       durationTime: '',
       location: '',
       info: '',
-      lat: 0,
-      lng: 0,
+      lat: '',
+      lng: '',
       images: [
         {
           imagePath: '',

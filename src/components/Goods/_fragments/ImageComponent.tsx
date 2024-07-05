@@ -74,6 +74,18 @@ function ImageComponent({ list, setList }: Props) {
           console.log('error 코드 생성 에러', resImg.code);
         }
       },
+      onError: (req) => {
+        console.log('req', req);
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => (
+            <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+              {'이미지 업로드가 불가능합니다.'}
+            </Box>
+          ),
+        });
+      },
     },
   });
   const handleImageSave = (imagePath: string, thumbnailImagePath: string) => {
@@ -114,6 +126,7 @@ function ImageComponent({ list, setList }: Props) {
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = () => {
         setImagePath(reader.result as string);
+        console.log('reader.result ', reader.result);
         const formData = new FormData();
         formData.append('image', e.target.files[0]);
         ItemCodeMutate(formData);

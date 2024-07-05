@@ -27,7 +27,7 @@ import { ColorRed, ColorWhite } from '@utils/_Palette';
 
 interface MapModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
-  onComplete: (location: { lat: number; lng: number; address: string }) => void;
+  onComplete: (location: { lat: string; lng: string; address: string }) => void;
 }
 const containerStyle = {
   width: '100%',
@@ -67,7 +67,13 @@ const MapModal: React.FC<MapModalProps> = ({
   console.log('modal open');
 
   const handleComplete = () => {
-    onComplete(location);
+    const newLoaction = {
+      lat: String(location.lat),
+      lng: String(location.lng),
+      address: String(location.address),
+      name: String(location.name),
+    };
+    onComplete(newLoaction);
     onClose();
   };
   const onLoad = (ref: google.maps.places.Autocomplete) => {
