@@ -21,7 +21,6 @@ interface PagePrams {
 
 export const useGetAlarmLitQuery = (
   params: AlarmListParamsType,
-  settingPage: PagePrams,
   options?: UseInfiniteQueryOptions<
     AlarmListDtoType,
     AxiosError<{ message: string }>,
