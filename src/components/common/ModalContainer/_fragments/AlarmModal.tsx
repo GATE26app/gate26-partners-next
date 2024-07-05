@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { QueryClient } from 'react-query';
 
 import {
   Box,
@@ -38,6 +39,15 @@ function AlarmModal({ onClose, ...props }: Props) {
   const [list, setList] = useState<AlarmListDataType[]>([]);
   const [obj, setObj] = useState({ pageNo: 1, pageSize: 10 });
   const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
+
+  console.log('obj,', obj);
+  // useEffect(() => {
+  //   setObj({
+  //     pageNo: 1,
+  //     pageSize: 10,
+  //   });
+  // }, []);
+
   const {
     data: alarmListData,
     error,
@@ -45,27 +55,32 @@ function AlarmModal({ onClose, ...props }: Props) {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-  } = useGetAlarmLitQuery(obj, { totalCount: list.length });
+  } = useGetAlarmLitQuery(obj);
 
   useEffect(() => {
     setAlarmInfo({ alarm: false });
   }, []);
+
   useEffect(() => {
     if (alarmListData !== undefined) {
-      if (list.length <= 0) {
-        setList(
+      if (list.length < alarmListData?.pages[0].data.totalCount) {
+        if (list.length == 0) {
+          setList(
+            alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
+              .alarms,
+          );
+        } else if (
+          list.length > 0 &&
           alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
-            .alarms,
-        );
-      } else if (
-        alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
-          .alarms.length > 0
-      ) {
-        setList((list) => [
-          ...list,
-          ...alarmListData?.pages[Number(alarmListData?.pages.length) - 1].data
-            .alarms,
-        ]);
+            .alarms.length > 0 &&
+          obj.pageNo > 1
+        ) {
+          setList((list) => [
+            ...list,
+            ...alarmListData?.pages[Number(alarmListData?.pages.length) - 1]
+              .data.alarms,
+          ]);
+        }
       }
     }
   }, [alarmListData]);
@@ -73,8 +88,8 @@ function AlarmModal({ onClose, ...props }: Props) {
   const isFetchingFirstPage = isFetching && !isFetchingNextPage;
   const fetchNextPageTarget = useIntersectionObserver(() => {
     if (list.length > 0) {
-      setObj({ ...obj, pageNo: obj.pageNo + 1 });
-      fetchNextPage();
+      setObj({ pageSize: 10, pageNo: obj.pageNo + 1 });
+      // fetchNextPage();
     }
   });
 
@@ -89,6 +104,7 @@ function AlarmModal({ onClose, ...props }: Props) {
     if (target == 'ITEM') {
       //상품
       router.push(`/updateGoods?itemcode=${itemCode}`);
+      // queryClient.clear();
       onClose();
     } else if (target == 'ORDER') {
       //주문
@@ -104,9 +120,10 @@ function AlarmModal({ onClose, ...props }: Props) {
     usePatchAlarmMutation({
       options: {
         onSuccess: (res) => {
-          if (res.success) {
-          } else {
-          }
+          // setObj({
+          //   pageNo: 1,
+          //   pageSize: 10,
+          // });
           // setDetailData(res);
           // console.log('Mutation res.', res);
           // console.log('Mutation data.', res.data);
@@ -150,54 +167,57 @@ function AlarmModal({ onClose, ...props }: Props) {
         zIndex={999999}
       >
         {list && list.length > 0 ? (
-          list.map((item, index) => {
-            return (
-              <Flex
-                key={index}
-                flexDirection={'column'}
-                p={'20px'}
-                borderTopWidth={1}
-                borderTopColor={ColoLineGray}
-                bgColor={item.level == 2 ? ColorWhite : ColorRed50}
-                onClick={() =>
-                  onClickAlarm(
-                    item.alarmId,
-                    item.orderId,
-                    item.target,
-                    item.itemCode,
-                  )
-                }
-              >
-                <Text
-                  fontSize={'12px'}
-                  fontWeight={400}
-                  color={ColorGray900}
-                  mb={'6px'}
+          <Box>
+            {list.map((item, index) => {
+              return (
+                <Flex
+                  key={index}
+                  flexDirection={'column'}
+                  p={'20px'}
+                  borderTopWidth={1}
+                  borderTopColor={ColoLineGray}
+                  bgColor={item.level == 2 ? ColorWhite : ColorRed50}
+                  onClick={() =>
+                    onClickAlarm(
+                      item.alarmId,
+                      item.orderId,
+                      item.target,
+                      item.itemCode,
+                    )
+                  }
                 >
-                  주문번호 {item.alarmId}
-                </Text>
-                <Text
-                  fontSize={'15px'}
-                  fontWeight={600}
-                  color={ColorBlack}
-                  pb={'5px'}
-                >
-                  {item.title}
-                </Text>
-                <Text
+                  <Text
+                    fontSize={'12px'}
+                    fontWeight={400}
+                    color={ColorGray900}
+                    mb={'6px'}
+                  >
+                    주문번호 {item.alarmId}
+                  </Text>
+                  <Text
+                    fontSize={'15px'}
+                    fontWeight={600}
+                    color={ColorBlack}
+                    pb={'5px'}
+                  >
+                    {item.title}
+                  </Text>
+                  {/* <Text
                   fontSize={'12px'}
                   fontWeight={400}
                   color={ColorBlack}
                   pb={'10px'}
                 >
                   {item.content}
-                </Text>
-                <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
-                  {item.createdDate}
-                </Text>
-              </Flex>
-            );
-          })
+                </Text> */}
+                  <Text color={ColorGray700} fontWeight={300} fontSize={'12px'}>
+                    {item.createdDate}
+                  </Text>
+                </Flex>
+              );
+            })}
+            {hasNextPage && <Box ref={fetchNextPageTarget} />}
+          </Box>
         ) : (
           <Flex
             alignItems={'center'}
@@ -221,8 +241,6 @@ function AlarmModal({ onClose, ...props }: Props) {
             </Text>
           </Flex>
         )}
-
-        {hasNextPage && <Box ref={fetchNextPageTarget} />}
       </Flex>
     </Box>
   );

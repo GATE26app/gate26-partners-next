@@ -197,11 +197,13 @@ function OptionPlus({
       ToastComponent('옵션명을 입력해주세요.');
     } else if (optionValues[0] == '') {
       ToastComponent('옵션값을 입력해주세요.');
-    } else if (price == 0) {
-      ToastComponent('가격을 입력해주세요.');
-    } else if (stock == 0) {
-      ToastComponent('재고를 입력해주세요.');
-    } else {
+    }
+    // else if (price.length == 0) {
+    //   ToastComponent('가격을 입력해주세요.');
+    // } else if (stock == 0) {
+    //   ToastComponent('재고를 입력해주세요.');
+    // }
+    else {
       // setOptionList([]);
       // setOptions([])
       setList({ ...list, optionInputType: optionInputType });
@@ -851,7 +853,7 @@ function OptionPlus({
                 placeholder="숫자입력"
                 type="text"
                 maxLength={15}
-                value={price == 0 ? '' : intComma(String(price))}
+                value={intComma(String(price))}
                 disabled={goodsInfo.LogItemDisable}
                 // onChange={handlePriceChange}
                 onChange={(e) => {
@@ -876,7 +878,7 @@ function OptionPlus({
                 placeholder="숫자 입력"
                 // type="number"
                 type="text"
-                value={stock == 0 ? '' : intComma(stock)}
+                value={intComma(stock)}
                 disabled={goodsInfo.LogItemDisable}
                 onChange={(e) => {
                   handleStockChange(e.target.value.replace(/[^0-9]/g, ''));

@@ -118,10 +118,14 @@ function CancelListPage() {
             pl={'9px'}
             pr={'5px'}
           >
-            검색필터 접기
+            {filter ? '검색필터 접기' : '검색필터 열기'}
           </Text>
           <Image
-            src={'/images/Page/ico_fillter_up.png'}
+            src={
+              filter
+                ? '/images/Page/ico_fillter_up.png'
+                : '/images/Page/ico_fillter_down.png'
+            }
             width={'18px'}
             height={'18px'}
             alt="취소관리"

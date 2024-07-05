@@ -100,7 +100,7 @@ function PriceComponent({ list, setList }: Props) {
               placeholder="할인율"
               type="text"
               maxLength={2}
-              value={list.priceDcPer == 0 ? '' : list.priceDcPer}
+              value={list.priceDcPer}
               onChange={(e) =>
                 setList({
                   ...list,

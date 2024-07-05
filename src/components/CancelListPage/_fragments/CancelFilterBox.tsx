@@ -44,6 +44,21 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
 
   const [sState, setSState] = useState(false);
   const [eState, setEState] = useState(false);
+  //초기화버튼 클릭시
+  useEffect(() => {
+    if (request.periodStartDate == '' || request.periodStartDate == null) {
+      setStartDay(dayjs(''));
+    }
+    if (request.periodEndDate == '' || request.periodEndDate == null) {
+      setEndDay(dayjs(''));
+    }
+    if (request.searchType == '') {
+      setSearchSelect('');
+    }
+    if (request.periodType == '') {
+      setSelect('');
+    }
+  }, [request]);
 
   useEffect(() => {
     if (sState) {

@@ -62,6 +62,15 @@ function ImageComponent({ list, setList }: Props) {
             resImg.data?.thumbnailImagePath,
           );
         } else {
+          toast({
+            position: 'top',
+            duration: 2000,
+            render: () => (
+              <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+                {'이미지 업로드가 불가능합니다.'}
+              </Box>
+            ),
+          });
           console.log('error 코드 생성 에러', resImg.code);
         }
       },
