@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { useGetUserQuery } from '@apis/user/UserApi.query';
+import { useGetUserQuery } from '@/apis/user/UserApi.query';
 
 import {
   ColorBlack,
@@ -12,17 +12,17 @@ import {
   ColorGray900,
   ColorMainBackBule,
   ColorWhite,
-} from '@utils/_Palette';
-import { imgPath } from '@utils/format';
+} from '@/utils/_Palette';
+import { imgPath } from '@/utils/format';
 import {
   deleteToken,
   deleteUserInfo,
   getToken,
-} from '@utils/localStorage/token';
+} from '@/utils/localStorage/token';
 
-import AlarmModal from '../ModalContainer/_fragments/AlarmModal';
 
-import { useAlarmZuInfo } from '_store/AlarmInfo';
+import { useAlarmZuInfo } from '@/_store/AlarmInfo';
+import AlarmModal from "../Modal/AlarmModal";
 
 function MainHeader() {
   const router = useRouter();
@@ -52,7 +52,6 @@ function MainHeader() {
       },
     },
   });
-
   return (
     <>
       <Flex

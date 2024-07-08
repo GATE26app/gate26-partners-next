@@ -5,7 +5,15 @@ import moment from 'moment';
 
 import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
-import { ColorBlue, ColorRed, ColorWhite } from '@utils/_Palette';
+import {
+  ColorBlack,
+  ColorBlue,
+  ColorGray200,
+  ColorGray500,
+  ColorGray700,
+  ColorRed,
+  ColorWhite,
+} from '@/utils/_Palette';
 
 import { PickerGrid, PickerGridItem } from './DatePicker.style';
 import CalendarHeader from './PickerHeader';
@@ -98,11 +106,11 @@ const Picker = ({
                   ? moment(minDateTime).format('YYYYMMDD') <=
                     current.format('YYYYMMDD')
                   : maxDateTime !== undefined &&
-                    maxDateTime !== '' &&
-                    maxDateTime !== 'Invalid Date'
-                  ? moment(maxDateTime).format('YYYYMMDD') >=
-                    current.format('YYYYMMDD')
-                  : current.format('YYYYMMDD');
+                      maxDateTime !== '' &&
+                      maxDateTime !== 'Invalid Date'
+                    ? moment(maxDateTime).format('YYYYMMDD') >=
+                      current.format('YYYYMMDD')
+                    : current.format('YYYYMMDD');
               return (
                 <Flex
                   key={current.format('YYYYMMDD')}
@@ -138,7 +146,7 @@ const Picker = ({
                               style={{ borderRadius: 8 }}
                               p={3}
                               color="white"
-                              bg="#ff6955"
+                              bg={ColorRed}
                             >
                               종료 날짜 이후 날짜는 선택할 수 없습니다.
                             </Box>
@@ -165,7 +173,7 @@ const Picker = ({
                   bg={
                     newSelected &&
                     current.format('YYYYMMDD') == date.format('YYYYMMDD')
-                      ? 'primary.500'
+                      ? ColorRed
                       : ColorWhite
                   }
                 >
@@ -180,15 +188,16 @@ const Picker = ({
                     borderRadius={isSelected ? '100%' : '50%'}
                     color={
                       isRed
-                        ? 'red'
+                        ? ColorRed
                         : newSelected &&
-                          current.format('YYYYMMDD') == date.format('YYYYMMDD')
-                        ? 'white'
-                        : isGrayed
-                        ? 'gray.200'
-                        : isBlakced
-                        ? 'black'
-                        : 'gray.500'
+                            current.format('YYYYMMDD') ==
+                              date.format('YYYYMMDD')
+                          ? 'white'
+                          : isGrayed
+                            ? ColorGray200
+                            : isBlakced
+                              ? ColorBlack
+                              : ColorGray500
                     }
                   >
                     {current.format('D')}
@@ -217,7 +226,7 @@ const Picker = ({
       <CalendarHeader date={date} setDate={setDate} />
       <PickerGrid templateColumns={'repeat(7, 1fr)'}>
         {['일', '월', '화', '수', '목', '금', '토'].map((el) => (
-          <PickerGridItem w="42.8px" h="44px" key={el} color="gray.700">
+          <PickerGridItem w="42.8px" h="44px" key={el} color={ColorGray700}>
             {el}
           </PickerGridItem>
         ))}

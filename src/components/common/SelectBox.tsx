@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
-import { ColorGray700, ColorInputBorder, ColorWhite } from '@utils/_Palette';
+import { ColorGray700, ColorInputBorder, ColorWhite } from '@/utils/_Palette';
 
 interface Props {
   placeholder: string;
@@ -78,7 +78,7 @@ function SelectBox({
           zIndex={9999}
           display={'block'}
           maxHeight={'220px'}
-          overflowY={'scroll'}
+          overflowY={'auto'}
         >
           {list &&
             list.map((item: string, index: number) => {

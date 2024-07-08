@@ -16,6 +16,7 @@ export type ListDtoType = {
   count?: number;
   data?: any;
   success: boolean;
+  message?: string;
 };
 export type DeleteType = {
   itemCode: string;

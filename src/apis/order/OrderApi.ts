@@ -1,9 +1,8 @@
 import { AxiosInstance } from 'axios';
-import { useStore } from 'zustand';
 
-import instance from '@apis/_axios/instance';
+import instance from '@/apis/_axios/instance';
 
-import { getToken } from '@utils/localStorage/token';
+import { getToken } from '@/utils/localStorage/token';
 
 import {
   OrderCancelRequestParamsType,

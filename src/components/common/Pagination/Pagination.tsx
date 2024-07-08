@@ -1,15 +1,15 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { Flex } from '@chakra-ui/react';
 
-import ArrowLeftIcon from '@icons/System/ArrowLeft2';
-import ArrowRightIcon from '@icons/System/ArrowRight2';
+import ArrowRightIcon from '../@Icons/System/ArrowRight2';
 
 import styled from '@emotion/styled';
-import { ColorGrayBorder } from '@utils/_Palette';
+import { ColorGrayBorder } from '@/utils/_Palette';
 
 import { PaginationProps } from './Pagination.type';
+import ArrowLeft2Icon from '../@Icons/System/ArrowLeft2';
 
 function Pagination({
   currentPage,
@@ -82,7 +82,7 @@ function Pagination({
           borderColor={ColorGrayBorder}
           onClick={() => handlePreviousClicked(currentPage - 1)}
         >
-          <ArrowLeftIcon maxH="24px" maxW="24px" width="2em" height="2em" />
+          <ArrowLeft2Icon maxH="24px" maxW="24px" width="2em" height="2em" />
         </Flex>
       )}
 

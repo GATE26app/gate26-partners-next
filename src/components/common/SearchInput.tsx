@@ -1,20 +1,6 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputProps,
-  InputRightElement,
-} from '@chakra-ui/react';
+import { Box, Flex, Image, InputProps } from '@chakra-ui/react';
 
-import InputBox from '@components/common/Input';
-
-import { Light } from '@theme/foundations/colors';
-import { ColorGray700, ColorInputBorder, ColorWhite } from '@utils/_Palette';
-
-import SearchIcon from './@Icons/Admin/Search';
+import { ColorGray700, ColorInputBorder, ColorWhite } from '@/utils/_Palette';
 
 interface SearchInputProps {
   placeholder?: string;

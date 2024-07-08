@@ -8,8 +8,6 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
-import useAppStore from '@features/useAppStore';
-
 import styled from '@emotion/styled';
 
 interface ModalStateType {

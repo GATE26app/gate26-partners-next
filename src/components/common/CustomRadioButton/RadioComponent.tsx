@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Box, HStack, Stack, Text } from '@chakra-ui/react';
 
-import { ColorBlack } from '@utils/_Palette';
+import { ColorBlack } from '@/utils/_Palette';
 
 interface Props {
   text: string;

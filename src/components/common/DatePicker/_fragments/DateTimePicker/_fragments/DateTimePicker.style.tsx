@@ -1,7 +1,7 @@
+import { ColorGray50, ColorRed } from '@/utils/_Palette';
 import { Box, Flex } from '@chakra-ui/react';
 
 import styled from '@emotion/styled';
-import { Light } from '@theme/foundations/colors';
 
 export const TimeBox = styled(Box)`
   display: flex;
@@ -17,16 +17,16 @@ export const TimeBox = styled(Box)`
   &.cur {
     font-weight: bold;
     color: white;
-    background-color: ${() => Light.primary[500]};
+    background-color: ${() => ColorRed};
     &:hover {
-      background-color: ${() => Light.primary[500]};
+      background-color: ${() => ColorRed};
     }
   }
   &.select {
-    background-color: ${() => Light.gray[100]};
+    background-color: ${() => ColorGray50};
   }
   &:hover {
-    background-color: ${() => Light.gray[100]};
+    background-color: ${() => ColorGray50};
   }
 `;
 

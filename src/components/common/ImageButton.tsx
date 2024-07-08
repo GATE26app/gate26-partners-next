@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Flex, Image, Text } from '@chakra-ui/react';
 
-import { ColorGray600, ColorGrayBorder, ColorWhite } from '@utils/_Palette';
-
 export interface ButtonProps {
   text: string;
   onClick?: () => void;

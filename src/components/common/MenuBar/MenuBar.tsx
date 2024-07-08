@@ -1,18 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { ColorGrayMenu, ColorRed, ColorWhite } from '@utils/_Palette';
+import { ColorGrayMenu, ColorRed, ColorWhite } from '@/utils/_Palette';
 
-import { useCancelFilterZuInfo } from '_store/CancelStateInfo';
-import { useGoodsFilterZuInfo } from '_store/GoodsFilterInfo';
-import { useOrderFilterZuInfo } from '_store/OrderFilterInfo';
+import { useCancelFilterZuInfo } from '@/_store/CancelStateInfo';
+import { useGoodsFilterZuInfo } from '@/_store/GoodsFilterInfo';
+import { useOrderFilterZuInfo } from '@/_store/OrderFilterInfo';
 
 function MenuBar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [menu, setMenu] = useState(1);
   const [orderMenu, setOrdreMenu] = useState(1);
   const { goodsFilterInfo, setGoodsFilterInfo } = useGoodsFilterZuInfo(
@@ -26,21 +27,21 @@ function MenuBar() {
   );
   useEffect(() => {
     if (
-      router.pathname == '/creategoods' ||
-      router.pathname == '/goodslist' ||
-      router.pathname == '/updateGoods' ||
-      router.pathname == '/saveGoods'
+      pathname == '/createGoods' ||
+      pathname == '/goodsList' ||
+      pathname == '/updateGoods' ||
+      pathname == '/saveGoods'
     ) {
       setMenu(4);
       // 주문관리 초기화
       setOrdreMenu(1);
     }
-    if (router.pathname == '/orderlist' || router.pathname == '/orderdetail') {
+    if (pathname == '/orderList' || pathname == '/orderDetail') {
       setMenu(2);
       setOrdreMenu(1);
     } else if (
-      router.pathname == '/cancellist' ||
-      router.pathname == '/canceldetail'
+      pathname == '/cancelList' ||
+      pathname== '/cancelDetail'
     ) {
       setMenu(2);
       setOrdreMenu(2);
@@ -50,10 +51,10 @@ function MenuBar() {
   //필터 초기화
   useEffect(() => {
     if (
-      router.pathname !== '/creategoods' &&
-      router.pathname !== '/goodslist' &&
-      router.pathname !== '/updateGoods' &&
-      router.pathname !== '/saveGoods'
+      pathname!== '/createGoods' &&
+      pathname!== '/goodsList' &&
+      pathname !== '/updateGoods' &&
+      pathname !== '/saveGoods'
     ) {
       setGoodsFilterInfo({
         ...goodsFilterInfo,
@@ -66,8 +67,8 @@ function MenuBar() {
       });
     }
     if (
-      router.pathname !== '/orderlist' &&
-      router.pathname !== '/orderdetail'
+      pathname !== '/orderList' &&
+      pathname !== '/orderDetail'
     ) {
       setOrderFilterInfo({
         ...orderFilterInfo,
@@ -82,8 +83,8 @@ function MenuBar() {
       });
     }
     if (
-      router.pathname !== '/cancellist' &&
-      router.pathname !== '/canceldetail'
+      pathname !== '/cancelList' &&
+      pathname !== '/cancelDetail'
     ) {
       setCancelFilterInfo({
         ...cancelFilterInfo,
@@ -213,7 +214,7 @@ function MenuBar() {
       </Flex>
       {menu == 2 && (
         <Flex mb={'30px'} ml={'57px'} flexDirection={'column'}>
-          <Link href={'/orderlist'}>
+          <Link href={'/orderList'}>
             <Text
               fontWeight={700}
               fontSize={'16px'}
@@ -227,7 +228,7 @@ function MenuBar() {
               주문관리
             </Text>
           </Link>
-          <Link href={'/cancellist'}>
+          <Link href={'/cancelList'}>
             <Text
               fontWeight={700}
               fontSize={'16px'}
@@ -312,7 +313,7 @@ function MenuBar() {
           </Text>
         </Flex>
       )} */}
-      <Link href={'/goodslist'}>
+      <Link href={'/goodsList'}>
         <Flex
           alignItems={'center'}
           cursor={'pointer'}
@@ -337,7 +338,7 @@ function MenuBar() {
 
           <Text
             color={
-              menu == 4 || router.pathname == '/creategoods'
+              menu == 4 || pathname == '/creategoods'
                 ? ColorRed
                 : ColorGrayMenu
             }

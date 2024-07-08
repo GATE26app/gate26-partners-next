@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import useAppStore from '@features/useAppStore';
 
 import AlertModal from './_fragments/AlertModal';
-import OrderModal from './_fragments/OrderModal';
+import OrderModal from '../Modal/OrderModal';
 
 import { useCustomModalHandlerContext } from 'contexts/modal/useCustomModalHandler.context';
 
@@ -26,7 +26,7 @@ function ModalContainer({ ...props }: ModalContainerProps) {
   }, [isOpenModal, isOrderOpenModal]);
   return (
     <>
-      {/* <AlertModal isOpen={isOpenModal} onClose={() => closeCustomModal()} /> */}
+      <AlertModal isOpen={isOpenModal} onClose={() => closeCustomModal()} />
       <OrderModal isOpen={isOrderOpenModal} onClose={() => closeOrderModal()} />
     </>
   );

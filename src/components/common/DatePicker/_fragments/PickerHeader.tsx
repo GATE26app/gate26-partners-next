@@ -4,9 +4,8 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 
 import { Center, Flex, Text } from '@chakra-ui/react';
-
-import ArrowLeftIcon from '@icons/System/ArrowLeft';
-import ArrowRightIcon from '@icons/System/ArrowRight';
+import ArrowLeftIcon from '../../@Icons/System/ArrowLeft';
+import ArrowRightIcon from '../../@Icons/System/ArrowRight';
 
 interface PickerHeaderProps {
   date: dayjs.Dayjs;

@@ -133,14 +133,13 @@
 // );
 // export { setAuthHeader, unsetAuthHeader };
 // export default instance;
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import axios, { AxiosError } from 'axios';
-import { useStore } from 'zustand';
 
-import { CONFIG } from '@config';
 
-import { apiLogger } from '@utils/apiLogger';
+
+import { apiLogger } from '@/utils/apiLogger';
 import {
   deleteErrorCode,
   deleteUserInfo,
@@ -148,10 +147,9 @@ import {
   getUserId,
   setErrorCode,
   setToken,
-} from '@utils/localStorage/token';
-import styledConsole from '@utils/styledConsole';
+} from '@/utils/localStorage/token';
+import { CONFIG } from "../../../config";
 
-// import { refresh } from './refresh';
 export type BasicListDTO<T> = {
   code?: string;
   data?: {

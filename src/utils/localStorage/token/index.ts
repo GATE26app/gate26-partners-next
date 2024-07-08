@@ -1,12 +1,13 @@
-import { CONFIG } from '@config';
 
-import { TokenType } from '@apis/auth/AuthApi.type';
+
+import { TokenType } from '@/apis/auth/AuthApi.type';
 
 import {
   getLocalStorage,
   removeLocalStorage,
   setLocalStorage,
 } from '../helper';
+import { CONFIG } from "../../../../config";
 
 const TOKEN_KEY = CONFIG.AUTH_TOKEN_KEY || '@token';
 

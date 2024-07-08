@@ -192,6 +192,7 @@ export type OrderDetailItemType = {
   buyerHp: string;
   partnerMemo: string;
   policies: Array<policiesType>;
+  orderConfirmName: string;
 };
 
 export type policiesType = {

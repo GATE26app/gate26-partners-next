@@ -6,7 +6,7 @@ import {
 
 import { AxiosError } from 'axios';
 
-import { InfiniteQueryHookParams } from '@apis/type';
+import { InfiniteQueryHookParams } from '@/apis/type';
 
 import alarmApi from './AlarmApi';
 import { AlarmListDtoType, AlarmListParamsType } from './AlarmApi.type';
@@ -35,6 +35,9 @@ export const useGetAlarmLitQuery = (
     queryFn: async ({ pageParam: pageNum = 1 }: { pageParam?: number }) =>
       alarmApi.getAlarmList(params),
     getNextPageParam: (nextInfo, allPages) => {
+      console.log('nextInfo', nextInfo);
+      console.log('nextInfo?.data.pageNo', nextInfo?.data.pageNo);
+      console.log('nextInfo?.data.pageCount', nextInfo?.data.pageCount);
       if (nextInfo.data.totalCount !== 0) {
         if (nextInfo?.data.pageNo >= nextInfo.data.pageCount) {
           return undefined;

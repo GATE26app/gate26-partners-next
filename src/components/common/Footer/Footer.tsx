@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import { ColorFooterBack, ColorWhite } from '@utils/_Palette';
+import { ColorFooterBack, ColorWhite } from '@/utils/_Palette';
 
 const data = {
   compony: 'GATE26',

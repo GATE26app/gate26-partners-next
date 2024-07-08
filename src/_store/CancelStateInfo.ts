@@ -1,7 +1,6 @@
-import { number } from 'yup';
 import { create } from 'zustand';
 
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface CancelFilterType {
   pageNo: number;

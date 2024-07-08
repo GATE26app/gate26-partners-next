@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { formatDate, formatDated } from '@utils/format';
+import { formatDate, formatDated } from '@/utils/format';
 
 import { PickerGrid } from './_fragments/DatePicker.style';
 import DateTimePicker from './_fragments/DateTimePicker';

@@ -1,7 +1,5 @@
 import { Button as ChakraButton, Flex, Text } from '@chakra-ui/react';
 
-import styled from '@emotion/styled';
-
 export interface ButtonProps {
   px?: string;
   py?: string;

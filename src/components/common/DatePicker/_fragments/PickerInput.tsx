@@ -2,10 +2,7 @@ import Image from 'next/image';
 
 import { InputGroup, InputRightElement } from '@chakra-ui/react';
 
-import CalendarIcon from '@components/common/@Icons/Admin/Calendar';
-import InputBox from '@components/common/Input';
-
-import { Light } from '@theme/foundations/colors';
+import InputBox from '@/components/common/Input';
 
 interface PickerInputProps {
   placeholder?: string;

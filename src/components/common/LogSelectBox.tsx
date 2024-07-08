@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
-import { LodListType } from '@apis/goods/GoodsApi.type';
+import { LodListType } from '@/apis/goods/GoodsApi.type';
 
 import {
   ColorBlue,
@@ -10,7 +10,7 @@ import {
   ColorInputBorder,
   ColorMainBackBule,
   ColorWhite,
-} from '@utils/_Palette';
+} from '@/utils/_Palette';
 
 interface Props {
   placeholder: string;
@@ -105,7 +105,7 @@ function LogSelectBox({
           zIndex={9999}
           display={'block'}
           maxHeight={'220px'}
-          overflowY={'scroll'}
+          overflowY={'auto'}
         >
           {list &&
             list.map((item: LodListType, index: number) => {

@@ -1,5 +1,3 @@
-import { UseFormRegisterReturn } from 'react-hook-form';
-
 import { Input, InputProps, Text } from '@chakra-ui/react';
 
 import {
@@ -7,11 +5,10 @@ import {
   ColorInputBorder,
   ColorRed,
   ColorWhite,
-} from '@utils/_Palette';
+} from '@/utils/_Palette';
 
 export interface Props extends InputProps {
   error?: string;
-  register?: UseFormRegisterReturn;
   disabled?: boolean;
 }
 

@@ -3,15 +3,9 @@ import React from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
 
-import { ColorBlack } from '@utils/_Palette';
+import { ColorBlack } from '@/utils/_Palette';
 
 import { CheckBoxProps } from './CheckBox.type';
-
-import {
-  CheckedDisableIcon,
-  CheckedOffIcon,
-  CheckedOnIcon,
-} from 'components/common/@Icons/Admin';
 
 const CheckBox = ({
   checked,

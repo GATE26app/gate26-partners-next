@@ -35,9 +35,6 @@ function useCustomModalHandler() {
 export const [CustomModalHandlerProvider, useCustomModalHandlerContext] =
   constate(useCustomModalHandler);
 
-// export const [OrderModalHandlerProvider, useOrderModalHandlerContext] =
-// constate(useCustomModalHandler);
-
 export function withCustomModalHandlerContext<T extends Function>(
   Component: T,
 ) {

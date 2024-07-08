@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 
-import instance from '@apis/_axios/instance';
+import instance from '@/apis/_axios/instance';
 
 import { LoginDTO, LoginDTOType } from './AuthApi.type';
 

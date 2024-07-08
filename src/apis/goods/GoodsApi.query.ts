@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 
-import { QueryHookParams } from '@apis/type';
+import { Parameter, QueryHookParams } from '@/apis/type';
 
 import goodsApi from './GoodsApi';
 import { GoodsLogItemType } from './GoodsApi.type';
