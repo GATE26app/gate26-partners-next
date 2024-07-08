@@ -13,15 +13,15 @@ export default function Home() {
   const { userZuInfo } = useUserZuInfo((state) => state);
 
   useEffect(() => {
-    if (
-      getToken().access == '' ||
-      getToken().access == undefined ||
-      getToken().access == null
-    ) {
-      router.replace('/login');
-    } else {
-      router.push('/orderList');
-    }
-  }, [getToken()]);
+    // if (
+    //   getToken().access == '' ||
+    //   getToken().access == undefined ||
+    //   getToken().access == null
+    // ) {
+    //   router.replace('/login');
+    // } else {
+    router.push('/orderList');
+    // }
+  }, []);
   return <main className={styles.main}></main>;
 }

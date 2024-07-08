@@ -137,8 +137,6 @@ import { useRouter } from 'next/navigation';
 
 import axios, { AxiosError } from 'axios';
 
-
-
 import { apiLogger } from '@/utils/apiLogger';
 import {
   deleteErrorCode,
@@ -148,7 +146,7 @@ import {
   setErrorCode,
   setToken,
 } from '@/utils/localStorage/token';
-import { CONFIG } from "../../../config";
+import { CONFIG } from '../../../config';
 
 export type BasicListDTO<T> = {
   code?: string;
@@ -224,6 +222,7 @@ const Logout = async () => {
   const router = useRouter();
   const param = { id: '', incorrectNum: 0 };
   // setPassCheck(param);
+  document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   deleteUserInfo();
   router.push('/login');
 };
@@ -282,6 +281,7 @@ instance.interceptors.response.use(
           `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
         );
         if (getToken().refresh == null) {
+          document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
           window.location.href = '/login';
         }
         // Sentry.captureMessage(
@@ -304,6 +304,7 @@ instance.interceptors.response.use(
           return instance(originalRequest);
         }
       } catch (err) {
+        document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
         console.log(`리프레쉬 토큰 에러 ${getUserId()}`);
         window.location.href = '/login';
         // Sentry.captureMessage(`리프레쉬 토큰 에러 ${getUserId()}`);

@@ -20,9 +20,9 @@ import {
   getToken,
 } from '@/utils/localStorage/token';
 
-
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
-import AlarmModal from "../Modal/AlarmModal";
+import AlarmModal from '../Modal/AlarmModal';
+// import { cookies } from 'next/headers';
 
 function MainHeader() {
   const router = useRouter();
@@ -34,6 +34,8 @@ function MainHeader() {
   const onLogout = () => {
     deleteUserInfo();
     deleteToken();
+    document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    // cookies().delete('token');
     router.push('/login');
   };
 
@@ -42,7 +44,7 @@ function MainHeader() {
       enabled: !!getToken().access,
       // staleTime: Infinity, // 데이터가 절대 오래되었다고 간주되지 않음
       // refetchInterval: false, // 자동 새로 고침 비활성화
-      onSuccess: (res) => {
+      onSuccess: (res: any) => {
         if (res.success == true) {
           //  setAllList(res.data);
           //    if (res.data) {

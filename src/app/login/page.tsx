@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useRouter } from 'next/navigation';
 import React, { ReactElement, useEffect, useState } from 'react';
 
@@ -58,15 +58,14 @@ function LoginPage() {
     fcm();
   }, []);
   function requestPermission() {
-    console.log('권한 요청 중...');
+    // console.log('권한 요청 중...');
     if (typeof Notification !== 'undefined') {
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
-          console.log('알림 권한이 허용됨');
-
+          // console.log('알림 권한이 허용됨');
           // FCM 메세지 처리
         } else {
-          console.log('알림 권한 허용 안됨');
+          // console.log('알림 권한 허용 안됨');
         }
       });
     }
@@ -128,6 +127,7 @@ function LoginPage() {
       onSuccess: (res) => {
         if (res.success == true) {
           const data = res.data;
+          document.cookie = `auth=${data?.accessToken}`;
           const param = {
             access: data?.accessToken ? data?.accessToken : '',
             refresh: data?.refreshToken ? data?.refreshToken : '',
@@ -137,10 +137,6 @@ function LoginPage() {
             accessToken: data?.accessToken ? data?.accessToken : '',
             refreshToken: data?.refreshToken ? data?.refreshToken : '',
           });
-
-          // setUserInfo(
-          //   param
-          // );
 
           router.push('/');
           setErrorMsg('');
@@ -204,7 +200,7 @@ function LoginPage() {
             alignItems={'center'}
           >
             <Image
-              src={'/images/header/icon_logo_big.png'}
+              src={'/images/icon_logo_big.png'}
               width={300}
               height={66}
               alt="로고"
