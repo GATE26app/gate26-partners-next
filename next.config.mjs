@@ -45,7 +45,7 @@ const nextConfig = {
     return [
       {
         source: '/api/backoffice/:path*',
-        destination: 'https://cdpartners.gate26.co.kr/:path*',
+        destination: 'https://partners.gate26.co.kr/:path*',
         // destination: 'https://cdpartners.gate26.co.kr/:path*',
         permanent: false,
       },
