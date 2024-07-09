@@ -357,7 +357,7 @@ function LoginPage() {
                       fontWeight={500}
                       fontSize={'14px'}
                     >
-                      email.@email.com
+                      apps@asianaidt.com
                     </Text>
                     <Flex
                       borderColor={ColorGrayBorder}
