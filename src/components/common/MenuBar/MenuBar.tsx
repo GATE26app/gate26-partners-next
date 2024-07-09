@@ -39,10 +39,7 @@ function MenuBar() {
     if (pathname == '/orderList' || pathname == '/orderDetail') {
       setMenu(2);
       setOrdreMenu(1);
-    } else if (
-      pathname == '/cancelList' ||
-      pathname== '/cancelDetail'
-    ) {
+    } else if (pathname == '/cancelList' || pathname == '/cancelDetail') {
       setMenu(2);
       setOrdreMenu(2);
     }
@@ -51,8 +48,8 @@ function MenuBar() {
   //필터 초기화
   useEffect(() => {
     if (
-      pathname!== '/createGoods' &&
-      pathname!== '/goodsList' &&
+      pathname !== '/createGoods' &&
+      pathname !== '/goodsList' &&
       pathname !== '/updateGoods' &&
       pathname !== '/saveGoods'
     ) {
@@ -66,10 +63,7 @@ function MenuBar() {
         searchType: '',
       });
     }
-    if (
-      pathname !== '/orderList' &&
-      pathname !== '/orderDetail'
-    ) {
+    if (pathname !== '/orderList' && pathname !== '/orderDetail') {
       setOrderFilterInfo({
         ...orderFilterInfo,
         periodEndDate: '',
@@ -82,10 +76,7 @@ function MenuBar() {
         cancelStatus: [],
       });
     }
-    if (
-      pathname !== '/cancelList' &&
-      pathname !== '/cancelDetail'
-    ) {
+    if (pathname !== '/cancelList' && pathname !== '/cancelDetail') {
       setCancelFilterInfo({
         ...cancelFilterInfo,
         pageNo: 0,
@@ -338,9 +329,7 @@ function MenuBar() {
 
           <Text
             color={
-              menu == 4 || pathname == '/creategoods'
-                ? ColorRed
-                : ColorGrayMenu
+              menu == 4 || pathname == '/createGoods' ? ColorRed : ColorGrayMenu
             }
             fontWeight={800}
             fontSize={'18px'}
