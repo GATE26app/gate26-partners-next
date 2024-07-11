@@ -67,7 +67,7 @@ function GoodsListComponet({
       //   pathname: '/goodslist',
       //   query: { page: Number(value) + 1 },
       // });
-      router.push(`/goodsList?page=${Number(value) + 1 }`)
+      router.push(`/goodsList?page=${Number(value) + 1}`);
       setGoodsFilterInfo({
         ...goodsFilterInfo,
         pageNo: Number(value),
@@ -113,9 +113,7 @@ function GoodsListComponet({
             py="11px"
             color={ColorWhite}
             fontSize="14px"
-            onClick={() =>
-              router.push(`/createGoods?type=1`)
-            }
+            onClick={() => router.push(`/createGoods?type=1`)}
             borderColor={ColorBlack}
           />
           <CustomButton
@@ -127,7 +125,7 @@ function GoodsListComponet({
             fontSize="14px"
             onClick={() =>
               // router.push({
-              //   pathname: '/creategoods',
+              //   pathname: '/createGoods',
               //   query: { type: 2 },
               // })
               router.push(`/createGoods?type=2`)
@@ -141,9 +139,7 @@ function GoodsListComponet({
             py="11px"
             color={ColorWhite}
             fontSize="14px"
-            onClick={() =>
-              router.push(`/createGoods?type=3`)
-            }
+            onClick={() => router.push(`/createGoods?type=3`)}
             borderColor={ColorBlack}
           />
           {/* <ImageButton
