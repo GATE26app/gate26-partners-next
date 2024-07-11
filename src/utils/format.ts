@@ -156,7 +156,7 @@ export const imgPath = () => {
     // return `http://192.168.0.63:40009/img/downloadFile?filePath=`;
     return `https://d2x6bq0qfvknb8.cloudfront.net`;
   } else {
-    return `https://resource.gate26.co.kr/img/downloadFile?filePath=`;
+    return `https://dmsxpx4f2ky7d.cloudfront.net`;
   }
 };
 

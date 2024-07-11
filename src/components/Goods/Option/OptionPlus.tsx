@@ -1,5 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -65,7 +65,7 @@ function OptionPlus({
   optionInputList,
   setOptionInputList,
 }: Props) {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const getType = searchParams.get('type');
   const [startDay, setStartDay] = useState<dayjs.Dayjs>(() =>
@@ -111,8 +111,9 @@ function OptionPlus({
   //   }
   // }, [router.query.type]);
 
+  console.log('optionInputList', optionInputList);
   useEffect(() => {
-    if (pathname !== '/creategoods') {
+    if (pathname !== '/createGoods') {
       if (optionInputList.length > 0) {
         // if()
         const nameList: string[] = [];
@@ -532,6 +533,8 @@ function OptionPlus({
     setOptionValues(Array(count).fill(''));
   };
 
+  console.log('optionNames', optionNames);
+  console.log('optionValues', optionValues);
   const handleOptionNameChange = (index: number, value: string) => {
     const newNames: string[] = [...optionNames];
     const updateKey: optionInputsProps[] = [...optionInputList];
@@ -911,4 +914,4 @@ function OptionPlus({
   );
 }
 
-export default OptionPlus;
+export default memo(OptionPlus);
