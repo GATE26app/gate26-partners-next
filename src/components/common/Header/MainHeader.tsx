@@ -76,7 +76,7 @@ function MainHeader() {
           <Image
             src={
               data?.data.images !== undefined && data?.data.images.length > 0
-                ? `${imgPath()}${data?.data.images[0].thumbnailImagePath}`
+                ? `${imgPath}${data?.data.images[0].thumbnailImagePath}`
                 : '/images/header/icon_header_user.png'
             }
             width={32}
