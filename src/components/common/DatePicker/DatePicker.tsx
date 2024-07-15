@@ -50,6 +50,7 @@ const DatePicker = ({
 
   const handleDayClick = (current: dayjs.Dayjs) => {
     setDate(current);
+    onClose();
   };
 
   const handleClose = () => {

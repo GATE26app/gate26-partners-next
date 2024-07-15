@@ -107,6 +107,16 @@ function GoodsListComponet({
         </Flex>
         <Flex gap={'10px'}>
           <CustomButton
+            text="예약형 상품 등록"
+            bgColor={ColorBlack}
+            px="29px"
+            py="11px"
+            color={ColorWhite}
+            fontSize="14px"
+            onClick={() => router.push(`/createGoods?type=3`)}
+            borderColor={ColorBlack}
+          />
+          <CustomButton
             text="일반 상품 등록"
             bgColor={ColorBlack}
             px="29px"
@@ -132,16 +142,7 @@ function GoodsListComponet({
             }
             borderColor={ColorBlack}
           />
-          <CustomButton
-            text="예약형 상품 등록"
-            bgColor={ColorBlack}
-            px="29px"
-            py="11px"
-            color={ColorWhite}
-            fontSize="14px"
-            onClick={() => router.push(`/createGoods?type=3`)}
-            borderColor={ColorBlack}
-          />
+
           {/* <ImageButton
             img="/images/Page/excel_icon.png"
             backgroundColor={ColorWhite}

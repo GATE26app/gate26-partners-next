@@ -111,7 +111,6 @@ function OptionPlus({
   //   }
   // }, [router.query.type]);
 
-  console.log('optionInputList', optionInputList);
   useEffect(() => {
     if (pathname !== '/createGoods') {
       if (optionInputList.length > 0) {
@@ -533,8 +532,6 @@ function OptionPlus({
     setOptionValues(Array(count).fill(''));
   };
 
-  console.log('optionNames', optionNames);
-  console.log('optionValues', optionValues);
   const handleOptionNameChange = (index: number, value: string) => {
     const newNames: string[] = [...optionNames];
     const updateKey: optionInputsProps[] = [...optionInputList];
@@ -604,7 +601,13 @@ function OptionPlus({
               <RadioComponent
                 text="날짜지정형"
                 disabled={goodsInfo.LogItemDisable}
-                checked={optionType == 2 ? true : false}
+                checked={
+                  getType == '3' && optionType == 2
+                    ? true
+                    : optionType == 2 && getType !== '3'
+                      ? true
+                      : false
+                }
                 onClick={() => {
                   setOptionType(2);
                   setList({ ...list, optionType: 2 });

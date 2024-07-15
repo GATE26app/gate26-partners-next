@@ -105,10 +105,7 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
           {item.orderId}
         </Text>
       </Flex>
-      <Flex
-        w={header[2]?.width}
-        gap={'10px'}
-      >
+      <Flex w={header[2]?.width} gap={'10px'}>
         <Box
           w={'80px'}
           minWidth={'80px'}
