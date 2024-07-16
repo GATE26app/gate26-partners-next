@@ -37,6 +37,19 @@ export const formatDateDash = (d: any) => {
   return `${year}-${`0${monthIndex}`.slice(-2)}-${`0${day}`.slice(-2)}`;
 };
 
+export const formatDateDot = (d: any) => {
+  let date = null;
+  if (d instanceof Date) {
+    date = d;
+  }
+  date = new Date(d);
+  const day = date.getDate();
+  const monthIndex = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${year}.${`0${monthIndex}`.slice(-2)}.${`0${day}`.slice(-2)}`;
+};
+
 export const formatDateKR = (d: any) => {
   let date: any = null;
   if (d instanceof Date) {
