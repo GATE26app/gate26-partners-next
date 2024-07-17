@@ -51,6 +51,12 @@ const DatePicker = ({
   const handleDayClick = (current: dayjs.Dayjs) => {
     setDate(current);
     onClose();
+    // console.log('current', current);
+
+    if (onApply) {
+      onApply(current);
+      onClose();
+    }
   };
 
   const handleClose = () => {
@@ -66,7 +72,7 @@ const DatePicker = ({
 
   useEffect(() => {
     setDate(curDate);
-  }, [curDate]);
+  }, []);
 
   return (
     <>

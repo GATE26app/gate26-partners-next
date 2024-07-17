@@ -7,6 +7,7 @@ interface GoodsType {
   LogItemDisable?: boolean;
   orderState?: boolean;
   cancelState?: boolean;
+  reviewState?: boolean;
 }
 
 interface GoodsInfoState {
@@ -20,6 +21,7 @@ const defaultState = {
   LogItemDisable: false,
   orderState: false,
   cancelState: false,
+  reviewState: false,
 };
 
 export const useGoodsStateZuInfo = create(
