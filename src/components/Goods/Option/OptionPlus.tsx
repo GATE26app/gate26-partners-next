@@ -120,10 +120,10 @@ function OptionPlus({
 
         setOptionCnt(String(optionInputList.length));
         optionInputList.forEach((item) => {
-          if (item.inputKey !== '' && item.inputValue !== '') {
-            nameList.push(item.inputKey);
-            valueList.push(item.inputValue);
-          }
+          // if (item.inputKey !== '' && item.inputValue !== '') {
+          nameList.push(item.inputKey);
+          valueList.push(item.inputValue);
+          // }
           setOptionNames(nameList);
           setOptionValues(valueList);
         });
