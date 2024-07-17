@@ -205,7 +205,6 @@ function PlanComponent({ list, setList }: Props) {
         }
       },
       onError: (req) => {
-        console.log('req', req);
         toast({
           position: 'top',
           duration: 2000,

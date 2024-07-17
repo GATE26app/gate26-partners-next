@@ -36,10 +36,10 @@ function OrderInfo({ info }: Props) {
     postcode: info.postcode,
     recieverName: info.recieverName,
     recieverHp: info.recieverHp,
-    orderConfirmName:info.orderConfirmName,
-    orderStatusName:info.orderStatusName
+    orderConfirmName: info.orderConfirmName,
+    orderStatusName: info.orderStatusName,
   };
-  console.log('info',info)
+
   return (
     <Box mt={'60px'}>
       <Text color={ColorBlack} fontWeight={600} fontSize={'18px'}>

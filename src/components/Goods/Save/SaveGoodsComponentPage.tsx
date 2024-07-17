@@ -193,7 +193,6 @@ function SaveGoodsComponentPage() {
           setOptionInputList(data.optionInputs);
           setImageList(data.images);
         }
-        console.log('d^^ata', data);
       },
       onError: (err) => {
         console.log('err', err);
@@ -219,7 +218,6 @@ function SaveGoodsComponentPage() {
   //     router.back();
   //   }
   // }, [data]);
-  console.log('data', data);
   const ToastComponent = (message: string) => {
     return toast({
       position: 'top',

@@ -166,7 +166,6 @@ function UpdateGoodsComponentPage() {
       // refetchInterval: false, // 자동 새로 고침 비활성화
       enabled: !!itemCode,
       onSuccess: ({ data }) => {
-        console.log('data', data);
         if (data == undefined) {
           toast({
             position: 'top',
