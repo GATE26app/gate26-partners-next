@@ -49,6 +49,7 @@ function ImageComponent({ list, setList }: Props) {
     cbCancel: () => {},
   });
 
+  console.log('list', list);
   const [indexList, setIndexList] = useState<string[]>([]);
 
   const { mutate: ItemCodeMutate, isLoading } = usePostImageMutation({
@@ -276,7 +277,7 @@ function ImageComponent({ list, setList }: Props) {
                 ) : (
                   <>
                     {list.filter((item) => item.sort == 1).length > 0 ? (
-                      <label htmlFor="img1">
+                      <>
                         <Flex
                           w={'182px'}
                           h={'182px'}
@@ -300,26 +301,28 @@ function ImageComponent({ list, setList }: Props) {
                             alt="이미지 업로드"
                           />
                         </Flex>
-                      </label>
+                      </>
                     ) : (
-                      <Flex
-                        w={182}
-                        h={182}
-                        borderWidth={1}
-                        borderStyle={'dashed'}
-                        borderColor={ColorInputBorder}
-                        justifyContent={'center'}
-                        alignItems={'center'}
-                        borderRadius={'10px'}
-                        onClick={() => setImageIndex(1)}
-                      >
-                        <Image
-                          src={'/images/Page/ico_plus.png'}
-                          width={28}
-                          height={28}
-                          alt="이미지 추가"
-                        />
-                      </Flex>
+                      <label htmlFor="img1">
+                        <Flex
+                          w={182}
+                          h={182}
+                          borderWidth={1}
+                          borderStyle={'dashed'}
+                          borderColor={ColorInputBorder}
+                          justifyContent={'center'}
+                          alignItems={'center'}
+                          borderRadius={'10px'}
+                          onClick={() => setImageIndex(1)}
+                        >
+                          <Image
+                            src={'/images/Page/ico_plus.png'}
+                            width={28}
+                            height={28}
+                            alt="이미지 추가"
+                          />
+                        </Flex>
+                      </label>
                     )}
                   </>
                 )}
