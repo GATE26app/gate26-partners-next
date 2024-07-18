@@ -14,7 +14,7 @@ import {
   ColorGrayBorder,
   ColorclickBlue,
 } from '@/utils/_Palette';
-import { formatDated, imgPath, intComma } from '@/utils/format';
+import { PaymentMethod, formatDated, imgPath, intComma } from '@/utils/format';
 
 // import { ItemProps } from './OrderDataTable';
 
@@ -230,7 +230,8 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
           {item.state}
         </Text> */}
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
-          {item.paymentMethod == 'card' ? '카드결제' : '결제'}
+          {/* {item.paymentMethod == 'card' ? '카드결제' : '결제'} */}
+          {PaymentMethod(item.paymentMethod)}
         </Text>
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
           {intComma(item.paymentAmount)}원

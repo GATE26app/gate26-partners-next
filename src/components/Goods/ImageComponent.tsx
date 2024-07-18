@@ -65,7 +65,7 @@ function ImageComponent({ list, setList }: Props) {
             duration: 2000,
             render: () => (
               <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-                {'이미지 업로드가 불가능합니다.'}
+                {'이미지 용량이 초과되어 업로드가 불가능합니다.'}
               </Box>
             ),
           });
@@ -78,7 +78,7 @@ function ImageComponent({ list, setList }: Props) {
           duration: 2000,
           render: () => (
             <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-              {'이미지 업로드가 불가능합니다.'}
+              {'이미지 용량이 초과되어 업로드가 불가능합니다.'}
             </Box>
           ),
         });
@@ -274,9 +274,9 @@ function ImageComponent({ list, setList }: Props) {
                     <CircularProgress isIndeterminate color={ColorBlue} />
                   </Flex>
                 ) : (
-                  <label htmlFor="img1">
+                  <>
                     {list.filter((item) => item.sort == 1).length > 0 ? (
-                      <>
+                      <label htmlFor="img1">
                         <Flex
                           w={'182px'}
                           h={'182px'}
@@ -300,7 +300,7 @@ function ImageComponent({ list, setList }: Props) {
                             alt="이미지 업로드"
                           />
                         </Flex>
-                      </>
+                      </label>
                     ) : (
                       <Flex
                         w={182}
@@ -321,7 +321,7 @@ function ImageComponent({ list, setList }: Props) {
                         />
                       </Flex>
                     )}
-                  </label>
+                  </>
                 )}
 
                 <input
@@ -427,7 +427,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum2">
+                      <>
                         {list.filter((item) => item.sort == 2).length > 0 ? (
                           <>
                             <Flex
@@ -460,26 +460,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(2)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum2">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(2)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -537,7 +539,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum3">
+                      <>
                         {list.filter((item) => item.sort == 3).length > 0 ? (
                           <>
                             <Flex
@@ -570,26 +572,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(3)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum3">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(3)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -647,7 +651,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum4">
+                      <>
                         {list.filter((item) => item.sort == 4).length > 0 ? (
                           <>
                             <Flex
@@ -680,26 +684,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(4)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum4">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(4)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -757,7 +763,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum5">
+                      <>
                         {list.filter((item) => item.sort == 5).length > 0 ? (
                           <>
                             <Flex
@@ -790,26 +796,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(5)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum5">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(5)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -867,7 +875,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum6">
+                      <>
                         {list.filter((item) => item.sort == 6).length > 0 ? (
                           <>
                             <Flex
@@ -900,26 +908,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(6)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum6">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(6)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -977,7 +987,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum7">
+                      <>
                         {list.filter((item) => item.sort == 7).length > 0 ? (
                           <>
                             <Flex
@@ -1010,26 +1020,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(7)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum7">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(7)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -1087,7 +1099,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum8">
+                      <>
                         {list.filter((item) => item.sort == 8).length > 0 ? (
                           <>
                             <Flex
@@ -1120,26 +1132,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(8)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum8">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(8)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -1197,7 +1211,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum9">
+                      <>
                         {list.filter((item) => item.sort == 9).length > 0 ? (
                           <>
                             <Flex
@@ -1230,26 +1244,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(9)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum9">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(9)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -1307,7 +1323,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum10">
+                      <>
                         {list.filter((item) => item.sort == 10).length > 0 ? (
                           <>
                             <Flex
@@ -1340,26 +1356,28 @@ function ImageComponent({ list, setList }: Props) {
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(10)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum10">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(10)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -1417,7 +1435,7 @@ function ImageComponent({ list, setList }: Props) {
                         <CircularProgress isIndeterminate color={ColorBlue} />
                       </Flex>
                     ) : (
-                      <label htmlFor="imageNum11">
+                      <>
                         {list.filter((item) => item.sort == 11).length > 0 ? (
                           <>
                             <Flex
@@ -1441,35 +1459,33 @@ function ImageComponent({ list, setList }: Props) {
                                   height: '100%',
                                   objectFit: 'contain',
                                 }}
-                                // src={imagePath[]}
-                                // src={`${imgPath()}${
-                                //   data[imageIndex].images[0].thumbnailImagePath
-                                // }`}
                                 alt="이미지 업로드"
                               />
                             </Flex>
                           </>
                         ) : (
-                          <Flex
-                            w={182}
-                            h={182}
-                            borderWidth={1}
-                            borderStyle={'dashed'}
-                            borderColor={ColorInputBorder}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            borderRadius={'10px'}
-                            onClick={() => setImageIndex(11)}
-                          >
-                            <Image
-                              src={'/images/Page/ico_plus.png'}
-                              width={28}
-                              height={28}
-                              alt="이미지 추가"
-                            />
-                          </Flex>
+                          <label htmlFor="imageNum11">
+                            <Flex
+                              w={182}
+                              h={182}
+                              borderWidth={1}
+                              borderStyle={'dashed'}
+                              borderColor={ColorInputBorder}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              borderRadius={'10px'}
+                              onClick={() => setImageIndex(11)}
+                            >
+                              <Image
+                                src={'/images/Page/ico_plus.png'}
+                                width={28}
+                                height={28}
+                                alt="이미지 추가"
+                              />
+                            </Flex>
+                          </label>
                         )}
-                      </label>
+                      </>
                     )}
                     <input
                       type="file"
@@ -1479,126 +1495,6 @@ function ImageComponent({ list, setList }: Props) {
                       disabled={goodsInfo.LogItemDisable}
                     ></input>
                   </Flex>
-                  {/* <label htmlFor="img2" accept=".png, .jpeg, .jpg">
-                  {imageListPath && (
-                    <Flex
-                      w={182}
-                      h={182}
-                      borderWidth={1}
-                      borderStyle={'dashed'}
-                      borderColor={ColorInputBorder}
-                      justifyContent={'center'}
-                      alignItems={'center'}
-                      borderRadius={'10px'}
-                      onClick={() => setImageIndex(1)}
-                    >
-                      <Image
-                        src={'/images/Page/ico_plus.png'}
-                        width={'28px'}
-                        height={'28px'}
-                        alt="이미지 추가"
-                      />
-                    </Flex>
-                  )}
-                </label>
-                <input
-                  type="file"
-                  id="img2"
-                  onChange={handleUploadImageList}
-                  style={{ display: 'none' }}
-                ></input>
-                {imageListPath.map((item: ImagetPathProps, index: number) => {
-                  return (
-                    <Flex position={'relative'} key={index}>
-                      <Flex
-                        position={'absolute'}
-                        top={'10px'}
-                        right={'10px'}
-                        onClick={() => onDeleteImg(0)}
-                      >
-                        <Image
-                          src={'/images/Page/icon_delete_img.png'}
-                          alt="이미지 삭제"
-                          width={'32px'}
-                          height={'32px'}
-                        />
-                      </Flex>
-                      <>
-                        <Flex
-                          w={'182px'}
-                          h={'182px'}
-                          justifyContent={'center'}
-                          alignItems={'center'}
-                          borderRadius={'10px'}
-                          overflow={'hidden'}
-                          borderWidth={1}
-                          borderStyle={'dashed'}
-                          borderColor={ColorInputBorder}
-                        >
-                          <img
-                            src={item.imagePath}
-                            // src={imagePath[]}
-                            // src={`${imgPath()}${
-                            //   data[imageIndex].images[0].thumbnailImagePath
-                            // }`}
-                            alt="이미지 업로드"
-                          />
-                        </Flex>
-                      </>
-                    </Flex>
-                  );
-                })} */}
-                  {/* <Flex
-                  w={182}
-                  h={182}
-                  borderWidth={1}
-                  borderStyle={'dashed'}
-                  borderColor={ColorInputBorder}
-                  justifyContent={'center'}
-                  alignItems={'center'}
-                  borderRadius={'10px'}
-                >
-                  <Image
-                    src={'/images/Page/ico_plus.png'}
-                    width={28}
-                    height={28}
-                    alt="이미지 삭제"
-                  />
-                </Flex>
-                {imageListPath.map((item: ImagetPathProps, index: number) => {
-                  return (
-                    <Flex
-                      key={index}
-                      w={'182px'}
-                      h={'182px'}
-                      justifyContent={'center'}
-                      alignItems={'center'}
-                      borderRadius={'10px'}
-                      overflow={'hidden'}
-                      position={'relative'}
-                    >
-                      <Box>
-                        <Image
-                          src={item.imagePath}
-                          width={182}
-                          height={182}
-                          alt="이미지"
-                          objectFit={'cover'}
-                          // fill
-                        />
-                      </Box>
-                      <Box position={'absolute'} top={'10px'} right={'10px'}>
-                        <Image
-                          src={'/images/Page/icon_delete_img.png'}
-                          alt="이미지 삭제"
-                          // onClick={() => setOpen(!open)}
-                          width={32}
-                          height={32}
-                        />
-                      </Box>
-                    </Flex>
-                  );
-                })} */}
                 </Flex>
                 <Box>
                   <Text

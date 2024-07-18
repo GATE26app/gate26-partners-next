@@ -107,6 +107,9 @@ function GoodsFilter({ request, setRequest, setOnSubmit }: Props) {
               searchType: '',
             });
             setOnSubmit(true);
+            setGoodsInfo({
+              goodState: true,
+            });
           }}
           borderColor={ColorGrayBorder}
           TextColor={ColorGray600}
