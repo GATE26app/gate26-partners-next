@@ -87,6 +87,7 @@ function StatusComponent({ list, setList }: Props) {
       setEState(false);
     }
   }, [sState, eState]);
+
   return (
     <Flex w={'100%'} flexDirection={'column'} mb={'30px'}>
       <Flex
@@ -313,6 +314,14 @@ function StatusComponent({ list, setList }: Props) {
                   curDate={startDay}
                   width={'200px'}
                   onApply={(date) => {
+                    console.log('srrrrrr', date);
+                    setList({
+                      ...list,
+                      viewStartDate:
+                        dayjs(date).format('YYYY-MM-DD') == 'Invalid Date'
+                          ? ''
+                          : `${dayjs(date).format('YYYY-MM-DD')} 00:00:00`,
+                    });
                     // setList({ ...list, viewStartDate:  });
                     setStartDay(date);
                     setSState(true);
@@ -340,6 +349,13 @@ function StatusComponent({ list, setList }: Props) {
                   onApply={(date) => {
                     setEndDay(date);
                     setEState(true);
+                    setList({
+                      ...list,
+                      viewEndDate:
+                        dayjs(endDay).format('YYYY-MM-DD') == 'Invalid Date'
+                          ? ''
+                          : `${dayjs(endDay).format('YYYY-MM-DD')} 23:59:59`,
+                    });
                   }}
                   disabled={goodsInfo.LogItemDisable}
                 />

@@ -11,6 +11,7 @@ export const ColorRedOpa = '#FFF3F1';
 export const ColorRed50 = '#FFDFDB';
 
 export const ColorBlue = '#3479EA';
+export const ColorBlue100 = '#1B66E1';
 export const ColorclickBlue = '#468DFF';
 export const COlorBlueSucces = '#CBDFFF';
 

@@ -9,7 +9,7 @@ import {
   ColorDataTableBorderTop,
   ColorGray700,
 } from '@/utils/_Palette';
-import { intComma } from '@/utils/format';
+import { PaymentMethod, intComma } from '@/utils/format';
 
 interface Props {
   info: OrderDetailItemType;
@@ -105,7 +105,8 @@ function OrderPayment({ info }: Props) {
             결제수단
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.paymentMethod == 'card' ? '카드' : '무통장입금'}
+            {/* {info.paymentMethod == 'card' ? '카드' : '무통장입금'} */}
+            {PaymentMethod(info.paymentMethod)}
           </Text>
         </Flex>
       </Flex>

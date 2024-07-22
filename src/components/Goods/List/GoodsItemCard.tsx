@@ -24,6 +24,7 @@ function GoodsItemCard({ header, item }: Props) {
   const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
     e.currentTarget.src = '/images/Page/no_data.png';
   };
+
   return (
     <>
       <Flex
@@ -167,7 +168,7 @@ function GoodsItemCard({ header, item }: Props) {
             src={
               item?.images.length == 0
                 ? '/images/Page/no_data.png'
-                : `${imgPath()}${item?.images[0].thumbnailImagePath}`
+                : `${imgPath()}${item?.images.filter((item) => item.sort == 1)[0].thumbnailImagePath}`
             }
             onError={addDefaultImg}
             // src={imagePath[]}

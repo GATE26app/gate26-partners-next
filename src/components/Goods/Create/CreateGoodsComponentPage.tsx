@@ -58,6 +58,7 @@ function CreateGoodsComponentPage() {
   const getType = searchParams.get('type');
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [disableBtn, setDiableBtn] = useState(false); //버튼 중복 막기
   const [ModalState, setModalState] = useState({
     title: '',
     message: '',
@@ -143,6 +144,7 @@ function CreateGoodsComponentPage() {
   const { mutate: CreateItemMutate, isLoading } = usePutCreateItemMutation({
     options: {
       onSuccess: (res) => {
+        setDiableBtn(false);
         if (res.success == true) {
           setOpenAlertModal(true);
           setModalState({
@@ -190,10 +192,12 @@ function CreateGoodsComponentPage() {
     },
   });
 
+  console.log('disableBtn', disableBtn);
   useEffect(() => {
     setLoadingModal(isLoading);
   }, [isLoading]);
   const handleOnSave = (status: number) => {
+    setDiableBtn(true);
     const PostData = {
       sort: 1,
       status: status,
@@ -230,32 +234,44 @@ function CreateGoodsComponentPage() {
 
     if (status == 2) {
       if (categoryList.length == 0) {
-        ToastComponent('카테고리를 선택해주세요.');
+        ToastComponent('111카테고리를 선택해주세요.');
+        console.log('vvvvvv');
+        setDiableBtn(false);
       } else if (
         locationList.length == 0 &&
         (getType == '3' || getType == '2')
       ) {
+        setDiableBtn(false);
         ToastComponent('지역을 선택해주세요.');
       } else if (BasicInfo.title == '') {
+        setDiableBtn(false);
         ToastComponent('제목을 입력해주세요.');
       } else if (BasicInfo.price == 0) {
+        setDiableBtn(false);
         ToastComponent('판매가를 입력해주세요.');
       } else if (imageList.length == 0) {
+        setDiableBtn(false);
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {
+        setDiableBtn(false);
         ToastComponent('상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {
+        setDiableBtn(false);
         ToastComponent('상품 이미지를 선택해주세요.');
       } else if (policyList.length == 0 && getType == '3') {
+        setDiableBtn(false);
         ToastComponent('취소/환불 규정을 입력해주세요.');
       } else if (
         policyList.filter((item) => item.type == 1).length == 0 &&
         getType == '3'
       ) {
+        setDiableBtn(false);
         ToastComponent('취소/환불 기본 규정을 입력해주세요.');
       } else if (optionList.length == 0) {
+        setDiableBtn(false);
         ToastComponent('옵션을 선택해 입력해주세요.');
       } else if (optionList.length >= 1000) {
+        setDiableBtn(false);
         ToastComponent('옵션은 1000개까지 등록 가능합니다.');
       } else {
         CreateItemMutate(PostData);
@@ -380,6 +396,7 @@ function CreateGoodsComponentPage() {
               color={ColorRed}
               px="31px"
               py="13px"
+              disabled={disableBtn}
               bgColor={ColorWhite}
               fontSize="15px"
               onClick={() => {
@@ -396,6 +413,7 @@ function CreateGoodsComponentPage() {
                   okButtonName: '확인',
                   cbOk: () => {
                     handleOnSave(2);
+
                     // window.history.back();
                   },
                 });
@@ -420,6 +438,7 @@ function CreateGoodsComponentPage() {
               px="31px"
               py="13px"
               bgColor={ColorRed}
+              disabled={disableBtn}
               fontSize="15px"
               onClick={() => {
                 setBasicInfo({
@@ -435,6 +454,7 @@ function CreateGoodsComponentPage() {
                   okButtonName: '확인',
                   cbOk: () => {
                     handleOnSave(0);
+                    setDiableBtn(true);
                     // window.history.back();
                   },
                 });

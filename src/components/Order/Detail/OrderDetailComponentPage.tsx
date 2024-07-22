@@ -43,7 +43,6 @@ function OrderDetailComponentPage() {
     },
   );
 
-  console.log('OrderData', OrderData);
   // useEffect(() => {
   //   if (router.query.orderId) {
   //     detail(String(router.query.orderId));
