@@ -82,6 +82,7 @@ function PlanComponent({ list, setList }: Props) {
     lng: string;
     address: string;
   } | null>(null);
+  const [comment, setComment] = useState('');
 
   const [thumImagePath, setThumImagePath] = useState<string>('');
   const [thumImageList, setThumImageList] = useState('');
@@ -205,13 +206,12 @@ function PlanComponent({ list, setList }: Props) {
         }
       },
       onError: (req) => {
-        console.log('req', req);
         toast({
           position: 'top',
           duration: 2000,
           render: () => (
             <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-              {'이미지 업로드가 불가능합니다.'}
+              {'이미지 용량이 초과되어 업로드가 불가능합니다.'}
             </Box>
           ),
         });
@@ -287,6 +287,7 @@ function PlanComponent({ list, setList }: Props) {
   //   lat: 37.5,
   //   lng: 127,
   // };
+  console.log('list[index].info.', list[0].info);
   return (
     <>
       <ButtonModal
@@ -596,7 +597,7 @@ function PlanComponent({ list, setList }: Props) {
                               />
                             </Flex>
                           ) : (
-                            <label htmlFor="img3">
+                            <>
                               {item.images[0].thumbnailImagePath !== '' ? (
                                 <>
                                   <Flex
@@ -622,26 +623,28 @@ function PlanComponent({ list, setList }: Props) {
                                   </Flex>
                                 </>
                               ) : (
-                                <Flex
-                                  w={380}
-                                  h={185}
-                                  borderWidth={1}
-                                  borderStyle={'dashed'}
-                                  borderColor={ColorInputBorder}
-                                  justifyContent={'center'}
-                                  alignItems={'center'}
-                                  borderRadius={'10px'}
-                                  onClick={() => setImageIndex(index)}
-                                >
-                                  <Image
-                                    src={'/images/Page/ico_plus.png'}
-                                    width={'28px'}
-                                    height={'28px'}
-                                    alt="이미지 추가"
-                                  />
-                                </Flex>
+                                <label htmlFor="img3">
+                                  <Flex
+                                    w={380}
+                                    h={185}
+                                    borderWidth={1}
+                                    borderStyle={'dashed'}
+                                    borderColor={ColorInputBorder}
+                                    justifyContent={'center'}
+                                    alignItems={'center'}
+                                    borderRadius={'10px'}
+                                    onClick={() => setImageIndex(index)}
+                                  >
+                                    <Image
+                                      src={'/images/Page/ico_plus.png'}
+                                      width={'28px'}
+                                      height={'28px'}
+                                      alt="이미지 추가"
+                                    />
+                                  </Flex>
+                                </label>
                               )}
-                            </label>
+                            </>
                           )}
                           <input
                             type="file"
@@ -698,7 +701,10 @@ function PlanComponent({ list, setList }: Props) {
                           borderRadius={'10px'}
                           disabled={goodsInfo.LogItemDisable}
                           defaultValue={item.info}
-                          onBlur={(e) => (list[index].info = e.target.value)}
+                          onChange={(e) => {
+                            list[index].info = e.target.value;
+                            setComment(e.target.value);
+                          }}
                         />
                         <Flex justifyContent={'flex-end'} mt={'5px'}>
                           <Text
@@ -706,7 +712,7 @@ function PlanComponent({ list, setList }: Props) {
                             fontWeight={400}
                             fontSize={'15px'}
                           >
-                            ({list[index].info.length}/100)
+                            ({comment.length}/100)
                           </Text>
                         </Flex>
                       </Flex>
