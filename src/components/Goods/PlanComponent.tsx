@@ -287,7 +287,7 @@ function PlanComponent({ list, setList }: Props) {
   //   lat: 37.5,
   //   lng: 127,
   // };
-  console.log('list[index].info.', list[0].info);
+  // console.log('list[index].info.', list[0].info);
   return (
     <>
       <ButtonModal

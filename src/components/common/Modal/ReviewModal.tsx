@@ -37,7 +37,12 @@ import {
   useDeleteReviewCommentMutation,
   usePutReviewCommentMutation,
 } from '@/apis/review/ReviewApi.mutation';
-
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 interface AlertModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
   reviewId: string;
@@ -222,7 +227,14 @@ function ReviewModal({
               </Flex>
             </Flex>
           </Flex>
-          {ReviewData?.data?.review?.images !== undefined &&
+          <Flex pb={'30px'}>
+            <Swiper
+              pagination={true}
+              // pagination={pagination}
+              modules={[Pagination]}
+              className="mySwiper"
+            >
+              {/* {ReviewData?.data?.review?.images !== undefined &&
             ReviewData?.data?.review?.images.length > 0 && (
               <Flex borderRadius={'12px'} overflow={'hidden'} pb={'30px'}>
                 <Image
@@ -232,7 +244,23 @@ function ReviewModal({
                   }
                 />
               </Flex>
-            )}
+            )} */}
+              {ReviewData?.data?.review?.images !== undefined &&
+                ReviewData?.data?.review?.images.length > 0 &&
+                ReviewData?.data?.review?.images.map((item) => {
+                  return (
+                    <SwiperSlide>
+                      <Box borderRadius={'12px'} overflow={'hidden'}>
+                        <Image
+                          width={'100%'}
+                          src={imgPath() + item.imagePath}
+                        />
+                      </Box>
+                    </SwiperSlide>
+                  );
+                })}
+            </Swiper>
+          </Flex>
 
           <Flex>
             <Text>{ReviewData?.data.review.content}</Text>
