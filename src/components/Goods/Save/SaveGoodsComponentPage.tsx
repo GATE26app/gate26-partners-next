@@ -356,9 +356,6 @@ function SaveGoodsComponentPage() {
       if (BasicInfo.price == 0) {
         ToastComponent('판매가를 입력해주세요.');
       }
-      if (BasicInfo.priceDcPer == 0) {
-        ToastComponent('할인율을 입력해주세요.');
-      }
       if (imageList.length == 0) {
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       }
@@ -394,8 +391,6 @@ function SaveGoodsComponentPage() {
     }
   };
 
-  console.log('BasicInfo', BasicInfo);
-  console.log('BasicInfo?.optionType', BasicInfo?.optionType);
   return (
     <>
       <ButtonModal

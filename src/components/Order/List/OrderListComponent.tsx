@@ -29,7 +29,7 @@ import OrderDataTable from './OrderDataTable';
 
 import { useOrderFilterZuInfo } from '@/_store/OrderFilterInfo';
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
-import LoadingModal from "@/components/common/Modal/LoadingModal";
+import LoadingModal from '@/components/common/Modal/LoadingModal';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -155,7 +155,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
       });
     }
   };
-  //주문 접수
+  //예약 확정
   const { mutate: ConfrimMutate, isLoading: isConfrimLoading } =
     usePostOrderContfrimMutation({
       options: {
@@ -172,7 +172,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
                   color="white"
                   bg="#ff6955"
                 >
-                  {`주문번호 [${req?.orderId}] : 주문 취소 요청이 되었습니다.`}
+                  {`주문번호 [${req?.orderId}] : 예약 확정 요청되었습니다.`}
                 </Box>
               ),
             });

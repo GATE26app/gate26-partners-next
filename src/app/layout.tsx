@@ -6,6 +6,7 @@ import localFont from 'next/font/local';
 import ReactQueryProviders from '@/utils/react-query-provider';
 import LayoutForm from '@/components/Layout/LayoutForm';
 import Script from 'next/script';
+
 // const inter = Inter({ subsets: ['latin'] });
 const pretendard = localFont({
   // src:'../../../',

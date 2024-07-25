@@ -12,7 +12,15 @@ export default function middleware(request: NextRequest) {
   if (
     !accessToken &&
     (request.nextUrl.pathname.startsWith('/join') ||
-      request.nextUrl.pathname.startsWith('/join/terms'))
+      request.nextUrl.pathname.startsWith('/join/terms') ||
+      request.nextUrl.pathname.startsWith('/join/select') ||
+      request.nextUrl.pathname.startsWith('/join/success') ||
+      request.nextUrl.pathname.startsWith('/join/fail') ||
+      request.nextUrl.pathname.startsWith('/findId') ||
+      request.nextUrl.pathname.startsWith('/findId/select') ||
+      request.nextUrl.pathname.startsWith('/findPw') ||
+      request.nextUrl.pathname.startsWith('/findPw/select') ||
+      request.nextUrl.pathname.startsWith('/findPw/change'))
   ) {
     return NextResponse.next();
   }

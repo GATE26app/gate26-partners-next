@@ -12,6 +12,23 @@ export default function Home() {
   const router = useRouter();
   const { userZuInfo } = useUserZuInfo((state) => state);
 
+  // 서비스 워커 등록
+  // serviceWorkerRegistration.register();
+
+  // 서비스 워커 메시지 수신 대기
+  // navigator.serviceWorker.addEventListener('message', (event) => {
+  //   if (!event.data.action) {
+  //     return;
+  //   }
+
+  //   switch (event.data.action) {
+  //     case 'redirect-from-notificationclick':
+  //       window.location.href = event.data.url;
+  //       break;
+  //     // no default
+  //   }
+  // });
+
   useEffect(() => {
     // if (
     //   getToken().access == '' ||

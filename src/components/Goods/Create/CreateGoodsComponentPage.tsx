@@ -234,8 +234,7 @@ function CreateGoodsComponentPage() {
 
     if (status == 2) {
       if (categoryList.length == 0) {
-        ToastComponent('111카테고리를 선택해주세요.');
-        console.log('vvvvvv');
+        ToastComponent('카테고리를 선택해주세요.');
         setDiableBtn(false);
       } else if (
         locationList.length == 0 &&

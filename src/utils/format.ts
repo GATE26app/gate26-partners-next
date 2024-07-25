@@ -173,6 +173,15 @@ export const imgPath = () => {
   }
 };
 
+export const filePath = () => {
+  if (DEV() === 'dev') {
+    // return `http://192.168.0.63:40009`;
+    return `https://cdpartners.gate26.co.kr`;
+  } else {
+    return `https://partners.gate26.co.kr`;
+  }
+};
+
 // 이미지 path
 export const DEV = () => {
   // return '';
@@ -182,6 +191,7 @@ export const DEV = () => {
 // yyyy-mm-dd형식에 맞춰서 유효한 날짜인지 체크해주는 코드
 export const checkInvalidDateYYYYMMDD = (value: string) => {
   var result = true;
+
   try {
     var date = value.split('-');
     if (date[0].length > 4 || date[1].length > 2 || date[2].length > 2)

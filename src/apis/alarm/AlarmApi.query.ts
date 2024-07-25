@@ -42,6 +42,7 @@ export const useGetAlarmLitQuery = (
         if (nextInfo?.data.pageNo >= nextInfo.data.pageCount) {
           return undefined;
         } else {
+          console.log('*****plus');
           params.pageNo + 1;
           return allPages.length + 1;
         }

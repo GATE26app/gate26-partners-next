@@ -95,7 +95,23 @@ function ImageComponent({ list, setList }: Props) {
     setList([...list, obj]);
     setImagePath('');
   };
+  //pdf
+  const handleUploadPdf = (e: any) => {
+    //이미지 미리보기 기능
+    console.log('pdf');
+    const reader = new FileReader();
 
+    console.log('e.target.files[0]', e.target.files[0]);
+    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(e.target.files);
+    reader.onload = () => {
+      console.log('reader.result as string', reader.result as string);
+      setImagePath(reader.result as string);
+      // const formData = new FormData();
+      // formData.append('image', e.target.files[0]);
+      // ItemCodeMutate(formData);
+    };
+  };
   const handleUploadImage = (e: any) => {
     //이미지 미리보기 기능
     const reader = new FileReader();
@@ -189,6 +205,7 @@ function ImageComponent({ list, setList }: Props) {
             )}
           </Flex>
         </Flex>
+
         {open && (
           <Flex
             px={'30px'}
