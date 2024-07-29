@@ -63,8 +63,6 @@ const GoogleMapModal: React.FC<MapModalProps> = ({
   //   });
 
   // console.log('placePredictions', placePredictions);
-  console.log('location,', location);
-  console.log('modal open');
 
   const handleComplete = () => {
     const newLoaction = {
@@ -81,7 +79,6 @@ const GoogleMapModal: React.FC<MapModalProps> = ({
   };
   const onPlaceChanged = () => {
     const place = autocomplete?.getPlace();
-    console.log('place,', place);
     if (place && place.geometry) {
       const lat = place.geometry.location?.lat() || 0;
       const lng = place.geometry.location?.lng() || 0;

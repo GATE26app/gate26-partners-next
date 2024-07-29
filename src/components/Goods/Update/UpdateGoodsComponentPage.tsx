@@ -156,7 +156,17 @@ function UpdateGoodsComponentPage() {
   >([]);
   const itemCode = getItemCode as string;
   const [logDisable, setLogDisable] = useState(false);
-
+  const ToastComponent = (message: string) => {
+    return toast({
+      position: 'top',
+      duration: 2000,
+      render: () => (
+        <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+          {`${message}`}
+        </Box>
+      ),
+    });
+  };
   //상품상세
   const { data: detailData } = useQuery(
     ['GET_GOODSDETAIL', itemCode],
@@ -166,7 +176,6 @@ function UpdateGoodsComponentPage() {
       // refetchInterval: false, // 자동 새로 고침 비활성화
       enabled: !!itemCode,
       onSuccess: ({ data }) => {
-        console.log('data', data);
         if (data == undefined) {
           toast({
             position: 'top',
@@ -395,44 +404,74 @@ function UpdateGoodsComponentPage() {
 
   const onSubmit = (selectMenu: number, status?: number) => {
     if (selectMenu == 1) {
-      const body: PatchUpdateGoodsStatusParmaType = {
-        itemCode: itemCode,
-        itemId: detailData?.data.itemId,
-        data: {
-          sort: BasicInfo.sort,
-          status: BasicInfo.status,
-          title: BasicInfo.title,
-          basicInfo: BasicInfo.basicInfo,
-          detailInfo: BasicInfo.detailInfo,
-          reservationInfo: BasicInfo.reservationInfo,
-          content: BasicInfo.content,
-          orderSameDay: BasicInfo.orderSameDay,
-          orderCloseBefore: BasicInfo.orderCloseBefore,
-          type: BasicInfo.type,
-          level: BasicInfo.level,
-          forSale: BasicInfo.forSale,
-          priceNet: BasicInfo.priceNet,
-          priceDcPer: BasicInfo.priceDcPer,
-          priceDc: BasicInfo.priceDc,
-          price: BasicInfo.price,
-          optionType: BasicInfo.optionType,
-          viewStartDate: BasicInfo.viewStartDate,
-          viewEndDate: BasicInfo.viewEndDate,
-          attributes: attributeList,
-          categories: categoryList,
-          locations: locationList,
-          optionInputType: BasicInfo.optionInputType,
-          optionInputStartDate: BasicInfo.optionInputStartDate,
-          optionInputEndDate: BasicInfo.optionInputEndDate,
-          images: imageList,
-          schedules: planList,
-          policies: policyList,
-          optionInputs: optionInputList,
-          options: optionList,
-        },
-      };
+      if (categoryList.length == 0) {
+        ToastComponent('111카테고리를 선택해주세요.');
+      } else if (
+        locationList.length == 0 &&
+        (getType == '3' || getType == '2')
+      ) {
+        ToastComponent('지역을 선택해주세요.');
+      } else if (BasicInfo.title == '') {
+        ToastComponent('제목을 입력해주세요.');
+      } else if (BasicInfo.price == 0) {
+        ToastComponent('판매가를 입력해주세요.');
+      } else if (imageList.length == 0) {
+        ToastComponent('대표 상품 이미지를 선택해주세요.');
+      } else if (imageList.length == 1) {
+        ToastComponent('상품 이미지를 선택해주세요.');
+      } else if (imageList.length == 1) {
+        ToastComponent('상품 이미지를 선택해주세요.');
+      } else if (policyList.length == 0 && getType == '3') {
+        ToastComponent('취소/환불 규정을 입력해주세요.');
+      } else if (
+        policyList.filter((item) => item.type == 1).length == 0 &&
+        getType == '3'
+      ) {
+        ToastComponent('취소/환불 기본 규정을 입력해주세요.');
+      } else if (optionList.length == 0) {
+        ToastComponent('옵션을 선택해 입력해주세요.');
+      } else if (optionList.length >= 1000) {
+        ToastComponent('옵션은 1000개까지 등록 가능합니다.');
+      } else {
+        const body: PatchUpdateGoodsStatusParmaType = {
+          itemCode: itemCode,
+          itemId: detailData?.data.itemId,
+          data: {
+            sort: BasicInfo.sort,
+            status: BasicInfo.status,
+            title: BasicInfo.title,
+            basicInfo: BasicInfo.basicInfo,
+            detailInfo: BasicInfo.detailInfo,
+            reservationInfo: BasicInfo.reservationInfo,
+            content: BasicInfo.content,
+            orderSameDay: BasicInfo.orderSameDay,
+            orderCloseBefore: BasicInfo.orderCloseBefore,
+            type: BasicInfo.type,
+            level: BasicInfo.level,
+            forSale: BasicInfo.forSale,
+            priceNet: BasicInfo.priceNet,
+            priceDcPer: BasicInfo.priceDcPer,
+            priceDc: BasicInfo.priceDc,
+            price: BasicInfo.price,
+            optionType: BasicInfo.optionType,
+            viewStartDate: BasicInfo.viewStartDate,
+            viewEndDate: BasicInfo.viewEndDate,
+            attributes: attributeList,
+            categories: categoryList,
+            locations: locationList,
+            optionInputType: BasicInfo.optionInputType,
+            optionInputStartDate: BasicInfo.optionInputStartDate,
+            optionInputEndDate: BasicInfo.optionInputEndDate,
+            images: imageList,
+            schedules: planList,
+            policies: policyList,
+            optionInputs: optionInputList,
+            options: optionList,
+          },
+        };
 
-      PatchUpdateGoodsMutate(body);
+        PatchUpdateGoodsMutate(body);
+      }
     } else if (selectMenu == 2) {
       const body: PatchGoodsStatusParmaType = {
         itemCode: itemCode,

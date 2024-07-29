@@ -193,7 +193,6 @@ function SaveGoodsComponentPage() {
           setOptionInputList(data.optionInputs);
           setImageList(data.images);
         }
-        console.log('d^^ata', data);
       },
       onError: (err) => {
         console.log('err', err);
@@ -219,7 +218,6 @@ function SaveGoodsComponentPage() {
   //     router.back();
   //   }
   // }, [data]);
-  console.log('data', data);
   const ToastComponent = (message: string) => {
     return toast({
       position: 'top',
@@ -357,9 +355,6 @@ function SaveGoodsComponentPage() {
       }
       if (BasicInfo.price == 0) {
         ToastComponent('판매가를 입력해주세요.');
-      }
-      if (BasicInfo.priceDcPer == 0) {
-        ToastComponent('할인율을 입력해주세요.');
       }
       if (imageList.length == 0) {
         ToastComponent('대표 상품 이미지를 선택해주세요.');
@@ -572,7 +567,7 @@ function SaveGoodsComponentPage() {
             getList={CateGetList}
             setGetList={setCateGetList}
           />
-          {(BasicInfo?.optionType == 3 || BasicInfo?.optionType == 2) && (
+          {(getType == '3' || getType == '2') && (
             <>
               <CountryComponent
                 list={locationList}
@@ -585,7 +580,7 @@ function SaveGoodsComponentPage() {
           <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />
           <PriceComponent list={BasicInfo} setList={setBasicInfo} />
           <ImageComponent list={imageList} setList={setImageList} />
-          {BasicInfo?.optionType == 3 && (
+          {getType == '3' && (
             <DivisionComponent
               list={attributeList}
               setList={setAttributeList}
@@ -593,7 +588,7 @@ function SaveGoodsComponentPage() {
           )}
           <InfoComponent list={BasicInfo} setList={setBasicInfo} />
           <DetailComponent list={BasicInfo} setList={setBasicInfo} />
-          {BasicInfo?.optionType == 3 && (
+          {getType == '3' && (
             <>
               <PlanComponent list={planList} setList={setPlanList} />
               <BookingCheckComponent list={BasicInfo} setList={setBasicInfo} />

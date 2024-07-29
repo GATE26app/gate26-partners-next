@@ -13,6 +13,7 @@ interface Props {
 }
 function RadioComponent({ text, checked, onClick, disabled }: Props) {
   const [check, setCheck] = useState(false);
+
   useEffect(() => {
     setCheck(checked);
   }, [checked]);
@@ -25,7 +26,7 @@ function RadioComponent({ text, checked, onClick, disabled }: Props) {
           undefined;
         } else {
           onClick();
-          setCheck(!check);
+          setCheck(checked);
         }
       }}
     >

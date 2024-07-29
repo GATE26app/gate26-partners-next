@@ -315,54 +315,6 @@ function CancelComponent({ list, setList }: Props) {
               fontSize={'16px'}
               mb={'10px'}
             >
-              기타
-            </Text>
-            <Flex mb={'30px'} w={'100%'}>
-              <InputBox
-                placeholder="직접 입력"
-                mr={'10px'}
-                value={etc}
-                disabled={goodsInfo.LogItemDisable}
-                onChange={(e) => setEtc(e.target.value)}
-              />
-              {/* <Input
-                value={etc}
-                onChange={(e) => setEtc(e.target.value)}
-                h="45px"
-                placeholder="직접 입력"
-                mr={'10px'}
-                // {...props.register}
-                errorBorderColor="warning.500"
-                variant="outline"
-                // onBlur={(e) => setEtc(e.target.value)}
-                // borderColor={ColorInputBorder}
-                backgroundColor={ColorWhite}
-                color="black"
-                _disabled={{ backgroundColor: 'gray.100', color: ColorGray700 }}
-                _placeholder={{ color: ColorGray700 }}
-                borderRadius={'10px'}
-                fontSize={'15px'}
-                outline={'none'}
-              /> */}
-              <Flex flexShrink={0}>
-                <CustomButton
-                  text="입력하기"
-                  bgColor={ColorGray900}
-                  borderColor={ColorGray900}
-                  color={ColorWhite}
-                  fontSize="15px"
-                  px="24px"
-                  py="12px"
-                  onClick={() => onHandleEtc()}
-                />
-              </Flex>
-            </Flex>
-            <Text
-              color={ColorBlack}
-              fontWeight={700}
-              fontSize={'16px'}
-              mb={'10px'}
-            >
               추가
             </Text>
             <Flex alignItems={'center'} gap={'20px'}>
@@ -412,6 +364,55 @@ function CancelComponent({ list, setList }: Props) {
                 py="12px"
                 onClick={() => onHandlePlus()}
               />
+            </Flex>
+            <Text
+              color={ColorBlack}
+              fontWeight={700}
+              fontSize={'16px'}
+              mb={'10px'}
+              mt="20px"
+            >
+              기타
+            </Text>
+            <Flex mb={'30px'} w={'100%'}>
+              <InputBox
+                placeholder="직접 입력"
+                mr={'10px'}
+                value={etc}
+                disabled={goodsInfo.LogItemDisable}
+                onChange={(e) => setEtc(e.target.value)}
+              />
+              {/* <Input
+                value={etc}
+                onChange={(e) => setEtc(e.target.value)}
+                h="45px"
+                placeholder="직접 입력"
+                mr={'10px'}
+                // {...props.register}
+                errorBorderColor="warning.500"
+                variant="outline"
+                // onBlur={(e) => setEtc(e.target.value)}
+                // borderColor={ColorInputBorder}
+                backgroundColor={ColorWhite}
+                color="black"
+                _disabled={{ backgroundColor: 'gray.100', color: ColorGray700 }}
+                _placeholder={{ color: ColorGray700 }}
+                borderRadius={'10px'}
+                fontSize={'15px'}
+                outline={'none'}
+              /> */}
+              <Flex flexShrink={0}>
+                <CustomButton
+                  text="입력하기"
+                  bgColor={ColorGray900}
+                  borderColor={ColorGray900}
+                  color={ColorWhite}
+                  fontSize="15px"
+                  px="24px"
+                  py="12px"
+                  onClick={() => onHandleEtc()}
+                />
+              </Flex>
             </Flex>
           </Flex>
           <Flex justifyContent={'center'} mt={'32px'} mb={'30px'}>

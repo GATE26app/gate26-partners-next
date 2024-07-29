@@ -36,7 +36,7 @@ function DetailComponent({ list, setList }: Props) {
       >
         <Flex>
           <Text fontWeight={800} fontSize={'18px'} color={ColorBlack}>
-            상세설명
+            주의사항
           </Text>
         </Flex>
         <Flex>
@@ -72,7 +72,7 @@ function DetailComponent({ list, setList }: Props) {
         >
           <Flex flexDirection={'column'}>
             <Textarea
-              placeholder="상세설명을 입력해주세요."
+              placeholder="주의사항을 입력해주세요."
               _placeholder={{ color: ColorGray700 }}
               color={ColorBlack}
               borderColor={ColorGray400}

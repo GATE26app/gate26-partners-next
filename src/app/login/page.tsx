@@ -32,13 +32,13 @@ interface LoginModel {
   loginId: string;
   password: string;
 }
-interface PayloadNotification {
-  title: string;
-  body: string;
-}
-interface MessagePayload {
-  notification: PayloadNotification;
-}
+// interface PayloadNotification {
+//   title: string;
+//   body: string;
+// }
+// interface MessagePayload {
+//   notification: PayloadNotification;
+// }
 function LoginPage() {
   const toast = useToast();
   const router = useRouter();
@@ -81,13 +81,13 @@ function LoginPage() {
       // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
     }
 
-    onMessageListener()
-      .then((payload) => {
-        console.log('Message received. ', payload);
-        setAlarmInfo({ alarm: true });
-        // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
-      })
-      .catch((err) => console.log('Failed to receive message: ', err));
+    // onMessageListener()
+    //   .then((payload) => {
+    //     console.log('Message received. ', payload);
+    //     setAlarmInfo({ alarm: true });
+    //     // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
+    //   })
+    //   .catch((err) => console.log('Failed to receive message: ', err));
   };
 
   useEffect(() => {
@@ -97,17 +97,17 @@ function LoginPage() {
     }
     getMessageToken();
   }, []);
-  useEffect(() => {
-    onMessageListener()
-      .then((payload: any) => {
-        console.log('Message received. ', payload);
-        const { title, body } = payload.notification;
-        if (Notification.permission === 'granted') {
-          new Notification(title, { body });
-        }
-      })
-      .catch((err) => console.log('Failed to receive message: ', err));
-  }, []);
+  // useEffect(() => {
+  //   onMessageListener()
+  //     .then((payload: any) => {
+  //       console.log('Message received. ', payload);
+  //       const { title, body } = payload.notification;
+  //       if (Notification.permission === 'granted') {
+  //         new Notification(title, { body });
+  //       }
+  //     })
+  //     .catch((err) => console.log('Failed to receive message: ', err));
+  // }, []);
   // useEffect(() => {
   //   setTokenHandler();
   // }, []);
@@ -261,14 +261,17 @@ function LoginPage() {
               로그인
             </Text>
           </Flex>
-          {/* <Flex justifyContent={'space-between'}>
-            <Box>
+          <Flex justifyContent={'space-between'}>
+            <Box cursor={'pointer'} onClick={() => router.push('/join/terms')}>
               <Text color={ColorGray700} fontSize={'14px'} fontWeight={500}>
                 회원가입
               </Text>
             </Box>
             <Flex flexDirection={'row'}>
-              <Box>
+              <Box
+                cursor={'pointer'}
+                onClick={() => router.push('/findId/select')}
+              >
                 <Text color={ColorGray700} fontSize={'14px'} fontWeight={500}>
                   아이디찾기
                 </Text>
@@ -283,13 +286,16 @@ function LoginPage() {
                   |
                 </Text>
               </Box>
-              <Box>
+              <Box
+                cursor={'pointer'}
+                onClick={() => router.push('/findPw/select')}
+              >
                 <Text color={ColorGray700} fontSize={'14px'} fontWeight={500}>
                   비밀번호찾기
                 </Text>
               </Box>
             </Flex>
-          </Flex> */}
+          </Flex>
           <Box
             w={'100%'}
             height={'1px'}

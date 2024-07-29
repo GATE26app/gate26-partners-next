@@ -1,19 +1,9 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import React, { memo, useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 
-import {
-  Box,
-  Flex,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
+import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import { GoodsBasicProps, optionInputsProps } from '@/apis/goods/GoodsApi.type';
 
@@ -85,6 +75,7 @@ function OptionPlus({
   const [optionValues, setOptionValues] = useState<string[]>(
     Array(optionCnt).fill(''),
   );
+
   const [price, setPrice] = useState<number>(0);
   const [stock, setStock] = useState<number>(0);
   const toast = useToast();
@@ -121,10 +112,10 @@ function OptionPlus({
 
         setOptionCnt(String(optionInputList.length));
         optionInputList.forEach((item) => {
-          if (item.inputKey !== '' && item.inputValue !== '') {
-            nameList.push(item.inputKey);
-            valueList.push(item.inputValue);
-          }
+          // if (item.inputKey !== '' && item.inputValue !== '') {
+          nameList.push(item.inputKey);
+          valueList.push(item.inputValue);
+          // }
           setOptionNames(nameList);
           setOptionValues(valueList);
         });
@@ -540,7 +531,6 @@ function OptionPlus({
     const updateKey: optionInputsProps[] = [...optionInputList];
     newNames[index] = value;
     updateKey[index].inputKey = value;
-
     setOptionInputList(updateKey);
     setOptionNames(newNames);
   };
@@ -604,7 +594,13 @@ function OptionPlus({
               <RadioComponent
                 text="날짜지정형"
                 disabled={goodsInfo.LogItemDisable}
-                checked={optionType == 2 ? true : false}
+                checked={
+                  getType == '3' && optionType == 2
+                    ? true
+                    : optionType == 2 && getType !== '3'
+                      ? true
+                      : false
+                }
                 onClick={() => {
                   setOptionType(2);
                   setList({ ...list, optionType: 2 });
@@ -700,6 +696,23 @@ function OptionPlus({
               disabled={goodsInfo.LogItemDisable}
               onClick={() => {
                 setOptionInputType(0);
+                // if (list.optionInputType == 1) {
+                setOptionList([]);
+                setOptions([]);
+                setOptionCnt('1');
+                setOptionInputList([
+                  {
+                    sort: 1,
+                    inputKey: '',
+                    inputValue: '',
+                  },
+                ]);
+                setOptionNames(['']);
+                setOptionValues(['']);
+                setPrice(0);
+                setStock(0);
+                // }
+
                 // setList({ ...list, optionInputType: 0 });
               }}
             />
@@ -711,45 +724,63 @@ function OptionPlus({
               checked={optionInputType == 1 ? true : false}
               onClick={() => {
                 setOptionInputType(1);
+                // if (list.optionInputType == 0) {
+                setOptionList([]);
+                setOptions([]);
+                setOptionCnt('1');
+                setOptionInputList([
+                  {
+                    sort: 1,
+                    inputKey: '',
+                    inputValue: '',
+                  },
+                ]);
+                setOptionNames(['']);
+                setOptionValues(['']);
+                setPrice(0);
+                setStock(0);
+                // }
+
                 // setList({ ...list, optionInputType: 1 });
               }}
             />
           </Flex>
         </Flex>
       </Flex>
-      <Flex
-        flexDirection={'row'}
-        mb={'30px'}
-        alignItems={'center'}
-        flexWrap={'wrap'}
-        gap={'10px'}
-      >
-        <Flex w={'200px'}>
-          <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-            옵션명 개수
-          </Text>
-          <Text
-            color={ColorRed}
-            fontWeight={700}
-            ml={'3px'}
-            lineHeight={'12px'}
-          >
-            *
-          </Text>
-        </Flex>
-        <Flex w={'200px'}>
-          <SelectBox
-            placeholder="옵션갯수"
-            width={'200px'}
-            list={optionCntList}
-            select={optionCnt}
-            setSelect={setOptionCnt}
-            disable={goodsInfo.LogItemDisable}
-            onClick={(data: string) => {
-              handleOptionCountChange(Number(data));
-            }}
-          />
-          {/* <NumberInput
+      {optionInputType == 1 && (
+        <Flex
+          flexDirection={'row'}
+          mb={'30px'}
+          alignItems={'center'}
+          flexWrap={'wrap'}
+          gap={'10px'}
+        >
+          <Flex w={'200px'}>
+            <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+              옵션명 개수
+            </Text>
+            <Text
+              color={ColorRed}
+              fontWeight={700}
+              ml={'3px'}
+              lineHeight={'12px'}
+            >
+              *
+            </Text>
+          </Flex>
+          <Flex w={'200px'}>
+            <SelectBox
+              placeholder="옵션갯수"
+              width={'200px'}
+              list={optionCntList}
+              select={optionCnt}
+              setSelect={setOptionCnt}
+              disable={goodsInfo.LogItemDisable}
+              onClick={(data: string) => {
+                handleOptionCountChange(Number(data));
+              }}
+            />
+            {/* <NumberInput
             min={1}
             defaultValue={optionCnt}
             borderRadius={'10px'}
@@ -763,8 +794,10 @@ function OptionPlus({
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput> */}
+          </Flex>
         </Flex>
-      </Flex>
+      )}
+
       <Flex
         flexDirection={'row'}
         mb={'30px'}

@@ -19,7 +19,7 @@ import {
   ColorRed,
   ColorWhite,
 } from '@/utils/_Palette';
-import { formatDated, intComma } from '@/utils/format';
+import { PaymentMethod, formatDated, intComma } from '@/utils/format';
 
 import CancelInfoCard from './CancelInfoCard';
 
@@ -123,8 +123,7 @@ function CancelInfo({ info }: Props) {
     recieverName: info.recieverName,
     recieverHp: info.recieverHp,
   };
-  console.log('memo', memo);
-  console.log('partnerMemo', info.partnerMemo);
+
   return (
     <Box mt={'60px'}>
       <Text color={ColorBlack} fontWeight={600} fontSize={'18px'}>
@@ -292,7 +291,8 @@ function CancelInfo({ info }: Props) {
               {intComma(info.paymentAmount)}원
             </Text>
             <Text color={ColorGray700} fontWeight={400} fontSize={'15px'}>
-              {info.paymentMethod == 'card' ? '카드취소' : '무통장'}
+              {/* {info.paymentMethod == 'card' ? '카드취소' : '무통장'} */}
+              {PaymentMethod(info.paymentMethod)}
             </Text>
           </Flex>
         </Flex>

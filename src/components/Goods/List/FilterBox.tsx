@@ -28,6 +28,8 @@ function FilterBox({ request, setRequest }: Props) {
       setSearchSelect('');
     }
   }, [request]);
+
+  console.log('request,', request);
   return (
     <Flex flexDirection={'column'} w={'100%'}>
       <Flex flexDirection={'row'} flexWrap={'wrap'}>
@@ -269,14 +271,15 @@ function FilterBox({ request, setRequest }: Props) {
               select={searchSelect}
               setSelect={(item) => {
                 setSearchSelect(item);
+                console.log('item', item);
                 setRequest({
                   ...request,
                   searchType:
                     item == '상품코드'
                       ? 'itemCode'
-                      : '상품명'
+                      : item == '상품명'
                         ? 'title'
-                        : '상품카테고리'
+                        : item == '상품카테고리'
                           ? 'category'
                           : '',
                 });

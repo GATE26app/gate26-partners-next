@@ -20,14 +20,14 @@ import CalendarHeader from './PickerHeader';
 
 interface DatePickerProps {
   date: dayjs.Dayjs;
-  handleDayClick?: (day: dayjs.Dayjs) => void;
+  // handleDayClick?: (day: dayjs.Dayjs) => void;
   onDayClick?: (val: dayjs.Dayjs) => void;
   setDate: (val: dayjs.Dayjs) => void;
   minDateTime?: string;
   maxDateTime?: string;
 }
 const Picker = ({
-  handleDayClick,
+  // handleDayClick,
   onDayClick,
   minDateTime,
   maxDateTime,
@@ -43,10 +43,10 @@ const Picker = ({
 
     setDate(current);
 
-    if (handleDayClick) {
+    if (onDayClick) {
       if (selecetMoment < momentNow) {
       } else {
-        handleDayClick(current);
+        onDayClick(current);
       }
     }
   };

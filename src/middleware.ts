@@ -9,6 +9,21 @@ export default function middleware(request: NextRequest) {
   if (accessToken && request.nextUrl.pathname.startsWith('/login')) {
     return NextResponse.next();
   }
+  if (
+    !accessToken &&
+    (request.nextUrl.pathname.startsWith('/join') ||
+      request.nextUrl.pathname.startsWith('/join/terms') ||
+      request.nextUrl.pathname.startsWith('/join/select') ||
+      request.nextUrl.pathname.startsWith('/join/success') ||
+      request.nextUrl.pathname.startsWith('/join/fail') ||
+      request.nextUrl.pathname.startsWith('/findId') ||
+      request.nextUrl.pathname.startsWith('/findId/select') ||
+      request.nextUrl.pathname.startsWith('/findPw') ||
+      request.nextUrl.pathname.startsWith('/findPw/select') ||
+      request.nextUrl.pathname.startsWith('/findPw/change'))
+  ) {
+    return NextResponse.next();
+  }
 
   // 로그인 X + 로그인 페이지 X
   if (!accessToken && !request.nextUrl.pathname.startsWith('/login')) {
@@ -18,6 +33,6 @@ export default function middleware(request: NextRequest) {
 }
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|images/icon_logo_big|images/icon_check_on|images/icon_check_off|images/Footer/icon_footer_logo).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|images/icon_logo_big|images/icon_check_on|images/icon_check_off|images/Footer/icon_footer_logo|/images/Page/icon_in).*)',
   ],
 };

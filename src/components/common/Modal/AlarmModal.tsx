@@ -81,7 +81,9 @@ function AlarmModal({ onClose, ...props }: Props) {
 
   const isFetchingFirstPage = isFetching && !isFetchingNextPage;
   const fetchNextPageTarget = useIntersectionObserver(() => {
+    console.log('list', list?.length);
     if (list.length > 0) {
+      console.log('obj.pageNo', obj.pageNo);
       setObj({ pageSize: 10, pageNo: obj.pageNo + 1 });
       // fetchNextPage();
     }
@@ -101,7 +103,7 @@ function AlarmModal({ onClose, ...props }: Props) {
       onClose();
     } else if (target == 'ORDER') {
       //주문
-      router.push(`orderDetail?orderId=${orderId}`);
+      router.push(`/orderDetail?orderId=${orderId}`);
       onClose();
     } else if (target == 'CANCEL_ORDER') {
       //취소

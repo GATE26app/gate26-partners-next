@@ -87,6 +87,7 @@ function StatusComponent({ list, setList }: Props) {
       setEState(false);
     }
   }, [sState, eState]);
+
   return (
     <Flex w={'100%'} flexDirection={'column'} mb={'30px'}>
       <Flex
@@ -306,43 +307,60 @@ function StatusComponent({ list, setList }: Props) {
                 onClick={() => setList({ ...list, level: 2 })}
               />
             </Flex>
-            <Flex gap={'5px'} alignItems={'center'}>
-              <DatePicker
-                type={'date'}
-                curDate={startDay}
-                width={'200px'}
-                onApply={(date) => {
-                  // setList({ ...list, viewStartDate:  });
-                  setStartDay(date);
-                  setSState(true);
-                }}
-                maxDateTime={
-                  list.viewEndDate == ''
-                    ? ''
-                    : dayjs(list.viewEndDate).format('YYYY-MM-DD')
-                }
-                disabled={goodsInfo.LogItemDisable}
-              />
-              <Text color={ColorBlack} fontSize={'15px'} fontWeight={500}>
-                ~
-              </Text>
-              <DatePicker
-                type={'date'}
-                curDate={endDay}
-                minDateTime={
-                  list.viewStartDate == ''
-                    ? ''
-                    : dayjs(list.viewStartDate).format('YYYY-MM-DD')
-                }
-                maxDateTime=""
-                width={'200px'}
-                onApply={(date) => {
-                  setEndDay(date);
-                  setEState(true);
-                }}
-                disabled={goodsInfo.LogItemDisable}
-              />
-            </Flex>
+            {list.level == 1 && (
+              <Flex gap={'5px'} alignItems={'center'}>
+                <DatePicker
+                  type={'date'}
+                  curDate={startDay}
+                  width={'200px'}
+                  onApply={(date) => {
+                    console.log('srrrrrr', date);
+                    setList({
+                      ...list,
+                      viewStartDate:
+                        dayjs(date).format('YYYY-MM-DD') == 'Invalid Date'
+                          ? ''
+                          : `${dayjs(date).format('YYYY-MM-DD')} 00:00:00`,
+                    });
+                    // setList({ ...list, viewStartDate:  });
+                    setStartDay(date);
+                    setSState(true);
+                  }}
+                  maxDateTime={
+                    list.viewEndDate == ''
+                      ? ''
+                      : dayjs(list.viewEndDate).format('YYYY-MM-DD')
+                  }
+                  disabled={goodsInfo.LogItemDisable}
+                />
+                <Text color={ColorBlack} fontSize={'15px'} fontWeight={500}>
+                  ~
+                </Text>
+                <DatePicker
+                  type={'date'}
+                  curDate={endDay}
+                  minDateTime={
+                    list.viewStartDate == ''
+                      ? ''
+                      : dayjs(list.viewStartDate).format('YYYY-MM-DD')
+                  }
+                  maxDateTime=""
+                  width={'200px'}
+                  onApply={(date) => {
+                    setEndDay(date);
+                    setEState(true);
+                    setList({
+                      ...list,
+                      viewEndDate:
+                        dayjs(endDay).format('YYYY-MM-DD') == 'Invalid Date'
+                          ? ''
+                          : `${dayjs(endDay).format('YYYY-MM-DD')} 23:59:59`,
+                    });
+                  }}
+                  disabled={goodsInfo.LogItemDisable}
+                />
+              </Flex>
+            )}
           </Flex>
           {/* <DatePicker
             locale={ko}

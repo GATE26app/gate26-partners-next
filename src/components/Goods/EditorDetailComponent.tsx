@@ -101,8 +101,6 @@ function EditorDetailComponent({ list, setList }: Props) {
     () => ({
       toolbar: {
         container: [
-          [{ header: '1' }, { header: '2' }],
-          [{ size: [] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
           [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
           ['image'],

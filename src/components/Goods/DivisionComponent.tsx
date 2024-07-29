@@ -38,6 +38,7 @@ const timeList = [
   '22시간',
   '23시간',
   '24시간',
+  '그외(직접입력)',
 ];
 const languageList = [
   '한국어',
@@ -61,6 +62,7 @@ function DivisionComponent({ list, setList }: Props) {
   const [inputTrans, setInputTrans] = useState('');
   const [tripSize, seTripSize] = useState('');
   const [time, setTime] = useState('');
+  const [inputTime, setInputTime] = useState('');
   const [language, setLanguage] = useState('');
   const [inputLanguage, setInputLanguage] = useState('');
   // const [list, setList] = useState<GoodsAttributeListProps[]>([]);
@@ -247,9 +249,24 @@ function DivisionComponent({ list, setList }: Props) {
                 disable={goodsInfo.LogItemDisable}
                 setSelect={setTime}
                 onClick={(data: string) =>
-                  handleOnChange(3, '소요시간', 1, data)
+                  data !== '그외(직접입력)'
+                    ? handleOnChange(3, '소요시간', 1, data)
+                    : setInputTime('')
                 }
               />
+              {time == '그외(직접입력)' && (
+                <InputBox
+                  placeholder="소요시간 직접입력"
+                  value={inputTime}
+                  onChange={(e) => {
+                    setInputTime(e.target.value);
+                  }}
+                  disabled={goodsInfo.LogItemDisable}
+                  onBlur={(e) =>
+                    handleOnChange(3, '소요시간', 1, e.target.value)
+                  }
+                />
+              )}
             </Flex>
             <Flex w={'311px'} flexDirection={'column'} gap={'6px'}>
               <Text fontWeight={700} fontSize={'16px'} color={ColorBlack}>

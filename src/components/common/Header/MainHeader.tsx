@@ -54,6 +54,7 @@ function MainHeader() {
       },
     },
   });
+
   return (
     <>
       <Flex
@@ -73,16 +74,19 @@ function MainHeader() {
           position={'relative'}
           pr={'25px'}
         >
-          <Image
-            src={
-              data?.data.images !== undefined && data?.data.images.length > 0
-                ? `${imgPath}${data?.data.images[0].thumbnailImagePath}`
-                : '/images/header/icon_header_user.png'
-            }
-            width={32}
-            height={32}
-            alt="로고"
-          />
+          <Box borderRadius={'50px'} overflow={'hidden'} w={'32px'} h={'32px'}>
+            <Image
+              src={
+                data?.data.images !== undefined && data?.data.images.length > 0
+                  ? `${imgPath()}${data?.data.images[0].thumbnailImagePath}`
+                  : '/images/header/icon_header_user.png'
+              }
+              width={32}
+              height={32}
+              alt="로고"
+            />
+          </Box>
+
           <Text
             fontWeight={700}
             fontSize={'16px'}
