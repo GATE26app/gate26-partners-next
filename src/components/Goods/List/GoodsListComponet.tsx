@@ -142,7 +142,7 @@ function GoodsListComponet({
             }
             borderColor={ColorBlack}
           />
-          <CustomButton
+          {/* <CustomButton
             text="예약형 상품 등록"
             bgColor={ColorBlack}
             px="29px"
@@ -151,7 +151,7 @@ function GoodsListComponet({
             fontSize="14px"
             onClick={() => router.push(`/createGoods?type=3`)}
             borderColor={ColorBlack}
-          />
+          /> */}
           {/* <ImageButton
             img="/images/Page/excel_icon.png"
             backgroundColor={ColorWhite}
