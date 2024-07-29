@@ -1,17 +1,10 @@
 // // public/firebase-messaging-sw.js
 importScripts(
-  'https://www.gstatic.com/firebasejs/<v9+>/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js',
 );
 importScripts(
-  'https://www.gstatic.com/firebasejs/<v9+>/firebase-messaging-compat.js',
+  'https://www.gstatic.com/firebasejs/9.17.2/firebase-messaging-compat.js',
 );
-
-// importScripts(
-//   'https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js',
-// );
-// importScripts(
-//   'https://www.gstatic.com/firebasejs/9.17.2/firebase-messaging-compat.js',
-// );
 const firebaseConfig = {
   apiKey: 'AIzaSyDLN1qbVnvyBxf9TBM4QypXO7UTSw-UhhI',
   authDomain: 'gate26-939fc.firebaseapp.com',
