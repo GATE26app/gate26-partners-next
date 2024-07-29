@@ -20,7 +20,8 @@ export default function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/findId/select') ||
       request.nextUrl.pathname.startsWith('/findPw') ||
       request.nextUrl.pathname.startsWith('/findPw/select') ||
-      request.nextUrl.pathname.startsWith('/findPw/change'))
+      request.nextUrl.pathname.startsWith('/findPw/change') ||
+      request.nextUrl.pathname.startsWith('/firebase-messaging-sw.js'))
   ) {
     return NextResponse.next();
   }

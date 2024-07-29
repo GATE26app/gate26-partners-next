@@ -23,7 +23,7 @@ import {
 } from '@/utils/_Palette';
 import { setToken, setUserInfo } from '@/utils/localStorage/token';
 
-import { getFcmToken, onMessageListener } from '../../../firebase';
+import { getFcmToken } from '../../../firebase';
 
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import { useUserZuInfo } from '@/_store/UserZuInfo';
@@ -77,37 +77,19 @@ function LoginPage() {
     const fcmToken = await getFcmToken();
     if (fcmToken) {
       setFcmToken(fcmToken);
-      // console.log('FCM Token:', fcmToken);
+      console.log('FCM Token:', fcmToken);
       // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
     }
-
-    onMessageListener()
-      .then((payload) => {
-        console.log('Message received. ', payload);
-        setAlarmInfo({ alarm: true });
-        // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
-      })
-      .catch((err) => console.log('Failed to receive message: ', err));
   };
 
   useEffect(() => {
     async function getMessageToken() {
       const token = await getFcmToken();
-      console.log(token);
+      console.log('t', token);
     }
     getMessageToken();
   }, []);
-  // useEffect(() => {
-  //   onMessageListener()
-  //     .then((payload: any) => {
-  //       console.log('Message received. ', payload);
-  //       const { title, body } = payload.notification;
-  //       if (Notification.permission === 'granted') {
-  //         new Notification(title, { body });
-  //       }
-  //     })
-  //     .catch((err) => console.log('Failed to receive message: ', err));
-  // }, []);
+
   // useEffect(() => {
   //   setTokenHandler();
   // }, []);

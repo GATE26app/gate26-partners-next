@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
@@ -10,17 +9,15 @@ import MenuBar from '@/components/common/MenuBar/MenuBar';
 import { ColorMainBackBule, ColorWhite } from '@/utils/_Palette';
 import { getToken } from '@/utils/localStorage/token';
 
-import { useUserZuInfo } from "@/_store/UserZuInfo";
-import { useRouter } from "next/navigation";
+import { useUserZuInfo } from '@/_store/UserZuInfo';
+import { useRouter } from 'next/navigation';
 
-
-// import firebase from 'firebase';
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter()
+  const router = useRouter();
   const { userZuInfo } = useUserZuInfo((state) => state);
 
   useEffect(() => {

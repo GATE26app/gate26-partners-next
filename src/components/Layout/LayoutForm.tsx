@@ -13,19 +13,7 @@ function LayoutForm({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { userZuInfo } = useUserZuInfo((state) => state);
-  // useEffect(() => {
-  //   fcm();
-  // }, []);
-  // console.log('fcmtoken,', fcmtoken);
-  // const fcm = async () => {
-  //   onMessageListener()
-  //     .then((payload) => {
-  //       console.log('Message received. ', payload);
-  //       // setAlarmInfo({ alarm: true });
-  //       // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
-  //     })
-  //     .catch((err) => console.log('Failed to receive message: ', err));
-  // };
+
   // useEffect(() => {
   //   if (
   //     getToken().access == null ||
@@ -39,25 +27,22 @@ function LayoutForm({ children }: { children: React.ReactNode }) {
   //     router.replace('/login');
   //   }
   // }, [getToken(), pathname]);
-  // serviceWorkerRegistration.register();
 
-  // useEffect(() => {
-  //   const native = navigator.serviceWorker;
-  //   if (native) {
-  //     navigator.serviceWorker.addEventListener('message', (event) => {
-  //       if (!event.data.action) {
-  //         return;
-  //       }
-
-  //       switch (event.data.action) {
-  //         case 'redirect-from-notificationclick':
-  //           window.location.href = event.data.url;
-  //           break;
-  //         // no default
-  //       }
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/firebase-messaging-sw.js')
+        .then(function (registration) {
+          console.log(
+            'Service Worker registered with scope:',
+            registration.scope,
+          );
+        })
+        .catch(function (err) {
+          console.log('Service Worker registration failed:', err);
+        });
+    }
+  }, []);
   return (
     <>
       {pathname == '/login' ? (
