@@ -62,10 +62,10 @@ function LoginPage() {
     if (typeof Notification !== 'undefined') {
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
-          // console.log('알림 권한이 허용됨');
+          console.log('알림 권한이 허용됨');
           // FCM 메세지 처리
         } else {
-          // console.log('알림 권한 허용 안됨');
+          console.log('알림 권한 허용 안됨');
         }
       });
     }
@@ -81,13 +81,13 @@ function LoginPage() {
       // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
     }
 
-    // onMessageListener()
-    //   .then((payload) => {
-    //     console.log('Message received. ', payload);
-    //     setAlarmInfo({ alarm: true });
-    //     // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
-    //   })
-    //   .catch((err) => console.log('Failed to receive message: ', err));
+    onMessageListener()
+      .then((payload) => {
+        console.log('Message received. ', payload);
+        setAlarmInfo({ alarm: true });
+        // 여기서 알림을 표시하거나 상태를 업데이트할 수 있습니다.
+      })
+      .catch((err) => console.log('Failed to receive message: ', err));
   };
 
   useEffect(() => {

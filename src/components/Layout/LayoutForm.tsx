@@ -7,7 +7,7 @@ import MainLayout from './MainLayout';
 import { useUserZuInfo } from '@/_store/UserZuInfo';
 import { getToken } from '@/utils/localStorage/token';
 import JoinLayout from './JoinLayout';
-import * as serviceWorkerRegistration from '../../app/serviceWorkerRegistration';
+// import * as serviceWorkerRegistration from '../../app/serviceWorkerRegistration';
 
 function LayoutForm({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
