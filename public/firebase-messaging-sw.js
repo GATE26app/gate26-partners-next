@@ -139,9 +139,7 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('push', (e) => {
   if (e.data) {
     const data = e.data.json().data;
-    if (!pushThorttle) {
-      showNotification(data);
-    }
+    showNotification(data);
   } else {
     console.log('This push event has no data.');
   }
