@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import {
+  usePostOrderContfrimMutation,
   usePutOrderCancelMutation,
   usePutOrderCancelRequestMutation,
 } from '@/apis/order/OrderApi.mutation';
@@ -27,6 +28,7 @@ import OrderStateSelectBox from './OrderStateSelectBox';
 
 import CancelModal from '../../common/Modal/CancelModal';
 import DeliveryModal from '@/components/common/Modal/DeliveryModal';
+import ButtonModal from '@/components/common/ModalContainer/_fragments/ButtonModal';
 interface headerProps {
   id: string;
   name: string;
@@ -130,6 +132,23 @@ function OrderGoodsCard({ header, item }: Props) {
         okButtonName: '확인',
         cbOk: () => {},
       });
+    } else if (type == '예약확정') {
+      setOpenAlertModal(true);
+      setModalState({
+        ...ModalState,
+        title: '상태값 변경',
+        message: `${type}으로 변경하시겠습니까?`,
+        type: 'confirm',
+        okButtonName: '변경',
+        cbOk: () => {
+          setSelectState(type);
+          let obj = {
+            orderId: item.orderId,
+          };
+          ConfrimMutate(obj);
+          // removeAdminInfo(row.userId as string);
+        },
+      });
     } else {
       setOpenAlertModal(true);
       setModalState({
@@ -197,7 +216,47 @@ function OrderGoodsCard({ header, item }: Props) {
     // );
     // openOrderModal();
   };
-
+  //예약 확정
+  const { mutate: ConfrimMutate, isLoading: isConfrimLoading } =
+    usePostOrderContfrimMutation({
+      options: {
+        onSuccess: (res, req) => {
+          if (res.success) {
+            // setIsLoading(false);
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'예약 확정 요청되었습니다.'}
+                </Box>
+              ),
+            });
+          } else {
+            // setIsLoading(false);
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {`${res.message}`}
+                </Box>
+              ),
+            });
+          }
+        },
+      },
+    });
   //주문 취소 요청
   const { mutate: CancelRequestMutate, isLoading: isCancelRequestLoading } =
     usePutOrderCancelRequestMutation({
@@ -303,6 +362,13 @@ function OrderGoodsCard({ header, item }: Props) {
           // onSubmit={onSubmitCancel}
           info={itemData}
           title={modalInfo.title}
+        />
+      )}
+      {isOpenAlertModal && (
+        <ButtonModal
+          isOpen={isOpenAlertModal}
+          ModalState={ModalState}
+          onClose={() => setOpenAlertModal(false)}
         />
       )}
 
