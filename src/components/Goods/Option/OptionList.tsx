@@ -36,6 +36,8 @@ interface Props {
 function OptionList({ list, setList, optionList, setOptionList }: Props) {
   const { goodsInfo } = useGoodsStateZuInfo((state) => state);
   const [focus, setFocus] = useState(false);
+  const [stock, setStock] = useState('');
+  const [price, setprice] = useState('');
   const onDeleteOption = (id: number) => {
     setOptionList(
       optionList.filter((item: Option, index: number) => index !== id),
@@ -58,10 +60,15 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
     } else if (key == 'thirdValue') {
       optionList[index].thirdValue = value;
     } else if (key == 'stockCnt') {
-      // setOptionList()
-      optionList[index].stockCnt = Number(value);
+      let updateItem = optionList.map((item) =>
+        item.sort === index + 1 ? { ...item, stockCnt: Number(stock) } : item,
+      );
+      setOptionList(updateItem);
     } else if (key == 'price') {
-      optionList[index].price = Number(value);
+      let updateItem = optionList.map((item) =>
+        item.sort === index + 1 ? { ...item, price: Number(price) } : item,
+      );
+      setOptionList(updateItem);
     }
   };
   return (
@@ -490,7 +497,8 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       isPreviewFocusable={true}
                       selectAllOnFocus={false}
                       isDisabled={goodsInfo.LogItemDisable}
-                      onChange={(e) => handleInputChange(index, 'price', e)}
+                      onBlur={(e) => handleInputChange(index, 'price', e)}
+                      onChange={(e) => setprice(e)}
                     >
                       <EditablePreview
                         py={'17px'}
@@ -524,7 +532,10 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       isPreviewFocusable={true}
                       selectAllOnFocus={false}
                       // isDisabled={goodsInfo.LogItemDisable}
-                      onChange={(e) => handleInputChange(index, 'stockCnt', e)}
+                      onChange={(e) => setStock(e)}
+                      onBlur={(e) => {
+                        handleInputChange(index, 'stockCnt', e);
+                      }}
                     >
                       <EditablePreview
                         py={'17px'}

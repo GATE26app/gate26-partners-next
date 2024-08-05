@@ -49,7 +49,6 @@ function ImageComponent({ list, setList }: Props) {
     cbCancel: () => {},
   });
 
-  console.log('list', list);
   const [indexList, setIndexList] = useState<string[]>([]);
 
   const { mutate: ItemCodeMutate, isLoading } = usePostImageMutation({

@@ -192,7 +192,6 @@ function CreateGoodsComponentPage() {
     },
   });
 
-  console.log('disableBtn', disableBtn);
   useEffect(() => {
     setLoadingModal(isLoading);
   }, [isLoading]);
