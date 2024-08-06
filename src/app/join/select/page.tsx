@@ -74,7 +74,7 @@ function page() {
           onClick={() => router.push('/join?type=2')}
         >
           <Image
-            src="/images/Page/icon_out.png"
+            src={'/images/Page/icon_out.png'}
             width={110}
             height={110}
             alt="이미지"

@@ -915,6 +915,7 @@ function OptionPlus({
                 value={intComma(stock) == 'NaN' ? 0 : intComma(stock)}
                 disabled={goodsInfo.LogItemDisable}
                 onChange={(e) => {
+                  console.log('재고', e.target.value.replace(/[^0-9]/g, ''));
                   handleStockChange(e.target.value.replace(/[^0-9]/g, ''));
                 }}
               />

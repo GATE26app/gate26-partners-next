@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import {
   Flex,
-  Image,
   Modal,
   ModalBody,
   ModalContent,
@@ -21,6 +20,7 @@ import {
   ColorGray900,
   ColorWhite,
 } from '@/utils/_Palette';
+import Image from 'next/image';
 
 interface AlertModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
@@ -48,8 +48,8 @@ function TermModal({
             </Text>
             <Image
               src={'/images/Page/ico_modal_close.png'}
-              width={'20px'}
-              height={'20px'}
+              width={20}
+              height={20}
               alt="모달 close"
               onClick={onClose}
             />
