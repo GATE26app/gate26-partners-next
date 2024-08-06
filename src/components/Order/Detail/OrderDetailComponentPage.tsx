@@ -17,12 +17,13 @@ import {
   ColorGrayBorder,
   ColorWhite,
 } from '@/utils/_Palette';
-import OrderInfo from '@/components/Cancel/Detail/OrderInfo';
+// import OrderInfo from '@/components/Cancel/Detail/OrderInfo';
 import OrderGoods from '@/components/Order/Detail/OrderGoods';
 import OrderBuyerInfo from '@/components/Order/Detail/OrderBuyerInfo';
 import OrderResevationInfo from '@/components/Order/Detail/OrderResevationInfo';
 import OrderDelivery from '@/components/Order/Detail/OrderDelivery';
 import OrderPayment from '@/components/Order/Detail/OrderPayment';
+import OrderInfo from './OrderInfo';
 
 function OrderDetailComponentPage() {
   const router = useRouter();

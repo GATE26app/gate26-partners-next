@@ -1,6 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-export default function useIntersectionObserver(intersectingCallback: (() => void | Promise<void>) | undefined, blurringCallback?: () => void | Promise<void>) {
+export default function useIntersectionObserver(
+  intersectingCallback: (() => void | Promise<void>) | undefined,
+  blurringCallback?: () => void | Promise<void>,
+) {
   const observerTarget = useRef(null);
 
   useEffect(
@@ -18,7 +21,7 @@ export default function useIntersectionObserver(intersectingCallback: (() => voi
             }
           });
         },
-        { threshold: 1 }
+        { threshold: 1 },
       );
       observer.observe(target);
 
@@ -26,7 +29,7 @@ export default function useIntersectionObserver(intersectingCallback: (() => voi
         observer.disconnect();
       };
     },
-    [blurringCallback, intersectingCallback]
+    [blurringCallback, intersectingCallback],
   );
 
   return observerTarget;

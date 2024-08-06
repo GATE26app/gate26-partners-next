@@ -176,10 +176,10 @@ function CancelComponent({ list, setList }: Props) {
     }
   };
 
-  const handelDelete = (index: number) => {
+  const handelDelete = (idx: number) => {
     setList(
       list.filter(
-        (item: GoodsPoliciesListProps, index: number) => index !== index,
+        (item: GoodsPoliciesListProps, index: number) => index !== idx,
       ),
     );
   };
