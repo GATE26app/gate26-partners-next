@@ -16,6 +16,7 @@ import { useOrderFilterZuInfo } from '@/_store/OrderFilterInfo';
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import OrderListComponent from '@/components/Order/List/OrderListComponent';
 import OrderFIlter from '@/components/Order/List/OrderFIlter';
+import OrderState from '@/components/Order/List/OrderState';
 
 function OrderListPage() {
   const router = useRouter();
@@ -28,6 +29,13 @@ function OrderListPage() {
     pageNo: 1,
     pageSize: 10,
     orders: [],
+    status: {
+      paymentCnt: 0,
+      reservationCnt: 0,
+      dateTimeOfUseCnt: 0,
+      completeCnt: 0,
+      cancelCnt: 0,
+    },
   });
   const { orderFilterInfo, setOrderFilterInfo } = useOrderFilterZuInfo(
     (state) => state,
@@ -133,7 +141,7 @@ function OrderListPage() {
         </Flex>
       </Flex>
       {filter && <OrderFIlter request={request} setRequest={setRequest} />}
-      {/* <OrderState /> */}
+      <OrderState list={list.status} />
       <OrderListComponent
         list={list}
         request={request}

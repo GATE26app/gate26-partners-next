@@ -391,7 +391,7 @@ function ProfileInfo({ info }: Props) {
                 color={ColorGray700}
                 pt={'5px'}
               >
-                (0/500)
+                ({profileInfo?.info.length}/500)
               </Text>
             </Flex>
           </Flex>

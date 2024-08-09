@@ -102,6 +102,7 @@ function OrderGoodsCard({ header, item }: Props) {
     orderCancelRequestDetail: '',
   });
 
+  console.log('item.cancelStatusName', item.cancelStatusName);
   const onClickSelect = (type: string) => {
     if (type !== selectState) {
       if (
@@ -111,6 +112,12 @@ function OrderGoodsCard({ header, item }: Props) {
         setModalInfo({
           type: type,
           title: type == '접수거절' ? '취소사유 입력' : '취소요청사유 입력',
+        });
+        setCancelModal(true);
+      } else if (type == '취소' && item.cancelStatusName == '') {
+        setModalInfo({
+          type: type,
+          title: '취소사유 입력',
         });
         setCancelModal(true);
       } else if (type == '취소요청' && item.cancelStatusName !== '') {
@@ -139,7 +146,29 @@ function OrderGoodsCard({ header, item }: Props) {
             ConfrimMutate(obj);
           },
         });
-      } else {
+      }
+      //  else if(type == '취소') {
+      //   setOpenAlertModal(true);
+      //   const obj = {
+      //     orderId: item.orderId,
+      //     type: '취소',
+      //     body: {
+      //       orderCancelRequestDetail: '취소',
+      //     },
+      //   };
+      //   setModalState({
+      //     ...ModalState,
+      //     title: '상태값 변경',
+      //     message: `${type}으로 변경하시겠습니까?`,
+      //     type: 'confirm',
+      //     okButtonName: '변경',
+      //     cbOk: () => {
+      //       setSelectState(type);
+      //       CancelMutate(obj);
+      //     },
+      //   });
+      // }
+      else {
         setOpenAlertModal(true);
         setModalState({
           ...ModalState,
@@ -169,6 +198,15 @@ function OrderGoodsCard({ header, item }: Props) {
       const obj = {
         orderId: item.orderId,
         type: '접수거절',
+        body: {
+          orderCancelRequestDetail: text,
+        },
+      };
+      CancelMutate(obj);
+    } else if (modalInfo.type == '취소') {
+      const obj = {
+        orderId: item.orderId,
+        type: '취소',
         body: {
           orderCancelRequestDetail: text,
         },

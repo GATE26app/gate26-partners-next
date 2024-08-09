@@ -120,22 +120,25 @@ function OrderGoods({ info }: Props) {
         >
           {orderGoodheader.map((item: DataTableHeaderProps, index: number) => {
             return (
-              <Flex
-                w={item.width}
-                alignItems={'center'}
-                justifyContent={'center'}
-                h={'49px'}
-              >
-                <Text
-                  color={ColorBlack}
-                  fontSize={'15px'}
-                  fontWeight={700}
-                  whiteSpace={'pre-wrap'}
-                  textAlign={'center'}
+              <>
+                {/* {item.name =='배송지정보'  info?.orderType == 1 } */}
+                <Flex
+                  w={item.width}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                  h={'49px'}
                 >
-                  {item.name}
-                </Text>
-              </Flex>
+                  <Text
+                    color={ColorBlack}
+                    fontSize={'15px'}
+                    fontWeight={700}
+                    whiteSpace={'pre-wrap'}
+                    textAlign={'center'}
+                  >
+                    {item.name}
+                  </Text>
+                </Flex>
+              </>
             );
           })}
         </Flex>

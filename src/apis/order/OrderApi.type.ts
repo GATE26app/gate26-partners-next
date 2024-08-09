@@ -27,6 +27,7 @@ export type OrderListResType = {
   pageNo: number;
   pageSize: number;
   orders: Array<OrderListItemType>;
+  status: OrderStatusType;
 };
 
 export type OrderListItemType = {
@@ -248,4 +249,12 @@ export type OrderCancelListParamsType = {
   periodType?: string;
   periodStartDate?: string;
   periodEndDate?: string;
+};
+
+export type OrderStatusType = {
+  paymentCnt: number;
+  reservationCnt: number;
+  dateTimeOfUseCnt: number;
+  completeCnt: number;
+  cancelCnt: number;
 };

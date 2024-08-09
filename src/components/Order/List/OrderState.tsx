@@ -2,9 +2,13 @@ import React from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
 
-import { ColorBlack, ColorGray50, ColorGray700 } from '@utils/_Palette';
+import { ColorBlack, ColorGray50, ColorGray700 } from '@/utils/_Palette';
+import { OrderStatusType } from '@/apis/order/OrderApi.type';
 
-function OrderState() {
+interface Props {
+  list: OrderStatusType;
+}
+function OrderState({ list }: Props) {
   return (
     <Flex flexDirection={'row'} mt={'30px'} gap={'10px'}>
       <Flex
@@ -19,7 +23,7 @@ function OrderState() {
           결제완료
         </Text>
         <Text color={ColorBlack} fontWeight={600} fontSize={'16px'}>
-          1000
+          {list.paymentCnt}
         </Text>
       </Flex>
       <Flex
@@ -34,7 +38,7 @@ function OrderState() {
           예약확정
         </Text>
         <Text color={ColorBlack} fontWeight={600} fontSize={'16px'}>
-          1000
+          {list.reservationCnt}
         </Text>
       </Flex>
       <Flex
@@ -49,7 +53,7 @@ function OrderState() {
           이용일
         </Text>
         <Text color={ColorBlack} fontWeight={600} fontSize={'16px'}>
-          1000
+          {list.dateTimeOfUseCnt}
         </Text>
       </Flex>
       <Flex
@@ -64,7 +68,7 @@ function OrderState() {
           이용완료
         </Text>
         <Text color={ColorBlack} fontWeight={600} fontSize={'16px'}>
-          1000
+          {list.completeCnt}
         </Text>
       </Flex>
       <Flex
@@ -79,7 +83,7 @@ function OrderState() {
           취소
         </Text>
         <Text color={ColorBlack} fontWeight={600} fontSize={'16px'}>
-          1000
+          {list.cancelCnt}
         </Text>
       </Flex>
     </Flex>

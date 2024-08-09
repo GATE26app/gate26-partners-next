@@ -62,7 +62,7 @@ function LoginPage() {
     if (typeof Notification !== 'undefined') {
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
-          console.log('알림 권한이 허용됨');
+          // console.log('알림 권한이 허용됨');
           // FCM 메세지 처리
         } else {
           console.log('알림 권한 허용 안됨');
@@ -85,7 +85,6 @@ function LoginPage() {
   useEffect(() => {
     async function getMessageToken() {
       const token = await getFcmToken();
-      console.log('t', token);
     }
     getMessageToken();
   }, []);

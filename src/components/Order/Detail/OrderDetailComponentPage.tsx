@@ -106,6 +106,7 @@ function OrderDetailComponentPage() {
         {OrderData?.data !== undefined && (
           <>
             <OrderInfo info={OrderData?.data} />
+            {/* <OrderInfo info={OrderData?.data} /> */}
             <OrderGoods info={OrderData?.data} />
             <OrderBuyerInfo info={OrderData?.data} />
             <OrderResevationInfo info={OrderData?.data} />
