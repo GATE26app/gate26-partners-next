@@ -24,6 +24,8 @@ import OrderResevationInfo from '@/components/Order/Detail/OrderResevationInfo';
 import OrderDelivery from '@/components/Order/Detail/OrderDelivery';
 import OrderPayment from '@/components/Order/Detail/OrderPayment';
 import OrderInfo from './OrderInfo';
+import OrderWithGoods from './OrderWithGoods';
+import OrderAmount from './OrderAmount';
 
 function OrderDetailComponentPage() {
   const router = useRouter();
@@ -108,12 +110,17 @@ function OrderDetailComponentPage() {
             <OrderInfo info={OrderData?.data} />
             {/* <OrderInfo info={OrderData?.data} /> */}
             <OrderGoods info={OrderData?.data} />
+            {OrderData?.data?.groupOrders !== undefined &&
+              OrderData?.data?.groupOrders.length > 0 && (
+                <OrderWithGoods info={OrderData?.data} />
+              )}
             <OrderBuyerInfo info={OrderData?.data} />
             <OrderResevationInfo info={OrderData?.data} />
             {OrderData?.data.orderType == 1 && (
               <OrderDelivery info={OrderData?.data} />
             )}
 
+            <OrderAmount info={OrderData?.data} />
             <OrderPayment info={OrderData?.data} />
           </>
         )}

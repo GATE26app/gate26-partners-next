@@ -25,6 +25,7 @@ import BookingCheckComponent from '../BookingCheckComponent';
 import CancelComponent from '../CancelComponent';
 import EditorDetailComponent from '../EditorDetailComponent';
 import OptionComponent from '../Option/OptionComponent';
+import ShippingComponent from '../ShippingComponent';
 
 interface CategoryListProps {
   categoryId: number;
@@ -115,6 +116,7 @@ Props) {
 
       <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />
       <PriceComponent list={BasicInfo} setList={setBasicInfo} />
+      {BasicInfo.type == 1 && <ShippingComponent />}
       <ImageComponent list={imageList} setList={setImageList} />
       {BasicInfo.type == 3 && (
         <DivisionComponent list={attributeList} setList={setAttributeList} />

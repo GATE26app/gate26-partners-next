@@ -49,3 +49,11 @@ export const useProfileResignMutation = (
     ...params?.options,
   });
 };
+//프로필 - 배송비 추가/수정
+export const useProfileShippingMutation = (
+  params?: MutationHookParams<typeof settingApi.patchParnterShipping>,
+) => {
+  return useMutation(settingApi.patchParnterShipping, {
+    ...params?.options,
+  });
+};

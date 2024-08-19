@@ -13,12 +13,6 @@ interface UserInfoState {
   deleteUserZuInfo: () => void;
 }
 
-interface UserInfoState {
-  userZuInfo: userInfoType;
-  setUserZuInfo: (userZuInfo: userInfoType) => void;
-  deleteUserZuInfo: () => void;
-}
-
 const defaultState = {
   accessToken: '',
   refreshToken: '',

@@ -45,6 +45,8 @@ import OptionComponent from '@/components/Goods/Option/OptionComponent';
 import StatusComponent from '@/components/Goods/StatusComponent';
 import CountryComponent from '@/components/Goods/CountryComponent';
 import CatagoryComponent from '@/components/Goods/CatagoryComponent';
+import ShippingComponent from '../ShippingComponent';
+import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 
 interface CategoryListProps {
   categoryId: number;
@@ -54,6 +56,7 @@ interface LocationListProps {
 }
 export type { CategoryListProps, LocationListProps };
 function SaveGoodsComponentPage() {
+  const { partnerInfo } = usePartnerZuInfo((state) => state);
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
   const router = useRouter();
@@ -341,6 +344,9 @@ function SaveGoodsComponentPage() {
     };
 
     if (status == 2) {
+      if (partnerInfo.shippingType == 0) {
+        ToastComponent('배송비 정책을 확인해주세요.');
+      }
       if (categoryList.length == 0) {
         ToastComponent('카테고리를 선택해주세요.');
       }
@@ -579,6 +585,7 @@ function SaveGoodsComponentPage() {
           )}
           <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />
           <PriceComponent list={BasicInfo} setList={setBasicInfo} />
+          {getType == '1' && <ShippingComponent />}
           <ImageComponent list={imageList} setList={setImageList} />
           {getType == '3' && (
             <DivisionComponent

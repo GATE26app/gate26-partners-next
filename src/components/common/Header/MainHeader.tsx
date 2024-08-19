@@ -22,10 +22,12 @@ import {
 
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import AlarmModal from '../Modal/AlarmModal';
+import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
   const router = useRouter();
+  const { setPartnerZuInfo } = usePartnerZuInfo((state) => state);
   const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
   const [alram, setAlram] = useState(false);
   const [chat, setChat] = useState(false);
@@ -48,6 +50,7 @@ function MainHeader() {
       // refetchInterval: false, // 자동 새로 고침 비활성화
       onSuccess: (res: any) => {
         if (res.success == true) {
+          setPartnerZuInfo(res.data);
           //  setAllList(res.data);
           //    if (res.data) {
           //   setLocationList(res.data);

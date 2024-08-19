@@ -41,6 +41,8 @@ import CancelComponent from '@/components/Goods/CancelComponent';
 import EditorDetailComponent from '@/components/Goods/EditorDetailComponent';
 import StatusComponent from '@/components/Goods/StatusComponent';
 import OptionComponent from '@/components/Goods/Option/OptionComponent';
+import ShippingComponent from '../ShippingComponent';
+import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 
 interface CategoryListProps {
   categoryId: number;
@@ -52,7 +54,7 @@ export type { CategoryListProps, LocationListProps };
 
 function CreateGoodsComponentPage() {
   const dispatch = useDispatch();
-
+  const { partnerInfo } = usePartnerZuInfo((state) => state);
   const router = useRouter();
   const searchParams = useSearchParams();
   const getType = searchParams.get('type');
@@ -232,7 +234,9 @@ function CreateGoodsComponentPage() {
     };
 
     if (status == 2) {
-      if (categoryList.length == 0) {
+      if (partnerInfo.shippingType == 0) {
+        ToastComponent('배송비 정책을 확인해주세요.');
+      } else if (categoryList.length == 0) {
         ToastComponent('카테고리를 선택해주세요.');
         setDiableBtn(false);
       } else if (
@@ -275,7 +279,11 @@ function CreateGoodsComponentPage() {
         CreateItemMutate(PostData);
       }
     } else {
-      CreateItemMutate(PostData);
+      if (partnerInfo.shippingType == 0) {
+        ToastComponent('배송비 정책을 확인해주세요.');
+      } else {
+        CreateItemMutate(PostData);
+      }
     }
   };
   const handleBack = () => {
@@ -487,6 +495,7 @@ function CreateGoodsComponentPage() {
           )}
           <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />
           <PriceComponent list={BasicInfo} setList={setBasicInfo} />
+          {getType == '1' && <ShippingComponent />}
           <ImageComponent list={imageList} setList={setImageList} />
           {getType == '3' && (
             <DivisionComponent

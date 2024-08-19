@@ -5,6 +5,7 @@ import instance from '@/apis/_axios/instance';
 import { getToken } from '@/utils/localStorage/token';
 import {
   ListDtoType,
+  PartnerShippingType,
   ProfileChangeReqType,
   ProfileDetailRes,
   ProfileReqType,
@@ -93,6 +94,22 @@ export class SettingApi {
       },
       data: body,
     });
+    return data;
+  };
+
+  // 배송비 추가/수정
+  patchParnterShipping = async (
+    body: PartnerShippingType,
+  ): Promise<ListDtoType> => {
+    const { data } = await this.axios({
+      method: 'PATCH',
+      url: '/partner/member/shipping',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+      data: body,
+    });
+    console.log('body', body);
     return data;
   };
 }

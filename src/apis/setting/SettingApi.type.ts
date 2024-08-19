@@ -44,6 +44,10 @@ export type ProfileBodyType = {
   mailOrderSalesRegistrationNo: string;
   images: Array<ProfileImageArray>;
   files: Array<ProfileFilesArray>;
+  shippingType: number;
+  shippingTypeName: string;
+  shippingFee: number;
+  shippingMinAmount: number;
 };
 
 export type ProfileImageArray = {
@@ -74,4 +78,10 @@ export type ProfileChangeReqType = {
 
 export type ProfileResignReqType = {
   resignRequestReason: string;
+};
+
+export type PartnerShippingType = {
+  shippingType: number;
+  shippingFee: number;
+  shippingMinAmount: number;
 };
