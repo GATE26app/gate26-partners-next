@@ -21,15 +21,20 @@ import {
   ColorWhite,
 } from '@/utils/_Palette';
 import Image from 'next/image';
+import TermsAndConditionsContent from '@/components/common/TermsAndConditionsContent';
 
 interface AlertModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
+  title?: string
+  contentSrc?: string;
   // reviewId: string;
 }
 function TermModal({
   onClose,
   // reviewId,
   // onSubmit,
+  title,
+  contentSrc,
   ...props
 }: AlertModalProps) {
   return (
@@ -44,7 +49,7 @@ function TermModal({
             mt={'30px'}
           >
             <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-              서비스 약관동의
+              {title}
             </Text>
             <Image
               src={'/images/Page/ico_modal_close.png'}
@@ -56,7 +61,7 @@ function TermModal({
           </Flex>
         </Header>
         <ModalBody>
-          <Flex
+          {/* <Flex
             flexDirection={'column'}
             py={'15px'}
             px={'15px'}
@@ -101,7 +106,8 @@ function TermModal({
               인생의 보는 힘있다. 아니한 황금시대의 그들의 발휘하기 피고, 가진
               있을 청춘의 것이다. 열매를 풍부하게 곳이 같은 위하여서.
             </Text>
-          </Flex>
+          </Flex> */}
+          <TermsAndConditionsContent contentSrc={contentSrc}/>
         </ModalBody>
         <Flex
           pb={'30px'}
