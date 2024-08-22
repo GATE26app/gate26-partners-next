@@ -42,8 +42,11 @@ function MenuBar() {
     } else if (pathname == '/cancelList' || pathname == '/cancelDetail') {
       setMenu(2);
       setOrdreMenu(2);
+    } else if (pathname == '/setting') {
+      setMenu(6);
+      setOrdreMenu(1);
     }
-  }, [router]);
+  }, [pathname]);
 
   //필터 초기화
   useEffect(() => {

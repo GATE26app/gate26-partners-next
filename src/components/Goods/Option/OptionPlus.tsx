@@ -548,7 +548,7 @@ function OptionPlus({
   };
 
   const handleStockChange = (text: string) => {
-    setStock(parseInt(text));
+    setStock(text == '' ? 0 : parseInt(text));
   };
 
   return (
@@ -915,9 +915,10 @@ function OptionPlus({
                 placeholder="숫자 입력"
                 // type="number"
                 type="text"
-                value={intComma(stock)}
+                value={intComma(stock) == 'NaN' ? 0 : intComma(stock)}
                 disabled={goodsInfo.LogItemDisable}
                 onChange={(e) => {
+                  console.log('재고', e.target.value.replace(/[^0-9]/g, ''));
                   handleStockChange(e.target.value.replace(/[^0-9]/g, ''));
                 }}
               />

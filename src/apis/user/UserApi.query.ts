@@ -1,8 +1,7 @@
 import { useQuery } from 'react-query';
 
-import { QueryHookParams } from '@apis/type';
-
 import userApi from './UserApi';
+import { QueryHookParams } from '../type';
 
 export const GOODS_API_QUERY_KEY = {
   GET_MEMBER_INFO: () => ['memeber-info'],

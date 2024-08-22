@@ -27,59 +27,22 @@ function OrderPayment({ info }: Props) {
         borderTopWidth={1}
         mt={'15px'}
       >
-        <Flex mt={'15px'} alignItems={'center'}>
-          <Text
-            w={'160px'}
-            fontSize={'15px'}
-            fontWeight={700}
-            flexShrink={0}
-            color={ColorBlack}
-          >
-            결제일시
-          </Text>
-          <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.paymentDate}
-          </Text>
-        </Flex>
-        <Flex mt={'15px'} alignItems={'center'}>
-          <Text
-            w={'160px'}
-            fontSize={'15px'}
-            fontWeight={700}
-            flexShrink={0}
-            color={ColorBlack}
-          >
-            상품합계금액
-          </Text>
-          <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {intComma(info.orderAmount)}원
-          </Text>
-        </Flex>
-
-        <Flex mt={'15px'} alignItems={'center'}>
-          <Text
-            w={'160px'}
-            fontSize={'15px'}
-            fontWeight={700}
-            // flexShrink={0}
-            color={ColorBlack}
-          >
-            할인금액
-          </Text>
-          <Flex flexDirection={'column'}>
-            <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-              (-) {intComma(info.discountAmount)}원
+        {info.payment !== null && (
+          <Flex mt={'15px'} alignItems={'center'}>
+            <Text
+              w={'160px'}
+              fontSize={'15px'}
+              fontWeight={700}
+              flexShrink={0}
+              color={ColorBlack}
+            >
+              결제일시
             </Text>
-            {info.coupons.length > 0 &&
-              info.coupons.map((item) => {
-                return (
-                  <Text color={ColorGray700} fontWeight={400} fontSize={'15px'}>
-                    {item.title} {intComma(item.priceDc)}원
-                  </Text>
-                );
-              })}
+            <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
+              {info.paymentDate}
+            </Text>
           </Flex>
-        </Flex>
+        )}
         <Flex mt={'15px'} alignItems={'center'}>
           <Text
             w={'160px'}
@@ -91,24 +54,44 @@ function OrderPayment({ info }: Props) {
             총 결제금액
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {intComma(info.paymentAmount)}원
+            {intComma(info.payment == null ? 0 : info.payment?.amount)}원
           </Text>
         </Flex>
-        <Flex mt={'15px'} alignItems={'center'}>
-          <Text
-            w={'160px'}
-            fontSize={'15px'}
-            fontWeight={700}
-            flexShrink={0}
-            color={ColorBlack}
-          >
-            결제수단
-          </Text>
-          <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {/* {info.paymentMethod == 'card' ? '카드' : '무통장입금'} */}
-            {PaymentMethod(info.paymentMethod)}
-          </Text>
-        </Flex>
+        {info.payment !== null && (
+          <Flex mt={'15px'} alignItems={'center'}>
+            <Text
+              w={'160px'}
+              fontSize={'15px'}
+              fontWeight={700}
+              flexShrink={0}
+              color={ColorBlack}
+            >
+              결제수단
+            </Text>
+            <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
+              {/* {info.paymentMethod == 'card' ? '카드' : '무통장입금'} */}
+              {PaymentMethod(info.paymentMethod)}
+            </Text>
+          </Flex>
+        )}
+
+        {info.paymentMethod == 'card' && (
+          <Flex mt={'15px'} alignItems={'center'}>
+            <Text
+              w={'160px'}
+              fontSize={'15px'}
+              fontWeight={700}
+              flexShrink={0}
+              color={ColorBlack}
+            >
+              카드사명
+            </Text>
+            <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
+              {/* {info.paymentMethod == 'card' ? '카드' : '무통장입금'} */}
+              {info?.payment.cardName}
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </Box>
   );

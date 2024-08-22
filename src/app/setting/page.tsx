@@ -4,6 +4,7 @@ import { useProfileDetailMutation } from '@/apis/setting/SettingApi.mutation';
 import { ProfileBodyType } from '@/apis/setting/SettingApi.type';
 import BasicInfo from '@/components/Setting/BasicInfo';
 import BusinessInfo from '@/components/Setting/BusinessInfo';
+import DeliveryInfo from '@/components/Setting/DeliveryInfo';
 import ProfileInfo from '@/components/Setting/ProfileInfo';
 import CustomButton from '@/components/common/CustomButton';
 import InputBox from '@/components/common/Input';
@@ -13,7 +14,6 @@ import {
   ColorGray400,
   ColorGray50,
   ColorGray700,
-  ColorGrayBorder,
   ColorRed,
   ColorRed50,
   ColorWhite,
@@ -52,10 +52,6 @@ function page() {
     },
   });
 
-  // useEffect(() => {
-
-  // })
-
   const onClickPwCheck = () => {
     if (password == '') {
       setError('비밀번호를 입력해주세요.');
@@ -67,7 +63,6 @@ function page() {
     }
   };
 
-  console.log('info', info);
   return (
     <Box w={'100%'}>
       <Flex alignItems={'center'} mb={'26px'}>
@@ -158,12 +153,32 @@ function page() {
                     사업자정보
                   </Text>
                 </Flex>
+                <Flex
+                  w={'143px'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  bgColor={menu == 4 ? ColorRed50 : ''}
+                  borderRadius={'12px'}
+                  pt={'13px'}
+                  pb={'12px'}
+                  onClick={() => setMenu(4)}
+                  cursor={'pointer'}
+                >
+                  <Text
+                    color={menu == 4 ? ColorRed : ColorGray700}
+                    fontWeight={600}
+                    fontSize={'16px'}
+                  >
+                    배송비 정책
+                  </Text>
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
           {menu == 1 && <BasicInfo info={info} />}
           {menu == 2 && <ProfileInfo info={info} />}
           {menu == 3 && <BusinessInfo info={info} />}
+          {menu == 4 && <DeliveryInfo info={info} />}
         </>
       ) : (
         <Flex

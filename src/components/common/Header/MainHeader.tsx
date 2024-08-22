@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
@@ -22,10 +22,12 @@ import {
 
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import AlarmModal from '../Modal/AlarmModal';
+import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
   const router = useRouter();
+  const { setPartnerZuInfo } = usePartnerZuInfo((state) => state);
   const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
   const [alram, setAlram] = useState(false);
   const [chat, setChat] = useState(false);
@@ -38,7 +40,9 @@ function MainHeader() {
     // cookies().delete('token');
     router.push('/login');
   };
-
+  const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = '/images/header/icon_header_user.png';
+  };
   const { data } = useGetUserQuery({
     options: {
       enabled: !!getToken().access,
@@ -46,6 +50,7 @@ function MainHeader() {
       // refetchInterval: false, // 자동 새로 고침 비활성화
       onSuccess: (res: any) => {
         if (res.success == true) {
+          setPartnerZuInfo(res.data);
           //  setAllList(res.data);
           //    if (res.data) {
           //   setLocationList(res.data);
@@ -75,7 +80,7 @@ function MainHeader() {
           pr={'25px'}
         >
           <Box borderRadius={'50px'} overflow={'hidden'} w={'32px'} h={'32px'}>
-            <Image
+            {/* <Image
               src={
                 data?.data.images !== undefined && data?.data.images.length > 0
                   ? `${imgPath()}${data?.data.images[0].thumbnailImagePath}`
@@ -84,6 +89,20 @@ function MainHeader() {
               width={32}
               height={32}
               alt="로고"
+            /> */}
+            <img
+              style={{
+                width: '32px',
+                height: '32px',
+                objectFit: 'cover',
+              }}
+              src={
+                data?.data.images !== undefined && data?.data.images.length > 0
+                  ? `${imgPath()}${data?.data.images[0].thumbnailImagePath}`
+                  : '/images/header/icon_header_user.png'
+              }
+              onError={addDefaultImg}
+              alt="이미지 업로드"
             />
           </Box>
 

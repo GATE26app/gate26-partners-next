@@ -157,7 +157,7 @@ function DeliveryModal({
             justifyContent={'space-between'}
             mb={'17px'}
           >
-            <Text>'배송정보 입력'</Text>
+            <Text>배송정보 입력</Text>
             <Image
               src={'/images/Page/ico_modal_close.png'}
               width={20}

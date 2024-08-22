@@ -12,12 +12,13 @@ import {
 } from '@/utils/_Palette';
 
 import OrderGoodsCard from './OrderGoodsCard';
+import OrderGroupGoodsCard from './OrderGroupGoodsCard';
 
 export const orderGoodheader = [
   {
     id: 'GoodOrderNum',
     name: '상품주문번호',
-    width: '15%',
+    width: '20%',
   },
   {
     id: 'info',
@@ -27,22 +28,17 @@ export const orderGoodheader = [
   {
     id: 'orderPrice',
     name: '주문 상품금액',
-    width: '15%',
+    width: '20%',
   },
   {
     id: 'reves',
     name: '예약/이용일',
-    width: '15%',
+    width: '20%',
   },
   {
     id: 'state',
     name: '주문상태',
-    width: '15%',
-  },
-  {
-    id: 'delivery',
-    name: '배송정보',
-    width: '15%',
+    width: '20%',
   },
 ];
 interface ItemProps {
@@ -72,7 +68,7 @@ interface DataTableHeaderProps {
   name: string;
   width: string;
 }
-function OrderGoods({ info }: Props) {
+function OrderWithGoods({ info }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
   const [clickPoint, setClickPoint] = useState(0);
@@ -97,7 +93,7 @@ function OrderGoods({ info }: Props) {
   return (
     <Box mt={'60px'}>
       <Text color={ColorBlack} fontWeight={600} fontSize={'18px'}>
-        주문상품
+        함께 주문한 상품
       </Text>
       <Box
         overflowX={'auto'}
@@ -106,7 +102,7 @@ function OrderGoods({ info }: Props) {
         onMouseLeave={() => setDragging(false)}
         onMouseUp={() => setDragging(false)}
         onMouseMove={handleMouseMoveEvent}
-        h={'280px'}
+        mb={'60px'}
       >
         <Flex
           flexDirection={'row'}
@@ -142,17 +138,21 @@ function OrderGoods({ info }: Props) {
             );
           })}
         </Flex>
-        <OrderGoodsCard item={info} header={orderGoodheader} />
+        {info.groupOrders !== undefined &&
+          info.groupOrders.length > 0 &&
+          info.groupOrders?.map((item) => {
+            return <OrderGroupGoodsCard item={item} header={orderGoodheader} />;
+          })}
       </Box>
 
       {/* {info &&
-        data.map((item: ItemProps, index: number) => {
-          return (
-            <OrderGoodsCard key={index} item={item} header={orderGoodheader} />
-          );
-        })} */}
+      data.map((item: ItemProps, index: number) => {
+        return (
+          <OrderGoodsCard key={index} item={item} header={orderGoodheader} />
+        );
+      })} */}
     </Box>
   );
 }
 
-export default OrderGoods;
+export default OrderWithGoods;

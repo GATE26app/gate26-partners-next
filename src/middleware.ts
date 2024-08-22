@@ -20,7 +20,8 @@ export default function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/findId/select') ||
       request.nextUrl.pathname.startsWith('/findPw') ||
       request.nextUrl.pathname.startsWith('/findPw/select') ||
-      request.nextUrl.pathname.startsWith('/findPw/change'))
+      request.nextUrl.pathname.startsWith('/findPw/change') ||
+      request.nextUrl.pathname.startsWith('/firebase-messaging-sw.js'))
   ) {
     return NextResponse.next();
   }
@@ -33,6 +34,6 @@ export default function middleware(request: NextRequest) {
 }
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|images/icon_logo_big|images/icon_check_on|images/icon_check_off|images/Footer/icon_footer_logo|/images/Page/icon_in).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|images/icon_logo_big|images/header/icon_logo_big|images/icon_check_on|images/icon_check_off|images/Footer/icon_footer_logo|images/Page/icon_in|images/Page/icon_arrow_red|images/Page/icon_out|images/Page/icon_arrow_blue|images/Page/ico_modal_close|images/Page/ico_plus|images/Page/icon_delete_img).*)',
   ],
 };

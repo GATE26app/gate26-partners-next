@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import {
+  usePostOrderContfrimMutation,
   usePutOrderCancelMutation,
   usePutOrderCancelRequestMutation,
 } from '@/apis/order/OrderApi.mutation';
@@ -27,6 +28,7 @@ import OrderStateSelectBox from './OrderStateSelectBox';
 
 import CancelModal from '../../common/Modal/CancelModal';
 import DeliveryModal from '@/components/common/Modal/DeliveryModal';
+import ButtonModal from '@/components/common/ModalContainer/_fragments/ButtonModal';
 interface headerProps {
   id: string;
   name: string;
@@ -100,62 +102,85 @@ function OrderGoodsCard({ header, item }: Props) {
     orderCancelRequestDetail: '',
   });
 
+  console.log('item.cancelStatusName', item.cancelStatusName);
   const onClickSelect = (type: string) => {
-    if (
-      type == '접수거절' ||
-      (type == '취소요청' && item.cancelStatusName == '')
-    ) {
-      setModalInfo({
-        type: type,
-        title: type == '접수거절' ? '취소사유 입력' : '취소요청사유 입력',
-      });
-      setCancelModal(true);
-    } else if (type == '취소요청' && item.cancelStatusName !== '') {
-      // dispatch(
-      //   customModalSliceAction.setMessage({
-      //     title: '상태값 변경',
-      //     message: `이미 취소요청이 되어 있습니다.`,
-      //     type: 'confirm',
-      //     okButtonName: '확인',
-      //     cbOk: () => {},
-      //   }),
-      // );
-      // openCustomModal();
-      setOpenAlertModal(true);
-      setModalState({
-        ...ModalState,
-        title: '상태값 변경',
-        message: `이미 취소요청이 되어 있습니다.`,
-        type: 'confirm',
-        okButtonName: '확인',
-        cbOk: () => {},
-      });
-    } else {
-      setOpenAlertModal(true);
-      setModalState({
-        ...ModalState,
-        title: '상태값 변경',
-        message: `${type}으로 변경하시겠습니까?`,
-        type: 'confirm',
-        okButtonName: '변경',
-        cbOk: () => {
-          setSelectState(type);
-          // removeAdminInfo(row.userId as string);
-        },
-      });
-      // dispatch(
-      //   customModalSliceAction.setMessage({
+    if (type !== selectState) {
+      if (
+        type == '접수거절' ||
+        (type == '취소요청' && item.cancelStatusName == '')
+      ) {
+        setModalInfo({
+          type: type,
+          title: type == '접수거절' ? '취소사유 입력' : '취소요청사유 입력',
+        });
+        setCancelModal(true);
+      } else if (type == '취소' && item.cancelStatusName == '') {
+        setModalInfo({
+          type: type,
+          title: '취소사유 입력',
+        });
+        setCancelModal(true);
+      } else if (type == '취소요청' && item.cancelStatusName !== '') {
+        setOpenAlertModal(true);
+        setModalState({
+          ...ModalState,
+          title: '상태값 변경',
+          message: `이미 취소요청이 되어 있습니다.`,
+          type: 'confirm',
+          okButtonName: '확인',
+          cbOk: () => {},
+        });
+      } else if (type == '예약확정') {
+        setOpenAlertModal(true);
+        setModalState({
+          ...ModalState,
+          title: '상태값 변경',
+          message: `${type}으로 변경하시겠습니까?`,
+          type: 'confirm',
+          okButtonName: '변경',
+          cbOk: () => {
+            setSelectState(type);
+            let obj = {
+              orderId: item.orderId,
+            };
+            ConfrimMutate(obj);
+          },
+        });
+      }
+      //  else if(type == '취소') {
+      //   setOpenAlertModal(true);
+      //   const obj = {
+      //     orderId: item.orderId,
+      //     type: '취소',
+      //     body: {
+      //       orderCancelRequestDetail: '취소',
+      //     },
+      //   };
+      //   setModalState({
+      //     ...ModalState,
       //     title: '상태값 변경',
       //     message: `${type}으로 변경하시겠습니까?`,
       //     type: 'confirm',
       //     okButtonName: '변경',
       //     cbOk: () => {
       //       setSelectState(type);
-      //       // removeAdminInfo(row.userId as string);
+      //       CancelMutate(obj);
       //     },
-      //   }),
-      // );
-      // openCustomModal();
+      //   });
+      // }
+      else {
+        setOpenAlertModal(true);
+        setModalState({
+          ...ModalState,
+          title: '상태값 변경',
+          message: `${type}으로 변경하시겠습니까?`,
+          type: 'confirm',
+          okButtonName: '변경',
+          cbOk: () => {
+            setSelectState(type);
+          },
+        });
+      }
     }
   };
 
@@ -173,6 +198,15 @@ function OrderGoodsCard({ header, item }: Props) {
       const obj = {
         orderId: item.orderId,
         type: '접수거절',
+        body: {
+          orderCancelRequestDetail: text,
+        },
+      };
+      CancelMutate(obj);
+    } else if (modalInfo.type == '취소') {
+      const obj = {
+        orderId: item.orderId,
+        type: '취소',
         body: {
           orderCancelRequestDetail: text,
         },
@@ -197,7 +231,47 @@ function OrderGoodsCard({ header, item }: Props) {
     // );
     // openOrderModal();
   };
-
+  //예약 확정
+  const { mutate: ConfrimMutate, isLoading: isConfrimLoading } =
+    usePostOrderContfrimMutation({
+      options: {
+        onSuccess: (res, req) => {
+          if (res.success) {
+            // setIsLoading(false);
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'예약 확정 요청되었습니다.'}
+                </Box>
+              ),
+            });
+          } else {
+            // setIsLoading(false);
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {`${res.message}`}
+                </Box>
+              ),
+            });
+          }
+        },
+      },
+    });
   //주문 취소 요청
   const { mutate: CancelRequestMutate, isLoading: isCancelRequestLoading } =
     usePutOrderCancelRequestMutation({
@@ -303,6 +377,13 @@ function OrderGoodsCard({ header, item }: Props) {
           // onSubmit={onSubmitCancel}
           info={itemData}
           title={modalInfo.title}
+        />
+      )}
+      {isOpenAlertModal && (
+        <ButtonModal
+          isOpen={isOpenAlertModal}
+          ModalState={ModalState}
+          onClose={() => setOpenAlertModal(false)}
         />
       )}
 

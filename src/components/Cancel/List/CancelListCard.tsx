@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 
 import dayjs from 'dayjs';
 
@@ -40,6 +40,9 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
         return [...prevItems, item];
       }
     });
+  };
+  const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = '/images/Page/no_data.png';
   };
   return (
     <Flex
@@ -159,7 +162,7 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
           flexShrink={0}
           overflow={'hidden'}
         >
-          <Image
+          {/* <Image
             // width={80}
             // height={80}
             src={
@@ -171,6 +174,20 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
             alt="상품이미지"
             objectFit={'cover'}
             fill
+          /> */}
+          <img
+            style={{
+              width: '80px',
+              height: '80px',
+              objectFit: 'cover',
+            }}
+            src={
+              item.orderThumbnailImagePath !== null
+                ? `${imgPath()}${item.orderThumbnailImagePath}`
+                : '/images/no_img.png'
+            }
+            onError={addDefaultImg}
+            alt="이미지 업로드"
           />
         </Box>
         {/* 상품정보 */}
