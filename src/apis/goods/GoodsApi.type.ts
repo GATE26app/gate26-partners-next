@@ -135,7 +135,6 @@ export type GoodsListItemProps = {
   type: number;
   typeName: string;
   orderSameDay: number;
-  orderCloseBefore: number;
   level: number;
   levelName: string;
   forSale: number;
@@ -270,7 +269,6 @@ export type GoodsBasicProps = {
   sort: number;
   type: number;
   orderSameDay: number;
-  orderCloseBefore: number;
   level: number;
   viewStartDate: string;
   viewEndDate: string;
@@ -296,7 +294,6 @@ export type GoodsReqProps = {
   sort: number;
   type: number;
   orderSameDay: number;
-  orderCloseBefore: number;
   level: number;
   viewStartDate: string;
   viewEndDate: string;
@@ -365,7 +362,6 @@ export type GoodsItemProps = {
   type: number;
   optionType: number;
   orderSameDay: number;
-  orderCloseBefore: number;
   level: number;
   forSale: number;
   priceNet: number;

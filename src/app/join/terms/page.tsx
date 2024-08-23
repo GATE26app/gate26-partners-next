@@ -19,9 +19,7 @@ function page() {
   const [privetebox, setPrivetebox] = useState<boolean>(false);
   const [servicebox, setservicebox] = useState<boolean>(false);
   const [termbox, setTermbox] = useState<boolean>(false);
-  const [serviceModal, setServiceModal] = useState(false);
-  const [privateModal, setPrivateModal] = useState(false);
-  const [termModal, setTermModal] = useState(false);
+  const [modal, setModal] = useState(false);
   const toggleCheckbox = () => {
     if (checkbox === false) {
       setCheckbox(true);
@@ -61,9 +59,7 @@ function page() {
   };
   return (
     <>
-      {serviceModal && <TermModal isOpen={serviceModal} onClose={() => setServiceModal(false)} contentSrc='https://gate26.co.kr/TermOfUse.html' title={'서비스 약관동의'}/>}
-      {privateModal && <TermModal isOpen={privateModal} onClose={() => setPrivateModal(false)} contentSrc='https://gate26.co.kr/PrivacyPolicy_new.html' title={'개인정보 처리방침'}/>}
-      {/* {termModal && <TermModal isOpen={termModal} onClose={() => setTermModal(false)} contentSrc='https://gate26.co.kr/TermOfUse_new.html' title={'개인정보 처리방침'}/>} */}
+      {modal && <TermModal isOpen={modal} onClose={() => setModal(false)} />}
       <Box width="100vw" backgroundColor={ColorGray50}>
         <Flex
           pt={'150px'}
@@ -118,7 +114,7 @@ function page() {
                 color={ColorGray700}
                 textDecoration={'underline'}
                 cursor={'pointer'}
-                onClick={() => setServiceModal(true)}
+                onClick={() => setModal(true)}
               >
                 자세히보기
               </Text>
@@ -135,12 +131,12 @@ function page() {
                 color={ColorGray700}
                 textDecoration={'underline'}
                 cursor={'pointer'}
-                onClick={() => setPrivateModal(true)}
+                onClick={() => setModal(true)}
               >
                 자세히보기
               </Text>
             </Flex>
-            {/* <Flex justifyContent={'space-between'} pb={'15px'}>
+            <Flex justifyContent={'space-between'} pb={'15px'}>
               <CheckBox
                 children={'[필수] 개인정보 제 3자 동의'}
                 onClick={() => setTermbox(!termbox)}
@@ -152,11 +148,11 @@ function page() {
                 color={ColorGray700}
                 textDecoration={'underline'}
                 cursor={'pointer'}
-                onClick={() => setTermModal(true)}
+                onClick={() => setModal(true)}
               >
                 자세히보기
               </Text>
-            </Flex> */}
+            </Flex>
             <Flex
               w={'100%'}
               bgColor={ColorRed}

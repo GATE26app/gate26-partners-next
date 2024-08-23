@@ -358,6 +358,7 @@ function OrderGoodsCard({ header, item }: Props) {
         },
       },
     });
+  console.log('item', item);
   return (
     <>
       {cancelModal && (
@@ -531,7 +532,28 @@ function OrderGoodsCard({ header, item }: Props) {
           w={header[5]?.width}
           alignItems={'center'}
           justifyContent={'center'}
+          flexDirection={'column'}
         >
+          {item.shippingCompany && (
+            <Text
+              color={ColorBlack}
+              fontSize={'14px'}
+              fontWeight={400}
+              mb={'5px'}
+            >
+              {item.shippingCompany}
+            </Text>
+          )}
+          {item.shippingInvoice && (
+            <Text
+              color={ColorBlack}
+              fontSize={'14px'}
+              fontWeight={400}
+              mb={'5px'}
+            >
+              {item.shippingInvoice}
+            </Text>
+          )}
           <Flex
             px={'11px'}
             py={'7px'}
