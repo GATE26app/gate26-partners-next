@@ -114,7 +114,6 @@ function UpdateGoodsComponentPage() {
     sort: 1, //상품 정렬
     type: Number(getType), //상품 유형 (미사용)
     orderSameDay: 0, //상품 이용일시 당일판매, 0=>가능, 1=>불가능
-    orderCloseBefore: 0, //상품 판매마감처리, 0=>해당없음, N시간전 판매마감
     level: 1, //상품 레벨, 1=>노출, 2=>미노출, 10=>삭제
     viewStartDate: '', //노출 시작일시
     viewEndDate: '', //노출 종료일시
@@ -220,7 +219,6 @@ function UpdateGoodsComponentPage() {
         sort: detailData.data.sort, //상품 정렬
         type: detailData.data.type, //상품 유형 (미사용)
         orderSameDay: detailData.data.orderSameDay, //상품 이용일시 당일판매, 0=>가능, 1=>불가능
-        orderCloseBefore: detailData.data.orderCloseBefore, //상품 판매마감처리, 0=>해당없음, N시간전 판매마감
         level: detailData.data.level, //상품 레벨, 1=>노출, 2=>미노출, 10=>삭제
         viewStartDate: detailData.data.viewStartDate, //노출 시작일시
         viewEndDate: detailData.data.viewEndDate, //노출 종료일시
@@ -362,7 +360,6 @@ function UpdateGoodsComponentPage() {
             sort: res.data.sort, //상품 정렬
             type: res.data.type, //상품 유형 (미사용)
             orderSameDay: res.data.orderSameDay, //상품 이용일시 당일판매, 0=>가능, 1=>불가능
-            orderCloseBefore: res.data.orderCloseBefore, //상품 판매마감처리, 0=>해당없음, N시간전 판매마감
             level: res.data.level, //상품 레벨, 1=>노출, 2=>미노출, 10=>삭제
             viewStartDate: res.data.viewStartDate, //노출 시작일시
             viewEndDate: res.data.viewEndDate, //노출 종료일시
@@ -445,7 +442,6 @@ function UpdateGoodsComponentPage() {
             reservationInfo: BasicInfo.reservationInfo,
             content: BasicInfo.content,
             orderSameDay: BasicInfo.orderSameDay,
-            orderCloseBefore: BasicInfo.orderCloseBefore,
             type: BasicInfo.type,
             level: BasicInfo.level,
             forSale: BasicInfo.forSale,

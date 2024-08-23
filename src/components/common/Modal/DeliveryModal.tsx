@@ -187,9 +187,9 @@ function DeliveryModal({
               </Box>
             </Flex>
             <Flex
-              mt={'25px'}
+              mt={'10px'}
               flexDirection={'column'}
-              pb={'25px'}
+              pb={'15px'}
               borderBottomColor={ColoLineGray}
               borderBottomWidth={1}
             >
@@ -203,7 +203,11 @@ function DeliveryModal({
                   setData({ ...data, shippingInvoice: e.target.value })
                 }
               />
+              <Text fontSize={'14px'} color={ColorGray700} mt={'10px'}>
+                운송장 번호 등록시 함께 주문한 상품도 같이 등록됩니다.
+              </Text>
             </Flex>
+
             <Flex mt={'25px'} flexDirection={'column'} pb={'25px'}>
               <Text fontSize={'16px'} color={ColorBlack} fontWeight={600}>
                 비고

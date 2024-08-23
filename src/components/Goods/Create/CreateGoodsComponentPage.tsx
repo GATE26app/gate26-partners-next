@@ -80,7 +80,6 @@ function CreateGoodsComponentPage() {
     sort: 1, //상품 정렬
     type: Number(getType), //상품 유형
     orderSameDay: 0, //상품 이용일시 당일판매, 0=>가능, 1=>불가능
-    orderCloseBefore: 0, //상품 판매마감처리, 0=>해당없음, N시간전 판매마감
     level: 1, //상품 레벨, 1=>노출, 2=>미노출, 10=>삭제
     viewStartDate: '', //노출 시작일시
     viewEndDate: '', //노출 종료일시
@@ -208,7 +207,6 @@ function CreateGoodsComponentPage() {
       reservationInfo: BasicInfo.reservationInfo,
       content: BasicInfo.content,
       orderSameDay: BasicInfo.orderSameDay,
-      orderCloseBefore: BasicInfo.orderCloseBefore,
       type: BasicInfo.type,
       level: BasicInfo.level,
       forSale: BasicInfo.forSale,
@@ -232,6 +230,7 @@ function CreateGoodsComponentPage() {
       options: optionList,
       autoConfirm: BasicInfo.autoConfirm,
     };
+    console.log('PostData', PostData);
 
     if (status == 2) {
       if (partnerInfo.shippingType == 0) {
