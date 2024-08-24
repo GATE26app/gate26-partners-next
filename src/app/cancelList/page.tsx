@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useRouter } from 'next/navigation';
 import React, { ReactElement, useEffect, useState } from 'react';
 
@@ -6,6 +6,7 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
 import { usePostOrderListMutation } from '@/apis/order/OrderApi.mutation';
 import {
+  CancelListResType,
   OrderListParamsType,
   OrderListResType,
 } from '@/apis/order/OrderApi.type';
@@ -15,13 +16,13 @@ import { ColorBlack00, ColorGray700, ColorGrayBorder } from '@/utils/_Palette';
 import { useCancelFilterZuInfo } from '@/_store/CancelStateInfo';
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import CancelFilter from '@/components/Cancel/List/CancelFilter';
-import CancelComponent from "@/components/Cancel/List/CancelComponent";
+import CancelComponent from '@/components/Cancel/List/CancelComponent';
 
 function CancelListPage() {
   const router = useRouter();
   const { goodsInfo, setGoodsInfo } = useGoodsStateZuInfo((state) => state);
   const [filter, setFilter] = useState(true);
-  const [list, setList] = useState<OrderListResType>({
+  const [list, setList] = useState<CancelListResType>({
     count: 0,
     totalCount: 0,
     pageCount: 0,
