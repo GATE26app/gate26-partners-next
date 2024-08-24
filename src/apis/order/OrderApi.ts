@@ -8,6 +8,8 @@ import {
   OrderCancelRequestParamsType,
   OrderConfrimParamsType,
   OrderDetailItemResType,
+  OrderGroupResType,
+  OrderGroupType,
   OrderListDtoType,
   OrderListParamsType,
   OrderMemoParamsType,
@@ -149,6 +151,19 @@ export class OrderApi {
       headers: {
         'X-AUTH-TOKEN': `${getToken().access}`,
       },
+    });
+    return data;
+  };
+  //주문번호 그룹화
+  postOrderGroup = async (req: OrderGroupType): Promise<OrderGroupResType> => {
+    //type : code 또는 parentCode
+    const { data } = await this.axios({
+      method: 'POST',
+      url: '/partner/grouping-orders',
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+      data: req,
     });
     return data;
   };

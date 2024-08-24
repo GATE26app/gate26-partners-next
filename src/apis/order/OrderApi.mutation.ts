@@ -70,3 +70,11 @@ export const usePostOrderContfrimMutation = (
     ...params?.options,
   });
 };
+//주문번호 그룹화
+export const usePostOrderGroupMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderGroup>,
+) => {
+  return useMutation(orderApi.postOrderGroup, {
+    ...params?.options,
+  });
+};

@@ -5,6 +5,7 @@ import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import {
   usePostOrderContfrimMutation,
+  usePostOrderGroupMutation,
   usePutOrderCancelMutation,
   usePutOrderCancelRequestMutation,
 } from '@/apis/order/OrderApi.mutation';
@@ -87,7 +88,22 @@ function OrderListComponent({ list, request, setRequest }: Props) {
   }
 
   const [CheckList, setChekcList] = useState<string[]>([]);
+  const [newCheckList, setNewChekcList] = useState<string[]>([]);
 
+  console.log('newCheckList', newCheckList);
+  //주문번호 그룹화
+  const { mutate: OrderGroupMutate } = usePostOrderGroupMutation({
+    options: {
+      onSuccess: (res, req) => {
+        if (res.success) {
+          console.log('res', res);
+          setNewChekcList(res.data.orderIds);
+          // setIsLoading(false);
+          onChangeFun(res.data.orderIds);
+        }
+      },
+    },
+  });
   //상태값 변경
   const onChangeState = () => {
     if (stateSelect == '') {
@@ -101,35 +117,40 @@ function OrderListComponent({ list, request, setRequest }: Props) {
         ),
       });
     } else {
-      if (stateSelect == '예약확정') {
-        CheckList.map((item) => {
-          const obj = {
-            orderId: item,
-          };
-          setIsLoading(true);
-          ConfrimMutate(obj);
-        });
-      } else if (stateSelect == '접수거절') {
-        setCancelModal(true);
-
-        setModalInfo({
-          type: '접수거절',
-          title: '취소사유 입력',
-        });
-      } else if (stateSelect == '취소요청') {
-        setCancelModal(true);
-
-        setModalInfo({
-          type: '접수거절',
-          title: '취소요청사유 입력',
-        });
-      }
+      OrderGroupMutate({
+        orderIds: CheckList,
+      });
     }
   };
 
+  const onChangeFun = (list: string[]) => {
+    if (stateSelect == '예약확정') {
+      list.map((item) => {
+        const obj = {
+          orderId: item,
+        };
+        setIsLoading(true);
+        ConfrimMutate(obj);
+      });
+    } else if (stateSelect == '접수거절') {
+      setCancelModal(true);
+
+      setModalInfo({
+        type: '접수거절',
+        title: '취소사유 입력',
+      });
+    } else if (stateSelect == '취소요청') {
+      setCancelModal(true);
+
+      setModalInfo({
+        type: '접수거절',
+        title: '취소요청사유 입력',
+      });
+    }
+  };
   const onSubmitCancel = (text: string) => {
     if (modalInfo.type == '취소요청') {
-      CheckList.map((item) => {
+      newCheckList.map((item) => {
         const obj = {
           orderId: item,
           type: '취소요청',
@@ -141,7 +162,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
         CancelRequestMutate(obj);
       });
     } else if (modalInfo.type == '접수거절') {
-      CheckList.map((item) => {
+      newCheckList.map((item) => {
         // CancelRequestMutate(obj);
         const obj = {
           orderId: item,

@@ -76,6 +76,13 @@ function OptionPlus({
     Array(optionCnt).fill(''),
   );
 
+  useEffect(() => {
+    if (optionList.length > 0) {
+      setStartDay(dayjs(optionList[0]?.useDateTime));
+      setEndDay(dayjs(optionList[optionList.length - 1]?.useDateTime));
+    }
+  }, [optionList]);
+
   const [price, setPrice] = useState<number>(0);
   const [stock, setStock] = useState<number>(0);
   const toast = useToast();

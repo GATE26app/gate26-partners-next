@@ -18,7 +18,15 @@ export type OrderListDtoType = {
   data: OrderListResType;
   success: boolean;
 };
-
+//주문내역 response type
+export type CancelListResType = {
+  count: number;
+  totalCount: number;
+  pageCount: number;
+  pageNo: number;
+  pageSize: number;
+  orders: Array<OrderListItemType>;
+};
 //주문내역 response type
 export type OrderListResType = {
   count: number;
@@ -337,4 +345,17 @@ export type GroupOrderListType = {
   policies: Array<policiesType>;
   orderConfirmName: string;
   shipping: Shippingtype;
+};
+//주문번호 그룹화
+export type OrderGroupType = {
+  orderIds: Array<string>;
+};
+
+//주문번호 그룹화
+export type OrderGroupResType = {
+  code: string;
+  count: number;
+  data: OrderGroupType;
+  success: boolean;
+  message?: string;
 };
