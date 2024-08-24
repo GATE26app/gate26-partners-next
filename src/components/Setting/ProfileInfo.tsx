@@ -195,7 +195,7 @@ function ProfileInfo({ info }: Props) {
           </Box>
         ),
       });
-    } else if (profileInfo.images.length == 0) {
+    } else if (profileInfo.images?.length == 0) {
       toast({
         position: 'top',
         duration: 2000,
@@ -391,7 +391,7 @@ function ProfileInfo({ info }: Props) {
                 color={ColorGray700}
                 pt={'5px'}
               >
-                ({profileInfo?.info.length}/500)
+                ({profileInfo?.info?.length}/500)
               </Text>
             </Flex>
           </Flex>
