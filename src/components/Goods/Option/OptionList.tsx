@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import {
   Editable,
@@ -38,6 +38,10 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
   const [focus, setFocus] = useState(false);
   const [stock, setStock] = useState('');
   const [price, setprice] = useState('');
+  const [stockState, setStockState] = useState(false);
+  const [priceState, setPriceState] = useState(false);
+  const [indexCnt, setIndexCnt] = useState(0);
+
   const onDeleteOption = (id: number) => {
     setOptionList(
       optionList.filter((item: Option, index: number) => index !== id),
@@ -71,6 +75,25 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
       setOptionList(updateItem);
     }
   };
+
+  useEffect(() => {
+    if (stockState) {
+      let updateItem = optionList.map((item) =>
+        item.sort === indexCnt + 1
+          ? { ...item, stockCnt: Number(stock) }
+          : item,
+      );
+      setOptionList(updateItem);
+      setStockState(false);
+    }
+    if (priceState) {
+      let updateItem = optionList.map((item) =>
+        item.sort === indexCnt + 1 ? { ...item, price: Number(price) } : item,
+      );
+      setOptionList(updateItem);
+      setPriceState(false);
+    }
+  }, [stockState, priceState]);
   return (
     <Flex
       borderRadius={'12px'}
@@ -497,8 +520,15 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       isPreviewFocusable={true}
                       selectAllOnFocus={false}
                       isDisabled={goodsInfo.LogItemDisable}
-                      onBlur={(e) => handleInputChange(index, 'price', e)}
-                      onChange={(e) => setprice(e)}
+                      onChange={(e) => {
+                        setIndexCnt(index);
+                        setprice(e);
+                      }}
+                      onBlur={(e) => {
+                        setPriceState(true);
+                      }}
+                      // onBlur={(e) => handleInputChange(index, 'price', e)}
+                      // onChange={(e) => setprice(e)}
                     >
                       <EditablePreview
                         py={'17px'}
@@ -532,9 +562,12 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       isPreviewFocusable={true}
                       selectAllOnFocus={false}
                       // isDisabled={goodsInfo.LogItemDisable}
-                      onChange={(e) => setStock(e)}
+                      onChange={(e) => {
+                        setIndexCnt(index);
+                        setStock(e);
+                      }}
                       onBlur={(e) => {
-                        handleInputChange(index, 'stockCnt', e);
+                        setStockState(true);
                       }}
                     >
                       <EditablePreview
