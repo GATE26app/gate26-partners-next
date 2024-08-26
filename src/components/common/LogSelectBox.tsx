@@ -141,7 +141,7 @@ function LogSelectBox({
                     ml={'10px'}
                   >
                     <Text fontSize={'12px'} fontWeight={600} color={ColorBlue}>
-                      {item.forSaleName}
+                      {item.statusName}
                     </Text>
                   </Box>
                 </Flex>

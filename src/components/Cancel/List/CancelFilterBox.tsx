@@ -31,7 +31,13 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
   const [searchSelect, setSearchSelect] = useState('');
   const [select, setSelect] = useState('');
   const SelectList = ['취소요청일', '취소승인일', '결제일', '예약일'];
-  const searchSelectList = ['상품코드', '상품명', '상품카테고리'];
+  const searchSelectList = [
+    '상품코드',
+    '상품명',
+    '상품카테고리',
+    '주문번호',
+    '상품주문번호',
+  ];
   const { cancelFilterInfo, setCancelFilterInfo } = useCancelFilterZuInfo(
     (state) => state,
   );
@@ -109,7 +115,11 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
             ? 'itemCode'
             : searchSelect == '카테고리명'
               ? 'category'
-              : 'title',
+              : searchSelect == '주문번호'
+                ? 'merchantId'
+                : searchSelect == '상품주문번호'
+                  ? 'orderId'
+                  : 'title',
       });
     }
   }, [searchSelect]);
