@@ -40,8 +40,17 @@ interface Props {
   setList: React.Dispatch<React.SetStateAction<LocationListProps[]>>;
   getList?: Array<LocationResProps>;
   setGetList?: React.Dispatch<React.SetStateAction<LocationResProps[]>>;
+  locationPreList: Array<LocationResProps>;
+  setLocationPreList: React.Dispatch<React.SetStateAction<LocationResProps[]>>;
 }
-function CountryComponent({ list, setList, getList, setGetList }: Props) {
+function CountryComponent({
+  list,
+  setList,
+  getList,
+  setGetList,
+  locationPreList,
+  setLocationPreList,
+}: Props) {
   const toast = useToast();
   const [select, setSelect] = useState('');
   const [city, setCity] = useState('');
@@ -137,12 +146,22 @@ function CountryComponent({ list, setList, getList, setGetList }: Props) {
     let locations = {
       locationId: id,
     };
+    let PreObject = {
+      locationId: id,
+      fullTitle: data == '전체' ? select : `${select} > ${data}`,
+      title: data,
+      sort: 1,
+      level: 1,
+      type: 2,
+      depth: 1,
+    };
     if (selectList.some((arr) => arr.locationId == id) == false) {
       setSelectList([...selectList, oneObject]);
       setCity('');
       setSelect('');
       setList([...list, locations]);
       setLevel2LocaList([]);
+      setLocationPreList([...locationPreList, PreObject]);
     } else {
       toast({
         position: 'top',
@@ -161,6 +180,9 @@ function CountryComponent({ list, setList, getList, setGetList }: Props) {
     if (selectList.some((arr) => arr.locationId === idx)) {
       setSelectList(selectList.filter((item) => idx !== item.locationId));
       setList(list.filter((item) => idx !== item.locationId));
+      setLocationPreList(
+        locationPreList.filter((item) => idx !== item.locationId),
+      );
     }
   };
   return (

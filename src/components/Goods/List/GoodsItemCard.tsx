@@ -287,7 +287,7 @@ function GoodsItemCard({ header, item }: Props) {
       </Flex>
       <Flex w={`10%`} alignItems={'center'} justifyContent={'center'}>
         <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-          {item?.forSaleName}
+          {item?.statusName}
         </Text>
       </Flex>
     </>

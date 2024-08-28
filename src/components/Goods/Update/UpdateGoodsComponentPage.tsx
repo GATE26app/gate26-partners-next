@@ -53,6 +53,7 @@ import { DashDate } from '@/utils/format';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import AlertModal from '@/components/common/ModalContainer/_fragments/AlertModal';
+import PreviewDrawerComponent from '../Preview/PreviewDrawerComponent';
 
 interface CategoryListProps {
   categoryId: number;
@@ -75,8 +76,12 @@ function UpdateGoodsComponentPage() {
   const [logList, setLogList] = useState([]);
   const [optionList, setOptionList] = useState<OptionItemProps[]>([]);
   const [CateGetList, setCateGetList] = useState<CategoryResProps[]>([]);
+  const [CatePreList, setCatePreList] = useState<CategoryResProps[]>([]);
   const [categoryList, setCategoryList] = useState<CategoryListProps[]>([]); //수정시 전달한 리스트
   const [locationGetList, setLocationGetList] = useState<LocationResProps[]>(
+    [],
+  );
+  const [locationPreList, setLocationPreList] = useState<LocationResProps[]>(
     [],
   );
   const [goodsItemList, setGoodsItemList] = useState<GoodsItemProps[]>([]);
@@ -88,6 +93,7 @@ function UpdateGoodsComponentPage() {
     viewEndDate: '',
   });
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [isPreviewModal, setIsPreviewModal] = useState(false);
   const [ModalState, setModalState] = useState({
     type: '',
     title: '',
@@ -206,7 +212,9 @@ function UpdateGoodsComponentPage() {
         viewEndDate: detailData.data.viewEndDate,
       });
       setCateGetList(detailData.data.categories);
+      setCatePreList(detailData.data.categories);
       setLocationGetList(detailData.data.locations);
+      setLocationPreList(detailData.data.locations);
       setGoodsItemList(detailData.data);
       setAttributeList(detailData.data.attributes);
       setBasicInfo({
@@ -347,7 +355,9 @@ function UpdateGoodsComponentPage() {
             viewEndDate: res.data.viewEndDate,
           });
           setCateGetList(res.data.categories);
+          setCatePreList(res.data.categories);
           setLocationGetList(res.data.locations);
+          setLocationPreList(res.data.locations);
           setGoodsItemList(res.data);
           setAttributeList(res.data.attributes);
           setBasicInfo({
@@ -494,8 +504,51 @@ function UpdateGoodsComponentPage() {
   useEffect(() => {
     setLoadingModal(isLoading);
   }, [isLoading]);
+
+  const previewData = {
+    type: getType,
+    title: BasicInfo.title,
+    basicInfo: BasicInfo.basicInfo,
+    detailInfo: BasicInfo.detailInfo,
+    reservationInfo: BasicInfo.reservationInfo,
+    content: BasicInfo.content,
+    orderSameDay: BasicInfo.orderSameDay,
+    level: BasicInfo.level,
+    forSale: BasicInfo.forSale,
+    priceNet: BasicInfo.priceNet,
+    priceDcPer: BasicInfo.priceDcPer,
+    priceDc: BasicInfo.priceDc,
+    price: BasicInfo.price,
+    optionType: BasicInfo.optionType,
+    viewStartDate: BasicInfo.viewStartDate,
+    viewEndDate: BasicInfo.viewEndDate,
+    attributes: attributeList,
+    categories: CatePreList,
+    locations: locationPreList,
+    optionInputType: BasicInfo.optionInputType,
+    optionInputStartDate: BasicInfo.optionInputStartDate,
+    optionInputEndDate: BasicInfo.optionInputEndDate,
+    images: imageList,
+    schedules: planList,
+    policies: policyList,
+    optionInputs: optionInputList,
+    options: optionList,
+    autoConfirm: BasicInfo.autoConfirm,
+  };
+
+  // useEffect(() =>{
+
+  //   if(categoryList){
+  //     setCatePreList()
+  //   }
+  // },[categoryList])
   return (
     <>
+      <PreviewDrawerComponent
+        data={previewData}
+        isOpen={isPreviewModal}
+        onClose={() => setIsPreviewModal(false)}
+      />
       <LoadingModal
         children={isLoadingModal}
         isOpen={isLoadingModal}
@@ -555,6 +608,18 @@ function UpdateGoodsComponentPage() {
                 </Text>
               </Flex>
               <Flex flexDirection={'row'} alignItems={'center'} gap={'10px'}>
+                <CustomButton
+                  text="미리보기"
+                  borderColor={ColorGray400}
+                  color={ColorGray700}
+                  px="44px"
+                  py="13px"
+                  bgColor={ColorWhite}
+                  fontSize="15px"
+                  onClick={() => {
+                    setIsPreviewModal(true);
+                  }}
+                />
                 {selectMenu == 1 && (
                   <CustomButton
                     text="취소"
@@ -785,6 +850,8 @@ function UpdateGoodsComponentPage() {
             {selectMenu == 1 && (
               <GoodsModify
                 // watch={watch}
+                CatePreList={CatePreList}
+                setCatePreList={setCatePreList}
                 CateGetList={CateGetList}
                 setCateGetList={setCateGetList}
                 categoryList={categoryList}
@@ -803,6 +870,8 @@ function UpdateGoodsComponentPage() {
                 setPolicyList={setPolicyList}
                 locationGetList={locationGetList}
                 setLocationGetList={setLocationGetList}
+                locationPreList={locationPreList}
+                setLocationPreList={setLocationPreList}
                 optionList={optionList}
                 setOptionList={setOptionList}
                 optionInputList={optionInputList}

@@ -34,7 +34,7 @@ function LogSelectBox({
   useEffect(() => {
     if (list !== undefined) {
       setSelect(list[0]?.version);
-      setState(list[0]?.forSaleName);
+      setState(list[0]?.statusName);
     }
   }, []);
 
