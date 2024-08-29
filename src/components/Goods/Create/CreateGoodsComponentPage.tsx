@@ -7,11 +7,13 @@ import { Box, Flex, Image, Text, useToast } from '@chakra-ui/react';
 
 import { usePutCreateItemMutation } from '@/apis/goods/GoodsApi.mutation';
 import {
+  CategoryResProps,
   GoodsAttributeListProps,
   GoodsBasicProps,
   GoodsListItemImageProps,
   GoodsPoliciesListProps,
   GoodsSchedulesListProps,
+  LocationResProps,
   OptionProps,
   optionInputsProps,
 } from '@/apis/goods/GoodsApi.type';
@@ -43,6 +45,7 @@ import StatusComponent from '@/components/Goods/StatusComponent';
 import OptionComponent from '@/components/Goods/Option/OptionComponent';
 import ShippingComponent from '../ShippingComponent';
 import { usePartnerZuInfo } from '@/_store/PartnerInfo';
+import PreviewDrawerComponent from '../Preview/PreviewDrawerComponent';
 
 interface CategoryListProps {
   categoryId: number;
@@ -60,6 +63,7 @@ function CreateGoodsComponentPage() {
   const getType = searchParams.get('type');
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [isPreviewModal, setIsPreviewModal] = useState(false);
   const [disableBtn, setDiableBtn] = useState(false); //버튼 중복 막기
   const [ModalState, setModalState] = useState({
     title: '',
@@ -109,6 +113,7 @@ function CreateGoodsComponentPage() {
       inputValue: '',
     },
   ]);
+  const [CateGetList, setCateGetList] = useState<CategoryResProps[]>([]);
   const [imageList, setImageList] = useState<GoodsListItemImageProps[]>([]);
   const [policyList, setPolicyList] = useState<GoodsPoliciesListProps[]>([]);
   const [planList, setPlanList] = useState<GoodsSchedulesListProps[]>([
@@ -129,7 +134,10 @@ function CreateGoodsComponentPage() {
       ],
     },
   ]);
-
+  const [locationPreList, setLocationPreList] = useState<LocationResProps[]>(
+    [],
+  );
+  const [CatePreList, setCatePreList] = useState<CategoryResProps[]>([]);
   const ToastComponent = (message: string) => {
     return toast({
       position: 'top',
@@ -325,8 +333,44 @@ function CreateGoodsComponentPage() {
   //   };
   // }, []);
 
+  const previewData = {
+    type: getType,
+    title: BasicInfo.title,
+    basicInfo: BasicInfo.basicInfo,
+    detailInfo: BasicInfo.detailInfo,
+    reservationInfo: BasicInfo.reservationInfo,
+    content: BasicInfo.content,
+    orderSameDay: BasicInfo.orderSameDay,
+    level: BasicInfo.level,
+    forSale: BasicInfo.forSale,
+    priceNet: BasicInfo.priceNet,
+    priceDcPer: BasicInfo.priceDcPer,
+    priceDc: BasicInfo.priceDc,
+    price: BasicInfo.price,
+    optionType: BasicInfo.optionType,
+    viewStartDate: BasicInfo.viewStartDate,
+    viewEndDate: BasicInfo.viewEndDate,
+    attributes: attributeList,
+    categories: CatePreList,
+    locations: locationPreList,
+    optionInputType: BasicInfo.optionInputType,
+    optionInputStartDate: BasicInfo.optionInputStartDate,
+    optionInputEndDate: BasicInfo.optionInputEndDate,
+    images: imageList,
+    schedules: planList,
+    policies: policyList,
+    optionInputs: optionInputList,
+    options: optionList,
+    autoConfirm: BasicInfo.autoConfirm,
+  };
+
   return (
     <>
+      <PreviewDrawerComponent
+        data={previewData}
+        isOpen={isPreviewModal}
+        onClose={() => setIsPreviewModal(false)}
+      />
       <ButtonModal
         isOpen={isOpenAlertModal}
         ModalState={ModalState}
@@ -372,6 +416,18 @@ function CreateGoodsComponentPage() {
             </Text>
           </Flex>
           <Flex flexDirection={'row'} alignItems={'center'} gap={'10px'}>
+            <CustomButton
+              text="미리보기"
+              borderColor={ColorGray400}
+              color={ColorGray700}
+              px="44px"
+              py="13px"
+              bgColor={ColorWhite}
+              fontSize="15px"
+              onClick={() => {
+                setIsPreviewModal(true);
+              }}
+            />
             <CustomButton
               text="취소"
               borderColor={ColorGray400}
@@ -486,10 +542,22 @@ function CreateGoodsComponentPage() {
           bgColor={ColorWhite}
           borderBottomRadius={'16px'}
         >
-          <CatagoryComponent list={categoryList} setList={setCategoryList} />
+          <CatagoryComponent
+            list={categoryList}
+            setList={setCategoryList}
+            getList={CateGetList}
+            setGetList={setCateGetList}
+            CatePreList={CatePreList}
+            setCatePreList={setCatePreList}
+          />
           {(getType == '3' || getType == '2') && (
             <>
-              <CountryComponent list={locationList} setList={setLocationList} />
+              <CountryComponent
+                list={locationList}
+                setList={setLocationList}
+                locationPreList={locationPreList}
+                setLocationPreList={setLocationPreList}
+              />
             </>
           )}
           <GoodNameComponent list={BasicInfo} setList={setBasicInfo} />

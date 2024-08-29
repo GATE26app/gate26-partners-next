@@ -5,7 +5,7 @@ import { ColorGray700, ColorInputBorder, ColorWhite } from '@/utils/_Palette';
 interface SearchInputProps {
   placeholder?: string;
   text: string;
-  onChange: (text: string) => void;
+  onChange: (text: any) => void;
   onSearch?: () => void;
   InputProps?: InputProps;
 }

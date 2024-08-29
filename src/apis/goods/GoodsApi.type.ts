@@ -422,3 +422,224 @@ export type GoodsLogItemReqType = {
   itemCode: string;
   itemId: string;
 };
+export type commerceProductDataType = {
+  zzimed: boolean;
+  itemCode: string;
+  itemId: string | null;
+  partner: commercePartnerType;
+  zzimCnt: number;
+  orderCnt: number;
+  reviewCnt: number;
+  reviewAvg: number;
+  coupons?: any;
+  relationItems?: any;
+  reviews?: any;
+
+  data: {
+    partner: commercePartnerType;
+    itemId: string;
+    itemCode: string;
+    siteOrigin?: string;
+    status: 0 | 1 | 2 | 3 | 10 | number;
+    statusName: string;
+    forSale: 1 | 2 | 10 | number;
+    forSaleName: string;
+    level: 1 | 2 | 10 | number;
+    levelName: string;
+    viewStartDate: string;
+    viewEndDDate: string;
+    title: string;
+    basicInfo?: string;
+    detailInfo?: string;
+    content?: string;
+    reservationInfo?: string;
+    type: 1 | 2 | 3 | number;
+    typeName: string;
+    optionType: 1 | 2 | number;
+    optionTypeName: string;
+    optionInputType: 0 | 1 | number;
+    optionInputTypeName: string;
+    autoConfirm: 0 | 1 | number;
+    autoConfirmName: string;
+    orderSameDay: 0 | 1 | number;
+    orderSameDayName: string;
+    orderCloseBefore: 0 | number;
+    orderCloseBeforeName: string;
+    taxType: 1 | 2 | 3 | number;
+    taxTypeName: string;
+    priceNet: number;
+    priceDcPer: number;
+    price: number;
+    requestId: string;
+    requestDate: string;
+    approvalId: string;
+    approvalDate: string;
+    deniedId: string | null;
+    deniedReason: string | null;
+    deniedDate: string | null;
+    attributes?: Array<attributeType>;
+    categories?: Array<categoryDTO>;
+    locations?: Array<locationsDTO>;
+    images?: Array<imageDTO>;
+    schedules?: Array<scheduleDTO>;
+    policies?: Array<policiesDTO>;
+    options?: Array<detailOptionType>;
+    optionsGroup?: optionsGroupType;
+    createDate: string;
+    modifiedDate: string;
+  };
+  createDate: string;
+  modifiedDate: string | null;
+  optionGroups?: string | null;
+};
+
+export type attributeType = {
+  code: number;
+  codeName: string;
+  sort: number;
+  type: number;
+  title: string;
+};
+
+export type detailOptionType = {
+  optionId: string;
+  sort: number;
+  type: number;
+  typeName: string;
+  depth: number;
+  useDateTime: string;
+  firstKey?: string;
+  firstValue?: string;
+  secondKey?: string;
+  secondValue?: string;
+  thirdKey?: string;
+  thirdValue?: string;
+  fourthKey?: string;
+  fourthValue?: string;
+  stockCnt: number;
+  taxType: number;
+  taxTypeName: string;
+  price: number;
+};
+
+export type optionsGroupType = {
+  title: 'DATE' | string;
+  childs?: Array<optionsGroupType>;
+  depth?: number;
+  option?: {
+    optionId?: string;
+    title?: string;
+    price?: number;
+    stockCnt?: number;
+  };
+};
+export type imageDTO = {
+  sort?: number;
+  imagePath: string;
+  thumbnailImagePath: string;
+};
+
+export type locationsDTO = {
+  locationId: number;
+  type: 0 | 1 | 2 | number;
+  typeName: string;
+  level: 1 | 2 | 10 | number;
+  levelName: string;
+  depth: number;
+  sort: number;
+  title: string;
+  fullTitle: string;
+  locations?: Array<locationsDTO>;
+};
+
+export type categoryDTO = {
+  categoryId: number;
+  title: string;
+  sort: number;
+  level: 1 | 2 | 10 | number;
+  levelName: string;
+  depth: number;
+  fullTitle: string;
+  categories?: Array<categoryDTO>;
+};
+
+export type scheduleDTO = {
+  sort: number;
+  startDay: string;
+  startTime: string;
+  durationTime: string | null;
+  location: string | null;
+  info: string | null;
+  lat: string;
+  lng: string;
+  images: Array<imageDTO>;
+};
+
+export type policiesDTO = {
+  title: string;
+  type: number;
+  ty0peName: string;
+  sort: number;
+  days: number;
+  feePer: number;
+};
+// 파트너 타입
+export type commercePartnerType = {
+  partnerId: string;
+  title: string;
+  info: string | null;
+  imagePath: string | null;
+  thumbnailImagePath: string | null;
+  shippingType: number;
+  shippingTypeName: string;
+  shippingFee: number;
+  shippingMinAmount: number;
+};
+
+export type commercePreviewProductDataType = {
+  itemCode: string;
+  itemId: string | null;
+  partner: commercePartnerType;
+  coupons?: any;
+  relationItems?: any;
+  siteOrigin?: string;
+  status: 0 | 1 | 2 | 3 | 10 | number;
+  statusName: string;
+  forSale: 1 | 2 | 10 | number;
+  forSaleName: string;
+  level: 1 | 2 | 10 | number;
+  levelName: string;
+  viewStartDate: string;
+  viewEndDDate: string;
+  title: string;
+  basicInfo?: string;
+  detailInfo?: string;
+  content?: string;
+  reservationInfo?: string;
+  type: 1 | 2 | 3 | number;
+  typeName: string;
+  optionType: 1 | 2 | number;
+  optionTypeName: string;
+  optionInputType: 0 | 1 | number;
+  optionInputTypeName: string;
+  orderSameDay: 0 | 1 | number;
+  orderSameDayName: string;
+  priceNet: number;
+  priceDcPer: number;
+  price: number;
+  requestId: string;
+  requestDate: string;
+  approvalId: string;
+  approvalDate: string;
+  deniedId: string | null;
+  deniedReason: string | null;
+  deniedDate: string | null;
+  attributes: Array<attributeType>;
+  categories: Array<categoryDTO>;
+  locations: Array<locationsDTO>;
+  images: Array<imageDTO>;
+  schedules: Array<scheduleDTO>;
+  policies: Array<policiesDTO>;
+  options: Array<detailOptionType>;
+  optionsGroup: optionsGroupType;
+};
