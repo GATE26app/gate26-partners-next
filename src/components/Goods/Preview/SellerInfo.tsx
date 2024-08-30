@@ -9,6 +9,8 @@ import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 function SellerInfo() {
   const { partnerInfo } = usePartnerZuInfo((state) => state);
   const [onImage, setOnImage] = useState(false);
+
+  console.log('partnerInfo', partnerInfo);
   return (
     <Box mx={'16px'} my={'20px'}>
       <Text color={ColorBlack} fontSize={'18px'} fontWeight={700}>
@@ -24,6 +26,7 @@ function SellerInfo() {
             <Box borderRadius={'50%'} overflow={'hidden'}>
               <Image
                 src={
+                  partnerInfo?.images.length > 0 &&
                   partnerInfo?.images[0].imagePath !== '' &&
                   partnerInfo?.images[0].imagePath !== null
                     ? `${getImagePath(partnerInfo?.images[0].imagePath)}`
