@@ -137,22 +137,25 @@ function ReviewCard({ header, item, index, totalCount, pageNo }: Props) {
                 {item.orderTitle}
               </Text>
             </Flex>
-            <Flex gap={'10px'} flexShrink={0}>
-              <Text
-                flexShrink={0}
-                color={ColorGray700}
-                fontWeight={600}
-                fontSize={'14px'}
-                w={'50px'}
-              >
-                예약일
-              </Text>
-              <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
-                {item.orderDateTimeOfUse !== undefined
-                  ? formatDateDot(item.orderDateTimeOfUse)
-                  : '-'}
-              </Text>
-            </Flex>
+            {item.orderDateTimeOfUse && (
+              <Flex gap={'10px'} flexShrink={0}>
+                <Text
+                  flexShrink={0}
+                  color={ColorGray700}
+                  fontWeight={600}
+                  fontSize={'14px'}
+                  w={'50px'}
+                >
+                  예약일
+                </Text>
+                <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
+                  {item.orderDateTimeOfUse !== undefined
+                    ? formatDateDot(item.orderDateTimeOfUse)
+                    : '-'}
+                </Text>
+              </Flex>
+            )}
+
             <Flex gap={'10px'}>
               <Text
                 color={ColorGray700}

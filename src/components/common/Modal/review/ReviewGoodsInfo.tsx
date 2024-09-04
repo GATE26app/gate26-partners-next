@@ -64,22 +64,26 @@ function ReviewGoodsInfo({ data }: Props) {
               {data?.orderTitle}
             </Text>
           </Flex>
-          <Flex gap={'10px'} flexShrink={0}>
-            <Text
-              flexShrink={0}
-              color={ColorGray700}
-              fontWeight={600}
-              fontSize={'14px'}
-              w={'50px'}
-            >
-              예약일
-            </Text>
-            <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
-              {data?.orderDateTimeOfUse !== undefined
-                ? formatDateDash(data?.orderDateTimeOfUse)
-                : '-'}
-            </Text>
-          </Flex>
+          {data?.orderDateTimeOfUse !== null &&
+            data?.orderDateTimeOfUse !== undefined && (
+              <Flex gap={'10px'} flexShrink={0}>
+                <Text
+                  flexShrink={0}
+                  color={ColorGray700}
+                  fontWeight={600}
+                  fontSize={'14px'}
+                  w={'50px'}
+                >
+                  예약일
+                </Text>
+                <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
+                  {data?.orderDateTimeOfUse !== undefined
+                    ? formatDateDash(data?.orderDateTimeOfUse)
+                    : '-'}
+                </Text>
+              </Flex>
+            )}
+
           <Flex gap={'10px'}>
             <Text
               color={ColorGray700}
