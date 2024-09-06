@@ -2,13 +2,9 @@ import Image from 'next/image';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
-import {
-  ColorBlack,
-  ColorGray100,
-  ColorGray700,
-} from '@/utils/_Palette';
-import { imgPath, intComma } from '@/utils/format';
-import { SyntheticEvent } from "react";
+import { ColorBlack, ColorGray100, ColorGray700 } from '@/utils/_Palette';
+import { getImagePath, imgPath, intComma } from '@/utils/format';
+import { SyntheticEvent } from 'react';
 
 interface Props {
   info: {
@@ -81,7 +77,7 @@ function ModalOrderInfo({ info }: Props) {
             src={
               info?.orderThumbnailImagePath !== null &&
               info?.orderThumbnailImagePath !== undefined
-                ? `${imgPath()}${info?.orderThumbnailImagePath}`
+                ? getImagePath(info?.orderThumbnailImagePath)
                 : '/images/no_img.png'
             }
             onError={addDefaultImg}

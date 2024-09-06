@@ -18,6 +18,7 @@ import {
   PaymentMethod,
   formatDated,
   formatPhone,
+  getImagePath,
   imgPath,
   intComma,
 } from '@/utils/format';
@@ -130,7 +131,7 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
             src={
               item.orderThumbnailImagePath !== null ||
               item.orderThumbnailImagePath !== ''
-                ? `${imgPath()}${item.orderThumbnailImagePath}`
+                ? getImagePath(item.orderThumbnailImagePath)
                 : '/images/no_img.png'
             }
             onError={addDefaultImg}

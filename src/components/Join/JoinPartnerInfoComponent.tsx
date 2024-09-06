@@ -11,7 +11,7 @@ import {
   ColorRed,
   ColorWhite,
 } from '@/utils/_Palette';
-import { imgPath } from '@/utils/format';
+import { getImagePath, imgPath } from '@/utils/format';
 import {
   Box,
   CircularProgress,
@@ -245,7 +245,7 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
                   <img
                     // src={imagePath[index]?.imagePath}
                     // src={imagePath[]}
-                    src={`${imgPath()}${joinInfo?.images[0].thumbnailImagePath}`}
+                    src={getImagePath(joinInfo?.images[0].thumbnailImagePath)}
                     alt="이미지 업로드"
                   />
                 </Flex>

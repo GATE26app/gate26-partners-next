@@ -8,7 +8,7 @@ import { usePostImageMutation } from '@/apis/goods/GoodsApi.mutation';
 import { GoodsBasicProps } from '@/apis/goods/GoodsApi.type';
 
 import { ColorBlack, ColorGray50, ColorGray400 } from '@/utils/_Palette';
-import { imgPath } from '@/utils/format';
+import { getImagePath, imgPath } from '@/utils/format';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 
@@ -81,7 +81,7 @@ function EditorDetailComponent({ list, setList }: Props) {
             const range = quillRef.current.getEditorSelection();
             quillRef.current
               .getEditor()
-              .insertEmbed(range.index, 'image', `${imgPath()}${imgUrl}`);
+              .insertEmbed(range.index, 'image', getImagePath(imgUrl));
             quillRef.current.getEditor().setSelection(range.index + 1);
           }
 

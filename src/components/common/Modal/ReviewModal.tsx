@@ -32,7 +32,12 @@ import ReviewGoodsInfo from './review/ReviewGoodsInfo';
 import ButtonModal from '../ModalContainer/_fragments/ButtonModal';
 import { useQuery } from 'react-query';
 import reviewApi from '@/apis/review/ReviewApi';
-import { PaymentMethod, formatDateDash, imgPath } from '@/utils/format';
+import {
+  PaymentMethod,
+  formatDateDash,
+  getImagePath,
+  imgPath,
+} from '@/utils/format';
 import {
   useDeleteReviewCommentMutation,
   usePutReviewCommentMutation,
@@ -253,7 +258,7 @@ function ReviewModal({
                       <Box borderRadius={'12px'} overflow={'hidden'}>
                         <Image
                           width={'100%'}
-                          src={imgPath() + item.imagePath}
+                          src={getImagePath(item.imagePath)}
                         />
                       </Box>
                     </SwiperSlide>
