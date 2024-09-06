@@ -78,6 +78,7 @@ export type GoodsListDtoType = {
   sortBy?: string;
   searchKeyword?: string;
   searchType?: string;
+  type?: number | null;
 };
 
 export type GoodsListParamGetType = {
@@ -90,6 +91,7 @@ export type GoodsListParamGetType = {
   sortBy?: string;
   searchKeyword?: string;
   searchType?: string;
+  type?: number | null;
 };
 export type GoodsListItemLocationProps = {
   locationId: number;

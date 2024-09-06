@@ -57,6 +57,7 @@ function GoodsFilter({ request, setRequest, setOnSubmit }: Props) {
         level: request.level !== undefined ? request.level : 0,
         forSale: request.forSale !== undefined ? request.forSale : 0,
         status: request.status !== undefined ? request.status : null,
+        type: request.type !== undefined ? request.type : null,
       });
       setGoodsInfo({
         goodState: true,

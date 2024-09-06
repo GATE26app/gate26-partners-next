@@ -10,6 +10,7 @@ interface goodsFilterType {
   forSale: number;
   searchKeyword: string;
   searchType: string;
+  type: number | null;
 }
 
 interface goodsFiterInfoState {
@@ -26,6 +27,7 @@ const defaultState = {
   forSale: 0,
   searchKeyword: '',
   searchType: '',
+  type: 0,
 };
 
 export const useGoodsFilterZuInfo = create(
