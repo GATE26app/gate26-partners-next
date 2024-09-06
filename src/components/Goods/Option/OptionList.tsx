@@ -21,12 +21,17 @@ import {
   ColorInputBorder,
   ColorMainBackBule,
   ColorWhite,
+  ColorRedOpa,
+  ColorBackBlue,
 } from '@/utils/_Palette';
 
 import { Option } from './OptionPlus';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
+dayjs.locale('ko');
 interface Props {
   list: GoodsBasicProps;
   setList: React.Dispatch<React.SetStateAction<GoodsBasicProps>>;
@@ -264,18 +269,32 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
             </Flex>
           )} */}
           {optionList[0].price !== null && (
-            <Flex
-              w={'300px'}
-              alignItems={'center'}
-              justifyContent={'center'}
-              borderRightColor={ColorGray400}
-              borderRightWidth={1}
-              py={'20px'}
-            >
-              <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-                가격
-              </Text>
-            </Flex>
+            <>
+              <Flex
+                w={'300px'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRightColor={ColorGray400}
+                borderRightWidth={1}
+                py={'20px'}
+              >
+                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                  옵션가
+                </Text>
+              </Flex>
+              <Flex
+                w={'300px'}
+                alignItems={'center'}
+                justifyContent={'center'}
+                borderRightColor={ColorGray400}
+                borderRightWidth={1}
+                py={'20px'}
+              >
+                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
+                  판매가격 (기본가 + 옵션가)
+                </Text>
+              </Flex>
+            </>
           )}
           {optionList[0].stockCnt !== null && (
             <Flex
@@ -317,6 +336,13 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                 borderTopColor={ColorGray400}
                 borderTopWidth={1}
                 key={index}
+                backgroundColor={
+                  dayjs(item.useDateTime).get('d') === 0
+                    ? ColorRedOpa
+                    : dayjs(item.useDateTime).get('d') === 6
+                      ? ColorBackBlue
+                      : 'transparent'
+                }
               >
                 {optionList[0].useDateTime !== '' &&
                   optionList[0].useDateTime !== null && (
@@ -330,7 +356,10 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       <Editable
                         w={'100%'}
                         key={item.useDateTime.split(' ')[0]}
-                        value={item.useDateTime.split(' ')[0]}
+                        // value={item.useDateTime.split(' ')[0]}
+                        value={dayjs(item.useDateTime).format(
+                          'YYYY-MM-DD (ddd)',
+                        )}
                         textAlign={'center'}
                         fontSize={'15px'}
                         fontWeight={500}
@@ -503,46 +532,57 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                 )}
 
                 {item.price !== null && (
-                  <Flex
-                    w={'300px'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    borderRightWidth={1}
-                    borderRightColor={ColorGray400}
-                  >
-                    <Editable
-                      w={'100%'}
-                      key={item.price}
-                      defaultValue={String(item.price)}
-                      textAlign={'center'}
-                      fontSize={'15px'}
-                      fontWeight={500}
-                      isPreviewFocusable={true}
-                      selectAllOnFocus={false}
-                      isDisabled={goodsInfo.LogItemDisable}
-                      onChange={(e) => {
-                        setIndexCnt(index);
-                        setprice(e);
-                      }}
-                      onBlur={(e) => {
-                        setPriceState(true);
-                      }}
-                      // onBlur={(e) => handleInputChange(index, 'price', e)}
-                      // onChange={(e) => setprice(e)}
+                  <>
+                    <Flex
+                      w={'300px'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      borderRightWidth={1}
+                      borderRightColor={ColorGray400}
                     >
-                      <EditablePreview
-                        py={'17px'}
-                        color={ColorGray700}
-                        width="full"
-                      />
-                      <EditableInput
-                        py={'17px'}
-                        type="number"
-                        color={ColorBlack}
-                        disabled={goodsInfo.LogItemDisable}
-                      />
-                    </Editable>
-                  </Flex>
+                      <Editable
+                        w={'100%'}
+                        key={item.price}
+                        defaultValue={String(item.price)}
+                        textAlign={'center'}
+                        fontSize={'15px'}
+                        fontWeight={500}
+                        isPreviewFocusable={true}
+                        selectAllOnFocus={false}
+                        isDisabled={goodsInfo.LogItemDisable}
+                        onChange={(e) => {
+                          setIndexCnt(index);
+                          setprice(e);
+                        }}
+                        onBlur={(e) => {
+                          setPriceState(true);
+                        }}
+                        // onBlur={(e) => handleInputChange(index, 'price', e)}
+                        // onChange={(e) => setprice(e)}
+                      >
+                        <EditablePreview
+                          py={'17px'}
+                          color={ColorGray700}
+                          width="full"
+                        />
+                        <EditableInput
+                          py={'17px'}
+                          type="number"
+                          color={ColorBlack}
+                          disabled={goodsInfo.LogItemDisable}
+                        />
+                      </Editable>
+                    </Flex>
+                    <Flex
+                      w={'300px'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      borderRightWidth={1}
+                      borderRightColor={ColorGray400}
+                    >
+                      <Text>{list.price + item.price}</Text>
+                    </Flex>
+                  </>
                 )}
                 {item.stockCnt !== null && (
                   <Flex
