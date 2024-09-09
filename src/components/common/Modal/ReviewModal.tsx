@@ -128,7 +128,6 @@ function ReviewModal({
   const { mutate: deleteMutate } = useDeleteReviewCommentMutation({
     options: {
       onSuccess: (res) => {
-        console.log('댓글 삭제 res', res);
         setReload(true);
         setComment('');
         // setList(res.data);

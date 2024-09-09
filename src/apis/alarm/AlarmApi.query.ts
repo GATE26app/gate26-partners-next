@@ -35,14 +35,10 @@ export const useGetAlarmLitQuery = (
     queryFn: async ({ pageParam: pageNum = 1 }: { pageParam?: number }) =>
       alarmApi.getAlarmList(params),
     getNextPageParam: (nextInfo, allPages) => {
-      console.log('nextInfo', nextInfo);
-      console.log('nextInfo?.data.pageNo', nextInfo?.data.pageNo);
-      console.log('nextInfo?.data.pageCount', nextInfo?.data.pageCount);
       if (nextInfo.data.totalCount !== 0) {
         if (nextInfo?.data.pageNo >= nextInfo.data.pageCount) {
           return undefined;
         } else {
-          console.log('*****plus');
           params.pageNo + 1;
           return allPages.length + 1;
         }

@@ -238,7 +238,6 @@ function CreateGoodsComponentPage() {
       options: optionList,
       autoConfirm: BasicInfo.autoConfirm,
     };
-    console.log('PostData', PostData);
 
     if (status == 2) {
       if (partnerInfo.shippingType == 0) {

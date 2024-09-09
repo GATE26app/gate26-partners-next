@@ -29,7 +29,6 @@ function FilterBox({ request, setRequest }: Props) {
     }
   }, [request]);
 
-  console.log('request,', request);
   return (
     <Flex flexDirection={'column'} w={'100%'}>
       <Flex flexDirection={'row'} flexWrap={'wrap'}>
@@ -370,7 +369,6 @@ function FilterBox({ request, setRequest }: Props) {
               select={searchSelect}
               setSelect={(item) => {
                 setSearchSelect(item);
-                console.log('item', item);
                 setRequest({
                   ...request,
                   searchType:

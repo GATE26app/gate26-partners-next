@@ -102,7 +102,6 @@ function OrderGoodsCard({ header, item }: Props) {
     orderCancelRequestDetail: '',
   });
 
-  console.log('item.cancelStatusName', item.cancelStatusName);
   const onClickSelect = (type: string) => {
     if (type !== selectState) {
       if (
@@ -358,7 +357,7 @@ function OrderGoodsCard({ header, item }: Props) {
         },
       },
     });
-  console.log('item', item);
+
   return (
     <>
       {cancelModal && (

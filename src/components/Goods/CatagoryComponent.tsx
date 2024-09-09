@@ -87,10 +87,6 @@ function CatagoryComponent({
       setList(resultId);
     }
   }, [getList]);
-  // const { data, isLoading } = useQuery('category', () =>
-  //   goodsApi.getCategory(),
-  // );
-  console.log('getList', getList);
   const { data, error, isLoading } = useQuery(
     'category',
     goodsApi.getCategory,

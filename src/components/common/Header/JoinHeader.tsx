@@ -1,9 +1,11 @@
 import { ColorGray400, ColorRed, ColorWhite } from '@/utils/_Palette';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 function JoinHeader() {
+  const router = useRouter();
   return (
     <>
       <Flex
@@ -19,7 +21,11 @@ function JoinHeader() {
         borderBottomWidth={1}
         boxShadow={'0px 3px 6px #00000008'}
       >
-        <Flex flexDirection={'row'} alignItems={'center'}>
+        <Flex
+          flexDirection={'row'}
+          alignItems={'center'}
+          onClick={() => router.replace('/login')}
+        >
           <Image
             src={'/images/header/icon_logo_big.png'}
             width={185}

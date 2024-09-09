@@ -11,9 +11,11 @@ import {
 import { Box, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 function page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const getMessage = searchParams.get('message');
   return (
     <Flex
       width="100vw"
@@ -41,11 +43,14 @@ function page() {
           회원가입 반려
         </Text>
         <Flex
+          w={'100%'}
           bgColor={ColorGray100}
           borderRadius={'10px'}
           px={'50px'}
           py={'30px'}
           mt={'35px'}
+          justifyContent={'center'}
+          // alignItems={'center'}
         >
           <Text
             fontWeight={700}
@@ -53,7 +58,7 @@ function page() {
             color={ColorRed}
             textAlign={'center'}
           >
-            반려사유가 노출됩니다. 반려사유가 노출됩니다. 반려사유가 노출됩니다.
+            {getMessage !== undefined ? getMessage : ''}
           </Text>
         </Flex>
 
@@ -67,7 +72,7 @@ function page() {
             alignItems={'center'}
             mt={'30px'}
             cursor={'pointer'}
-            onClick={() => router.back()}
+            onClick={() => router.push('/join/terms')}
           >
             <Text color={ColorWhite} fontWeight={800} fontSize={'16px'}>
               다시 회원가입하기

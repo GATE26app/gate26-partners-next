@@ -36,7 +36,6 @@ function page() {
   const { mutate: IdCheckMutate, isLoading } = useProfileDetailMutation({
     options: {
       onSuccess: (res) => {
-        console.log('비밀번호 확인, 프로필조회 : ', res);
         setSettingStateInfo({
           settingState: false,
         });

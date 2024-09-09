@@ -13,6 +13,7 @@ export type LoginDTO = {
   data?: LoginInfo;
   message?: string;
   success: boolean;
+  code: string;
 };
 
 export type LoginInfo = {

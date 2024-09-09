@@ -63,7 +63,6 @@ function JoinBasicInfoComponent({
     pg: '',
   });
 
-  console.log('joinInfo', joinInfo);
   const ToastComponent = (message: string) => {
     const toast = useToast();
     return toast({
@@ -80,7 +79,6 @@ function JoinBasicInfoComponent({
   const { mutate: IdCheckMutate, isLoading } = usePostIdCheckMutation({
     options: {
       onSuccess: (res) => {
-        console.log('아이디 중복확인 : ', res);
         if (res.success) {
           setJoinInfo({
             ...joinInfo,
@@ -151,7 +149,6 @@ function JoinBasicInfoComponent({
   // 핸드폰번호 확인
   const handlePhone = (phone: string) => {
     let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-    console.log('phone', phone);
 
     if (phone == '') {
       setError({
@@ -178,7 +175,6 @@ function JoinBasicInfoComponent({
     usePostAuthKeyMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 키 : ', res);
           if (res.success) {
             setMerchantUid(res.data.merchantUid);
             setData({
@@ -202,10 +198,8 @@ function JoinBasicInfoComponent({
     usePostAuthCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 확인 : ', res);
           if (res.success) {
             setAuthCheckDisable(true);
-            console.log('merchantUid', merchantUid);
             setJoinInfo({
               ...joinInfo,
               authId: merchantUid,
@@ -236,7 +230,6 @@ function JoinBasicInfoComponent({
 
   /* 본인인증 후 콜백함수 */
   function callback(response: RequestPayResponse) {
-    console.log('response', response);
     if (
       response.success &&
       response.imp_uid !== undefined &&
@@ -247,7 +240,6 @@ function JoinBasicInfoComponent({
         impUid: response.imp_uid,
       };
       setMerchantUid(response.merchant_uid);
-      console.log('body', body);
       AuthCheckMutate(body);
     }
     setLoading(false);
@@ -275,7 +267,6 @@ function JoinBasicInfoComponent({
     usePostAuthEmailMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 발급 : ', res);
           if (res.success) {
             setEmailSend(true);
             setEmailAuthId(res.data.authId);
@@ -325,7 +316,6 @@ function JoinBasicInfoComponent({
         authId: emailAuthId,
         authCode: emailCode,
       };
-      console.log('data', data);
       AuthEmailCodeMutate(data);
     }
   };
@@ -334,7 +324,6 @@ function JoinBasicInfoComponent({
     usePostAuthEmailCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 확인 : ', res);
           if (res.success) {
             setJoinInfo({
               ...joinInfo,

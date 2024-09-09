@@ -46,7 +46,6 @@ function FindPwComponent() {
   const handlePhone = (phone: string) => {
     let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
 
-    console.log('phone', phone);
     if (phone == '') {
       setError({
         ...error,
@@ -72,7 +71,6 @@ function FindPwComponent() {
     usePostFindPwAuthKeyMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 키 : ', res);
           if (res.success) {
             setMerchantUid(res.data.merchantUid);
 
@@ -93,7 +91,6 @@ function FindPwComponent() {
     usePosFindPwtAuthCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 확인 : ', res);
           if (res.success) {
             setSubmitAble(true);
             setAuthCheckDisable(true);
@@ -139,7 +136,6 @@ function FindPwComponent() {
 
   /* 본인인증 후 콜백함수 */
   function callback(response: RequestPayResponse) {
-    console.log('response', response);
     if (
       response.success &&
       response.imp_uid !== undefined &&
@@ -149,8 +145,6 @@ function FindPwComponent() {
         authId: response.merchant_uid,
         impUid: response.imp_uid,
       };
-      // setMerchantUid(response.merchant_uid);
-      console.log('body', body);
       AuthFindPwCheckMutate(body);
     }
     setLoading(false);
@@ -186,7 +180,6 @@ function FindPwComponent() {
     usePostFindPwAuthEmailMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 발급 : ', res);
           if (res.success) {
             setEmailSend(true);
             setMerchantUid(res.data.authId);
@@ -236,7 +229,6 @@ function FindPwComponent() {
         authId: merchantUid,
         authCode: emailCode,
       };
-      console.log('data', data);
       AuthFindPwEmailCodeMutate(data);
     }
   };
@@ -245,7 +237,6 @@ function FindPwComponent() {
     usePostFindPwAuthEmailCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 확인 : ', res);
           if (res.success) {
             // setAuthEmailCheckDisable(true);
             setEmailSend(false); //인증 완료 후 이메일 인증 코드 input 가리기
@@ -342,6 +333,16 @@ function FindPwComponent() {
                 onClick={() => handlePhone(phoneNum)}
               />
             </Flex>
+            {error.phoneError && (
+              <Text
+                color={ColorRed}
+                fontWeight={400}
+                fontSize={'12px'}
+                pt={'6px'}
+              >
+                {error.phoneError}
+              </Text>
+            )}
           </>
         ) : (
           <>

@@ -81,7 +81,6 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
     options: {
       onSuccess: (res) => {
         if (res.success == true) {
-          console.log('이미지 : ', res.data);
           setJoinInfo({
             ...joinInfo,
             images: [
@@ -108,19 +107,17 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
       },
     },
   });
-  const onDeleteImg = (index: number) => {
-    // list[index].images[0].imagePath = '';
-    // list[index].images[0].thumbnailImagePath = '';
-    // setImageList((prevItems) =>
-    //   prevItems.map((item, idx) =>
-    //     idx === index ? { ...item, imageListImage: '' } : item,
-    //   ),
-    // );
-    // setImagePath((prevItems) =>
-    //   prevItems.map((item, idx) =>
-    //     idx === index ? { ...item, imagePath: '' } : item,
-    //   ),
-    // );
+
+  const onDeleteImg = () => {
+    setJoinInfo({
+      ...joinInfo,
+      images: [
+        {
+          imagePath: '',
+          thumbnailImagePath: '',
+        },
+      ],
+    });
   };
   return (
     <>
@@ -184,7 +181,7 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
         </Text>
       </Flex>
       <Flex flexDirection={'column'} position={'relative'} w={'100px'}>
-        {joinInfo?.images[0].thumbnailImagePath !== '' && (
+        {joinInfo?.images[0]?.thumbnailImagePath !== '' && (
           <Flex
             position={'absolute'}
             top={'10px'}
@@ -198,7 +195,7 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
                 type: 'alert',
                 okButtonName: '확인',
                 cbOk: () => {
-                  // onDeleteImg(index);
+                  onDeleteImg();
                   // window.history.back();
                 },
               });

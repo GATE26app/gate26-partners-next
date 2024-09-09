@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import ButtonModal from '../common/ModalContainer/_fragments/ButtonModal';
 // import { Viewer, Worker } from '@react-pdf-viewer/core';
 // import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 // import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -37,11 +38,18 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [pdfList, setPdfList] = useState<Array<JoinFilesArray>>([]);
   const [filePathList, setFilePathList] = useState<Array<ImgPath>>([]);
-
+  const [isOpenAlertModal, setOpenAlertModal] = useState(false);
+  const [ModalState, setModalState] = useState({
+    title: '',
+    message: '',
+    type: 'alert',
+    okButtonName: '',
+    cbOk: () => {},
+    cbCancel: () => {},
+  });
   const { mutate: PdfMutate, isLoading } = usePostJoinPdfMutation({
     options: {
       onSuccess: (res) => {
-        console.log('pdf : ', res.data);
         if (res.success == true) {
           handleImageSave(res.data?.filePath, res.data?.thumbnailImagePath);
           // setJoinInfo({
@@ -86,6 +94,17 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
       setJoinInfo({
         ...joinInfo,
         files: pdfList,
+      });
+    } else {
+      setJoinInfo({
+        ...joinInfo,
+        files: [
+          {
+            filePath: '',
+            thumbnailImagePath: '',
+            type: 0,
+          },
+        ],
       });
     }
   }, [pdfList]);
@@ -132,15 +151,31 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
     PdfMutate(formData);
   };
 
-  const onDeleteImg = (index: number) => {
-    const deleteImage = pdfList.filter((item) => item.type !== index);
-    const deleteImg = filePathList.filter((item) => item.type !== index);
+  const onDeleteImg = (type: number) => {
+    const deleteImage = pdfList.filter((item) => item.type !== type);
+    const deleteImg = filePathList.filter((item) => item.type !== type);
     setPdfList(deleteImage);
     setFilePathList(deleteImg);
+
+    setJoinInfo({
+      ...joinInfo,
+      files: [
+        {
+          filePath: '',
+          thumbnailImagePath: '',
+          type: 0,
+        },
+      ],
+    });
   };
 
   return (
     <>
+      <ButtonModal
+        isOpen={isOpenAlertModal}
+        ModalState={ModalState}
+        onClose={() => setOpenAlertModal(false)}
+      />
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           사업자등록증 파일첨부
@@ -157,27 +192,27 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
               position={'absolute'}
               top={'10px'}
               right={'10px'}
-              // onClick={() => {
-              //   setOpenAlertModal(true);
-              //   setModalState({
-              //     ...ModalState,
-              //     title: '이미지 삭제',
-              //     message: '이미지를 삭제하시곘습니까?',
-              //     type: 'alert',
-              //     okButtonName: '확인',
-              //     cbOk: () => {
-              //       // onDeleteImg(index);
-              //       // window.history.back();
-              //     },
-              //   });
-              // }}
+              onClick={() => {
+                setOpenAlertModal(true);
+                setModalState({
+                  ...ModalState,
+                  title: '파일 삭제',
+                  message: '파일을 삭제하시곘습니까?',
+                  type: 'alert',
+                  okButtonName: '확인',
+                  cbOk: () => {
+                    onDeleteImg(1);
+                    // window.history.back();
+                  },
+                });
+              }}
             >
               <Image
                 src={'/images/Page/icon_delete_img.png'}
                 alt="이미지 삭제"
                 width={18}
                 height={18}
-                onClick={() => onDeleteImg(1)}
+                // onClick={() => onDeleteImg(1)}
               />
             </Flex>
           )}
@@ -275,27 +310,27 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
               position={'absolute'}
               top={'10px'}
               right={'10px'}
-              // onClick={() => {
-              //   setOpenAlertModal(true);
-              //   setModalState({
-              //     ...ModalState,
-              //     title: '이미지 삭제',
-              //     message: '이미지를 삭제하시곘습니까?',
-              //     type: 'alert',
-              //     okButtonName: '확인',
-              //     cbOk: () => {
-              //       // onDeleteImg(index);
-              //       // window.history.back();
-              //     },
-              //   });
-              // }}
+              onClick={() => {
+                setOpenAlertModal(true);
+                setModalState({
+                  ...ModalState,
+                  title: '파일 삭제',
+                  message: '파일을 삭제하시곘습니까?',
+                  type: 'alert',
+                  okButtonName: '확인',
+                  cbOk: () => {
+                    onDeleteImg(2);
+                    // window.history.back();
+                  },
+                });
+              }}
             >
               <Image
                 src={'/images/Page/icon_delete_img.png'}
                 alt="이미지 삭제"
                 width={18}
                 height={18}
-                onClick={() => onDeleteImg(2)}
+                // onClick={() => onDeleteImg(2)}
               />
             </Flex>
           )}

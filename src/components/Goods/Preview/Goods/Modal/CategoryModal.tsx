@@ -25,7 +25,6 @@ interface OneButtonModalProps extends ModalProps {
   category: Array<categoryDTO>;
 }
 function CategoryModal(props: Omit<OneButtonModalProps, 'children'>) {
-  console.log('category', props.category, props.location);
   return (
     <Modal closeOnOverlayClick={false} {...props} isCentered>
       <ModalOverlay />

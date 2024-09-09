@@ -31,7 +31,6 @@ function FindPwChangeComponent() {
   //비밀번호 체크
   const handleCheckPw = (pw: string) => {
     var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
-    console.log('pw', pw);
     if (pw.length == 0) {
       setError({
         ...error,
@@ -78,7 +77,6 @@ function FindPwChangeComponent() {
     usePostFindPwResetPwMutation({
       options: {
         onSuccess: (res) => {
-          console.log('비밀번호 변경 : ', res);
           if (res.success) {
             toast({
               position: 'top',

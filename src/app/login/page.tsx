@@ -57,6 +57,7 @@ function LoginPage() {
   useEffect(() => {
     fcm();
   }, []);
+
   function requestPermission() {
     // console.log('권한 요청 중...');
     if (typeof Notification !== 'undefined') {
@@ -71,7 +72,6 @@ function LoginPage() {
     }
   }
   requestPermission();
-
   // console.log('fcmtoken,', fcmtoken);
   const fcm = async () => {
     const fcmToken = await getFcmToken();
@@ -122,7 +122,11 @@ function LoginPage() {
           router.push('/');
           setErrorMsg('');
         } else {
-          setErrorMsg(String(res.message));
+          if (res.code == 'A023') {
+            router.replace(`/join/fail?message=${res.message}`);
+          } else {
+            setErrorMsg(String(res.message));
+          }
         }
       },
       onError: (e) => {

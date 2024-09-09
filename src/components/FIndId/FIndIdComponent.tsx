@@ -60,7 +60,6 @@ function FindIdComponent() {
   // 핸드폰번호 확인
   const handlePhone = (phone: string) => {
     let result = /^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/;
-    console.log('phone', phone);
 
     if (phone == '') {
       setError({
@@ -87,7 +86,6 @@ function FindIdComponent() {
     usePostFindIdAuthKeyMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 키 : ', res);
           if (res.success) {
             setMerchantUid(res.data.merchantUid);
 
@@ -108,7 +106,6 @@ function FindIdComponent() {
     usePosFindIdtAuthCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('본인인증 확인 : ', res);
           if (res.success) {
             setAuthCheckDisable(true);
             setSubmitAble(true);
@@ -139,7 +136,6 @@ function FindIdComponent() {
 
   /* 본인인증 후 콜백함수 */
   function callback(response: RequestPayResponse) {
-    console.log('response', response);
     if (
       response.success &&
       response.imp_uid !== undefined &&
@@ -149,8 +145,6 @@ function FindIdComponent() {
         authId: response.merchant_uid,
         impUid: response.imp_uid,
       };
-      // setMerchantUid(response.merchant_uid);
-      console.log('body', body);
       AuthFindIdCheckMutate(body);
     }
     setLoading(false);
@@ -178,7 +172,6 @@ function FindIdComponent() {
     usePostFindIdAuthEmailMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 발급 : ', res);
           if (res.success) {
             setEmailSend(true);
             setEmailAuthId(res.data.authId);
@@ -214,7 +207,6 @@ function FindIdComponent() {
         authId: emailAuthId,
         authCode: emailCode,
       };
-      console.log('data', data);
       AuthFindIdEmailCodeMutate(data);
     }
   };
@@ -223,7 +215,6 @@ function FindIdComponent() {
     usePostFindIdAuthEmailCheckMutation({
       options: {
         onSuccess: (res) => {
-          console.log('이메일 인증코드 확인 : ', res);
           if (res.success) {
             // setAuthEmailCheckDisable(true);
             setEmailSend(false); //인증 완료 후 이메일 인증 코드 input 가리기
