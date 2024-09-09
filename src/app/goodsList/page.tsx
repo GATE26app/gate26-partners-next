@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import { Box, Flex, Image, Text, useToast } from '@chakra-ui/react';
@@ -38,6 +38,7 @@ function GoodsListPage() {
     forSale: goodsFilterInfo.forSale,
     searchKeyword: goodsFilterInfo.searchKeyword,
     searchType: goodsFilterInfo.searchType,
+    type: goodsFilterInfo.type,
   });
   const { mutate: refreshList, isLoading } = usePostListMutation({
     options: {

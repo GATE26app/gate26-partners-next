@@ -6,11 +6,14 @@ import dayjs from 'dayjs';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
+import { ColorBlack, ColorGray700 } from '@/utils/_Palette';
 import {
-  ColorBlack,
-  ColorGray700,
-} from '@/utils/_Palette';
-import { formatDated, formatPhone, imgPath, intComma } from '@/utils/format';
+  formatDated,
+  formatPhone,
+  getImagePath,
+  imgPath,
+  intComma,
+} from '@/utils/format';
 
 interface headerProps {
   id: string;
@@ -30,7 +33,7 @@ interface Props {
     orderTitle: string;
     orderDateTimeOfUse: string;
     orderStatus: number;
-    orderStatusName:string;
+    orderStatusName: string;
     address: string;
     addressDetail: string;
     postcode: string;
@@ -93,8 +96,8 @@ function GoodsInfoCard({ header, item }: Props) {
             }}
             src={
               item.orderThumbnailImagePath !== null
-              ? `${imgPath()}${item.orderThumbnailImagePath}`
-              : '/images/no_img.png'
+                ? getImagePath(item.orderThumbnailImagePath)
+                : '/images/no_img.png'
             }
             onError={addDefaultImg}
             alt="이미지 업로드"

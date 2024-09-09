@@ -22,6 +22,7 @@ import {
   formatDateDot,
   formatDated,
   formatPhone,
+  getImagePath,
   imgPath,
   intComma,
 } from '@/utils/format';
@@ -99,7 +100,7 @@ function ReviewCard({ header, item, index, totalCount, pageNo }: Props) {
               src={
                 item.orderThumbnailImagePath !== null ||
                 item.orderThumbnailImagePath !== ''
-                  ? `${imgPath()}${item.orderThumbnailImagePath}`
+                  ? getImagePath(item.orderThumbnailImagePath)
                   : '/images/no_img.png'
               }
               onError={addDefaultImg}
@@ -137,22 +138,25 @@ function ReviewCard({ header, item, index, totalCount, pageNo }: Props) {
                 {item.orderTitle}
               </Text>
             </Flex>
-            <Flex gap={'10px'} flexShrink={0}>
-              <Text
-                flexShrink={0}
-                color={ColorGray700}
-                fontWeight={600}
-                fontSize={'14px'}
-                w={'50px'}
-              >
-                예약일
-              </Text>
-              <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
-                {item.orderDateTimeOfUse !== undefined
-                  ? formatDateDot(item.orderDateTimeOfUse)
-                  : '-'}
-              </Text>
-            </Flex>
+            {item.orderDateTimeOfUse && (
+              <Flex gap={'10px'} flexShrink={0}>
+                <Text
+                  flexShrink={0}
+                  color={ColorGray700}
+                  fontWeight={600}
+                  fontSize={'14px'}
+                  w={'50px'}
+                >
+                  예약일
+                </Text>
+                <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
+                  {item.orderDateTimeOfUse !== undefined
+                    ? formatDateDot(item.orderDateTimeOfUse)
+                    : '-'}
+                </Text>
+              </Flex>
+            )}
+
             <Flex gap={'10px'}>
               <Text
                 color={ColorGray700}
@@ -186,7 +190,7 @@ function ReviewCard({ header, item, index, totalCount, pageNo }: Props) {
               }}
               src={
                 item.review?.images.length > 0
-                  ? `${imgPath()}${item.review?.images[0].thumbnailImagePath}`
+                  ? getImagePath(item.review?.images[0].thumbnailImagePath)
                   : '/images/no_img.png'
               }
               onError={addDefaultImg}

@@ -19,7 +19,7 @@ import {
   ColorRed50,
   ColorWhite,
 } from '@/utils/_Palette';
-import { imgPath } from '@/utils/format';
+import { getImagePath, imgPath } from '@/utils/format';
 import {
   Box,
   CircularProgress,
@@ -300,9 +300,9 @@ function ProfileInfo({ info }: Props) {
                       overflow={'hidden'}
                     >
                       <img
-                        src={
-                          imgPath() + profileInfo?.images[0]?.thumbnailImagePath
-                        }
+                        src={getImagePath(
+                          profileInfo?.images[0]?.thumbnailImagePath,
+                        )}
                         style={{
                           width: '100%',
                           height: '100%',

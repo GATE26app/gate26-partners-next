@@ -14,7 +14,13 @@ import {
   ColorGrayBorder,
   ColorclickBlue,
 } from '@/utils/_Palette';
-import { PaymentMethod, formatDated, imgPath, intComma } from '@/utils/format';
+import {
+  PaymentMethod,
+  formatDated,
+  getImagePath,
+  imgPath,
+  intComma,
+} from '@/utils/format';
 
 // import { ItemProps } from './OrderDataTable';
 
@@ -161,7 +167,7 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
             }}
             src={
               item.orderThumbnailImagePath !== null
-                ? `${imgPath()}${item.orderThumbnailImagePath}`
+                ? getImagePath(item.orderThumbnailImagePath)
                 : '/images/no_img.png'
             }
             onError={addDefaultImg}

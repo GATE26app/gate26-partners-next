@@ -73,6 +73,9 @@ function OrderAmount({ info }: Props) {
             <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
               (-) {intComma(info.discountAmount)}원
             </Text>
+            {/* <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
+              {'신규 가입 쿠폰 1,000원'}
+            </Text> */}
             {info.coupons.length > 0 &&
               info.coupons.map((item) => {
                 return (

@@ -34,7 +34,8 @@ export class GoodsApi {
       method: 'GET',
       url: `/partner/items?pageNo=${request.pageNo + 1}&pageSize=${
         request.pageSize
-      }${request.status != null ? '&status=' + request.status : ''}${
+      }${request.type != 0 ? '&type=' + request.type : ''}
+      ${request.status != null ? '&status=' + request.status : ''}${
         request.level != 0 ? '&level=' + request.level : ''
       }${request.forSale != 0 ? '&forSale=' + request.forSale : ''}${
         request.searchKeyword != ''

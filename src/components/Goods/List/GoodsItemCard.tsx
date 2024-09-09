@@ -12,7 +12,7 @@ import {
   ColorGray700,
   ColorRed,
 } from '@/utils/_Palette';
-import { DashDate, imgPath, intComma } from '@/utils/format';
+import { DashDate, getImagePath, imgPath, intComma } from '@/utils/format';
 
 import { DataTableHeaderProps } from './GoodsDataTable';
 
@@ -168,7 +168,10 @@ function GoodsItemCard({ header, item }: Props) {
             src={
               item?.images.length == 0
                 ? '/images/Page/no_data.png'
-                : `${imgPath()}${item?.images.filter((item) => item.sort == 1)[0]?.thumbnailImagePath}`
+                : getImagePath(
+                    item?.images.filter((item) => item.sort == 1)[0]
+                      ?.thumbnailImagePath,
+                  )
             }
             onError={addDefaultImg}
             // src={imagePath[]}
