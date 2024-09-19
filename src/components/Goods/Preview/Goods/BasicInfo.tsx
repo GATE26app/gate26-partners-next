@@ -36,7 +36,6 @@ function BasicInfo({ info, loading }: detailType) {
   const [slide, setSlide] = useState(1);
   const [clickImage, setClickImage] = useState<string>('');
 
-  console.log('info.images', info.images);
   return (
     <>
       {info ? (

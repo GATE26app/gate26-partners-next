@@ -63,6 +63,7 @@ export type JoinDtoType = {
   count: number;
   data: any;
   success: boolean;
+  message?: string;
 };
 //회원가입 body
 export type JoinBody = {

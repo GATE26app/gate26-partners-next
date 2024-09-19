@@ -94,7 +94,7 @@ function JoinComponent() {
     } else if (joinInfo.title == '') {
       ToastComponent('파트너사명을 입력해주세요.');
     } else if (joinInfo.tel == '') {
-      ToastComponent('파트너사명을 입력해주세요.');
+      ToastComponent('전화번호를 입력해주세요.');
     } else if (joinInfo?.images[0].thumbnailImagePath == '') {
       ToastComponent('프로필 이미지를 확인해주세요.');
     } else if (joinInfo.info.length == 0) {
@@ -113,7 +113,7 @@ function JoinComponent() {
     } else if (joinInfo.nameOfRepresentative == '') {
       ToastComponent('대표자명 입력해주세요.');
     } else if (joinInfo.businessTel == '') {
-      ToastComponent(' 대표 전화번호을 입력해주세요.');
+      ToastComponent('대표 전화번호을 입력해주세요.');
     } else if (joinInfo.address == '') {
       ToastComponent('주소를 입력해주세요.');
     } else if (joinInfo.addressDetail == '') {
@@ -140,12 +140,20 @@ function JoinComponent() {
   const { mutate: joinMutate, isLoading } = usePutJoinMutation({
     options: {
       onSuccess: (res) => {
-        console.log('res', res);
         if (res.success == true) {
           router.replace('/join/success');
         } else {
           setLoading(false);
-          router.replace('/join/fail');
+          toast({
+            position: 'top',
+            duration: 1000,
+            render: () => (
+              <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+                {res.message}
+              </Box>
+            ),
+          });
+          // router.replace('/join/fail');
           // setErrorMsg(String(res.message));
         }
       },

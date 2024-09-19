@@ -27,7 +27,6 @@ interface Props {
 
 function ShippingComponent() {
   const { partnerInfo } = usePartnerZuInfo((state) => state);
-  console.log('partnerInfo', partnerInfo);
   return (
     <Flex w={'100%'} flexDirection={'column'} mb={'30px'}>
       <Flex

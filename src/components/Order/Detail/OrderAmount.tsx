@@ -73,9 +73,6 @@ function OrderAmount({ info }: Props) {
             <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
               (-) {intComma(info.discountAmount)}원
             </Text>
-            {/* <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
-              {'신규 가입 쿠폰 1,000원'}
-            </Text> */}
             {info.coupons.length > 0 &&
               info.coupons.map((item) => {
                 return (
@@ -86,6 +83,25 @@ function OrderAmount({ info }: Props) {
               })}
           </Flex>
         </Flex>
+        {/* <Flex mt={'15px'} alignItems={'start'}>
+          <Text
+            w={'160px'}
+            fontSize={'15px'}
+            fontWeight={700}
+            flexShrink={0}
+            color={ColorBlack}
+          >
+            할인금액
+          </Text>
+          <Flex flexDirection={'column'}>
+            <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
+              (-) {intComma(info.discountAmount == null ? 0 : info.discountAmount)}원
+            </Text>
+            <Text color={ColorGray700} fontWeight={400} fontSize={'14px'}>
+              {'신규 가입 쿠폰 1,000원'}
+            </Text>
+          </Flex>
+        </Flex> */}
       </Flex>
     </Box>
   );

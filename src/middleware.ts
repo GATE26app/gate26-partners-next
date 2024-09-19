@@ -28,7 +28,6 @@ export default function middleware(request: NextRequest) {
 
   // 로그인 X + 로그인 페이지 X
   if (!accessToken && !request.nextUrl.pathname.startsWith('/login')) {
-    console.log('22222');
     return NextResponse.redirect(new URL('/login', request.url));
   }
 }

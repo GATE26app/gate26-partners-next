@@ -879,7 +879,7 @@ function OptionPlus({
       >
         <Flex w={'200px'}>
           <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-            판매금액/재고
+            옵션가/재고
           </Text>
         </Flex>
         <Flex gap={'10px'} flexDirection={'column'}>
@@ -891,7 +891,7 @@ function OptionPlus({
                 fontSize={'16px'}
                 mb={'5px'}
               >
-                판매금액
+                옵션가
               </Text>
               <InputBox
                 placeholder="숫자입력"
@@ -925,7 +925,6 @@ function OptionPlus({
                 value={intComma(stock) == 'NaN' ? 0 : intComma(stock)}
                 disabled={goodsInfo.LogItemDisable}
                 onChange={(e) => {
-                  console.log('재고', e.target.value.replace(/[^0-9]/g, ''));
                   handleStockChange(e.target.value.replace(/[^0-9]/g, ''));
                 }}
               />

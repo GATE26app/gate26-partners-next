@@ -28,9 +28,7 @@ function BusinessInfo({ info }: Props) {
         },
       },
     );
-    console.log('res', res);
     const imageURL = window.URL.createObjectURL(res.data);
-    console.log('imageURL', imageURL);
     document.getElementById('target-img-1').src = imageURL;
   };
   // 통신판매업신고증
@@ -45,9 +43,7 @@ function BusinessInfo({ info }: Props) {
         },
       },
     );
-    console.log('res', res);
     const imageURL = window.URL.createObjectURL(res.data);
-    console.log('imageURL', imageURL);
     document.getElementById('target-img-2').src = imageURL;
   };
   // 통장사본
@@ -62,9 +58,7 @@ function BusinessInfo({ info }: Props) {
         },
       },
     );
-    console.log('res', res);
     const imageURL = window.URL.createObjectURL(res.data);
-    console.log('imageURL', imageURL);
     document.getElementById('target-img-3').src = imageURL;
   };
 

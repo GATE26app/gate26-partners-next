@@ -109,7 +109,6 @@ export class SettingApi {
       },
       data: body,
     });
-    console.log('body', body);
     return data;
   };
 }

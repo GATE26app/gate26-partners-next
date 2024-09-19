@@ -10,7 +10,6 @@ function SellerInfo() {
   const { partnerInfo } = usePartnerZuInfo((state) => state);
   const [onImage, setOnImage] = useState(false);
 
-  console.log('partnerInfo', partnerInfo);
   return (
     <Box mx={'16px'} my={'20px'}>
       <Text color={ColorBlack} fontSize={'18px'} fontWeight={700}>
@@ -52,9 +51,6 @@ function SellerInfo() {
             px={'15px'}
             py={'9px'}
             cursor={'pointer'}
-            onClick={() => {
-              console.log('파트너 ID => ', info.partnerId);
-            }}
           >
             <Image src="/images/commerce/ico_send.png" w={'15px'} h={'15px'} />
             <Text fontSize={'13px'} color={ColorGray700} fontWeight={600}>

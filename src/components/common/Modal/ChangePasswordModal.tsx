@@ -139,7 +139,6 @@ function ChangePasswordModal({ onClose, ...props }: AlertModalProps) {
     useProfileChangePwMutation({
       options: {
         onSuccess: (res) => {
-          console.log('비밀번호 변경 : ', res);
           if (res.success) {
             toast({
               position: 'top',
@@ -174,9 +173,6 @@ function ChangePasswordModal({ onClose, ...props }: AlertModalProps) {
       },
     });
   useEffect(() => {
-    console.log('pwState', pwState);
-    console.log('chpwState', chpwState);
-    console.log('newchpwState', newchpwState);
     if (pwState && chpwState && newchpwState) {
       setSubmitState(true);
     } else {

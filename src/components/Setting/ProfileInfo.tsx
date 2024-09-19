@@ -214,7 +214,6 @@ function ProfileInfo({ info }: Props) {
     }
   };
 
-  console.log('vvv', profileInfo?.images[0]?.thumbnailImagePath);
   return (
     <Flex flexDirection={'column'}>
       <Box

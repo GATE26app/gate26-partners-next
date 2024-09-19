@@ -90,13 +90,11 @@ function OrderListComponent({ list, request, setRequest }: Props) {
   const [CheckList, setChekcList] = useState<string[]>([]);
   const [newCheckList, setNewChekcList] = useState<string[]>([]);
 
-  console.log('newCheckList', newCheckList);
   //주문번호 그룹화
   const { mutate: OrderGroupMutate } = usePostOrderGroupMutation({
     options: {
       onSuccess: (res, req) => {
         if (res.success) {
-          console.log('res', res);
           setNewChekcList(res.data.orderIds);
           // setIsLoading(false);
           onChangeFun(res.data.orderIds);
