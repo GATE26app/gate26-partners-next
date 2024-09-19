@@ -891,7 +891,7 @@ function OptionPlus({
                 fontSize={'16px'}
                 mb={'5px'}
               >
-                옵션가
+                옵션가 (기본가 추가금액)
               </Text>
               <InputBox
                 placeholder="숫자입력"
