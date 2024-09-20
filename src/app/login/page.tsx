@@ -21,12 +21,21 @@ import {
   ColorRed,
   ColorWhite,
 } from '@/utils/_Palette';
-import { setToken, setUserInfo } from '@/utils/localStorage/token';
+import {
+  getSendBirdToken,
+  setSendBirdToken,
+  setToken,
+  setUserInfo,
+} from '@/utils/localStorage/token';
 
 import { getFcmToken } from '../../../firebase';
 
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import { useUserZuInfo } from '@/_store/UserZuInfo';
+import { TokenType } from '@/apis/auth/AuthApi.type';
+import { useQuery } from 'react-query';
+import goodsApi from '@/apis/goods/GoodsApi';
+import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 
 interface LoginModel {
   loginId: string;
@@ -53,10 +62,22 @@ function LoginPage() {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [fcmtoken, setFcmToken] = useState('');
   const { setAlarmInfo } = useAlarmZuInfo((state) => state);
+  const [sendBirdTokenState, setSendBirdTokenState] = useState(false);
 
   useEffect(() => {
     fcm();
   }, []);
+  const fcm = async () => {
+    const fcmToken = await getFcmToken();
+    if (fcmToken) {
+      setUserZuInfo({
+        fcmToken: fcmToken ? fcmToken : '',
+      });
+      setFcmToken(fcmToken);
+      console.log('FCM Token:', fcmToken);
+      // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
+    }
+  };
 
   function requestPermission() {
     // console.log('권한 요청 중...');
@@ -72,37 +93,35 @@ function LoginPage() {
     }
   }
   requestPermission();
-  // console.log('fcmtoken,', fcmtoken);
-  const fcm = async () => {
-    const fcmToken = await getFcmToken();
-    if (fcmToken) {
-      setFcmToken(fcmToken);
-      console.log('FCM Token:', fcmToken);
-      // 여기서 FCM 토큰을 서버로 전송하여 저장할 수 있습니다.
-    }
-  };
 
+  // 1.최초 로그인시 샌드버드 토큰 발급 > 로컬에 담기
+  // 2.로컬에 있는 지 확인 , expire_at 확인 후 7일 지났는지 확인 (수시로 발급받으면 안됨. 정지당함.)
+  // 3.토큰 유효하지 않을 경우 토큰 재발급
   useEffect(() => {
-    async function getMessageToken() {
-      const token = await getFcmToken();
-    }
-    getMessageToken();
+    console.log('getSendBirdToken().expiresAt', getSendBirdToken().expiresAt);
   }, []);
+  const { data: SendBirdTokenData, error } = useQuery(
+    ['GET_GOODSDETAIL'],
+    () => sendBirdApi.getSendBirdToken(),
+    {
+      // staleTime: Infinity, // 데이터가 절대 오래되었다고 간주되지 않음
+      refetchInterval: false, // 자동 새로 고침 비활성화
+      enabled: !!sendBirdTokenState,
+    },
+  );
+  console.log('sendBirdTokenState', sendBirdTokenState);
+  useEffect(() => {
+    if (SendBirdTokenData !== undefined) {
+      console.log('SendBirdTokenData', SendBirdTokenData);
+      setSendBirdToken({
+        sendBird: SendBirdTokenData.data.token,
+        expiresAt: SendBirdTokenData.data.expires_at,
+        user_id: SendBirdTokenData.data.user_id,
+      });
+      router.push('/');
+    }
+  }, [SendBirdTokenData]);
 
-  // useEffect(() => {
-  //   setTokenHandler();
-  // }, []);
-  // useEffect(() => {
-  //   const fetchToken = async () => {
-  //     const token = await requestFCMToken();
-  //     setFcmToken(token);
-  //     if (token) {
-  //       console.log('FCM Token:', token);
-  //     }
-  //   };
-
-  //   fetchToken();
-  // }, []);
   const { mutate: loginMutate, isLoading } = usePostLoginMutation({
     options: {
       onSuccess: (res) => {
@@ -110,6 +129,7 @@ function LoginPage() {
           const data = res.data;
           document.cookie = `auth=${data?.accessToken}`;
           const param = {
+            fcm: fcmtoken,
             access: data?.accessToken ? data?.accessToken : '',
             refresh: data?.refreshToken ? data?.refreshToken : '',
           };
@@ -118,8 +138,22 @@ function LoginPage() {
             accessToken: data?.accessToken ? data?.accessToken : '',
             refreshToken: data?.refreshToken ? data?.refreshToken : '',
           });
+          if (getSendBirdToken().expiresAt < Date.now()) {
+            console.log('샌드버드 토큰 재발급');
+            // ReTokenFun();
+            setSendBirdTokenState(true);
+          } else {
+            setSendBirdTokenState(false);
+            router.push('/');
+            // ReTokenFun();
+          }
+          // setSendBirdToken({
+          //   sendBird:
+          //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoyMDc1MTEzODgsInYiOjIsImUiOjE3MjYxMDg3MDh9.tOHIkIJUMh18nNgHG8gXgrahKFoWe9jaIY8cSRwxzsw',
+          //   expiresAt: 1726108708000,
+          //   user_id: '9f86f694-4f22-438d-8672-e95a5121d3c7',
+          // });
 
-          router.push('/');
           setErrorMsg('');
         } else {
           if (res.code == 'A023') {

@@ -13,7 +13,7 @@ import {
   ColorMainBackBule,
   ColorWhite,
 } from '@/utils/_Palette';
-import { imgPath } from '@/utils/format';
+import { getImagePath, imgPath } from '@/utils/format';
 import {
   deleteToken,
   deleteUserInfo,
@@ -23,6 +23,7 @@ import {
 import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import AlarmModal from '../Modal/AlarmModal';
 import { usePartnerZuInfo } from '@/_store/PartnerInfo';
+import ChatComponent from '@/components/Chat/ChatComponent';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
@@ -33,6 +34,7 @@ function MainHeader() {
   const [chat, setChat] = useState(false);
   const [logout, setLogout] = useState(false);
   const [alramModal, setAlramModal] = useState(false);
+  const [chatModal, setChatModal] = useState(false);
   const onLogout = () => {
     deleteUserInfo();
     deleteToken();
@@ -98,7 +100,7 @@ function MainHeader() {
               }}
               src={
                 data?.data.images !== undefined && data?.data.images.length > 0
-                  ? `${imgPath()}${data?.data.images[0].thumbnailImagePath}`
+                  ? getImagePath(data?.data.images[0].thumbnailImagePath)
                   : '/images/header/icon_header_user.png'
               }
               onError={addDefaultImg}
@@ -139,13 +141,14 @@ function MainHeader() {
             </Flex>
           )}
         </Flex>
-        {/* <Box  pr={'20px'} cursor={'pointer'}>
+        <Box pr={'20px'} cursor={'pointer'}>
           {chat ? (
             <Image
-              src={'/images/header/icon_chatting_on.png'}
+              src={'/images/header/ch_on.png'}
               width={49}
               height={49}
               alt="로고"
+              onClick={() => setChat(!chat)}
             />
           ) : (
             <Image
@@ -153,9 +156,10 @@ function MainHeader() {
               width={49}
               height={49}
               alt="로고"
+              onClick={() => setChat(!chat)}
             />
           )}
-        </Box> */}
+        </Box>
         <Box cursor={'pointer'}>
           {alarmInfo.alarm ? (
             <Image
@@ -181,6 +185,7 @@ function MainHeader() {
             onClose={() => setAlramModal(false)}
           />
         )}
+        {chat && <ChatComponent />}
       </Flex>
     </>
   );

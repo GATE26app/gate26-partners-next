@@ -412,7 +412,7 @@ function UpdateGoodsComponentPage() {
   const onSubmit = (selectMenu: number, status?: number) => {
     if (selectMenu == 1) {
       if (categoryList.length == 0) {
-        ToastComponent('111카테고리를 선택해주세요.');
+        ToastComponent('카테고리를 선택해주세요.');
       } else if (
         locationList.length == 0 &&
         (getType == '3' || getType == '2')
@@ -658,7 +658,35 @@ function UpdateGoodsComponentPage() {
                     }}
                   />
                 )}
-
+                <CustomButton
+                  text="임시저장"
+                  borderColor={ColorRed}
+                  color={ColorWhite}
+                  px="31px"
+                  py="13px"
+                  bgColor={ColorRed}
+                  // disabled={disableBtn}
+                  fontSize="15px"
+                  onClick={() => {
+                    setBasicInfo({
+                      ...BasicInfo,
+                      status: 0,
+                    });
+                    setOpenAlertModal(true);
+                    setModalState({
+                      ...ModalState,
+                      title: '상품 등록',
+                      message: `상품을 임시저장 하시겠습니까?`,
+                      type: 'confirm',
+                      okButtonName: '확인',
+                      cbOk: () => {
+                        // handleOnSave(0);
+                        // setDiableBtn(true);
+                        // window.history.back();
+                      },
+                    });
+                  }}
+                />
                 <CustomButton
                   text={selectMenu == 1 ? '저장' : '업데이트'}
                   borderColor={ColorRed}

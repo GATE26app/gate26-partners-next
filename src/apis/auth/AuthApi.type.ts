@@ -1,6 +1,13 @@
 export type TokenType = {
   access: string;
   refresh: string;
+  fcm: string;
+};
+
+export type SendBirdTokenType = {
+  sendBird: string;
+  expiresAt: number;
+  user_id: string;
 };
 
 export type LoginDTOType = {

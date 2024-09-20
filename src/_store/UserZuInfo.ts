@@ -5,6 +5,8 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 interface userInfoType {
   accessToken?: string;
   refreshToken?: string;
+  sendBirdToken?: string;
+  fcmToken?: string;
 }
 
 interface UserInfoState {
@@ -16,6 +18,8 @@ interface UserInfoState {
 const defaultState = {
   accessToken: '',
   refreshToken: '',
+  sendBirdToken: '',
+  fcmToken: '',
 };
 
 export const useUserZuInfo = create(
@@ -31,7 +35,7 @@ export const useUserZuInfo = create(
     }),
     {
       name: 'gate26',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
       // storage: typeof window !== "undefined" ? window.localStorage : dummyStorageApi,
     },
   ),
