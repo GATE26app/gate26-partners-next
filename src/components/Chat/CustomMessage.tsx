@@ -6,7 +6,7 @@ import EmojiReactions from '@sendbird/uikit-react/ui/EmojiReactions';
 import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
 import { Box, useToast } from '@chakra-ui/react';
 import lodash from 'lodash';
-import { useGetImage } from '@/apis/sendbird/sendbirdApi.mutation';
+import { useGetImage } from '@/apis/sendbird/SendBirdApi.mutation';
 
 const CustomMessage = (props) => {
   const { message } = props;
