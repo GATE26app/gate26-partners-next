@@ -8,6 +8,7 @@ import MainHeader from '@/components/common/Header/MainHeader';
 import MenuBar from '@/components/common/MenuBar/MenuBar';
 
 import { ColorMainBackBule, ColorWhite } from '@/utils/_Palette';
+import MainHeaderComponent from '../common/Header/MainHeaderComponent';
 
 export default function GoodsLayout({
   children,
@@ -24,7 +25,7 @@ export default function GoodsLayout({
         bgColor={ColorMainBackBule}
         width="calc(100% - 340px)"
       >
-        <MainHeader />
+        <MainHeaderComponent />
         <Box mx={'60px'} mb={'60px'}>
           {children}
         </Box>

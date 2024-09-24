@@ -11,6 +11,7 @@ import { getToken } from '@/utils/localStorage/token';
 
 import { useUserZuInfo } from '@/_store/UserZuInfo';
 import { useRouter } from 'next/navigation';
+import MainHeaderComponent from '../common/Header/MainHeaderComponent';
 
 export default function MainLayout({
   children,
@@ -39,7 +40,7 @@ export default function MainLayout({
         justifyContent={'space-between'}
       >
         <Box>
-          <MainHeader />
+          <MainHeaderComponent />
           <Box
             backgroundColor={ColorWhite}
             // m={'60px'}
