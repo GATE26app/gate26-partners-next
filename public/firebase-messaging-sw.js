@@ -164,16 +164,21 @@ const showNotification = (data) => {
 const getClickAction = (data) => {
   console.log('data', data);
   if (data.sendbird !== undefined) {
-    console.log('JSON.stringify(data.sendbird)', JSON.stringify(data.sendbird));
-    console.log(
-      'channel_url',
-      JSON.stringify(data.sendbird).channel?.channel_url,
-    );
-    localStorage.setItem('sendbirdPush', true);
-    localStorage.setItem(
-      'pushUrl',
-      JSON.stringify(data.sendbird).channel?.channel_url,
-    );
+    if (typeof window !== 'undefined') {
+      console.log(
+        'JSON.stringify(data.sendbird)',
+        JSON.stringify(data.sendbird),
+      );
+      console.log(
+        'channel_url',
+        JSON.parse(data.sendbird).channel?.channel_url,
+      );
+      localStorage.setItem('sendbirdPush', true);
+      localStorage.setItem(
+        'pushUrl',
+        JSON.parse(data.sendbird).channel?.channel_url,
+      );
+    }
   }
   switch (data.type) {
     case 'ITEM':
