@@ -73,7 +73,7 @@ const myColorSet = {
 const CustomMessageInput = () => {
   const { sendUserMessage, hasNext } = useGroupChannelContext();
 
-  console.log('hasNext', hasNext);
+  // console.log('hasNext', hasNext);
   const handleSendMessage = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -458,10 +458,10 @@ function ChatComponent() {
             renderMessage={(props) => {
               // const context = useGroupChannelContext();
               // console.log('context', context);
-              console.log('props', props);
+              // console.log('props', props);
               // 이미지 컴포넌트
               const message = props.message;
-              console.log('message', message);
+              // console.log('message', message);
               if (message.isFileMessage()) {
                 return <CustomMessage {...props} onReact={() => {}} />;
               }
