@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
 
@@ -61,6 +61,12 @@ function MainHeader() {
       },
     },
   });
+  useEffect(() => {
+    console.log('sendbirdPushhhhh', localStorage.getItem('sendbirdPush'));
+    if (localStorage.getItem('sendbirdPush')) {
+      setChat(true);
+    }
+  }, []);
 
   return (
     <>
