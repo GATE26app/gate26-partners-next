@@ -62,7 +62,7 @@ import { useQuery } from 'react-query';
 import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
-import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
+// import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -367,18 +367,18 @@ function ChatComponent() {
     ts: Date.now(),
     messageId: '',
   });
-  const { mutate: refreshList, isLoading } = useChatBackUpMessageMutation({
-    options: {
-      onSuccess: (res) => {
-        console.log('**back up res', res);
-      },
-    },
-  });
-  useEffect(() => {
-    if (!backUpState) {
-      refreshList(bckObj);
-    }
-  }, [backUpState]);
+  // const { mutate: refreshList, isLoading } = useChatBackUpMessageMutation({
+  //   options: {
+  //     onSuccess: (res) => {
+  //       console.log('**back up res', res);
+  //     },
+  //   },
+  // });
+  // useEffect(() => {
+  //   if (!backUpState) {
+  //     refreshList(bckObj);
+  //   }
+  // }, [backUpState]);
 
   const scrollRef = useRef(null);
   // console.log('context', context);
