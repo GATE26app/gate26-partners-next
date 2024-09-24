@@ -139,9 +139,10 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('push', (e) => {
   if (e.data) {
     const data = e.data.json().data;
-    if (!pushThorttle) {
-      showNotification(data);
-    }
+    console.log('###data', data);
+    // if (!pushThorttle) {
+    showNotification(data);
+    // }
   } else {
     console.log('This push event has no data.');
   }
@@ -161,6 +162,7 @@ const showNotification = (data) => {
 };
 
 const getClickAction = (data) => {
+  console.log('data', data);
   switch (data.type) {
     case 'ITEM':
       return `/updateGoods?itemcode=${data.tgId}`;
