@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
@@ -28,6 +28,9 @@ import ChatComponent from '@/components/Chat/ChatComponent';
 
 function MainHeader() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const getSendBird = searchParams.get('sendBird');
+  const getSendbirdUrl = searchParams.get('sendbirdUrl');
   const { setPartnerZuInfo } = usePartnerZuInfo((state) => state);
   const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
   const [alram, setAlram] = useState(false);
@@ -62,9 +65,9 @@ function MainHeader() {
     },
   });
   useEffect(() => {
-    console.log('sendbirdPushhhhh', localStorage.getItem('sendbirdPush'));
-    if (localStorage.getItem('sendbirdPush')) {
+    if (getSendBird == 'true') {
       setChat(true);
+      console.log('getSendbirdUrl', getSendbirdUrl);
     }
   }, []);
 

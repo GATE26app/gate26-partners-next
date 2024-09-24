@@ -164,21 +164,8 @@ const showNotification = (data) => {
 const getClickAction = (data) => {
   console.log('data', data);
   if (data.sendbird !== undefined) {
-    if (typeof window !== 'undefined') {
-      console.log(
-        'JSON.stringify(data.sendbird)',
-        JSON.stringify(data.sendbird),
-      );
-      console.log(
-        'channel_url',
-        JSON.parse(data.sendbird).channel?.channel_url,
-      );
-      localStorage.setItem('sendbirdPush', true);
-      localStorage.setItem(
-        'pushUrl',
-        JSON.parse(data.sendbird).channel?.channel_url,
-      );
-    }
+    console.log('JSON.stringify(data.sendbird)', JSON.stringify(data.sendbird));
+    console.log('channel_url', JSON.parse(data.sendbird).channel?.channel_url);
   }
   switch (data.type) {
     case 'ITEM':
@@ -188,7 +175,9 @@ const getClickAction = (data) => {
     case 'CANCEL':
       return `/cancelDetail?orderId=${data.tgId}`;
     default:
-      return '/';
+      return data.sendbird !== undefined
+        ? `/sendBird=true&sendbirdUrl=${JSON.parse(data.sendbird).channel?.channel_url}`
+        : '/';
   }
 };
 
