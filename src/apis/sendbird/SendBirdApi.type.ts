@@ -14,3 +14,20 @@ export type SendBirdImageType = {
   ChannelUrl: string;
   imageId: string;
 };
+//샌드버드 전체 채널 리스트 request type
+export type SendBirdChannelMessageType = {
+  channelUrl: string;
+  ts: number;
+  prevLimit: number;
+  nextLimit: number;
+  messageId?: string;
+};
+//샌드버드 전체 채널 리스트 request type
+export type SendBirdMessageDtoType = {
+  code: string;
+  count: number;
+  data: {
+    messages: any;
+  };
+  success: boolean;
+};

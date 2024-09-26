@@ -21,7 +21,7 @@ const CustomReMessage = (props) => {
   });
   const [msg, setMsg] = React.useState<any>();
   const toast = useToast();
-  console.log('Custom Re Message PROPS :: ', props);
+  // console.log('Custom Re Message PROPS :: ', props);
 
   const { mutate: GetImage } = useGetImage({
     options: {

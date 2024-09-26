@@ -20,6 +20,7 @@ const nextConfig = {
       'http://192.168.0.20:40009',
       'resource.gate26.co.kr',
       'd2x6bq0qfvknb8.cloudfront.net',
+      'https://dmsxpx4f2ky7d.cloudfront.net',
     ],
   },
   // webpack: (config, { isServer }) => {
@@ -54,7 +55,7 @@ const nextConfig = {
   // async redirects() {
   //   return [
   //     {
-  //       source: '/backoffice/:path*',
+  //       source: '/api/backoffice/:path*',
   //       // destination: 'http://localhost:40004/:path*',
   //       destination: 'http://192.168.0.63:40009/:path*',
   //       permanent: false,

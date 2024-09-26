@@ -10,3 +10,10 @@ export const useGetImage = (
     ...params?.options,
   });
 };
+export const useChatBackUpMessageMutation = (
+  params?: MutationHookParams<typeof sendBirdApi.getSendBirdBackUpMessage>,
+) => {
+  return useMutation(sendBirdApi.getSendBirdBackUpMessage, {
+    ...params?.options,
+  });
+};

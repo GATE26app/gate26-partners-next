@@ -17,12 +17,11 @@ const CustomMessage = (props) => {
   });
   const [msg, setMsg] = React.useState<any>();
   const toast = useToast();
-  console.log('Custom Message PROPS :: ', props);
 
   const { mutate: GetImage } = useGetImage({
     options: {
       onSuccess: (res) => {
-        console.log('res', res);
+        // console.log('res', res);
         if (res.success == true) {
           setLoad(true);
           let d = lodash.cloneDeep(message);
@@ -88,7 +87,6 @@ const CustomMessage = (props) => {
     }
   }, [message]);
 
-  console.log('msg', msg);
   return (
     <>
       {msg && (

@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-import SendbirdApp from '@sendbird/uikit-react/App';
 import '@sendbird/uikit-react/dist/index.css';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Input, Text, useToast } from '@chakra-ui/react';
 import {
   ColorBackRed,
   ColorBlack,
-  ColorGray400,
-  ColorGray700,
   ColorInputBorder,
   ColorRed,
   ColorRed50,
@@ -19,50 +15,30 @@ import SendbirdProvider, {
   useSendbirdStateContext,
 } from '@sendbird/uikit-react/SendbirdProvider';
 import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
-import {
-  GroupChannelProvider,
-  useGroupChannelContext,
-} from '@sendbird/uikit-react/GroupChannel/context';
-import { GroupChannelHeader } from '@sendbird/uikit-react/GroupChannel/components/GroupChannelHeader';
-import { GroupChannelUI } from '@sendbird/uikit-react/GroupChannel/components/GroupChannelUI';
-import { FileViewer } from '@sendbird/uikit-react/GroupChannel/components/FileViewer';
-import { FrozenNotification } from '@sendbird/uikit-react/GroupChannel/components/FrozenNotification';
+import { useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
-import {
-  MessageInputWrapper,
-  VoiceMessageInputWrapper,
-} from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
-import { MessageList } from '@sendbird/uikit-react/GroupChannel/components/MessageList';
-import { RemoveMessageModal } from '@sendbird/uikit-react/GroupChannel/components/RemoveMessageModal';
-import { TypingIndicator } from '@sendbird/uikit-react/GroupChannel/components/TypingIndicator';
-import { UnreadCount } from '@sendbird/uikit-react/GroupChannel/components/UnreadCount';
-import { SuggestedMentionList } from '@sendbird/uikit-react/GroupChannel/components/SuggestedMentionList';
 import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
-import {
-  GroupChannelListProvider,
-  useGroupChannelListContext,
-} from '@sendbird/uikit-react/GroupChannelList/context';
-import { AddGroupChannel } from '@sendbird/uikit-react/GroupChannelList/components/AddGroupChannel';
-import { GroupChannelListUI } from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListUI';
-import { GroupChannelListHeader } from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
-import { GroupChannelListItem } from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListItem';
-import { GroupChannelPreviewAction } from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelPreviewAction';
-import OpenChannel from '@sendbird/uikit-react/OpenChannel';
 import kr from 'date-fns/locale/ko';
-import CustomGroupChannelListHeader from './CustomGroupChannelListHeader';
 import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 import { getImagePath, imgPath } from '@/utils/format';
-import InputBox from '../common/Input';
 import {
   getSendBirdToken,
   getToken,
   setToken,
 } from '@/utils/localStorage/token';
-import { useQuery } from 'react-query';
-import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
-// import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
+import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
+import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
+import './style.css';
+import {
+  CreateAdminMessage,
+  CreateFileMessage,
+  CreateFileYouMessage,
+  CreateUserMessage,
+  CreateUserYouMessage,
+} from '@/apis/sendbird/chatUtils';
+import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -70,50 +46,16 @@ const myColorSet = {
   '--sendbird-light-primary-200': ColorRed50,
   '--sendbird-light-primary-100': ColorBackRed,
 };
-const CustomMessageInput = () => {
-  const { sendUserMessage, hasNext } = useGroupChannelContext();
 
-  // console.log('hasNext', hasNext);
-  const handleSendMessage = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const message = event.target.value;
-      if (message.trim()) {
-        sendUserMessage({ message });
-        event.target.value = '';
-      }
-    }
-  };
-
-  return (
-    <div style={{ marginTop: '15px', marginLeft: '15px', marginRight: '15px' }}>
-      {/* <InputBox onKeyDown={handleSendMessage} /> */}
-      <input
-        type="text"
-        placeholder="채팅을 입력해주세요."
-        style={{
-          width: '100%',
-          padding: '10px',
-          borderColor: ColorInputBorder,
-          borderWidth: 1,
-          borderRadius: '10px',
-          outline: 'none',
-        }}
-        onKeyDown={handleSendMessage}
-      />
-      {/* 파일 전송 버튼을 제거하거나 비활성화 */}
-    </div>
-  );
-};
 const CustomConnectionHandler = () => {
-  try {
-    const store = useSendbirdStateContext();
-    const sdk = store?.stores?.sdkStore?.sdk;
-    if (sdk.currentUser) {
-      sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
-    }
-  } catch (error) {}
-  return null;
+  // try {
+  //   const store = useSendbirdStateContext();
+  //   const sdk = store?.stores?.sdkStore?.sdk;
+  //   if (sdk.currentUser) {
+  //     sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
+  //   }
+  // } catch (error) {}
+  // return null;
 };
 function ChatComponent() {
   const [stringSet] = useState({
@@ -351,37 +293,265 @@ function ChatComponent() {
     MESSAGE_INPUT__PLACE_HOLDER__DISABLED:
       '이 채널에서는 채팅을 사용할 수 없습니다',
   });
+  const toast = useToast();
   const { partnerInfo } = usePartnerZuInfo((state) => state);
   const [currentChannelUrl, setCurrentChannelUrl] = useState('');
   const [backUpState, setBackUpState] = useState(false);
+  const [prevHeigth, setPrevHeigth] = useState(0);
+  // state
+  const [prevState, setPrevState] = useState(false); //6개월 이후 데이터 추가
+  // scroll
+  const [hasPrev, setHasPrev] = useState(false); // sendbird 측의 과거 데이터 조회 가능 여부
+  const [done, setDone] = useState<boolean>(false); // 내부서버 측의 과거 데이터 조회 가능 여부
+  const [scrollContainer, setScrollContainer] = useState<any>(); // scroll Container
+  const [scrollValue, setScrollValue] = useState(0); // scrollTop
+  // context
+  const [_context, setContext] = useState<any>();
 
   const handleSetCurrentChannel = (channel) => {
     if (channel?.url) {
       setCurrentChannelUrl(channel.url);
     }
   };
-  const [bckObj, setBckObj] = useState({
-    prevLimit: 30,
-    nextLimit: 0,
-    channelUrl: '',
-    ts: Date.now(),
-    messageId: '',
-  });
-  // const { mutate: refreshList, isLoading } = useChatBackUpMessageMutation({
-  //   options: {
-  //     onSuccess: (res) => {
-  //       console.log('**back up res', res);
-  //     },
-  //   },
-  // });
-  // useEffect(() => {
-  //   if (!backUpState) {
-  //     refreshList(bckObj);
-  //   }
-  // }, [backUpState]);
 
-  const scrollRef = useRef(null);
-  // console.log('context', context);
+  useEffect(() => {
+    // body 스크롤 안되게 막기
+    document.body.style.cssText = `
+      position: fixed; 
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
+    };
+  }, []);
+
+  // 백업 데이터 추가
+  const add_list = async (list: any) => {
+    // 특정 클래스를 가진 요소 선택
+    const container = document.querySelector(
+      '.sendbird-conversation__messages-padding',
+    );
+
+    if (container) {
+      if (container) {
+        // 추가할 요소의 배열
+        if (list?.length > 0) {
+          const firstElement = document.querySelector(
+            '.sendbird-msg--scroll-ref',
+          );
+          const messageId = firstElement.getAttribute('data-sb-message-id');
+          if (list?.length === 1 && list[0].message_id == Number(messageId)) {
+            setDone(true);
+          } else {
+            let newElement: any = [];
+            list.reverse().forEach(async (res, index) => {
+              if (res.message_id != messageId) {
+                console.log(res.type);
+                if (res.type === 'MESG') {
+                  // 일반 메세지
+                  if (getSendBirdToken().user_id == res.user.user_id) {
+                    var tag = CreateUserMessage(
+                      res,
+                      list[index + 1] ? Number(list[index + 1].created_at) : 0,
+                      list[index - 1] ? Number(list[index - 1].created_at) : 0,
+                      list[index - 1] ? list[index - 1].user?.user_id : '',
+                      list[index + 1] ? list[index + 1].user?.user_id : '',
+                    );
+                  } else {
+                    var tag = CreateUserYouMessage(
+                      res,
+                      list[index + 1] ? Number(list[index + 1].created_at) : 0,
+                      list[index - 1] ? Number(list[index - 1].created_at) : 0,
+                      list[index - 1] ? list[index - 1].user?.user_id : '',
+                      list[index + 1] ? list[index + 1].user?.user_id : '',
+                    );
+                  }
+                  if (tag) {
+                    container.insertAdjacentHTML('afterbegin', tag);
+                  }
+                } else if (res.type === 'FILE') {
+                  // 파일 메세지
+                  const tag = await CreateFileYouMessage(
+                    res,
+                    list[index + 1] ? Number(list[index + 1].created_at) : 0,
+                    list[index - 1] ? Number(list[index - 1].created_at) : 0,
+                    list[index - 1] ? list[index - 1].user?.user_id : '',
+                    list[index + 1] ? list[index + 1].user?.user_id : '',
+                    currentChannelUrl,
+                  );
+                  if (tag) {
+                    newElement.push(tag);
+                    container.insertAdjacentHTML('afterbegin', tag);
+                  }
+                } else {
+                  const tag = await CreateAdminMessage(res);
+                  if (tag) {
+                    newElement.push(tag);
+                    container.insertAdjacentHTML('afterbegin', tag);
+                  }
+                }
+              } else {
+                // if(index == list.length - 2){
+                //   console.log(newElement);
+                //   container.insertAdjacentHTML('afterbegin', newElement);
+                // }
+              }
+            });
+          }
+        }
+      }
+    }
+  };
+  const { mutate: GetHistory, isLoading: hLoading } =
+    useChatBackUpMessageMutation({
+      options: {
+        onSuccess: async (res) => {
+          if (res.success == true) {
+            console.log('histofy ::', res.data);
+            add_list(res.data.messages);
+          } else {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'히스토리 데이터를 불러올 수 없습니다.'}
+                </Box>
+              ),
+            });
+          }
+        },
+        onError: (req) => {
+          toast({
+            position: 'top',
+            duration: 2000,
+            render: () => (
+              <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
+                {'히스토리 데이터를 불러올 수 없습니다.'}
+              </Box>
+            ),
+          });
+        },
+      },
+    });
+
+  const handleScroll = React.useCallback(() => {
+    const scrollContainer = document.querySelector(
+      '.sendbird-conversation__messages-padding',
+    );
+    if (scrollContainer) {
+      setScrollValue(scrollContainer.scrollTop);
+
+      // 스크롤 값이 100 미만일 때
+      if (scrollContainer.scrollTop <= 60) {
+        setPrevHeigth(scrollContainer.scrollHeight);
+        // 이전 페이지가 없을 때
+        if (hasPrev === false) {
+          // 가장 첫번째 element message_id
+          const firstElement = document.querySelector(
+            '.sendbird-msg--scroll-ref',
+          );
+          const messageId = firstElement?.getAttribute('data-sb-message-id');
+          const createdAt = firstElement?.getAttribute('data-sb-created-at');
+
+          if (done === false && hLoading === false) {
+            GetHistory({
+              messageId: String(messageId),
+              prevLimit: 100,
+              nextLimit: 0,
+              channelUrl: currentChannelUrl,
+              ts: Date.now(),
+            });
+            scrollContainer.scrollTop =
+              scrollContainer.scrollHeight - prevHeigth;
+          }
+        }
+      }
+    }
+  }, [hasPrev, done, hLoading]);
+  useEffect(() => {
+    const sc = document.querySelector(
+      '.sendbird-conversation__messages-padding',
+    );
+    try {
+      if (sc) {
+        // 스크롤 이벤트 리스너 등록
+        sc.addEventListener('scroll', handleScroll);
+      }
+    } catch (error) {}
+    // 컴포넌트 언마운트 시 이벤트 리스너 해제
+    return () => {
+      if (sc) {
+        sc.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [scrollContainer, hasPrev, done, hLoading]);
+
+  const CustomMessageInput = () => {
+    const { sendUserMessage, hasNext } = useGroupChannelContext();
+    const context = useGroupChannelContext();
+    if (context) {
+      const isPrev = context.hasPrevious();
+      setHasPrev(isPrev);
+      if (context?.scrollRef?.current?.scrollTop === 0) {
+        setHasPrev(isPrev);
+      }
+    }
+    if (!_context) {
+      setContext(useGroupChannelContext());
+    }
+
+    const sc = document.querySelector(
+      '.sendbird-conversation__messages-padding',
+    );
+    setScrollContainer(sc);
+    // console.log('hasNext', hasNext);
+    const handleSendMessage = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const message = event.target.value;
+        if (message.trim()) {
+          sendUserMessage({ message });
+          event.target.value = '';
+        }
+      }
+    };
+
+    return (
+      <div
+        style={{ marginTop: '15px', marginLeft: '15px', marginRight: '15px' }}
+      >
+        {/* <InputBox onKeyDown={handleSendMessage} /> */}
+        <input
+          type="text"
+          placeholder="채팅을 입력해주세요."
+          style={{
+            width: '100%',
+            padding: '10px',
+            borderColor: ColorInputBorder,
+            borderWidth: 1,
+            borderRadius: '10px',
+            outline: 'none',
+          }}
+          onKeyDown={handleSendMessage}
+        />
+        {/* 파일 전송 버튼을 제거하거나 비활성화 */}
+      </div>
+    );
+  };
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   return (
     <Box
       w={'80%'}
@@ -395,85 +565,92 @@ function ChatComponent() {
       borderRadius={'12px'}
       zIndex={99999}
     >
-      <SendbirdProvider
-        appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
-        userId={getSendBirdToken().user_id}
-        accessToken={getSendBirdToken().sendBird}
-        theme="light"
-        dateLocale={kr}
-        colorSet={myColorSet}
-        stringSet={stringSet}
-        // key={Date.now()}
-      >
-        <CustomConnectionHandler />
-        <Flex flexDirection={'row'} h={'100%'}>
-          <GroupChannelList
-            // enableTypingIndicator={false}
-            renderHeader={(props) => (
-              // <CustomGroupChannelListHeader />
-              <GroupChannelListHeader
-                renderMiddle={() => (
-                  <Flex alignItems={'center'} gap={'10px'}>
-                    <Box
-                      borderRadius={'50px'}
-                      overflow={'hidden'}
-                      w={'32px'}
-                      h={'32px'}
-                    >
-                      <img
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          objectFit: 'cover',
-                        }}
-                        src={
-                          partnerInfo.images !== undefined &&
-                          partnerInfo.images.length > 0
-                            ? getImagePath(
-                                partnerInfo.images[0].thumbnailImagePath,
-                              )
-                            : '/images/header/icon_header_user.png'
-                        }
-                        alt="이미지 업로드"
-                      />
-                    </Box>
-                    {/* <Text>{props}</Text> */}
-                    <Text color={ColorBlack} fontSize={'16px'} fontWeight={500}>
-                      {partnerInfo.title}
-                    </Text>
-                  </Flex>
-                )}
-              />
-            )}
-            onChannelSelect={handleSetCurrentChannel}
-            onChannelCreated={() => {
-              // console.log('2222');
-            }}
-          />
-          <GroupChannel
-            // ref={scrollRef}
-            // scr
-            channelUrl={currentChannelUrl}
-            onBackClick={() => setCurrentChannelUrl('')}
-            renderMessage={(props) => {
-              // const context = useGroupChannelContext();
-              // console.log('context', context);
-              // console.log('props', props);
-              // 이미지 컴포넌트
-              const message = props.message;
-              // console.log('message', message);
-              if (message.isFileMessage()) {
-                return <CustomMessage {...props} onReact={() => {}} />;
-              }
-              if (message.isUserMessage() && message.parentMessageId > 0) {
-                return <CustomReMessage {...props} onReact={() => {}} />;
-              }
-              return <Message {...props} />;
-            }}
-            renderMessageInput={() => <CustomMessageInput />}
-          />
-        </Flex>
-      </SendbirdProvider>
+      {isClient && (
+        <SendbirdProvider
+          appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
+          userId={getSendBirdToken().user_id}
+          accessToken={getSendBirdToken().sendBird}
+          theme="light"
+          dateLocale={kr}
+          colorSet={myColorSet}
+          stringSet={stringSet}
+          // key={Date.now()}
+        >
+          {/* <CustomConnectionHandler /> */}
+          <Flex flexDirection={'row'} h={'100%'}>
+            <GroupChannelList
+              // enableTypingIndicator={false}
+              renderHeader={(props) => (
+                // <CustomGroupChannelListHeader />
+                <GroupChannelListHeader
+                  renderMiddle={() => (
+                    <Flex alignItems={'center'} gap={'10px'}>
+                      <Box
+                        borderRadius={'50px'}
+                        overflow={'hidden'}
+                        w={'32px'}
+                        h={'32px'}
+                      >
+                        <img
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            objectFit: 'cover',
+                          }}
+                          src={
+                            partnerInfo.images !== undefined &&
+                            partnerInfo.images.length > 0
+                              ? getImagePath(
+                                  partnerInfo.images[0].thumbnailImagePath,
+                                )
+                              : '/images/header/icon_header_user.png'
+                          }
+                          alt="이미지 업로드"
+                        />
+                      </Box>
+                      {/* <Text>{props}</Text> */}
+                      <Text
+                        color={ColorBlack}
+                        fontSize={'16px'}
+                        fontWeight={500}
+                      >
+                        {partnerInfo.title}
+                      </Text>
+                    </Flex>
+                  )}
+                />
+              )}
+              onChannelSelect={handleSetCurrentChannel}
+              onChannelCreated={() => {
+                // console.log('2222');
+              }}
+            />
+            <GroupChannel
+              // ref={scrollRef}
+              // scr
+              channelUrl={currentChannelUrl}
+              onBackClick={() => setCurrentChannelUrl('')}
+              renderMessage={(props) => {
+                // const context = useGroupChannelContext();
+                // console.log('context', context);
+                // console.log('props', props);
+                // 이미지 컴포넌트
+                // console.log('BackUpChatListData', BackUpChatListData);
+                const message = props.message;
+                // console.log('message', message);
+                if (message.isFileMessage()) {
+                  return <CustomMessage {...props} onReact={() => {}} />;
+                }
+                if (message.isUserMessage() && message.parentMessageId > 0) {
+                  return <CustomReMessage {...props} onReact={() => {}} />;
+                }
+                return <Message {...props} />;
+              }}
+              renderMessageInput={() => <CustomMessageInput />}
+            />
+          </Flex>
+        </SendbirdProvider>
+      )}
     </Box>
   );
 }
