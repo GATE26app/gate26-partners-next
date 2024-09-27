@@ -30,7 +30,6 @@ import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
 import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
 import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
-import './style.css';
 import {
   CreateAdminMessage,
   CreateFileMessage,
