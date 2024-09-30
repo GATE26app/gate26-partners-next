@@ -132,13 +132,15 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // self.registration.hideNotification();
-// messaging.onBackgroundMessage((payload) => {
-//   console.log('background', payload);
-//   showNotification(payload.data);
-// });
+messaging.onBackgroundMessage((payload) => {
+  console.log('background', payload);
+  showNotification(payload.data);
+});
 
 self.addEventListener('push', (e) => {
   if (e.data) {
+    console.log('push', e);
+    console.log('push', e.data);
     const data = e.data.json().data;
     console.log('###data', data);
     // if (!pushThorttle) {
@@ -152,7 +154,7 @@ self.addEventListener('push', (e) => {
 const showNotification = (data) => {
   console.log('showNotification');
 
-  console.log('data', data);
+  console.log('showNotification data', data);
   const options = {
     body: data.body,
     icon: data.icon || '/firebase-logo.png',
@@ -164,7 +166,7 @@ const showNotification = (data) => {
 };
 
 const getClickAction = (data) => {
-  console.log('data', data);
+  console.log('getClickAction data', data);
   if (data.sendbird !== undefined) {
     console.log('JSON.parse(data.sendbird)', JSON.parse(data.sendbird));
     console.log('channel_url', JSON.parse(data.sendbird).channel?.channel_url);
