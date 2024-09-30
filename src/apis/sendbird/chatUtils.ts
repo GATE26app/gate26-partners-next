@@ -174,6 +174,7 @@ const shouldShowUserName = (date, lastDate, user_id, next_user_id) => {
   var lastMinute = ('0' + lastDate.getMinutes()).slice(-2);
 
   if (!lastDate) return true; // 첫 번째 메시지이면 닉네임 표시
+  // if (type !== item.type) return true; // type이 다르면
   const isDifferentUser = user_id !== next_user_id;
   const isDifferentMinute =
     `${year}.${month}.${day} ${hour}:${minute}` !==
@@ -187,12 +188,13 @@ const shouldShowUserName = (date, lastDate, user_id, next_user_id) => {
     return false;
   }
 };
-export const CreateUserYouMessage = (
+export const CreateUserYouMessage = async (
   item: any,
   before: number,
   next: number,
   nextUser: string,
   lastUser: string,
+  url: string,
 ) => {
   let change_date = false;
   let change_time = false;
@@ -216,6 +218,12 @@ export const CreateUserYouMessage = (
   var tag = `<div class="sendbird-msg-hoc sendbird-msg--scroll-ref" data-testid="sendbird-message-view"
     data-sb-message-id="${item.message_id}" data-sb-created-at="${item.created_at}" style="margin-bottom: 2px;">`;
 
+  // if (
+  //   item.parent_message_info.file &&
+  //   item.parent_message_info.file.data != ''
+  // ) {
+
+  // }
   // separator
   if (change_date) {
     tag += `<div class=" sendbird-separator">`;
@@ -262,13 +270,74 @@ export const CreateUserYouMessage = (
 
   // msg
   tag += `<div class="sendbird-message-content__middle" data-testid="sendbird-message-content__middle">`;
+  // 대댓글
+  if (item.parent_message_info) {
+    tag += `<div class="sendbird-message-content__middle__quote-message incoming use-quote" data-testid="sendbird-message-content__middle__quote-message">
+ <div class="sendbird-message-content__middle__quote-message__quote sendbird-quote-message incoming ">
+   <div class="sendbird-quote-message__replied-to">
+     <div class="sendbird-quote-message__replied-to__icon sendbird-icon sendbird-icon-reply sendbird-icon-color--on-background-3" role="button" tabindex="0" style="width: 12px; min-width: 12px; height: 12px; min-height: 12px;">
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+       <path fill="#000" fill-rule="evenodd" d="M11.774 10.5c.062 0 .12-.025.164-.07a.22.22 0 0 0 .062-.164c-.069-1.447-.495-2.678-1.268-3.66-.618-.785-1.455-1.409-2.49-1.855a9.3 9.3 0 0 0-2.406-.655 10 10 0 0 0-.862-.078V2.225a.23.23 0 0 0-.128-.203.23.23 0 0 0-.24.028L.084 5.692A.22.22 0 0 0 0 5.865c0 .068.03.132.082.175l4.523 3.737c.067.056.16.068.24.03a.22.22 0 0 0 .13-.202v-1.95c1.134-.08 2.178.003 3.107.25a6.4 6.4 0 0 1 2.087.96c1.018.724 1.398 1.5 1.401 1.507a.23.23 0 0 0 .204.128" class="icon-reply-filled_svg__fill">
+       </path>
+       </svg>
+     </div>
+     <span class="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3" data-testid="sendbird-quote-message__replied-to__text">
+       <span class="sendbird-quote-message__replied-to__text__nickname">
+         디몬스터테스터1
+       </span>
+       <span class="sendbird-quote-message__replied-to__text__text">
+         에 답장했습니다
+       </span>
+       <span class="sendbird-quote-message__replied-to__text__nickname">${item.user.nickname}</span>
+     </span>
+   </div>
+   <div class="sendbird-quote-message__replied-message">
+     `;
+    if (
+      item.parent_message_info.file &&
+      item.parent_message_info.file.data != ''
+    ) {
+      const data = JSON.parse(item.parent_message_info.file.data);
+      const thumbnail = await sendBirdApi.getSendBirdImage({
+        ChannelUrl: url,
+        imageId: data.thumbnailId,
+      });
+
+      const image = await sendBirdApi.getSendBirdImage({
+        ChannelUrl: url,
+        imageId: data.imageId,
+      });
+      tag += `<div class="sendbird-quote-message__replied-message__thumbnail-message">
+              <div class="sendbird-quote-message__replied-message__thumbnail-message__image sendbird-image-renderer" style="width: 100%; min-width: calc(144px); max-width: 400px; height: calc(108px);">
+                <div class="sendbird-image-renderer__image" style="width: 100%; min-width: calc(144px); max-width: 400px; height: calc(108px); position: absolute; background-repeat: no-repeat; background-position: center center; background-size: cover; background-image: url(&quot;${thumbnail.data.presignedUrl}&quot;);">
+                </div>
+                <img class="sendbird-image-renderer__hidden-image-loader" src="${image.data.presignedUrl}" alt="image/png">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      tag += `
+      <div class="sendbird-quote-message__replied-message__text-message">
+        <span class="sendbird-quote-message__replied-message__text-message__word sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1" data-testid="sendbird-quote-message__replied-message__text-message__word">
+        ${item.parent_message_info.message}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>`;
+    }
+  }
+
   if (
     shouldShowUserName(
       new Date(item.created_at),
       new Date(before),
       item.user.user_id,
       lastUser,
-    )
+    ) &&
+    !item.parent_message_info
   ) {
     tag += `<span
     class="sendbird-message-content__middle__sender-name sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-2">${item.user.nickname}</span>`;
@@ -340,12 +409,13 @@ export const CreateUserYouMessage = (
   return tag;
 };
 
-export const CreateUserMessage = (
+export const CreateUserMessage = async (
   item: any,
   before: number,
   next: number,
   nextUser: string,
   lastUser: string,
+  url: string,
 ) => {
   let change_data = false;
   let change_time = false;
@@ -395,8 +465,68 @@ export const CreateUserMessage = (
 
   // msg
   tag += `<div class="sendbird-message-content__middle" data-testid="sendbird-message-content__middle">`;
-  tag += `<div class="sendbird-message-content__middle__body-container">`;
+  // 대댓글
+  if (item.parent_message_info) {
+    tag += ` <div class="sendbird-message-content__middle__quote-message outgoing use-quote" data-testid="sendbird-message-content__middle__quote-message">
+    <div class="sendbird-message-content__middle__quote-message__quote sendbird-quote-message outgoing ">
+      <div class="sendbird-quote-message__replied-to">
+        <div class="sendbird-quote-message__replied-to__icon sendbird-icon sendbird-icon-reply sendbird-icon-color--on-background-3" role="button" tabindex="0" style="width: 12px; min-width: 12px; height: 12px; min-height: 12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+          <path fill="#000" fill-rule="evenodd" d="M11.774 10.5c.062 0 .12-.025.164-.07a.22.22 0 0 0 .062-.164c-.069-1.447-.495-2.678-1.268-3.66-.618-.785-1.455-1.409-2.49-1.855a9.3 9.3 0 0 0-2.406-.655 10 10 0 0 0-.862-.078V2.225a.23.23 0 0 0-.128-.203.23.23 0 0 0-.24.028L.084 5.692A.22.22 0 0 0 0 5.865c0 .068.03.132.082.175l4.523 3.737c.067.056.16.068.24.03a.22.22 0 0 0 .13-.202v-1.95c1.134-.08 2.178.003 3.107.25a6.4 6.4 0 0 1 2.087.96c1.018.724 1.398 1.5 1.401 1.507a.23.23 0 0 0 .204.128" class="icon-reply-filled_svg__fill">
+          </path>
+        </svg>
+      </div>
+      <span class="sendbird-quote-message__replied-to__text sendbird-label sendbird-label--caption-2 sendbird-label--color-onbackground-3" data-testid="sendbird-quote-message__replied-to__text">
+        <span class="sendbird-quote-message__replied-to__text__nickname">
+          당신
+        </span>
+        <span class="sendbird-quote-message__replied-to__text__text">
+          에 답장했습니다
+        </span>
+        <span class="sendbird-quote-message__replied-to__text__nickname">
+          디몬스터테스터1
+        </span>
+      </span>
+    </div>
+    <div class="sendbird-quote-message__replied-message">`;
+    if (
+      item.parent_message_info.file &&
+      item.parent_message_info.file.data != ''
+    ) {
+      const data = JSON.parse(item.parent_message_info.file.data);
+      const thumbnail = await sendBirdApi.getSendBirdImage({
+        ChannelUrl: url,
+        imageId: data.thumbnailId,
+      });
 
+      const image = await sendBirdApi.getSendBirdImage({
+        ChannelUrl: url,
+        imageId: data.imageId,
+      });
+      tag += `<div class="sendbird-quote-message__replied-message__thumbnail-message">
+        <div class="sendbird-quote-message__replied-message__thumbnail-message__image sendbird-image-renderer" style="width: 100%; min-width: calc(144px); max-width: 400px; height: calc(108px);">
+          <div class="sendbird-image-renderer__image" style="width: 100%; min-width: calc(144px); max-width: 400px; height: calc(108px); position: absolute; background-repeat: no-repeat; background-position: center center; background-size: cover; background-image: url(&quot;${thumbnail.data.presignedUrl}&quot;);">
+          </div>
+          <img class="sendbird-image-renderer__hidden-image-loader" src="${image.data.presignedUrl}" alt="image/png">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+    } else {
+      tag += `
+      <div class="sendbird-quote-message__replied-message__text-message">
+        <span class="sendbird-quote-message__replied-message__text-message__word sendbird-label sendbird-label--body-2 sendbird-label--color-onbackground-1" data-testid="sendbird-quote-message__replied-message__text-message__word">
+          ${item.parent_message_info.message}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>`;
+    }
+  }
+
+  tag += `<div class="sendbird-message-content__middle__body-container">`;
   // view status
   tag += `<div class="sendbird-message-content__middle__body-container__created-at left">`;
   tag += `<div class="sendbird-message-content__middle__body-container__created-at__component-container">`;

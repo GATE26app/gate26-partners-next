@@ -133,6 +133,7 @@ const messaging = firebase.messaging();
 
 // self.registration.hideNotification();
 messaging.onBackgroundMessage((payload) => {
+  console.log('background', payload);
   showNotification(payload.data);
 });
 
@@ -151,6 +152,7 @@ self.addEventListener('push', (e) => {
 const showNotification = (data) => {
   console.log('showNotification');
 
+  console.log('data', data);
   const options = {
     body: data.body,
     icon: data.icon || '/firebase-logo.png',
@@ -164,7 +166,7 @@ const showNotification = (data) => {
 const getClickAction = (data) => {
   console.log('data', data);
   if (data.sendbird !== undefined) {
-    console.log('JSON.stringify(data.sendbird)', JSON.stringify(data.sendbird));
+    console.log('JSON.parse(data.sendbird)', JSON.parse(data.sendbird));
     console.log('channel_url', JSON.parse(data.sendbird).channel?.channel_url);
   }
   switch (data.type) {
@@ -176,7 +178,7 @@ const getClickAction = (data) => {
       return `/cancelDetail?orderId=${data.tgId}`;
     default:
       return data.sendbird !== undefined
-        ? `/sendBird=true&sendbirdUrl=${JSON.parse(data.sendbird).channel?.channel_url}`
+        ? `/?sendBird=true&sendbirdUrl=${JSON.parse(data.sendbird).channel?.channel_url}`
         : '/';
   }
 };

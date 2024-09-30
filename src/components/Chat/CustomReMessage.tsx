@@ -95,11 +95,12 @@ const CustomReMessage = (props) => {
         ChannelUrl: data.channelUrl,
         imageId: data.imageId,
       });
-      // setMsg(d);
     } else {
       if (image.plainUrl != '') {
         let d = lodash.cloneDeep(message);
         (d.parentMessage.plainUrl = image?.plainUrl), setMsg(d);
+      } else {
+        setMsg(message);
       }
     }
   }, [message]);

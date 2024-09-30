@@ -47,14 +47,14 @@ const myColorSet = {
 };
 
 const CustomConnectionHandler = () => {
-  // try {
-  //   const store = useSendbirdStateContext();
-  //   const sdk = store?.stores?.sdkStore?.sdk;
-  //   if (sdk.currentUser) {
-  //     sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
-  //   }
-  // } catch (error) {}
-  // return null;
+  try {
+    const store = useSendbirdStateContext();
+    const sdk = store?.stores?.sdkStore?.sdk;
+    if (sdk.currentUser) {
+      sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
+    }
+  } catch (error) {}
+  return null;
 };
 function ChatComponent() {
   const [stringSet] = useState({
@@ -346,26 +346,28 @@ function ChatComponent() {
             setDone(true);
           } else {
             let newElement: any = [];
-            list.reverse().forEach(async (res, index) => {
+            list.forEach(async (res, index) => {
               if (res.message_id != messageId) {
                 console.log(res.type);
                 if (res.type === 'MESG') {
                   // 일반 메세지
                   if (getSendBirdToken().user_id == res.user.user_id) {
-                    var tag = CreateUserMessage(
+                    var tag = await CreateUserMessage(
                       res,
                       list[index + 1] ? Number(list[index + 1].created_at) : 0,
                       list[index - 1] ? Number(list[index - 1].created_at) : 0,
                       list[index - 1] ? list[index - 1].user?.user_id : '',
                       list[index + 1] ? list[index + 1].user?.user_id : '',
+                      currentChannelUrl,
                     );
                   } else {
-                    var tag = CreateUserYouMessage(
+                    var tag = await CreateUserYouMessage(
                       res,
                       list[index + 1] ? Number(list[index + 1].created_at) : 0,
                       list[index - 1] ? Number(list[index - 1].created_at) : 0,
                       list[index - 1] ? list[index - 1].user?.user_id : '',
                       list[index + 1] ? list[index + 1].user?.user_id : '',
+                      currentChannelUrl,
                     );
                   }
                   if (tag) {
@@ -451,6 +453,9 @@ function ChatComponent() {
 
       // 스크롤 값이 100 미만일 때
       if (scrollContainer.scrollTop <= 60) {
+        console.log('이전 페이지가 존재함 ', hasPrev);
+        console.log('scroll heigt', scrollContainer.scrollHeight);
+
         setPrevHeigth(scrollContainer.scrollHeight);
         // 이전 페이지가 없을 때
         if (hasPrev === false) {
@@ -460,11 +465,13 @@ function ChatComponent() {
           );
           const messageId = firstElement?.getAttribute('data-sb-message-id');
           const createdAt = firstElement?.getAttribute('data-sb-created-at');
-
+          console.log(messageId, createdAt);
+          // 내부 서버 가져올 데이터가 존재할 때
+          console.log(done, hLoading);
           if (done === false && hLoading === false) {
             GetHistory({
-              messageId: String(messageId),
-              prevLimit: 100,
+              messageId: '7598494855',
+              prevLimit: 50,
               nextLimit: 0,
               channelUrl: currentChannelUrl,
               ts: Date.now(),
@@ -481,6 +488,7 @@ function ChatComponent() {
       '.sendbird-conversation__messages-padding',
     );
     try {
+      console.log('scrollContainer', sc);
       if (sc) {
         // 스크롤 이벤트 리스너 등록
         sc.addEventListener('scroll', handleScroll);
@@ -575,7 +583,7 @@ function ChatComponent() {
           stringSet={stringSet}
           // key={Date.now()}
         >
-          {/* <CustomConnectionHandler /> */}
+          <CustomConnectionHandler />
           <Flex flexDirection={'row'} h={'100%'}>
             <GroupChannelList
               // enableTypingIndicator={false}
