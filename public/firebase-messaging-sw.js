@@ -132,10 +132,10 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // self.registration.hideNotification();
-messaging.onBackgroundMessage((payload) => {
-  console.log('background', payload);
-  showNotification(payload.data);
-});
+// messaging.onBackgroundMessage((payload) => {
+//   console.log('background', payload);
+//   showNotification(payload.data);
+// });
 
 self.addEventListener('push', (e) => {
   if (e.data) {
