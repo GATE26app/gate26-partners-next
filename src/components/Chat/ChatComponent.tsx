@@ -470,7 +470,7 @@ function ChatComponent() {
           console.log(done, hLoading);
           if (done === false && hLoading === false) {
             GetHistory({
-              messageId: '7598494855',
+              messageId: messageId,
               prevLimit: 50,
               nextLimit: 0,
               channelUrl: currentChannelUrl,
