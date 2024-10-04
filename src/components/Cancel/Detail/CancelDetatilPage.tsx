@@ -21,6 +21,7 @@ import OrderResevationInfo from '@/components/Order/Detail/OrderResevationInfo';
 import OrderDelivery from '@/components/Order/Detail/OrderDelivery';
 import OrderPayment from '@/components/Order/Detail/OrderPayment';
 import CustomButton from '@/components/common/CustomButton';
+import OrderAmount from '@/components/Order/Detail/OrderAmount';
 
 function CancelDetailComponentPage() {
   const router = useRouter();
@@ -67,6 +68,7 @@ function CancelDetailComponentPage() {
             {/* <OrderGoods /> */}
             <OrderResevationInfo info={CancelData?.data} />
             <OrderDelivery info={CancelData?.data} />
+            <OrderAmount info={CancelData?.data} />
             <OrderPayment info={CancelData?.data} />
           </>
         )}
