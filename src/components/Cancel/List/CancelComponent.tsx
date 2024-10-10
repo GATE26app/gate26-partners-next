@@ -62,7 +62,7 @@ function CancelComponent({ list, request, setRequest }: Props) {
         ...cancelFilterInfo,
         pageNo: Number(value),
       });
-      router.push(`/orderList?page=${Number(value) + 1}`);
+      router.push(`/cancelList?page=${Number(value) + 1}`);
     }
     //페이지가 0보다 작은 경우 0으로 세팅
     if (newRequest.pageNo < 0) {
