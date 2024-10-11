@@ -7,6 +7,7 @@ interface userInfoType {
   refreshToken?: string;
   sendBirdToken?: string;
   fcmToken?: string;
+  userId?: string;
 }
 
 interface UserInfoState {
@@ -20,6 +21,7 @@ const defaultState = {
   refreshToken: '',
   sendBirdToken: '',
   fcmToken: '',
+  userId: '',
 };
 
 export const useUserZuInfo = create(

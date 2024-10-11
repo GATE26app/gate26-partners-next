@@ -58,7 +58,7 @@ function LoginPage() {
   const [checkbox, setCheckbox] = useState<boolean>(true);
   const [modal, setModal] = useState<boolean>(false);
   const toggleCheckbox = () => setCheckbox(!checkbox);
-  const { setUserZuInfo } = useUserZuInfo((state) => state);
+  const { userZuInfo, setUserZuInfo } = useUserZuInfo((state) => state);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [fcmtoken, setFcmToken] = useState('');
   const { setAlarmInfo } = useAlarmZuInfo((state) => state);
@@ -98,7 +98,12 @@ function LoginPage() {
   // 2.로컬에 있는 지 확인 , expire_at 확인 후 7일 지났는지 확인 (수시로 발급받으면 안됨. 정지당함.)
   // 3.토큰 유효하지 않을 경우 토큰 재발급
   useEffect(() => {
-    console.log('getSendBirdToken().expiresAt', getSendBirdToken().expiresAt);
+    // console.log('getSendBirdToken().expiresAt', getSendBirdToken().expiresAt);
+    // console.log('Date.now()', Date.now());
+    // console.log(
+    //   'getSendBirdToken().expiresAt < Date.now()',
+    //   getSendBirdToken().expiresAt < Date.now(),
+    // );
   }, []);
   const { data: SendBirdTokenData, error } = useQuery(
     ['GET_GOODSDETAIL'],
@@ -109,9 +114,8 @@ function LoginPage() {
       enabled: !!sendBirdTokenState,
     },
   );
-  console.log('sendBirdTokenState', sendBirdTokenState);
   useEffect(() => {
-    if (SendBirdTokenData !== undefined) {
+    if (SendBirdTokenData !== undefined && sendBirdTokenState) {
       console.log('SendBirdTokenData', SendBirdTokenData);
       setSendBirdToken({
         sendBird: SendBirdTokenData.data.token,
@@ -137,16 +141,22 @@ function LoginPage() {
           setUserZuInfo({
             accessToken: data?.accessToken ? data?.accessToken : '',
             refreshToken: data?.refreshToken ? data?.refreshToken : '',
+            userId: request.loginId,
           });
-          if (getSendBirdToken().expiresAt < Date.now()) {
-            console.log('샌드버드 토큰 재발급');
-            // ReTokenFun();
+          if (userZuInfo.userId !== request.loginId) {
             setSendBirdTokenState(true);
           } else {
-            setSendBirdTokenState(false);
-            router.push('/');
-            // ReTokenFun();
+            if (getSendBirdToken().expiresAt < Date.now()) {
+              console.log('샌드버드 토큰 재발급');
+              // ReTokenFun();
+              setSendBirdTokenState(true);
+            } else {
+              setSendBirdTokenState(false);
+              router.push('/');
+              // ReTokenFun();
+            }
           }
+
           // setSendBirdToken({
           //   sendBird:
           //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1IjoyMDc1MTEzODgsInYiOjIsImUiOjE3MjYxMDg3MDh9.tOHIkIJUMh18nNgHG8gXgrahKFoWe9jaIY8cSRwxzsw',

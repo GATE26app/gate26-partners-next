@@ -30,6 +30,7 @@ import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
 import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
 import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
+import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
 import {
   CreateAdminMessage,
   CreateFileMessage,
@@ -40,6 +41,7 @@ import {
 import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
 import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 import { useQuery } from 'react-query';
+import './style.css';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -514,62 +516,37 @@ function ChatComponent() {
   }, [scrollContainer, hasPrev, done, hLoading]);
 
   const CustomMessageInput = () => {
-    const { sendUserMessage, hasNext } = useGroupChannelContext();
-    const context = useGroupChannelContext();
-    if (context) {
-      const isPrev = context.hasPrevious();
-      setHasPrev(isPrev);
-      if (context?.scrollRef?.current?.scrollTop === 0) {
-        setHasPrev(isPrev);
-      }
-    }
-    if (!_context) {
-      setContext(useGroupChannelContext());
-    }
+    // const { sendUserMessage, hasNext } = useGroupChannelContext();
+    // const context = useGroupChannelContext();
+    // if (context) {
+    //   const isPrev = context.hasPrevious();
+    //   setHasPrev(isPrev);
+    //   if (context?.scrollRef?.current?.scrollTop === 60) {
+    //     setHasPrev(isPrev);
+    //   }
+    // }
+    // if (!_context) {
+    //   setContext(useGroupChannelContext());
+    // }
 
-    const sc = document.querySelector(
-      '.sendbird-conversation__messages-padding',
-    );
-    setScrollContainer(sc);
+    // const sc = document.querySelector(
+    //   '.sendbird-conversation__messages-padding',
+    // );
+    // setScrollContainer(sc);
     // console.log('hasNext', hasNext);
-    const handleSendMessage = (event) => {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        const message = event.target.value;
-        if (message.trim()) {
-          sendUserMessage({ message });
-          event.target.value = '';
-        }
-      }
-    };
 
-    return (
-      <div
-        style={{ marginTop: '15px', marginLeft: '15px', marginRight: '15px' }}
-      >
-        {/* <InputBox onKeyDown={handleSendMessage} /> */}
-        <input
-          type="text"
-          placeholder="채팅을 입력해주세요."
-          style={{
-            width: '100%',
-            padding: '10px',
-            borderColor: ColorInputBorder,
-            borderWidth: 1,
-            borderRadius: '10px',
-            outline: 'none',
-          }}
-          onKeyDown={handleSendMessage}
-        />
-        {/* 파일 전송 버튼을 제거하거나 비활성화 */}
-      </div>
-    );
+    return <></>;
   };
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+  const [queryParmas, setQueryParams] = useState<any>({
+    customTypesFilter: ['', 'private'],
+    includeEmpty: true,
+  });
+
   return (
     <Box
       w={'80%'}
@@ -587,6 +564,7 @@ function ChatComponent() {
     >
       {isClient && (
         <SendbirdProvider
+          // breakpoint={true}
           appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
           userId={getSendBirdToken().user_id}
           accessToken={getSendBirdToken().sendBird}
@@ -606,6 +584,7 @@ function ChatComponent() {
             // minH={'calc(100vh - 150px)'}
           >
             <GroupChannelList
+              channelListQueryParams={queryParmas}
               // enableTypingIndicator={false}
               renderHeader={(props) => (
                 // <CustomGroupChannelListHeader />
@@ -673,7 +652,11 @@ function ChatComponent() {
                 }
                 return <Message {...props} />;
               }}
-              renderMessageInput={() => <CustomMessageInput />}
+              renderMessageInput={() => (
+                <MessageInputWrapper
+                  renderFileUploadIcon={() => <CustomMessageInput />}
+                ></MessageInputWrapper>
+              )}
             />
           </Flex>
         </SendbirdProvider>

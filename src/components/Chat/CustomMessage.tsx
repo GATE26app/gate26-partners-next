@@ -67,8 +67,8 @@ const CustomMessage = (props) => {
         let data: any;
         data = JSON.parse(message.data);
         GetImage({
-          channelURL: data.channelUrl,
-          image: data.imageId,
+          ChannelUrl: data.channelUrl,
+          imageId: data.imageId,
         });
       }
     }
