@@ -38,6 +38,8 @@ import {
   CreateUserYouMessage,
 } from '@/apis/sendbird/chatUtils';
 import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
+import sendBirdApi from '@/apis/sendbird/SendBirdApi';
+import { useQuery } from 'react-query';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -56,6 +58,7 @@ const CustomConnectionHandler = () => {
   } catch (error) {}
   return null;
 };
+
 function ChatComponent() {
   const [stringSet] = useState({
     MESSAGE_INPUT__PLACE_HOLDER__SUGGESTED_REPLIES: '위에서 선택해주세요',
@@ -295,15 +298,14 @@ function ChatComponent() {
   const toast = useToast();
   const { partnerInfo } = usePartnerZuInfo((state) => state);
   const [currentChannelUrl, setCurrentChannelUrl] = useState('');
-  const [backUpState, setBackUpState] = useState(false);
   const [prevHeigth, setPrevHeigth] = useState(0);
-  // state
-  const [prevState, setPrevState] = useState(false); //6개월 이후 데이터 추가
   // scroll
   const [hasPrev, setHasPrev] = useState(false); // sendbird 측의 과거 데이터 조회 가능 여부
   const [done, setDone] = useState<boolean>(false); // 내부서버 측의 과거 데이터 조회 가능 여부
   const [scrollContainer, setScrollContainer] = useState<any>(); // scroll Container
   const [scrollValue, setScrollValue] = useState(0); // scrollTop
+  const [sendBirdTokenState, setSendBirdTokenState] = useState(false);
+
   // context
   const [_context, setContext] = useState<any>();
 
@@ -313,6 +315,16 @@ function ChatComponent() {
     }
   };
 
+  //토큰 재발급
+  const { data: SendBirdTokenData, error } = useQuery(
+    ['GET_GOODSDETAIL'],
+    () => sendBirdApi.getSendBirdToken(),
+    {
+      // staleTime: Infinity, // 데이터가 절대 오래되었다고 간주되지 않음
+      refetchInterval: false, // 자동 새로 고침 비활성화
+      enabled: !!sendBirdTokenState,
+    },
+  );
   useEffect(() => {
     // body 스크롤 안되게 막기
     document.body.style.cssText = `
@@ -348,7 +360,6 @@ function ChatComponent() {
             let newElement: any = [];
             list.forEach(async (res, index) => {
               if (res.message_id != messageId) {
-                console.log(res.type);
                 if (res.type === 'MESG') {
                   // 일반 메세지
                   if (getSendBirdToken().user_id == res.user.user_id) {
@@ -453,8 +464,8 @@ function ChatComponent() {
 
       // 스크롤 값이 100 미만일 때
       if (scrollContainer.scrollTop <= 60) {
-        console.log('이전 페이지가 존재함 ', hasPrev);
-        console.log('scroll heigt', scrollContainer.scrollHeight);
+        // console.log('이전 페이지가 존재함 ', hasPrev);
+        // console.log('scroll heigt', scrollContainer.scrollHeight);
 
         setPrevHeigth(scrollContainer.scrollHeight);
         // 이전 페이지가 없을 때
@@ -465,12 +476,13 @@ function ChatComponent() {
           );
           const messageId = firstElement?.getAttribute('data-sb-message-id');
           const createdAt = firstElement?.getAttribute('data-sb-created-at');
-          console.log(messageId, createdAt);
+          console.log('messageId', messageId);
           // 내부 서버 가져올 데이터가 존재할 때
           console.log(done, hLoading);
           if (done === false && hLoading === false) {
             GetHistory({
-              messageId: messageId,
+              // messageId: '7598494855',
+              messageId: String(messageId),
               prevLimit: 50,
               nextLimit: 0,
               channelUrl: currentChannelUrl,
@@ -488,7 +500,6 @@ function ChatComponent() {
       '.sendbird-conversation__messages-padding',
     );
     try {
-      console.log('scrollContainer', sc);
       if (sc) {
         // 스크롤 이벤트 리스너 등록
         sc.addEventListener('scroll', handleScroll);
@@ -563,6 +574,8 @@ function ChatComponent() {
     <Box
       w={'80%'}
       h={'700px'}
+      // maxH={'700px'}
+      // minH={'calc(100vh - 150px)'}
       // maxH={'450px'}
       bgColor={ColorWhite}
       boxShadow={'3px 6px 20px #0000000D'}
@@ -584,7 +597,14 @@ function ChatComponent() {
           // key={Date.now()}
         >
           <CustomConnectionHandler />
-          <Flex flexDirection={'row'} h={'100%'}>
+          <Flex
+            flexDirection={'row'}
+            h={'100%'}
+            alignItems={'stretch'}
+            // align-items: stretch
+            // maxH={'700px'}
+            // minH={'calc(100vh - 150px)'}
+          >
             <GroupChannelList
               // enableTypingIndicator={false}
               renderHeader={(props) => (

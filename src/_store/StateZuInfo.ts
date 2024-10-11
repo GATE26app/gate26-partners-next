@@ -8,6 +8,8 @@ interface GoodsType {
   orderState?: boolean;
   cancelState?: boolean;
   reviewState?: boolean;
+  settlementState?: boolean;
+  unSettlementState?: boolean;
 }
 
 interface GoodsInfoState {
@@ -22,6 +24,8 @@ const defaultState = {
   orderState: false,
   cancelState: false,
   reviewState: false,
+  settlementState: false,
+  unSettlementState: false,
 };
 
 export const useGoodsStateZuInfo = create(

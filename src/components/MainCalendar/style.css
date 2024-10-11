@@ -1,0 +1,80 @@
+/* .react-calendar {
+  border: 0px;
+  width: 100%;
+}
+.react-calendar__navigation {
+  display: none;
+}
+.react-calendar__month-view__weekdays {
+  background-color: #f7f7f7;
+  border-radius: 12px;
+
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 16px 60px;
+    abbr {
+      text-decoration: none;
+      font-size: 16px;
+      color: #757983;
+    }
+  }
+}
+.react-calendar__tile react-calendar__month-view__days__day{
+  
+} */
+.rbc-month-view {
+  border: 0px;
+}
+.rbc-row.rbc-month-header {
+  border: 0px;
+  background-color: #f7f7f7;
+  border-radius: 12px;
+  .rbc-header {
+    padding: 10px 50px;
+    border-bottom: 0px;
+    span {
+      color: #757983;
+    }
+  }
+}
+.rbc-header + .rbc-header {
+  border-left: 0px;
+}
+.rbc-calendar {
+  flex-direction: row;
+  gap: 45px;
+}
+.rbc-day-bg.rbc-off-range-bg {
+  background-color: white;
+}
+.rbc-button-link {
+  font-weight: 600;
+}
+.rbc-day-bg.rbc-today {
+  background-color: white;
+  /* border-radius: 50px; */
+}
+.rbc-date-cell {
+  padding-top: 10px;
+  padding-right: 10px;
+}
+.rbc-month-row + .rbc-month-row {
+  border-top: 0px;
+  /* border-bottom: 1px solid #d6d6d6; */
+}
+.rbc-month-row {
+  border-bottom: 1px solid #d6d6d6;
+}
+.rbc-date-cell.rbc-now.rbc-current {
+  .rbc-button-link {
+    background-color: red;
+    width: 30px;
+    height: 30px;
+    color: white;
+    border-radius: 50px;
+  }
+}
+
+.rbc-event {
+  background-color: #fff;
+  padding: 0px;
+}

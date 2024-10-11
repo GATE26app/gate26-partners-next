@@ -26,7 +26,16 @@ function MenuBar() {
     (state) => state,
   );
   useEffect(() => {
-    if (
+    if (pathname == '/orderList' || pathname == '/orderDetail') {
+      setMenu(2);
+      setOrdreMenu(1);
+    } else if (pathname == '/cancelList' || pathname == '/cancelDetail') {
+      setMenu(2);
+      setOrdreMenu(2);
+      // } else if (pathname == '/settlementList') {
+      //   setMenu(3);
+      //   setOrdreMenu(1);
+    } else if (
       pathname == '/createGoods' ||
       pathname == '/goodsList' ||
       pathname == '/updateGoods' ||
@@ -35,13 +44,6 @@ function MenuBar() {
       setMenu(4);
       // 주문관리 초기화
       setOrdreMenu(1);
-    }
-    if (pathname == '/orderList' || pathname == '/orderDetail') {
-      setMenu(2);
-      setOrdreMenu(1);
-    } else if (pathname == '/cancelList' || pathname == '/cancelDetail') {
-      setMenu(2);
-      setOrdreMenu(2);
     } else if (pathname == '/setting') {
       setMenu(6);
       setOrdreMenu(1);
@@ -125,37 +127,39 @@ function MenuBar() {
           </Text>
         </Box>
       </Flex>
-      {/* <Flex
-        alignItems={'center'}
-        cursor={'pointer'}
-        mb={'30px'}
-        onClick={() => setMenu(1)}
-      >
-        {menu == 1 ? (
-          <Image
-            src={'/images/Menu/icon_menu_calendar_on.png'}
-            width={40}
-            height={40}
-            alt="로고"
-          />
-        ) : (
-          <Image
-            src={'/images/Menu/icon_menu_calendar_off.png'}
-            width={40}
-            height={40}
-            alt="로고"
-          />
-        )}
-
-        <Text
-          color={menu == 1 ? ColorRed : ColorGrayMenu}
-          fontWeight={800}
-          fontSize={'18px'}
-          ml={'15px'}
+      <Link href={'/mainCalendar'}>
+        <Flex
+          alignItems={'center'}
+          cursor={'pointer'}
+          mb={'30px'}
+          onClick={() => setMenu(1)}
         >
-          예약/주문캘린더
-        </Text>
-      </Flex> */}
+          {menu == 1 ? (
+            <Image
+              src={'/images/Menu/icon_menu_calendar_on.png'}
+              width={40}
+              height={40}
+              alt="로고"
+            />
+          ) : (
+            <Image
+              src={'/images/Menu/icon_menu_calendar_off.png'}
+              width={40}
+              height={40}
+              alt="로고"
+            />
+          )}
+
+          <Text
+            color={menu == 1 ? ColorRed : ColorGrayMenu}
+            fontWeight={800}
+            fontSize={'18px'}
+            ml={'15px'}
+          >
+            예약/주문캘린더
+          </Text>
+        </Flex>
+      </Link>
       <Flex
         alignItems={'center'}
         cursor={'pointer'}
@@ -286,18 +290,20 @@ function MenuBar() {
             alt="로고"
           />
         )}
-      </Flex> */}
+      </Flex>*/}
       {/* {menu == 3 && (
         <Flex mb={'30px'} ml={'57px'} flexDirection={'column'}>
-          <Text
-            fontWeight={700}
-            fontSize={'16px'}
-            mb={'15px'}
-            color={menu == 3 ? ColorRed : ColorGrayMenu}
-          >
-            정산내역
-          </Text>
-          <Text
+          <Link href={'/settlementList'}>
+            <Text
+              fontWeight={700}
+              fontSize={'16px'}
+              mb={'15px'}
+              color={menu == 3 ? ColorRed : ColorGrayMenu}
+            >
+              정산내역
+            </Text>
+          </Link>
+          {/* <Text
             fontWeight={700}
             fontSize={'16px'}
             mb={'15px'}
@@ -306,7 +312,7 @@ function MenuBar() {
             세금계산서
           </Text>
         </Flex>
-      )} */}
+      )}*/}
       <Link href={'/goodsList'}>
         <Flex
           alignItems={'center'}
