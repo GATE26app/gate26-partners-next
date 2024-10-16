@@ -307,6 +307,10 @@ function ChatComponent() {
   const [scrollContainer, setScrollContainer] = useState<any>(); // scroll Container
   const [scrollValue, setScrollValue] = useState(0); // scrollTop
   const [sendBirdTokenState, setSendBirdTokenState] = useState(false);
+  const [msId, setMsId] = useState('');
+  const [lastListLength, setLastListLength] = useState(0);
+  const [firstState, setFirstState] = useState(true);
+  const [list, setList] = useState([]);
 
   // context
   const [_context, setContext] = useState<any>();
@@ -347,7 +351,7 @@ function ChatComponent() {
     const container = document.querySelector(
       '.sendbird-conversation__messages-padding',
     );
-
+    console.log('*****list', list);
     if (container) {
       if (container) {
         // 추가할 요소의 배열
@@ -419,13 +423,20 @@ function ChatComponent() {
       }
     }
   };
+  useEffect(() => {
+    if (list) {
+      console.log('list::', list);
+    }
+  }, [list]);
   const { mutate: GetHistory, isLoading: hLoading } =
     useChatBackUpMessageMutation({
       options: {
         onSuccess: async (res) => {
           if (res.success == true) {
             console.log('histofy ::', res.data);
+            setLastListLength(res.data.messages.length);
             add_list(res.data.messages);
+            setList([...list, res.data.messages]);
           } else {
             toast({
               position: 'top',
@@ -479,19 +490,43 @@ function ChatComponent() {
           const messageId = firstElement?.getAttribute('data-sb-message-id');
           const createdAt = firstElement?.getAttribute('data-sb-created-at');
           console.log('messageId', messageId);
+
+          console.log('msId', msId);
+          // if (messageId !== msId) {
+
+          // }
           // 내부 서버 가져올 데이터가 존재할 때
-          console.log(done, hLoading);
+          // console.log(done, hLoading);
           if (done === false && hLoading === false) {
-            GetHistory({
-              // messageId: '7598494855',
-              messageId: String(messageId),
-              prevLimit: 50,
-              nextLimit: 0,
-              channelUrl: currentChannelUrl,
-              ts: Date.now(),
-            });
-            scrollContainer.scrollTop =
-              scrollContainer.scrollHeight - prevHeigth;
+            if (messageId !== msId && firstState) {
+              console.log('11111^^^^^^^^^');
+              setMsId(messageId);
+              GetHistory({
+                // messageId: '7598494855',
+                messageId: String(messageId),
+                prevLimit: 50,
+                nextLimit: 0,
+                channelUrl: currentChannelUrl,
+                ts: Date.now(),
+              });
+              setFirstState(false);
+              scrollContainer.scrollTop =
+                scrollContainer.scrollHeight - prevHeigth;
+            } else if (lastListLength >= 50 && !firstState) {
+              console.log('2222^^^^^^^^^');
+              setMsId(messageId);
+              GetHistory({
+                // messageId: '7598494855',
+                messageId: String(messageId),
+                prevLimit: 50,
+                nextLimit: 0,
+                channelUrl: currentChannelUrl,
+                ts: Date.now(),
+              });
+              setFirstState(false);
+              scrollContainer.scrollTop =
+                scrollContainer.scrollHeight - prevHeigth;
+            }
           }
         }
       }
@@ -516,23 +551,23 @@ function ChatComponent() {
   }, [scrollContainer, hasPrev, done, hLoading]);
 
   const CustomMessageInput = () => {
-    // const { sendUserMessage, hasNext } = useGroupChannelContext();
-    // const context = useGroupChannelContext();
-    // if (context) {
-    //   const isPrev = context.hasPrevious();
-    //   setHasPrev(isPrev);
-    //   if (context?.scrollRef?.current?.scrollTop === 60) {
-    //     setHasPrev(isPrev);
-    //   }
-    // }
-    // if (!_context) {
-    //   setContext(useGroupChannelContext());
-    // }
+    const { sendUserMessage, hasNext } = useGroupChannelContext();
+    const context = useGroupChannelContext();
+    if (context) {
+      const isPrev = context.hasPrevious();
+      setHasPrev(isPrev);
+      if (context?.scrollRef?.current?.scrollTop === 60) {
+        setHasPrev(isPrev);
+      }
+    }
+    if (!_context) {
+      setContext(useGroupChannelContext());
+    }
 
-    // const sc = document.querySelector(
-    //   '.sendbird-conversation__messages-padding',
-    // );
-    // setScrollContainer(sc);
+    const sc = document.querySelector(
+      '.sendbird-conversation__messages-padding',
+    );
+    setScrollContainer(sc);
     // console.log('hasNext', hasNext);
 
     return <></>;

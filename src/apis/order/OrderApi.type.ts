@@ -229,6 +229,8 @@ export type OrderDetailItemType = {
   orderConfirmName: string;
   shipping: Shippingtype;
   groupOrders?: Array<GroupOrderListType>;
+  requiredPartnerCancelConfirm: number;
+  partnerCancelConfirm: number;
 };
 
 export type policiesType = {
@@ -264,7 +266,7 @@ export type OrderCancelRequestParamsType = {
   orderId: string;
   type: string;
   body: {
-    orderCancelRequestDetail: string;
+    cancelDeniedDetail: string;
   };
 };
 
@@ -383,4 +385,12 @@ export type OrderGroupResType = {
   data: OrderGroupType;
   success: boolean;
   message?: string;
+};
+
+//주문번호 그룹화
+export type RequestCacnelDeniedType = {
+  orderId: string;
+  obj: {
+    cancelDeniedDetail: string;
+  };
 };

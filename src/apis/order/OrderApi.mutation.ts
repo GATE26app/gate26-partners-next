@@ -78,3 +78,19 @@ export const usePostOrderGroupMutation = (
     ...params?.options,
   });
 };
+//주문쉬초요청건 파트너승인처리
+export const useRequestCancelConfirmMutation = (
+  params?: MutationHookParams<typeof orderApi.postRequestCancelConfirm>,
+) => {
+  return useMutation(orderApi.postRequestCancelConfirm, {
+    ...params?.options,
+  });
+};
+//주문쉬초요청건 파트너거절처리
+export const useRequestCancelDeniedMutation = (
+  params?: MutationHookParams<typeof orderApi.postRequestCancelDenied>,
+) => {
+  return useMutation(orderApi.postRequestCancelDenied, {
+    ...params?.options,
+  });
+};

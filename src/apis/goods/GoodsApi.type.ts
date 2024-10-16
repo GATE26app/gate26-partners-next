@@ -285,6 +285,7 @@ export type GoodsBasicProps = {
   optionInputStartDate: string;
   optionInputEndDate: string;
   autoConfirm: number;
+  requiredPartnerCancelConfirm: number;
 };
 //상품등록 type
 export type GoodsReqProps = {
@@ -317,6 +318,7 @@ export type GoodsReqProps = {
   policies: GoodsPoliciesListProps[];
   optionInputs: optionInputsProps[];
   options: OptionProps[];
+  requiredPartnerCancelConfirm: number;
 };
 
 export type OptionStockType = {

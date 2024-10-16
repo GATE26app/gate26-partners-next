@@ -139,10 +139,15 @@ Props) {
         <>
           <PlanComponent list={planList} setList={setPlanList} />
           <BookingCheckComponent list={BasicInfo} setList={setBasicInfo} />
-          <CancelComponent list={policyList} setList={setPolicyList} />
         </>
       )}
-
+      <CancelComponent
+        list={policyList}
+        setList={setPolicyList}
+        type={String(BasicInfo.type)}
+        BasicInfo={BasicInfo}
+        setBasicInfo={setBasicInfo}
+      />
       <EditorDetailComponent list={BasicInfo} setList={setBasicInfo} />
       <OptionComponent
         list={BasicInfo}

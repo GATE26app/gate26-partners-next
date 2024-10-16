@@ -134,6 +134,7 @@ function UpdateGoodsComponentPage() {
     optionInputStartDate: '', //상품 옵션입력 이용일시 생성구간 시작일
     optionInputEndDate: '', //상품 옵션입력 이용일시 생성구간 종료일,
     autoConfirm: 0, //자동예약확정: 활성화 비활성화
+    requiredPartnerCancelConfirm: 0, //0=>미해당, 1=>해당
   });
   const [isLoadingModal, setLoadingModal] = useState(false);
   const [imageList, setImageList] = useState<GoodsListItemImageProps[]>([]);
@@ -203,6 +204,7 @@ function UpdateGoodsComponentPage() {
 
   useEffect(() => {
     if (detailData?.success == true) {
+      console.log('detailData.data', detailData.data);
       setLogDisable(false);
       setOptionList(detailData.data.options);
       setStatusList({
@@ -241,6 +243,8 @@ function UpdateGoodsComponentPage() {
         optionInputStartDate: detailData.data.optionInputStartDate, //상품 옵션입력 이용일시 생성구간 시작일
         optionInputEndDate: detailData.data.optionInputEndDate, //상품 옵션입력 이용일시 생성구간 종료일
         autoConfirm: detailData.data.autoConfirm,
+        requiredPartnerCancelConfirm:
+          detailData.data.requiredPartnerCancelConfirm, //0=>미해당, 1=>해당
       });
       setPlanList(detailData.data.schedules);
       setPolicyList(detailData.data.policies);
@@ -384,6 +388,7 @@ function UpdateGoodsComponentPage() {
             optionInputStartDate: res.data.optionInputStartDate, //상품 옵션입력 이용일시 생성구간 시작일
             optionInputEndDate: res.data.optionInputEndDate, //상품 옵션입력 이용일시 생성구간 종료일
             autoConfirm: res.data.autoConfirm,
+            requiredPartnerCancelConfirm: res.data.requiredPartnerCancelConfirm,
           });
           setPlanList(res.data.schedules);
           setPolicyList(res.data.policies);
@@ -409,6 +414,8 @@ function UpdateGoodsComponentPage() {
     }
   }, [LogListData]);
 
+  console.log('BasicInfo', BasicInfo);
+  console.log('selectMenu', selectMenu);
   const onSubmit = (selectMenu: number, status?: number) => {
     if (selectMenu == 1) {
       if (categoryList.length == 0) {
@@ -473,6 +480,8 @@ function UpdateGoodsComponentPage() {
             policies: policyList,
             optionInputs: optionInputList,
             options: optionList,
+            requiredPartnerCancelConfirm:
+              BasicInfo.requiredPartnerCancelConfirm,
           },
         };
 
@@ -534,6 +543,7 @@ function UpdateGoodsComponentPage() {
     optionInputs: optionInputList,
     options: optionList,
     autoConfirm: BasicInfo.autoConfirm,
+    requiredPartnerCancelConfirm: BasicInfo.requiredPartnerCancelConfirm,
   };
 
   // useEffect(() =>{

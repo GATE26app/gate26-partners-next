@@ -85,7 +85,7 @@ function CancelFilter({ request, setRequest }: Props) {
           request.periodEndDate !== undefined ? request.periodEndDate : '',
       });
       setGoodsInfo({
-        orderState: true,
+        cancelState: true,
       });
     }
   };
@@ -150,7 +150,7 @@ function CancelFilter({ request, setRequest }: Props) {
               cancelStatus: [1, 2, 3],
             });
             setGoodsInfo({
-              orderState: true,
+              cancelState: true,
             });
           }}
           borderColor={ColorGrayBorder}

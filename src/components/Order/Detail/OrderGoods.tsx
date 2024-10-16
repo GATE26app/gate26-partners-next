@@ -40,6 +40,11 @@ export const orderGoodheader = [
     width: '15%',
   },
   {
+    id: 'requiredPartnerCancelConfirm',
+    name: '파트너취소승인해당여부',
+    width: '15%',
+  },
+  {
     id: 'delivery',
     name: '배송정보',
     width: '15%',
@@ -121,23 +126,46 @@ function OrderGoods({ info }: Props) {
           {orderGoodheader.map((item: DataTableHeaderProps, index: number) => {
             return (
               <>
-                {/* {item.name =='배송지정보'  info?.orderType == 1 } */}
-                <Flex
-                  w={item.width}
-                  alignItems={'center'}
-                  justifyContent={'center'}
-                  h={'49px'}
-                >
-                  <Text
-                    color={ColorBlack}
-                    fontSize={'15px'}
-                    fontWeight={700}
-                    whiteSpace={'pre-wrap'}
-                    textAlign={'center'}
+                {item.id == 'requiredPartnerCancelConfirm' ? (
+                  <>
+                    {info.requiredPartnerCancelConfirm == 1 &&
+                      info.cancelStatus == 1 && (
+                        <Flex
+                          w={item.width}
+                          alignItems={'center'}
+                          justifyContent={'center'}
+                          h={'49px'}
+                        >
+                          <Text
+                            color={ColorBlack}
+                            fontSize={'15px'}
+                            fontWeight={700}
+                            whiteSpace={'pre-wrap'}
+                            textAlign={'center'}
+                          >
+                            {item.name}
+                          </Text>
+                        </Flex>
+                      )}
+                  </>
+                ) : (
+                  <Flex
+                    w={item.width}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    h={'49px'}
                   >
-                    {item.name}
-                  </Text>
-                </Flex>
+                    <Text
+                      color={ColorBlack}
+                      fontSize={'15px'}
+                      fontWeight={700}
+                      whiteSpace={'pre-wrap'}
+                      textAlign={'center'}
+                    >
+                      {item.name}
+                    </Text>
+                  </Flex>
+                )}
               </>
             );
           })}

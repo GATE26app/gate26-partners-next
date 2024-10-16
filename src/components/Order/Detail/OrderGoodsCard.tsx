@@ -10,6 +10,8 @@ import {
   usePostOrderContfrimMutation,
   usePutOrderCancelMutation,
   usePutOrderCancelRequestMutation,
+  useRequestCancelConfirmMutation,
+  useRequestCancelDeniedMutation,
 } from '@/apis/order/OrderApi.mutation';
 import { OrderDetailItemType } from '@/apis/order/OrderApi.type';
 import { customModalSliceAction } from '@/features/customModal/customModalSlice';
@@ -29,6 +31,8 @@ import OrderStateSelectBox from './OrderStateSelectBox';
 import CancelModal from '../../common/Modal/CancelModal';
 import DeliveryModal from '@/components/common/Modal/DeliveryModal';
 import ButtonModal from '@/components/common/ModalContainer/_fragments/ButtonModal';
+import RadioComponent from '@/components/common/CustomRadioButton/RadioComponent';
+import CancelDeniedModal from '@/components/common/Modal/CancelDeniedModal';
 interface headerProps {
   id: string;
   name: string;
@@ -46,14 +50,11 @@ function OrderGoodsCard({ header, item }: Props) {
 
   const [cancelModal, setCancelModal] = useState(false);
   const [deliveryModal, setDelieveryModal] = useState(false);
+  const [cancelDeniedModal, setCancelDeniedModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({
     type: '',
     title: '',
   });
-  const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = '/images/Page/no_data.png';
-  };
-
   const [isOpenAlertModal, setOpenAlertModal] = useState(false);
   const [ModalState, setModalState] = useState({
     type: '',
@@ -63,6 +64,13 @@ function OrderGoodsCard({ header, item }: Props) {
     cbOk: () => {},
     cbCancel: () => {},
   });
+
+  const [CancelConfirmClick, setCancelConfirmClick] = useState(false);
+  const [CancelDeniedClick, setCancelDeniedClick] = useState(false);
+  const [cancelStateTxt, setCancelStateTxt] = useState('');
+  const addDefaultImg = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = '/images/Page/no_data.png';
+  };
 
   useEffect(() => {
     if (item.cancelStatusName == '' || item.cancelStatusName == null) {
@@ -87,6 +95,17 @@ function OrderGoodsCard({ header, item }: Props) {
     }
   }, [item.orderStatusName, item.cancelStatusName]);
 
+  useEffect(() => {
+    if (item.cancelStatus == 1) {
+      if (item.partnerCancelConfirm == 2) {
+        setCancelStateTxt('반려');
+      } else if (item.partnerCancelConfirm == 3) {
+        setCancelStateTxt('승인');
+      } else {
+        setCancelStateTxt('');
+      }
+    }
+  }, [item.partnerCancelConfirm]);
   const [itemData, setItemData] = useState({
     orderId: item.orderId,
     orderThumbnailImagePath: item.orderThumbnailImagePath,
@@ -212,6 +231,26 @@ function OrderGoodsCard({ header, item }: Props) {
       };
       CancelMutate(obj);
     }
+  };
+  const onSubmitCancelDenied = (text: string) => {
+    console.log('text', text);
+    setOpenAlertModal(true);
+    setModalState({
+      ...ModalState,
+      title: '파트너사 취소 반려',
+      message: `파트너사 취소 반려하시겠습니까?`,
+      type: 'confirm',
+      okButtonName: '확인',
+      cbOk: () => {
+        setCancelDeniedModal(false);
+        CancelDeniedMutate({
+          orderId: item.orderId,
+          obj: {
+            cancelDeniedDetail: text,
+          },
+        });
+      },
+    });
   };
   const onClickDelivery = () => {
     setDelieveryModal(true);
@@ -358,6 +397,88 @@ function OrderGoodsCard({ header, item }: Props) {
       },
     });
 
+  //주문쉬초요청건 파트너승인처리
+  const { mutate: CancelConfirmMutate, isLoading: isCancelConfirmLoading } =
+    useRequestCancelConfirmMutation({
+      options: {
+        onSuccess: (res) => {
+          if (res.success) {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'파트너 취소 승인이 되었습니다.'}
+                </Box>
+              ),
+            });
+            setCancelStateTxt('승인');
+          } else {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {`${res.message}`}
+                </Box>
+              ),
+            });
+            setCancelStateTxt('');
+          }
+        },
+      },
+    });
+  //주문쉬초요청건 파트너반려처리
+  const { mutate: CancelDeniedMutate, isLoading: isCancelDeniedLoading } =
+    useRequestCancelDeniedMutation({
+      options: {
+        onSuccess: (res) => {
+          if (res.success) {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'파트너 취소 반려 되었습니다.'}
+                </Box>
+              ),
+            });
+            setCancelStateTxt('반려');
+          } else {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {`${res.message}`}
+                </Box>
+              ),
+            });
+            setCancelStateTxt('');
+          }
+        },
+      },
+    });
   return (
     <>
       {cancelModal && (
@@ -386,7 +507,11 @@ function OrderGoodsCard({ header, item }: Props) {
           onClose={() => setOpenAlertModal(false)}
         />
       )}
-
+      <CancelDeniedModal
+        isOpen={cancelDeniedModal}
+        onSubmit={onSubmitCancelDenied}
+        onClose={() => setCancelDeniedModal(false)}
+      />
       <Flex
         minW={'1550px'}
         flexDirection={'row'}
@@ -516,6 +641,7 @@ function OrderGoodsCard({ header, item }: Props) {
           w={header[4]?.width}
           alignItems={'center'}
           justifyContent={'center'}
+          flexDirection={'column'}
           gap={'10px'}
         >
           <OrderStateSelectBox
@@ -527,8 +653,83 @@ function OrderGoodsCard({ header, item }: Props) {
             onClick={onClickSelect}
           />
         </Flex>
+        {item.cancelStatus == 1 && (
+          <>
+            {item.partnerCancelConfirm == 1 ? (
+              <Flex
+                w={header[5]?.width}
+                alignItems={'center'}
+                justifyContent={'center'}
+                flexDirection={'column'}
+              >
+                <Flex gap={'20px'}>
+                  <RadioComponent
+                    text="승인"
+                    checked={CancelConfirmClick}
+                    onClick={() => {
+                      CancelConfirmMutate(item.orderId);
+                      setCancelConfirmClick(true);
+                      setCancelDeniedClick(false);
+                    }}
+                  />
+                  <RadioComponent
+                    text="반려"
+                    checked={CancelDeniedClick}
+                    onClick={() => {
+                      setCancelDeniedModal(true);
+                      setCancelConfirmClick(false);
+                      setCancelDeniedClick(true);
+                      // console.log('vvvv');
+                    }}
+                  />
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex
+                w={header[5]?.width}
+                alignItems={'center'}
+                justifyContent={'center'}
+                flexDirection={'column'}
+              >
+                <Text>{item.partnerCancelConfirm == 2 ? '반려' : '승인'}</Text>
+              </Flex>
+            )}
+          </>
+        )}
+        {/* {item.partnerCancelConfirm == 1 && item.cancelStatus == 1 ? (
+          <Flex
+            w={header[5]?.width}
+            alignItems={'center'}
+            justifyContent={'center'}
+            flexDirection={'column'}
+          >
+            <Flex gap={'20px'}>
+              <RadioComponent
+                text="승인"
+                checked={item.partnerCancelConfirm == 3 ? true : false}
+                disabled={item.partnerCancelConfirm !== 1}
+                onClick={() => {
+                  CancelConfirmMutate(item.orderId);
+                  console.log('vvvv');
+                }}
+              />
+              <RadioComponent
+                text="반려"
+                disabled={item.requiredPartnerCancelConfirm !== 1}
+                checked={item.partnerCancelConfirm == 2 ? true : false}
+                onClick={() => {
+                  setCancelDeniedModal(true);
+                  // console.log('vvvv');
+                }}
+              />
+            </Flex>
+          </Flex>
+        ) : (
+          <Text>{item.partnerCancelConfirm == 2 ? '승인' : '반려'}</Text>
+        )} */}
+
         <Flex
-          w={header[5]?.width}
+          w={header[6]?.width}
           alignItems={'center'}
           justifyContent={'center'}
           flexDirection={'column'}

@@ -14,6 +14,7 @@ import {
   OrderListParamsType,
   OrderMemoParamsType,
   OrderShoppingParamsType,
+  RequestCacnelDeniedType,
 } from './OrderApi.type';
 
 export class OrderApi {
@@ -164,6 +165,35 @@ export class OrderApi {
         'X-AUTH-TOKEN': `${getToken().access}`,
       },
       data: req,
+    });
+    return data;
+  };
+  //주문쉬초요청건 파트너승인처리
+  postRequestCancelConfirm = async (
+    req: string,
+  ): Promise<OrderGroupResType> => {
+    //type : code 또는 parentCode
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/partner/orders/${req}/request-cancel-confirm`,
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+    });
+    return data;
+  };
+  //주문쉬초요청건 파트너거절처리
+  postRequestCancelDenied = async (
+    req: RequestCacnelDeniedType,
+  ): Promise<OrderGroupResType> => {
+    //type : code 또는 parentCode
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/partner/orders/${req.orderId}/request-cancel-denied`,
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+      data: req.obj,
     });
     return data;
   };
