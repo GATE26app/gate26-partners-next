@@ -20,26 +20,15 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
-
 // self.registration.hideNotification();
 messaging.onBackgroundMessage((payload) => {
   console.log('background', payload);
-  // return new Promise(function (resolve, reject) {
-  //   resolve();
-  //   setTimeout(function () {
-  //     self.registration.getNotifications().then((notifications) => {
-  //       notifications.forEach((notification) => {
-  //         notification.close();
-  //       });
-  //     });
-  //   }, 0);
-  // });
-  // self.registration.hideNotification();
-  // showNotification(payload);
   if (payload.notification) {
+    // 발신자 : sendbird
     return;
   } else {
-    // showNotification(payload);
+    // 발신자 :gate26
+    showNotification(payload);
   }
 });
 
@@ -71,27 +60,24 @@ messaging.onBackgroundMessage((payload) => {
 // });
 
 const showNotification = (data) => {
-  console.log('showNotification');
-
-  console.log('showNotification data', data);
-  console.log(
-    'title',
-    data.notification ? data.notification.title : data.data.title,
-  );
-  console.log(
-    'body',
-    data.data.sendbird ? data.data.message : data.notification.body,
-  );
   const options = {
-    title: data.notification ? data.notification.title : data.data.title,
-    body: data.data.sendbird ? data.notification.message : data.data.body,
+    title:
+      data.data.sendbird !== undefined
+        ? JSON.parse(data.data.sendbird).push_title
+        : data.data.title,
+    body:
+      data.data.sendbird !== undefined
+        ? JSON.parse(data.data.sendbird).push_alert
+        : data.data.body,
     icon: data.icon || '/firebase-logo.png',
     data: {
       click_action: getClickAction(data.data),
     },
   };
   self.registration.showNotification(
-    data.notification ? data.notification.title : data.data.title,
+    data.data.sendbird !== undefined
+      ? JSON.parse(data.data.sendbird).push_title
+      : data.data.title,
     options,
   );
 };
