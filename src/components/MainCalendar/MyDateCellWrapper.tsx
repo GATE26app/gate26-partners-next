@@ -25,7 +25,6 @@ function MyDateCellWrapper(event) {
     >
       {result.length > 0
         ? result.map((item, index) => {
-            console.log('item', item);
             return (
               <>
                 {item.paymentCnt ? (

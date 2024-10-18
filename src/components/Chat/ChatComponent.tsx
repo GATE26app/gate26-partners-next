@@ -351,7 +351,6 @@ function ChatComponent() {
     const container = document.querySelector(
       '.sendbird-conversation__messages-padding',
     );
-    console.log('*****list', list);
     if (container) {
       if (container) {
         // 추가할 요소의 배열
@@ -423,17 +422,12 @@ function ChatComponent() {
       }
     }
   };
-  useEffect(() => {
-    if (list) {
-      console.log('list::', list);
-    }
-  }, [list]);
+
   const { mutate: GetHistory, isLoading: hLoading } =
     useChatBackUpMessageMutation({
       options: {
         onSuccess: async (res) => {
           if (res.success == true) {
-            console.log('histofy ::', res.data);
             setLastListLength(res.data.messages.length);
             add_list(res.data.messages);
             setList([...list, res.data.messages]);
@@ -499,7 +493,6 @@ function ChatComponent() {
           // console.log(done, hLoading);
           if (done === false && hLoading === false) {
             if (messageId !== msId && firstState) {
-              console.log('11111^^^^^^^^^');
               setMsId(messageId);
               GetHistory({
                 // messageId: '7598494855',
@@ -513,7 +506,6 @@ function ChatComponent() {
               scrollContainer.scrollTop =
                 scrollContainer.scrollHeight - prevHeigth;
             } else if (lastListLength >= 50 && !firstState) {
-              console.log('2222^^^^^^^^^');
               setMsId(messageId);
               GetHistory({
                 // messageId: '7598494855',

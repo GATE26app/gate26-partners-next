@@ -70,7 +70,6 @@ function CancelComponent({
 
   const resultArray: GoodsPoliciesListProps[] = [];
 
-  console.log('BasicInfo', BasicInfo);
   useEffect(() => {
     if (list) {
       list?.filter((item) => {

@@ -204,7 +204,6 @@ function UpdateGoodsComponentPage() {
 
   useEffect(() => {
     if (detailData?.success == true) {
-      console.log('detailData.data', detailData.data);
       setLogDisable(false);
       setOptionList(detailData.data.options);
       setStatusList({
@@ -414,8 +413,6 @@ function UpdateGoodsComponentPage() {
     }
   }, [LogListData]);
 
-  console.log('BasicInfo', BasicInfo);
-  console.log('selectMenu', selectMenu);
   const onSubmit = (selectMenu: number, status?: number) => {
     if (selectMenu == 1) {
       if (categoryList.length == 0) {

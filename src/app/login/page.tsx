@@ -36,6 +36,7 @@ import { TokenType } from '@/apis/auth/AuthApi.type';
 import { useQuery } from 'react-query';
 import goodsApi from '@/apis/goods/GoodsApi';
 import sendBirdApi from '@/apis/sendbird/SendBirdApi';
+import moment from 'moment';
 
 interface LoginModel {
   loginId: string;
@@ -59,9 +60,9 @@ function LoginPage() {
   const [modal, setModal] = useState<boolean>(false);
   const toggleCheckbox = () => setCheckbox(!checkbox);
   const { userZuInfo, setUserZuInfo } = useUserZuInfo((state) => state);
+
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [fcmtoken, setFcmToken] = useState('');
-  const { setAlarmInfo } = useAlarmZuInfo((state) => state);
   const [sendBirdTokenState, setSendBirdTokenState] = useState(false);
 
   useEffect(() => {
@@ -97,14 +98,7 @@ function LoginPage() {
   // 1.최초 로그인시 샌드버드 토큰 발급 > 로컬에 담기
   // 2.로컬에 있는 지 확인 , expire_at 확인 후 7일 지났는지 확인 (수시로 발급받으면 안됨. 정지당함.)
   // 3.토큰 유효하지 않을 경우 토큰 재발급
-  useEffect(() => {
-    // console.log('getSendBirdToken().expiresAt', getSendBirdToken().expiresAt);
-    // console.log('Date.now()', Date.now());
-    // console.log(
-    //   'getSendBirdToken().expiresAt < Date.now()',
-    //   getSendBirdToken().expiresAt < Date.now(),
-    // );
-  }, []);
+
   const { data: SendBirdTokenData, error } = useQuery(
     ['GET_GOODSDETAIL'],
     () => sendBirdApi.getSendBirdToken(),
@@ -114,6 +108,7 @@ function LoginPage() {
       enabled: !!sendBirdTokenState,
     },
   );
+
   useEffect(() => {
     if (SendBirdTokenData !== undefined && sendBirdTokenState) {
       console.log('SendBirdTokenData', SendBirdTokenData);
@@ -143,17 +138,17 @@ function LoginPage() {
             refreshToken: data?.refreshToken ? data?.refreshToken : '',
             userId: request.loginId,
           });
-          if (userZuInfo.userId !== request.loginId) {
+          localStorage.setItem('loginId', request.loginId);
+          if (localStorage.getItem('loginId') !== request.loginId) {
             setSendBirdTokenState(true);
           } else {
-            if (getSendBirdToken().expiresAt < Date.now()) {
+            if (getSendBirdToken().expiresAt / 1000 < moment().unix()) {
               console.log('샌드버드 토큰 재발급');
               // ReTokenFun();
               setSendBirdTokenState(true);
             } else {
               setSendBirdTokenState(false);
               router.push('/');
-              // ReTokenFun();
             }
           }
 

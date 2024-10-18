@@ -65,8 +65,6 @@ function MainHeader() {
     },
   });
   useEffect(() => {
-    console.log('getSendbirdUrl', getSendbirdUrl);
-    console.log('getSendBird', getSendBird);
     if (getSendBird == 'true') {
       setChat(true);
     }
