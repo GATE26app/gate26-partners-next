@@ -100,9 +100,11 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
             ? 'cancelRequestDate'
             : select == '취소승인일'
               ? 'cancelConfirmDate'
-              : select == '취소반려일'
-                ? 'cancelDeniedDate'
-                : '',
+              : select == '결제일'
+                ? 'paymentDate'
+                : select == '예약일'
+                  ? 'orderDateTimeOfUse'
+                  : ''
       });
     }
   }, [select]);
