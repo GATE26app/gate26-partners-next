@@ -21,15 +21,20 @@ import {
   ColorWhite,
 } from '@/utils/_Palette';
 import Image from 'next/image';
+import TermsAndConditionsContent from '@/components/common/TermsAndConditionsContent';
 
 interface AlertModalProps extends Omit<ModalProps, 'children'> {
   onClose: () => void;
+  title?: string
+  contentSrc?: string;
   // reviewId: string;
 }
 function TermModal({
   onClose,
   // reviewId,
   // onSubmit,
+  title,
+  contentSrc,
   ...props
 }: AlertModalProps) {
   return (
@@ -44,7 +49,7 @@ function TermModal({
             mt={'30px'}
           >
             <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-              서비스 약관동의
+              {title}
             </Text>
             <Image
               src={'/images/Page/ico_modal_close.png'}
@@ -56,52 +61,7 @@ function TermModal({
           </Flex>
         </Header>
         <ModalBody>
-          <Flex
-            flexDirection={'column'}
-            py={'15px'}
-            px={'15px'}
-            height={'530px'}
-            overflowY={'auto'}
-            // overflow={'hidden'}
-            bgColor={ColorGray100}
-          >
-            <Text>제1조 (목적)</Text>
-            <Text>
-              밥을 동산에는 것은 천하를 사막이다. 보내는 뜨거운지라, 그들의
-              쓸쓸한 우리 그들은 풍부하게 보이는 사라지지 칼이다. 노년에게서
-              따뜻한 가장 우는 같은 곳으로 거친 따뜻한 있는가? 미묘한 길을
-              그들의 피가 작고 힘있다. 만물은 위하여 너의 꽃 얼음 무엇을
-              것이다.보라, 불어 찾아 때문이다. 희망의 무엇을 같이 인간이
-              되려니와, 할지니, 약동하다. 평화스러운 기관과 인생의 보는 힘있다.
-              아니한 황금시대의 그들의 발휘하기 피고, 가진 있을 청춘의 것이다.
-              열매를 풍부하게 곳이 같은 위하여서. 밥을 동산에는 것은 천하를
-              사막이다. 보내는 뜨거운지라, 그들의 쓸쓸한 우리 그들은 풍부하게
-              보이는 사라지지 칼이다. 노년에게서 따뜻한 가장 우는 같은 곳으로
-              거친 따뜻한 있는가? 미묘한 길을 그들의 피가 작고 힘있다. 만물은
-              위하여 너의 꽃 얼음 무엇을 것이다.보라, 불어 찾아 때문이다. 희망의
-              무엇을 같이 인간이 되려니와, 할지니, 약동하다. 평화스러운 기관과
-              인생의 보는 힘있다. 아니한 황금시대의 그들의 발휘하기 피고, 가진
-              있을 청춘의 것이다. 열매를 풍부하게 곳이 같은 위하여서.
-            </Text>
-            <Text>제1조 (목적)</Text>
-            <Text>
-              밥을 동산에는 것은 천하를 사막이다. 보내는 뜨거운지라, 그들의
-              쓸쓸한 우리 그들은 풍부하게 보이는 사라지지 칼이다. 노년에게서
-              따뜻한 가장 우는 같은 곳으로 거친 따뜻한 있는가? 미묘한 길을
-              그들의 피가 작고 힘있다. 만물은 위하여 너의 꽃 얼음 무엇을
-              것이다.보라, 불어 찾아 때문이다. 희망의 무엇을 같이 인간이
-              되려니와, 할지니, 약동하다. 평화스러운 기관과 인생의 보는 힘있다.
-              아니한 황금시대의 그들의 발휘하기 피고, 가진 있을 청춘의 것이다.
-              열매를 풍부하게 곳이 같은 위하여서. 밥을 동산에는 것은 천하를
-              사막이다. 보내는 뜨거운지라, 그들의 쓸쓸한 우리 그들은 풍부하게
-              보이는 사라지지 칼이다. 노년에게서 따뜻한 가장 우는 같은 곳으로
-              거친 따뜻한 있는가? 미묘한 길을 그들의 피가 작고 힘있다. 만물은
-              위하여 너의 꽃 얼음 무엇을 것이다.보라, 불어 찾아 때문이다. 희망의
-              무엇을 같이 인간이 되려니와, 할지니, 약동하다. 평화스러운 기관과
-              인생의 보는 힘있다. 아니한 황금시대의 그들의 발휘하기 피고, 가진
-              있을 청춘의 것이다. 열매를 풍부하게 곳이 같은 위하여서.
-            </Text>
-          </Flex>
+          <TermsAndConditionsContent contentSrc={contentSrc}/>
         </ModalBody>
         <Flex
           pb={'30px'}
