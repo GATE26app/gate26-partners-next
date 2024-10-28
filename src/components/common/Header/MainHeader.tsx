@@ -24,6 +24,7 @@ import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import AlarmModal from '../Modal/AlarmModal';
 import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 import ChatComponent from '@/components/Chat/ChatComponent';
+import { deleteSendBirdToken } from '@/utils/localStorage/token/index';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
@@ -41,6 +42,7 @@ function MainHeader() {
   const onLogout = () => {
     deleteUserInfo();
     deleteToken();
+    deleteSendBirdToken();
     document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     // cookies().delete('token');
     router.push('/login');

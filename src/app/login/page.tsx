@@ -139,17 +139,18 @@ function LoginPage() {
             userId: request.loginId,
           });
           localStorage.setItem('loginId', request.loginId);
-          if (localStorage.getItem('loginId') !== request.loginId) {
-            setSendBirdTokenState(true);
-          } else {
-            if (getSendBirdToken().expiresAt / 1000 < moment().unix()) {
-              console.log('샌드버드 토큰 재발급');
-              // ReTokenFun();
-              setSendBirdTokenState(true);
-            } else {
-              setSendBirdTokenState(false);
-              router.push('/');
-            }
+          setSendBirdTokenState(true);
+          // if (localStorage.getItem('loginId') !== request.loginId) {
+          //   setSendBirdTokenState(true);
+          // } else {
+          //   if (getSendBirdToken().expiresAt / 1000 <= moment().unix()) {
+          //     console.log('샌드버드 토큰 재발급');
+          //     // ReTokenFun();
+          //     setSendBirdTokenState(true);
+          //   } else {
+          //     setSendBirdTokenState(false);
+          //     router.push('/');
+          //   }
           }
 
           // setSendBirdToken({
