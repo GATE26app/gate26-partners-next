@@ -18,7 +18,7 @@ import {
   ColorRed,
   ColorWhite,
 } from '@/utils/_Palette';
-import { imgPath } from '@/utils/format';
+import { getImagePath, imgPath } from '@/utils/format';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import ButtonModal from '../common/ModalContainer/_fragments/ButtonModal';
