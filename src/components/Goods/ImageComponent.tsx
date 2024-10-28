@@ -18,7 +18,7 @@ import {
   ColorRed,
   ColorWhite,
 } from '@/utils/_Palette';
-import { getImagePath, imgPath } from '@/utils/format';
+import { imgPath, getImagePath } from '@/utils/format';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import ButtonModal from '../common/ModalContainer/_fragments/ButtonModal';
@@ -167,6 +167,19 @@ function ImageComponent({ list, setList }: Props) {
     const deleteImage = list.filter((item) => item.sort !== index);
     setList(deleteImage);
   };
+
+  const getImageFromImageObject = (index: number) => {
+    const imageObject = list.filter((item) => item.sort === index)[0];
+    console.log(imageObject)
+
+    if(imageObject.imagePath) {
+      return getImagePath(imageObject.imagePath)
+    } else if(imageObject.thumbnailImagePath){
+      return imageObject.thumbnailImagePath
+    }
+
+    return '/images/no_img.png'
+  }
 
   return (
     <>
@@ -326,7 +339,8 @@ function ImageComponent({ list, setList }: Props) {
                             // src={`${imgPath()}${
                             //   list.filter((item) => item.sort == 1)[0].imagePath
                             // }`}
-                            src={images[0]}
+                            // src={images[0]}
+                            src={getImageFromImageObject(1)}
                             style={{
                               width: '100%',
                               height: '100%',
@@ -483,7 +497,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 2)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[1]}
+                                // src={images[1]}
+                                src={getImageFromImageObject(2)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -587,12 +602,11 @@ function ImageComponent({ list, setList }: Props) {
                               borderRadius={'10px'}
                               overflow={'hidden'}
                             >
+
                               <img
-                                // src={`${imgPath()}${
-                                //   list.filter((item) => item.sort == 3)[0]
-                                //     .imagePath
-                              // }`}
-                                src={images[2]}
+                                // src={`${imgPath()}${list.filter((item) => item.sort == 3)[0].imagePath}`}
+                                // src={images[2]}
+                                src={getImageFromImageObject(3)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -701,7 +715,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 4)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[3]}
+                                // src={images[3]}
+                                src={getImageFromImageObject(4)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -815,7 +830,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 5)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[4]}
+                                // src={images[4]}
+                                src={getImageFromImageObject(5)}
                                 alt="이미지 업로드"
                               />
                             </Flex>
@@ -919,7 +935,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 6)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[5]}
+                                // src={images[5]}
+                                src={getImageFromImageObject(6)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -1028,7 +1045,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 7)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[6]}
+                                // src={images[6]}
+                                src={getImageFromImageObject(7)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -1137,7 +1155,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 8)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[7]}
+                                // src={images[7]}
+                                src={getImageFromImageObject(8)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -1246,7 +1265,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 9)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[8]}
+                                // src={images[8]}
+                                src={getImageFromImageObject(9)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -1355,7 +1375,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 10)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[9]}
+                                // src={images[9]}
+                                src={getImageFromImageObject(10)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
@@ -1464,7 +1485,8 @@ function ImageComponent({ list, setList }: Props) {
                                 //   list.filter((item) => item.sort == 11)[0]
                                 //     .imagePath
                               // }`}
-                                src={images[10]}
+                                // src={images[10]}
+                                src={getImageFromImageObject(11)}
                                 style={{
                                   width: '100%',
                                   height: '100%',
