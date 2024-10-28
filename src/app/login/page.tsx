@@ -139,7 +139,6 @@ function LoginPage() {
             userId: request.loginId,
           });
           localStorage.setItem('loginId', request.loginId);
-          setSendBirdTokenState(true);
           // if (localStorage.getItem('loginId') !== request.loginId) {
           //   setSendBirdTokenState(true);
           // } else {
@@ -151,7 +150,7 @@ function LoginPage() {
           //     setSendBirdTokenState(false);
           //     router.push('/');
           //   }
-          }
+          // }
 
           // setSendBirdToken({
           //   sendBird:
