@@ -331,6 +331,20 @@ function JoinBasicInfoComponent({
             });
             setAuthEmailCheckDisable(true);
             setEmailSend(false); //인증 완료 후 이메일 인증 코드 input 가리기
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'이메일로 인증이 완료되었습니다.'}
+                </Box>
+              ),
+            });
           } else {
             setError({
               ...error,

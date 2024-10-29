@@ -12,12 +12,14 @@ import {
 import { Box, Flex, Text, Textarea, useToast } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import AddressModal from '../common/Modal/AddressModal';
+import GoogleMapModal from '../common/Modal/GoogleMapModal';
 interface Props {
   joinInfo: JoinBody;
   setJoinInfo: React.Dispatch<React.SetStateAction<JoinBody>>;
 }
 function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
   const [addressModal, setAddressModal] = useState(false);
+  const [googleModal, setGoogleModal] = useState(false);
 
   const handleAddress = (location: { address: string }) => {
     if (location.address !== '') {
@@ -27,8 +29,17 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
       });
     }
   };
+
   return (
     <>
+      {googleModal && (
+        <GoogleMapModal
+          isOpen={googleModal}
+          onClose={() => setGoogleModal(false)}
+          onComplete={handleAddress}
+        />
+      )}
+
       {addressModal && (
         <AddressModal
           isOpen={addressModal}
@@ -227,7 +238,10 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
           px="29px"
           py="13px"
           borderColor={ColorBlack}
-          onClick={() => setAddressModal(true)}
+          onClick={() => {
+            if(joinInfo.type == 2) setGoogleModal(true);
+            else setAddressModal(true)
+          }}
         />
       </Flex>
       <Flex flexDirection={'row'} justifyContent={'flex-end'} mt={'10px'}>
