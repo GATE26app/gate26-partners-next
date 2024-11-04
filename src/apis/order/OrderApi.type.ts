@@ -37,7 +37,18 @@ export type OrderListResType = {
   orders: Array<OrderListItemType>;
   status: OrderStatusType;
 };
-
+//주문내역 엑셀 다운로드 params
+export type OrderListExcelDownParamsType = {
+  searchType?: string;
+  searchKeyword?: string;
+  orderType?: number;
+  orderStatus?: number;
+  cancelStatus?: number[];
+  periodType?: string;
+  periodStartDate?: string;
+  periodEndDate?: string;
+  orderIds?: string[];
+};
 export type OrderListItemType = {
   orderId: string;
   merchantUid: string;

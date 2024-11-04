@@ -10,12 +10,19 @@ import {
 
 import Pagination from '@/components/common/Pagination';
 
-import { ColorBlack, ColorGray700 } from '@/utils/_Palette';
+import {
+  ColorBlack,
+  ColorGray700,
+  ColorGrayBorder,
+  ColorWhite,
+} from '@/utils/_Palette';
 
 import CancelDataTable from './CancelDataTable';
 
 import { useCancelFilterZuInfo } from '@/_store/CancelStateInfo';
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
+import ImageButton from '@/components/common/ImageButton';
+import { getToken } from '@/utils/localStorage/token';
 
 // import OrderDataTable from './OrderDataTable';
 
@@ -73,6 +80,86 @@ function CancelComponent({ list, request, setRequest }: Props) {
     });
     setRequest(newRequest);
   }
+  const f_excel_down = async () => {
+    var cancelText =
+      request.cancelStatus !== undefined && request.cancelStatus.length > 0
+        ? request.cancelStatus
+            .map((number) => `&cancelStatus=${number}`)
+            .join('')
+        : '';
+    let searchKeyword =
+      request.searchKeyword != ''
+        ? 'searchType=' +
+          request.searchType +
+          '&searchKeyword=' +
+          request.searchKeyword
+        : '';
+    let and =
+      request.searchKeyword != '' ||
+      request.orderType != 0 ||
+      request.orderStatus != 0 ||
+      request.cancelStatus?.length !== 0 ||
+      request.periodType != '' ||
+      request.periodStartDate != '' ||
+      request.periodEndDate != '' ||
+      CheckList.length != 0
+        ? '?'
+        : '';
+    let orderType =
+      request.orderType != 0 ? '&orderType=' + request.orderType : '';
+    let orderStatus =
+      request.orderStatus != 0 ? '&orderStatus=' + request.orderStatus : '';
+    let cancelStatus = request.cancelStatus?.length !== 0 ? cancelText : '';
+    let periodType =
+      request.periodType != '' ? '&periodType=' + request.periodType : '';
+    let periodStartDate =
+      request.periodStartDate != ''
+        ? '&periodStartDate=' + request.periodStartDate
+        : '';
+    let periodEndDate =
+      request.periodEndDate != ''
+        ? '&periodEndDate=' + request.periodEndDate
+        : '';
+    let orderId = CheckList.length > 0 ? '&orderIds=' + CheckList : '';
+    const url = `/api/backoffice/partner/download-orders${and}${cancelStatus}${searchKeyword}${orderType}${orderStatus}${periodType}${periodStartDate}${periodEndDate}${orderId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN': `${getToken().access}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let fileName = '첨부파일';
+      console.log('contentDisposition', contentDisposition);
+
+      if (contentDisposition && contentDisposition.includes('filename=')) {
+        fileName = contentDisposition
+          .split('filename=')[1]
+          .split(';')[0]
+          .replace(/"/g, '');
+      }
+
+      a.download = decodeURIComponent(fileName); // 다운로드할 파일의 이름
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
   return (
     <Box mt={'40px'}>
       <Flex justifyContent={'space-between'}>
@@ -95,7 +182,7 @@ function CancelComponent({ list, request, setRequest }: Props) {
           </Text>
         </Flex>
         <Flex gap={'10px'}>
-          {/* <ImageButton
+          <ImageButton
             img="/images/Page/excel_icon.png"
             backgroundColor={ColorWhite}
             borderColor={ColorGrayBorder}
@@ -106,8 +193,8 @@ function CancelComponent({ list, request, setRequest }: Props) {
             imgWidth="20px"
             px="14px"
             py="10px"
-            onClick={() => console.log('엑셀다운로드')}
-          /> */}
+            onClick={() => f_excel_down()}
+          />
         </Flex>
       </Flex>
       <CancelDataTable

@@ -11,6 +11,7 @@ import {
   OrderGroupResType,
   OrderGroupType,
   OrderListDtoType,
+  OrderListExcelDownParamsType,
   OrderListParamsType,
   OrderMemoParamsType,
   OrderShoppingParamsType,
@@ -39,6 +40,47 @@ export class OrderApi {
       url: `/partner/orders?pageNo=${request.pageNo + 1}&pageSize=${
         request.pageSize
       }${
+        request.searchKeyword != ''
+          ? '&searchType=' +
+            request.searchType +
+            '&searchKeyword=' +
+            request.searchKeyword
+          : ''
+      }${request.orderType != 0 ? '&orderType=' + request.orderType : ''}${
+        request.orderStatus != 0 ? '&orderStatus=' + request.orderStatus : ''
+      }${request.cancelStatus?.length !== 0 ? cancelText : ''}${
+        request.periodType != '' ? '&periodType=' + request.periodType : ''
+      }${
+        request.periodStartDate != ''
+          ? '&periodStartDate=' + request.periodStartDate
+          : ''
+      }${
+        request.periodEndDate != ''
+          ? '&periodEndDate=' + request.periodEndDate
+          : ''
+      }`,
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+    });
+    return data;
+  };
+
+  //주문 리스트 엑셀 다운로드
+  getOrderListExcelDown = async (
+    request: OrderListExcelDownParamsType,
+  ): Promise<OrderListDtoType> => {
+    //type : code 또는 parentCode
+    var cancelText =
+      request.cancelStatus !== undefined && request.cancelStatus.length > 0
+        ? request.cancelStatus
+            .map((number) => `&cancelStatus=${number}`)
+            .join('')
+        : '';
+
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/partner/download-orders?${
         request.searchKeyword != ''
           ? '&searchType=' +
             request.searchType +

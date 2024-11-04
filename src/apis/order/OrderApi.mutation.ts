@@ -17,6 +17,15 @@ export const usePostOrderListMutation = (
   });
 };
 
+//주문 목록 엑셀 다운로드
+export const usePostOrderExcelDownMutation = (
+  params?: MutationHookParams<typeof orderApi.getOrderListExcelDown>,
+) => {
+  return useMutation(orderApi.getOrderListExcelDown, {
+    ...params?.options,
+  });
+};
+
 //주문 상세
 export const useGetOrderDetailMutation = (
   params?: MutationHookParams<typeof orderApi.getOrderItem>,

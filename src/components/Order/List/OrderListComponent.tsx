@@ -5,6 +5,7 @@ import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import {
   usePostOrderContfrimMutation,
+  usePostOrderExcelDownMutation,
   usePostOrderGroupMutation,
   usePutOrderCancelMutation,
   usePutOrderCancelRequestMutation,
@@ -31,6 +32,9 @@ import OrderDataTable from './OrderDataTable';
 import { useOrderFilterZuInfo } from '@/_store/OrderFilterInfo';
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
 import LoadingModal from '@/components/common/Modal/LoadingModal';
+import ImageButton from '@/components/common/ImageButton';
+import { OrderApi } from '@/apis/order/OrderApi';
+import { getToken } from '@/utils/localStorage/token';
 
 interface ReqLoungeProps {
   keyword?: string;
@@ -90,6 +94,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
   const [CheckList, setChekcList] = useState<string[]>([]);
   const [newCheckList, setNewChekcList] = useState<string[]>([]);
 
+  console.log('CheckList', CheckList);
   //주문번호 그룹화
   const { mutate: OrderGroupMutate } = usePostOrderGroupMutation({
     options: {
@@ -299,6 +304,129 @@ function OrderListComponent({ list, request, setRequest }: Props) {
       },
     });
 
+  //주문목록 엑셀다운로드
+  // const { mutate: refreshExcelDown, isLoading: isLoadingExcel } =
+  //   usePostOrderExcelDownMutation({
+  //     options: {
+  //       onSuccess: (res) => {
+  //         console.log('res', res);
+
+  //         // let a = document.createElement('a');
+  //         // a.href = res.data.excel_file;
+  //         // a.download = res.data.excel_file.substring(
+  //         //   res.data.excel_file.lastIndexOf('/') + 1,
+  //         // );
+  //         // document.body.appendChild(a);
+  //         // a.click();
+  //       },
+  //     },
+  //   });
+  const f_excel_down = async () => {
+    let searchKeyword =
+      request.searchKeyword != ''
+        ? 'searchType=' +
+          request.searchType +
+          '&searchKeyword=' +
+          request.searchKeyword
+        : '';
+    let and =
+      request.searchKeyword != '' ||
+      request.orderType != 0 ||
+      request.orderStatus != 0 ||
+      request.cancelStatus?.length !== 0 ||
+      request.periodType != '' ||
+      request.periodStartDate != '' ||
+      request.periodEndDate != '' ||
+      CheckList.length != 0
+        ? '?'
+        : '';
+    let orderType =
+      request.orderType != 0 ? '&orderType=' + request.orderType : '';
+    let orderStatus =
+      request.orderStatus != 0 ? '&orderStatus=' + request.orderStatus : '';
+    let periodType =
+      request.periodType != '' ? '&periodType=' + request.periodType : '';
+    let periodStartDate =
+      request.periodStartDate != ''
+        ? '&periodStartDate=' + request.periodStartDate
+        : '';
+    let periodEndDate =
+      request.periodEndDate != ''
+        ? '&periodEndDate=' + request.periodEndDate
+        : '';
+    let orderId = CheckList.length > 0 ? 'orderIds=' + CheckList : '';
+    const url = `/api/backoffice/partner/download-orders${and}${searchKeyword}${orderType}${orderStatus}${periodType}${periodStartDate}${periodEndDate}${orderId}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-AUTH-TOKEN': `${getToken().access}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let fileName = '첨부파일';
+      console.log('contentDisposition', contentDisposition);
+
+      if (contentDisposition && contentDisposition.includes('filename=')) {
+        fileName = contentDisposition
+          .split('filename=')[1]
+          .split(';')[0]
+          .replace(/"/g, '');
+      }
+
+      a.download = decodeURIComponent(fileName); // 다운로드할 파일의 이름
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error downloading the file:', error);
+    }
+  };
+
+  const onClickExcelDown = () => {
+    f_excel_down();
+    // if (CheckList.length == 0) {
+    //   let data = {
+    //     searchType: request.searchType,
+    //     searchKeyword: request.searchKeyword,
+    //     orderType: request.orderType,
+    //     orderStatus: request.orderStatus,
+    //     cancelStatus: request.cancelStatus,
+    //     periodType: request.periodType,
+    //     periodStartDate: request.periodStartDate,
+    //     periodEndDate: request.periodEndDate,
+    //   };
+    //   console.log('data', data);
+    //   f_excel_down();
+    //   // refreshExcelDown(data);
+    // } else {
+    //   let data = {
+    //     searchType: request.searchType,
+    //     searchKeyword: request.searchKeyword,
+    //     orderType: request.orderType,
+    //     orderStatus: request.orderStatus,
+    //     cancelStatus: request.cancelStatus,
+    //     periodType: request.periodType,
+    //     periodStartDate: request.periodStartDate,
+    //     periodEndDate: request.periodEndDate,
+
+    //     orderIds: CheckList,
+    //   };
+    //   // refreshExcelDown(data);
+    // }
+  };
   return (
     <Box mt={'40px'}>
       {cancelModal && (
@@ -353,7 +481,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
             fontSize="14px"
             onClick={() => onChangeState()}
           />
-          {/* <ImageButton
+          <ImageButton
             img="/images/Page/excel_icon.png"
             backgroundColor={ColorWhite}
             borderColor={ColorGrayBorder}
@@ -364,8 +492,8 @@ function OrderListComponent({ list, request, setRequest }: Props) {
             imgWidth="20px"
             px="14px"
             py="10px"
-            onClick={() => console.log('엑셀다운로드')}
-          /> */}
+            onClick={() => onClickExcelDown()}
+          />
         </Flex>
       </Flex>
       <OrderDataTable
