@@ -96,14 +96,12 @@ function OrderGoodsCard({ header, item }: Props) {
   }, [item.orderStatusName, item.cancelStatusName]);
 
   useEffect(() => {
-    if (item.cancelStatus == 1) {
-      if (item.partnerCancelConfirm == 2) {
-        setCancelStateTxt('반려');
-      } else if (item.partnerCancelConfirm == 3) {
-        setCancelStateTxt('승인');
-      } else {
-        setCancelStateTxt('');
-      }
+    if (item.partnerCancelConfirm == 2) {
+      setCancelStateTxt('반려');
+    } else if (item.partnerCancelConfirm == 3) {
+      setCancelStateTxt('승인');
+    } else {
+      setCancelStateTxt('');
     }
   }, [item.partnerCancelConfirm]);
   const [itemData, setItemData] = useState({
@@ -243,6 +241,7 @@ function OrderGoodsCard({ header, item }: Props) {
       okButtonName: '확인',
       cbOk: () => {
         setCancelDeniedModal(false);
+        setCancelStateTxt('반려');
         CancelDeniedMutate({
           orderId: item.orderId,
           obj: {
@@ -655,7 +654,7 @@ function OrderGoodsCard({ header, item }: Props) {
         </Flex>
         {item.cancelStatus == 1 && (
           <>
-            {item.partnerCancelConfirm == 1 ? (
+            {(item.partnerCancelConfirm == 1 && cancelStateTxt == '') ? (
               <Flex
                 w={header[5]?.width}
                 alignItems={'center'}
@@ -691,7 +690,7 @@ function OrderGoodsCard({ header, item }: Props) {
                 justifyContent={'center'}
                 flexDirection={'column'}
               >
-                <Text>{item.partnerCancelConfirm == 2 ? '반려' : '승인'}</Text>
+                <Text>{(item.partnerCancelConfirm == 2 || cancelStateTxt == '반려') ? '반려' : '승인'}</Text>
               </Flex>
             )}
           </>
