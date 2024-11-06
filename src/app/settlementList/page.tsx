@@ -65,11 +65,11 @@ function page() {
 
   useEffect(() => {
     refreshList(request);
-    console.log('request ::??', refreshList);
   }, []);
   
   useEffect(() => {
     if (goodsInfo.settlementState) refreshList(request);
+    console.log(request);
   }, [goodsInfo.settlementState]);
   
   return (

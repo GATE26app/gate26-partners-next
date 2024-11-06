@@ -30,8 +30,12 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
   const router = useRouter();
   const toast = useToast();
 
-  const [startDay, setStartDay] = useState<dayjs.Dayjs>();
-  const [endDay, setEndDay] = useState<dayjs.Dayjs>();
+  const [startDay, setStartDay] = useState<dayjs.Dayjs>(() =>
+    dayjs(request.fromDate),
+  );
+  const [endDay, setEndDay] = useState<dayjs.Dayjs>(() =>
+    dayjs(request.toDate),
+  );
 
   const [sState, setSState] = useState(false);
   const [eState, setEState] = useState(false);
@@ -53,8 +57,10 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
     } else {
       setSettleFilterInfo({
         ...settleFilterInfo,
-        fromDate: request.fromDate,
-        endDate: request.endDate,
+        fromDate:
+          request.fromDate !== undefined ? request.fromDate : '',
+        toDate:
+          request.toDate !== undefined ? request.toDate : '',
         pageNo: 0,
         searchType: request.searchType !== undefined ? request.searchType : '',
         searchKeyword:
@@ -72,15 +78,10 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
     }
     if(request.fromDate == ''){
       setStartDay(dayjs(''));
-      setSState(false);
     }
     if(request.toDate == ''){
       setEndDay(dayjs(''));
-      setEState(false);
     }
-    // if (request.searchKeyword == '') {
-    //   setSearchSelect('');
-    // }
   }, [request]);
 
   // useEffect(() => {
@@ -121,6 +122,7 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
                 : dayjs(request.toDate).format('YYYY-MM-DD')
             }
             onApply={(date) => {
+              console.log(date, startDay);
               setStartDay(date);
               setSState(true);
             }}
@@ -211,11 +213,8 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
               searchKeyword: '',
               searchType: '',
             });
-            setStartDay(dayjs(''));
-            setEndDay(dayjs(''));
             deleteSettleFilterInfo();
             setOnSubmit(true);
-            setSState(false);
             setGoodsInfo({
               settlementState: true,
             });

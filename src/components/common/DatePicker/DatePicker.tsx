@@ -72,7 +72,7 @@ const DatePicker = ({
 
   useEffect(() => {
     setDate(curDate);
-  }, []);
+  }, [curDate]);
 
   return (
     <>
@@ -88,7 +88,11 @@ const DatePicker = ({
             <PickerInput
               disabled={disabled}
               text={
-                formatDated(date) == 'Invalid Date' ? '' : formatDated(date)
+                formatDated(date) == 'Invalid Date'
+                  ? ''
+                  : type === 'datetime'
+                    ? dayjs(date).format('YY-MM-DD HH:mm')
+                    : formatDated(date)
               }
               placeholder="날짜선택"
             />

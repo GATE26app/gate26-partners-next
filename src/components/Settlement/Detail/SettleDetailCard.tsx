@@ -96,8 +96,11 @@ function SettleDetailCard({ header, item, index, pageNo, totalCount }: Props) {
         justifyContent={'center'}
         flexDirection={'column'}
       >
-        <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-        {intComma(item.serviceChargePercent)}원
+        <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
+        {intComma(item.paymentChargeAmount)}%
+        </Text>
+        <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
+        {intComma(item.paymentChargePercent)}원
         </Text>
       </Flex>
 
@@ -108,10 +111,10 @@ function SettleDetailCard({ header, item, index, pageNo, totalCount }: Props) {
         flexDirection={'column'}
       >
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
-        {intComma(item.paymentChargePercent)}%
+        {intComma(item.serviceChargeAmount)}%
         </Text>
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
-        {intComma(item.paymentChargeAmount)}원
+        {intComma(item.serviceChargePercent)}원
         </Text>
       </Flex>
       <Flex
