@@ -47,6 +47,7 @@ const SearchInput = ({
           color: ColorGray700,
           fontSize: '15px',
           lineHeight: '15px',
+          minHeight: '40px',
         }}
         placeholder={placeholder !== '' ? placeholder : ''}
         onChange={handleChangeInput}

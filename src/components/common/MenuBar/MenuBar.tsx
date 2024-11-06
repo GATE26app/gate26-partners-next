@@ -241,14 +241,15 @@ function MenuBar() {
         </Flex>
       )}
 
-      {/* <Flex
+      <Flex
         alignItems={'center'}
         cursor={'pointer'}
-        mb={menu == 3 ? '15px' : '30px'}
+        mb={'30px'}
         mr={'30px'}
         justifyContent={'space-between'}
         onClick={() => setMenu(3)}
       >
+        <Link href={'/settlementList'}>
         <Flex alignItems={'center'}>
           {menu == 3 ? (
             <Image
@@ -275,7 +276,7 @@ function MenuBar() {
             정산내역
           </Text>
         </Flex>
-        {menu == 3 ? (
+        {/* {menu == 3 ? (
           <Image
             src={'/images/Menu/icon_menu_up.png'}
             width={16}
@@ -289,8 +290,9 @@ function MenuBar() {
             height={16}
             alt="로고"
           />
-        )}
-      </Flex>*/}
+        )} */}
+        </Link>
+      </Flex>
       {/* {menu == 3 && (
         <Flex mb={'30px'} ml={'57px'} flexDirection={'column'}>
           <Link href={'/settlementList'}>
