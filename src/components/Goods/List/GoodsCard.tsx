@@ -37,6 +37,8 @@ interface Props {
   pageNo: number;
   totalCount: number;
   setOnSubmit: React.Dispatch<React.SetStateAction<boolean>>;
+  CheckList: string[];
+  setCheckList: React.Dispatch<React.SetStateAction<string[]>>;
 }
 function GoodsCard({
   header,
@@ -45,6 +47,8 @@ function GoodsCard({
   pageNo,
   totalCount,
   setOnSubmit,
+  CheckList,
+  setCheckList,
 }: Props) {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -104,6 +108,15 @@ function GoodsCard({
 
     // deleteMutate(body);
   };
+  const onCheckClick = (item: string) => {
+    setCheckList((prevItems) => {
+      if (prevItems.includes(item)) {
+        return prevItems.filter((i) => i !== item);
+      } else {
+        return [...prevItems, item];
+      }
+    });
+  };
   return (
     <>
       <ButtonModal
@@ -119,6 +132,28 @@ function GoodsCard({
         borderBottomColor={ColorGrayBorder}
         borderBottomWidth={1}
       >
+         <Flex
+          w={'5%'}
+          alignItems={'center'}
+          justifyContent={'center'}
+          onClick={() => onCheckClick(item.itemCode)}
+        >
+          {CheckList.includes(item.itemCode) ? (
+            <Image
+              width={21}
+              height={21}
+              src={'/images/icon_check_on.png'}
+              alt="체크"
+            />
+          ) : (
+            <Image
+              width={21}
+              height={21}
+              src={'/images/icon_check_off.png'}
+              alt="체크"
+            />
+          )}
+        </Flex>
         <Flex
           w={`${header[0]?.width}%`}
           alignItems={'center'}

@@ -112,7 +112,7 @@ export type GoodsListItemCategoryProps = {
 };
 export type GoodsListResponseProps = {
   count: number;
-  data?: Array<GodsListItemDataListProps>;
+  data: Array<GodsListItemDataListProps>;
   pageCount: number;
   pageNo: number;
   pageSize: number;
