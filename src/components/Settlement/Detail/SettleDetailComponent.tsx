@@ -180,7 +180,7 @@ function SettleDetailComponent() {
               />
             </Box>
             <Flex gap={'10px'}>
-            {settleData && settleData.data.status == 0 && (
+            {/* {settleData && settleData.data.status == 0 && (
               <CustomButton
               text="항목추가"
               fontSize="15px"
@@ -191,7 +191,7 @@ function SettleDetailComponent() {
               px="48px"
               onClick={() => setOpenModal(true)}
             />
-            )}
+            )} */}
             <ImageButton
               img="/images/Page/excel_icon.png"
               backgroundColor={ColorWhite}

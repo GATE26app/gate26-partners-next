@@ -259,15 +259,6 @@ function DetailBox({ data }: Props) {
                 ? '-'
                 : formatDated(dayjs(data.settlementDate))}
             </Text>
-            {/* <DatePicker
-              type={'date'}
-              curDate={startDay}
-              width={'235px'}
-              onApply={(date) => {
-                setStartDay(date);
-                setSState(true);
-              }}
-            /> */}
           </Flex>
         </Flex>
         <Flex w={'100%'} pb={'30px'} alignItems={'center'}>
@@ -280,39 +271,7 @@ function DetailBox({ data }: Props) {
             >
               정산상태
             </Text>
-            {data.status == 0 ? <SelectBox
-              placeholder="상태값 변경처리"
-              width={'168px'}
-              list={selectList}
-              select={select}
-              setSelect={(e) => {
-                if(e === '정산완료'){
-                  if(data.partner.bank == null || data.partner.accountNumber == null || data.partner.accountHolder == null){
-                    console.log(data.partner.bank, data.partner.accountNumber, data.partner.accountHolder);
-                    toast({
-                      position: 'top',
-                      duration: 2000,
-                      render: () => (
-                        <Box
-                          style={{ borderRadius: 8 }}
-                          p={3}
-                          color="white"
-                          bg="#ff6955"
-                        >
-                          {'은행 정보가 없습니다.'}
-                        </Box>
-                      ),
-                    });
-                  } else {
-                    InputCompeleteMutate({
-                      settlementId: Number(getSettleId),
-                    });
-                    setIsLoading(true);
-                  }
-                }
-                // setSelect
-              }}
-            /> : <Text>정산완료</Text>}
+            <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>{data.statusName}</Text>
           </Flex>
           <Flex alignItems={'center'}>
             <Text

@@ -114,7 +114,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Text>
       </Flex>
       <Flex
-        w={`${header[6]?.width}%`}
+        w={`${header[7]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -132,7 +132,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Flex>
       </Flex>
       <Flex
-        w={`${header[7]?.width}%`}
+        w={`${header[8]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
