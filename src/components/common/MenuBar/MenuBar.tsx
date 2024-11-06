@@ -241,7 +241,7 @@ function MenuBar() {
         </Flex>
       )}
 
-      <Flex
+      {/* <Flex
         alignItems={'center'}
         cursor={'pointer'}
         mb={'30px'}
@@ -275,8 +275,8 @@ function MenuBar() {
           >
             정산내역
           </Text>
-        </Flex>
-        {/* {menu == 3 ? (
+        </Flex> */}
+      {/* {menu == 3 ? (
           <Image
             src={'/images/Menu/icon_menu_up.png'}
             width={16}
@@ -291,8 +291,8 @@ function MenuBar() {
             alt="로고"
           />
         )} */}
-        </Link>
-      </Flex>
+      {/* </Link>
+      </Flex> */}
       {/* {menu == 3 && (
         <Flex mb={'30px'} ml={'57px'} flexDirection={'column'}>
           <Link href={'/settlementList'}>
