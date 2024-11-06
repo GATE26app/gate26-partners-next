@@ -127,7 +127,7 @@ function MenuBar() {
           </Text>
         </Box>
       </Flex>
-      <Link href={'/mainCalendar'}>
+      {/* <Link href={'/mainCalendar'}>
         <Flex
           alignItems={'center'}
           cursor={'pointer'}
@@ -159,7 +159,7 @@ function MenuBar() {
             예약/주문캘린더
           </Text>
         </Flex>
-      </Link>
+      </Link> */}
       <Flex
         alignItems={'center'}
         cursor={'pointer'}
