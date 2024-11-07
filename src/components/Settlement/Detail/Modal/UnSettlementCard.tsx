@@ -93,10 +93,10 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         flexDirection={'column'}
       >
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
-        {intComma(item.paymentChargeAmount)}%
+        {intComma(item.paymentChargePercent)}%
         </Text>
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
-        {intComma(item.paymentChargePercent)}원
+        {intComma(item.paymentChargeAmount)}원
         </Text>
       </Flex>
 
@@ -114,7 +114,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Text>
       </Flex>
       <Flex
-        w={`${header[6]?.width}%`}
+        w={`${header[7]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -132,7 +132,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Flex>
       </Flex>
       <Flex
-        w={`${header[7]?.width}%`}
+        w={`${header[8]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
