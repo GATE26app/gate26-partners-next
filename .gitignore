@@ -38,3 +38,6 @@ yarn-error.log*
 #build info
 tsconfig.tsbuildinfo
 package-lock.json
+
+next.config.mjs
+/src/utils/format.ts

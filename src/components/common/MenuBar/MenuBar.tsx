@@ -241,7 +241,7 @@ function MenuBar() {
         </Flex>
       )}
 
-      {/* <Flex
+      <Flex
         alignItems={'center'}
         cursor={'pointer'}
         mb={'30px'}
@@ -250,33 +250,33 @@ function MenuBar() {
         onClick={() => setMenu(3)}
       >
         <Link href={'/settlementList'}>
-        <Flex alignItems={'center'}>
-          {menu == 3 ? (
-            <Image
-              src={'/images/Menu/icon_menu_calculate_on.png'}
-              width={40}
-              height={40}
-              alt="로고"
-            />
-          ) : (
-            <Image
-              src={'/images/Menu/icon_menu_calculate_off.png'}
-              width={40}
-              height={40}
-              alt="로고"
-            />
-          )}
+          <Flex alignItems={'center'}>
+            {menu == 3 ? (
+              <Image
+                src={'/images/Menu/icon_menu_calculate_on.png'}
+                width={40}
+                height={40}
+                alt="로고"
+              />
+            ) : (
+              <Image
+                src={'/images/Menu/icon_menu_calculate_off.png'}
+                width={40}
+                height={40}
+                alt="로고"
+              />
+            )}
 
-          <Text
-            color={menu == 3 ? ColorRed : ColorGrayMenu}
-            fontWeight={800}
-            fontSize={'18px'}
-            ml={'15px'}
-          >
-            정산내역
-          </Text>
-        </Flex> */}
-      {/* {menu == 3 ? (
+            <Text
+              color={menu == 3 ? ColorRed : ColorGrayMenu}
+              fontWeight={800}
+              fontSize={'18px'}
+              ml={'15px'}
+            >
+              정산내역
+            </Text>
+          </Flex>
+          {/* {menu == 3 ? (
           <Image
             src={'/images/Menu/icon_menu_up.png'}
             width={16}
@@ -291,8 +291,8 @@ function MenuBar() {
             alt="로고"
           />
         )} */}
-      {/* </Link>
-      </Flex> */}
+        </Link>
+      </Flex>
       {/* {menu == 3 && (
         <Flex mb={'30px'} ml={'57px'} flexDirection={'column'}>
           <Link href={'/settlementList'}>
