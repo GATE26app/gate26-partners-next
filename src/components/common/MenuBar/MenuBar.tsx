@@ -10,6 +10,7 @@ import { ColorGrayMenu, ColorRed, ColorWhite } from '@/utils/_Palette';
 import { useCancelFilterZuInfo } from '@/_store/CancelStateInfo';
 import { useGoodsFilterZuInfo } from '@/_store/GoodsFilterInfo';
 import { useOrderFilterZuInfo } from '@/_store/OrderFilterInfo';
+import { useSettleFilterZuInfo } from '@/_store/SettleFilterInfo';
 
 function MenuBar() {
   const router = useRouter();
@@ -23,6 +24,9 @@ function MenuBar() {
     (state) => state,
   );
   const { cancelFilterInfo, setCancelFilterInfo } = useCancelFilterZuInfo(
+    (state) => state,
+  );
+  const { settleFilterInfo, setSettleFilterInfo, deleteSettleFilterInfo } = useSettleFilterZuInfo(
     (state) => state,
   );
   useEffect(() => {
@@ -95,7 +99,20 @@ function MenuBar() {
         cancelStatus: [1, 2, 3],
       });
     }
-  }, [router]);
+    console.log(pathname);
+    if (pathname !== '/settlementList' && pathname !== '/settlementDetail') {
+      console.log('왜???');
+      setSettleFilterInfo({
+        pageNo: 0,
+        pageSize: 10,
+        status: null,
+        searchKeyword: '',
+        searchType: '',
+        fromDate: '',
+        toDate: '',
+      });
+    }
+  }, [router, pathname]);
 
   return (
     <Box
