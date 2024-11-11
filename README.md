@@ -11,6 +11,7 @@ Use this template 버튼을 활용해서 프로젝트의 repository를 생성해
 
 A quick look at the directories you'll see in this project.
 
+
 ### Root directory layout
 
     ├── public                  #
