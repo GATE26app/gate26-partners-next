@@ -68,8 +68,9 @@ function CancelModal({
     orderCancelRequestDetail: '',
   });
   const handleClickOK = () => {
-    onSubmit(data.orderCancelRequestDetail);
-    if (data.orderCancelRequestDetail == '') {
+    // onSubmit(data.orderCancelRequestDetail);
+    
+    if (data.orderCancelRequestDetail === '') {
       toast({
         position: 'top',
         duration: 2000,
@@ -83,6 +84,7 @@ function CancelModal({
       setOrderStateInfo({
         orderCancelRequestDetail: data.orderCancelRequestDetail,
       });
+      onSubmit(data.orderCancelRequestDetail);
       onClose();
     }
   };
