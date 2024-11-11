@@ -146,7 +146,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
       setCancelModal(true);
 
       setModalInfo({
-        type: '접수거절',
+        type: '취소요청',
         title: '취소요청사유 입력',
       });
     }
