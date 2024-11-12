@@ -259,7 +259,7 @@ function CreateGoodsComponentPage() {
       } else if (BasicInfo.price == 0) {
         setDiableBtn(false);
         ToastComponent('판매가를 입력해주세요.');
-      } else if (imageList.length == 0) {
+      } else if (imageList.length == 0 || (imageList.length > 0 && imageList[0].sort > 1)) {
         setDiableBtn(false);
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {

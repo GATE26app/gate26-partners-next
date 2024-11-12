@@ -428,8 +428,8 @@ function UpdateGoodsComponentPage() {
         ToastComponent('판매가를 입력해주세요.');
       } else if (imageList.length == 0) {
         ToastComponent('대표 상품 이미지를 선택해주세요.');
-      } else if (imageList.length == 1) {
-        ToastComponent('상품 이미지를 선택해주세요.');
+      } else if (imageList.length > 0 && imageList[0].sort > 1) {
+        ToastComponent('대표 상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {
         ToastComponent('상품 이미지를 선택해주세요.');
       } else if (policyList.length == 0 && getType == '3') {
