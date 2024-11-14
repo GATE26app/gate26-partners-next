@@ -560,7 +560,7 @@ function PlanComponent({ list, setList }: Props) {
                                 setModalState({
                                   ...ModalState,
                                   title: '이미지 삭제',
-                                  message: '이미지를 삭제하시곘습니까?',
+                                  message: '이미지를 삭제하시겠습니까?',
                                   type: 'alert',
                                   okButtonName: '확인',
                                   cbOk: () => {

@@ -101,7 +101,6 @@ function MenuBar() {
     }
     console.log(pathname);
     if (pathname !== '/settlementList' && pathname !== '/settlementDetail') {
-      console.log('왜???');
       setSettleFilterInfo({
         pageNo: 0,
         pageSize: 10,
