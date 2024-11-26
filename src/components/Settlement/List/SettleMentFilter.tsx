@@ -93,6 +93,31 @@ function SettleMentFilter({ request, setRequest, setOnSubmit }: Props) {
   //   }
   // }, [EntriesData]);
 
+  useEffect(() => {
+    if (sState) {
+      setRequest({
+        ...request,
+        fromDate: `${dayjs(startDay).format('YYYY-MM-DD')}`,
+      });
+      setSettleFilterInfo({
+        ...settleFilterInfo,
+        fromDate: `${dayjs(startDay).format('YYYY-MM-DD')}`,
+      });
+      setSState(false);
+    }
+    if (eState) {
+      setRequest({
+        ...request,
+        toDate: `${dayjs(endDay).format('YYYY-MM-DD')}`,
+      });
+      setSettleFilterInfo({
+        ...settleFilterInfo,
+        toDate: `${dayjs(endDay).format('YYYY-MM-DD')}`,
+      });
+      setEState(false);
+    }
+  }, [sState, eState]);
+
   return (
     <Flex
       bgColor={ColorGray50}

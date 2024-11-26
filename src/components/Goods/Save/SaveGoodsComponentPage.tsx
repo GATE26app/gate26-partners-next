@@ -346,40 +346,37 @@ function SaveGoodsComponentPage() {
       if (partnerInfo.shippingType == 0) {
         ToastComponent('배송비 정책을 확인해주세요.');
       }
-      if (categoryList.length == 0) {
+      else if (categoryList.length == 0) {
         ToastComponent('카테고리를 선택해주세요.');
       }
-      if (
+      else if (
         locationList.length == 0 &&
         (BasicInfo?.optionType == 3 || BasicInfo?.optionType == 2)
       ) {
         ToastComponent('지역을 선택해주세요.');
       }
-      if (BasicInfo.title == '') {
+      else if (BasicInfo.title == '') {
         ToastComponent('제목을 입력해주세요.');
       }
-      if (BasicInfo.price == 0) {
+      else if (BasicInfo.price == 0) {
         ToastComponent('판매가를 입력해주세요.');
       }
-      if (imageList.length == 0) {
+      else if (imageList.length == 0) {
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       }
-      if (imageList.length == 1) {
+      else if (imageList.length == 1) {
         ToastComponent('상품 이미지를 선택해주세요.');
       }
-      if (imageList.length == 1) {
-        ToastComponent('상품 이미지를 선택해주세요.');
-      }
-      if (policyList.length == 0 && BasicInfo?.optionType == 3) {
+      else if (policyList.length == 0 && BasicInfo?.optionType == 3) {
         ToastComponent('취소/환불 규정을 입력해주세요.');
       }
-      if (
+      else if (
         policyList.filter((item) => item.type == 1).length == 0 &&
         BasicInfo?.optionType == 3
       ) {
         ToastComponent('취소/환불 기본 규정을 입력해주세요.');
       }
-      if (optionList.length == 0) {
+      else if (optionList.length == 0) {
         ToastComponent('옵션을 선택해 입력해주세요.');
       }
       // if (BasicInfo.viewStartDate == '' || BasicInfo.viewStartDate == null) {

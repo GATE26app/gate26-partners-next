@@ -116,16 +116,7 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
   // }, []);
   const handleUploadPdf = async (e: any) => {
     //이미지 미리보기 기능
-    if (
-      e.target.files[0].name.split('.')[1] == 'jpg' ||
-      e.target.files[0].name.split('.')[1] == 'JPG' ||
-      e.target.files[0].name.split('.')[1] == 'jpeg' ||
-      e.target.files[0].name.split('.')[1] == 'JPEG' ||
-      e.target.files[0].name.split('.')[1] == 'png' ||
-      e.target.files[0].name.split('.')[1] == 'PNG' ||
-      e.target.files[0].name.split('.')[1] == 'gif' ||
-      e.target.files[0].name.split('.')[1] == 'GIF'
-    ) {
+    if (e.target.files[0]) {
       const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = () => {
@@ -289,6 +280,7 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
         )}
         <input
           type="file"
+          accept="image/jpeg, image/png, image/gif, image/jpg" 
           id="pdffirst"
           onChange={handleUploadPdf}
           style={{ display: 'none' }}
@@ -484,7 +476,7 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
               //   setModalState({
               //     ...ModalState,
               //     title: '이미지 삭제',
-              //     message: '이미지를 삭제하시곘습니까?',
+              //     message: '이미지를 삭제하시겠습니까?',
               //     type: 'alert',
               //     okButtonName: '확인',
               //     cbOk: () => {

@@ -3,7 +3,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import dayjs from 'dayjs';
-
+import { useQueryClient } from 'react-query';
 import { Box, Flex, Text, useToast } from '@chakra-ui/react';
 
 import {
@@ -64,7 +64,7 @@ function OrderGoodsCard({ header, item }: Props) {
     cbOk: () => {},
     cbCancel: () => {},
   });
-
+  const queryClient = useQueryClient();
   const [CancelConfirmClick, setCancelConfirmClick] = useState(false);
   const [CancelDeniedClick, setCancelDeniedClick] = useState(false);
   const [cancelStateTxt, setCancelStateTxt] = useState('');
@@ -417,6 +417,7 @@ function OrderGoodsCard({ header, item }: Props) {
               ),
             });
             setCancelStateTxt('승인');
+            queryClient.refetchQueries(['orderItem', String(item.orderId)]);
           } else {
             toast({
               position: 'top',
@@ -457,6 +458,7 @@ function OrderGoodsCard({ header, item }: Props) {
                 </Box>
               ),
             });
+            queryClient.refetchQueries(['orderItem', String(item.orderId)]);
             setCancelStateTxt('반려');
           } else {
             toast({
@@ -654,7 +656,7 @@ function OrderGoodsCard({ header, item }: Props) {
         </Flex>
         {item.cancelStatus == 1 && (
           <>
-            {(item.partnerCancelConfirm == 1 && cancelStateTxt == '') ? (
+            {item.partnerCancelConfirm == 1 && cancelStateTxt == '' ? (
               <Flex
                 w={header[5]?.width}
                 alignItems={'center'}
@@ -690,7 +692,11 @@ function OrderGoodsCard({ header, item }: Props) {
                 justifyContent={'center'}
                 flexDirection={'column'}
               >
-                <Text>{(item.partnerCancelConfirm == 2 || cancelStateTxt == '반려') ? '반려' : '승인'}</Text>
+                <Text>
+                  {item.partnerCancelConfirm == 2 || cancelStateTxt == '반려'
+                    ? '반려'
+                    : '승인'}
+                </Text>
               </Flex>
             )}
           </>
