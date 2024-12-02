@@ -170,7 +170,6 @@ function ImageComponent({ list, setList }: Props) {
 
   const getImageFromImageObject = (index: number) => {
     const imageObject = list.filter((item) => item.sort === index)[0];
-    console.log(imageObject)
 
     if(imageObject.imagePath) {
       return getImagePath(imageObject.imagePath)
