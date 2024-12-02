@@ -11,6 +11,7 @@ export interface Props extends InputProps {
   error?: string;
   disabled?: boolean;
   textAlign?: string;
+  maxLength?: string;
 }
 
 const InputBox = ({ error, disabled = false, ...props }: Props) => {
@@ -33,6 +34,7 @@ const InputBox = ({ error, disabled = false, ...props }: Props) => {
         disabled={disabled}
         // disabled={disabled}
         textAlign={props.textAlign}
+        maxLength={props.maxLength}
       />
       {error !== '' && (
         <Text color={ColorRed} fontWeight={400} fontSize={'12px'} mt={'6px'}>

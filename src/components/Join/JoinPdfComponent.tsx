@@ -280,12 +280,15 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
         )}
         <input
           type="file"
-          accept="image/jpeg, image/png, image/gif, image/jpg" 
+          accept="image/jpeg, image/png, image/gif, image/jpg"
           id="pdffirst"
           onChange={handleUploadPdf}
           style={{ display: 'none' }}
         ></input>
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
+      </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           통신판매업신고증 파일첨부
@@ -413,6 +416,9 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
           style={{ display: 'none' }}
         ></input>
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
+      </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           정산 받은 계좌
@@ -573,6 +579,9 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
           style={{ display: 'none' }}
         ></input>
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
+      </Text>
     </>
   );
 }
