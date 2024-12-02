@@ -86,14 +86,18 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
         <InputBox
           placeholder="사업자번호"
           value={joinInfo.businessRegistrationNumber}
-          onChange={(e) =>
+          onChange={(e) => {
             setJoinInfo({
               ...joinInfo,
               businessRegistrationNumber: e.target.value.replace(/[^0-9]/g, ''),
             })
-          }
+          }}
+          maxLength={10}
         />
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        (- 없이 숫자로만 입력해주세요)
+      </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           업태/업종
@@ -177,6 +181,9 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
           }
         />
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        실명으로 정확히 입력해주세요
+      </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           대표 전화번호
@@ -198,6 +205,9 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
           }
         />
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        (- 없이 숫자로만 입력해주세요)
+      </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           사업장 주소

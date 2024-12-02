@@ -489,6 +489,9 @@ function JoinBasicInfoComponent({
               onClick={() => handlePhone(phoneNum)}
             />
           </Flex>
+          <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+            (- 없이 숫자로만 입력해주세요)
+          </Text>
 
           {error.phoneError && (
             <Text
