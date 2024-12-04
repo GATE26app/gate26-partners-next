@@ -7,6 +7,7 @@ import {
   Flex,
   Input,
   Text,
+  Checkbox,
 } from '@chakra-ui/react';
 
 import { GoodsBasicProps } from '@/apis/goods/GoodsApi.type';
@@ -49,6 +50,7 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
   const [indexCnt, setIndexCnt] = useState(0);
   const [bulkOptionPrice, setBulkOptionPrice] = useState(0);
   const [bulkStockCnt, setBulkStockCnt] = useState(0);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const onDeleteOption = (id: number) => {
     setOptionList(
@@ -85,20 +87,45 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
   };
 
   const handleBulkOptionPriceChange = () => {
-    if(bulkOptionPrice > -1) {
-      console.log(optionList)
-      let updatedOptionList = optionList.map(option => ({...option, price: +bulkOptionPrice}))
-      setOptionList(updatedOptionList)
+    if (bulkOptionPrice > -1) {
+      console.log(optionList);
+      let updatedOptionList = optionList.map((option, index) => ({
+        ...option,
+        price: selectedRows.includes(index)
+          ? Number(bulkOptionPrice)
+          : option.price,
+      }));
+
+      setOptionList(updatedOptionList);
     }
-  }
+  };
 
   const handleBulkStockCntChange = () => {
-    if(bulkStockCnt > -1) {
-      console.log(optionList)
-      let updatedOptionList = optionList.map(option => ({...option, stockCnt: +bulkStockCnt}))
-      setOptionList(updatedOptionList)
+    if (bulkStockCnt > -1) {
+      console.log(optionList);
+      let updatedOptionList = optionList.map((option, index) => ({
+        ...option,
+        stockCnt: selectedRows.includes(index)
+          ? Number(bulkStockCnt)
+          : option.stockCnt,
+      }));
+      setOptionList(updatedOptionList);
     }
-  }
+  };
+
+  const handleSelectRow = (index: number) => {
+    setSelectedRows((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+    );
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedRows(optionList.map((_, index) => index));
+    } else {
+      setSelectedRows([]);
+    }
+  };
 
   useEffect(() => {
     if (stockState) {
@@ -118,6 +145,7 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
       setPriceState(false);
     }
   }, [stockState, priceState]);
+
   return (
     <Flex
       borderRadius={'12px'}
@@ -135,6 +163,16 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
           h={'100px'}
           w="100%"
         >
+          <Checkbox
+            mx="2"
+            onChange={handleSelectAll}
+            isChecked={selectedRows.length === optionList.length}
+            isIndeterminate={
+              selectedRows.length > 0 && selectedRows.length < optionList.length
+            }
+          />
+          {/* 이하 기존 코드 구조 유지 */}
+          {/* 기존 Flex, Editable 및 기타 컴포넌트 추가 위치 */}
           {optionList[0].useDateTime !== '' &&
             optionList[0].useDateTime !== null && (
               <Flex
@@ -231,7 +269,12 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                 py={'20px'}
                 flexDir="column"
               >
-                <Text fontSize={'16px'} fontWeight={700} color={ColorBlack} mb="5px">
+                <Text
+                  fontSize={'16px'}
+                  fontWeight={700}
+                  color={ColorBlack}
+                  mb="5px"
+                >
                   옵션가
                 </Text>
                 <Flex w="90%">
@@ -241,7 +284,7 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                     maxLength={8}
                     value={bulkOptionPrice}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setBulkOptionPrice(+e.target.value)
+                      setBulkOptionPrice(+e.target.value);
                     }}
                     textAlign="center"
                     w="60%"
@@ -293,7 +336,7 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                   maxLength={4}
                   value={bulkStockCnt}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setBulkStockCnt(+e.target.value)
+                    setBulkStockCnt(+e.target.value);
                   }}
                   textAlign="center"
                   w="60%"
@@ -346,6 +389,11 @@ function OptionList({ list, setList, optionList, setOptionList }: Props) {
                       : 'transparent'
                 }
               >
+                <Checkbox
+                  mx="2"
+                  isChecked={selectedRows.includes(index)}
+                  onChange={() => handleSelectRow(index)}
+                />
                 {optionList[0].useDateTime !== '' &&
                   optionList[0].useDateTime !== null && (
                     <Flex
