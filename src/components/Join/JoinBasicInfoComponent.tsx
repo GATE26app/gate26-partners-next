@@ -64,13 +64,13 @@ function JoinBasicInfoComponent({
   });
 
   const ToastComponent = (message: string) => {
-    const toast = useToast();
+    // const toast = useToast();
     return toast({
       position: 'top',
       duration: 2000,
       render: () => (
         <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-          {`${message}`}
+          {message}
         </Box>
       ),
     });
@@ -205,6 +205,7 @@ function JoinBasicInfoComponent({
               authId: merchantUid,
             });
           } else {
+            console.log(res.message)
             ToastComponent(res.message);
           }
         },
