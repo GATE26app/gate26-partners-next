@@ -14,6 +14,7 @@ import {
 import SendbirdProvider, {
   useSendbirdStateContext,
 } from '@sendbird/uikit-react/SendbirdProvider';
+import ChannelSettings from '@sendbird/uikit-react/ChannelSettings';
 import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
@@ -31,6 +32,8 @@ import CustomReMessage from './CustomReMessage';
 import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
 import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
 import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import useMenuList from '@sendbird/uikit-react/ChannelSettings/hooks/useMenuList';
+import { MenuListByRole } from '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingMenuList';
 import {
   CreateAdminMessage,
   CreateFileMessage,
@@ -312,6 +315,8 @@ function ChatComponent() {
   const [firstState, setFirstState] = useState(true);
   const [list, setList] = useState([]);
 
+  const [menu, setMenu] = useState(false);
+
   // context
   const [_context, setContext] = useState<any>();
 
@@ -574,6 +579,7 @@ function ChatComponent() {
     includeEmpty: true,
   });
 
+
   return (
     <Box
       w={'80%'}
@@ -591,7 +597,7 @@ function ChatComponent() {
     >
       {isClient && (
         <SendbirdProvider
-          // breakpoint={true}
+          breakpoint={true}
           appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
           userId={getSendBirdToken().user_id}
           accessToken={getSendBirdToken().sendBird}

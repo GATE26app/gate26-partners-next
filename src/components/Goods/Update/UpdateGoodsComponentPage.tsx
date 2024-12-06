@@ -243,7 +243,7 @@ function UpdateGoodsComponentPage() {
         optionInputEndDate: detailData.data.optionInputEndDate, //상품 옵션입력 이용일시 생성구간 종료일
         autoConfirm: detailData.data.autoConfirm,
         requiredPartnerCancelConfirm:
-          detailData.data.requiredPartnerCancelConfirm, //0=>미해당, 1=>해당
+        detailData.data.requiredPartnerCancelConfirm, //0=>미해당, 1=>해당
       });
       setPlanList(detailData.data.schedules);
       setPolicyList(detailData.data.policies);

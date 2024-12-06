@@ -79,6 +79,7 @@ function OrderListPage() {
   useEffect(() => {
     refreshList(request);
   }, []);
+  
   useEffect(() => {
     if (goodsInfo.orderState) refreshList(request);
   }, [goodsInfo.orderState]);

@@ -50,11 +50,10 @@ function SettlementModal({
     partnerId: '',
   });
 
-  const { mutate: UnListMutate, isLoading: isLoadingUnList} = useGetUnSettleListMutation({
+  const { mutate: UnListMutate, isLoading: isLoadingUnList } = useGetUnSettleListMutation({
     options: {
       onSuccess: (res) => {
         setList(res.data);
-        console.log(res.data);
         // setGoodsInfo({
         //   settlementState: false,
         // });
