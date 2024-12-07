@@ -421,7 +421,7 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
       </Text>
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
-          정산 받은 계좌
+          정산 계좌
         </Text>
         <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
           *
