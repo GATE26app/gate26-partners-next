@@ -119,6 +119,23 @@ function OrderGoodsCard({ header, item }: Props) {
     orderCancelRequestDetail: '',
   });
 
+  useEffect(() => {
+    setItemData({
+      orderId: item.orderId,
+      orderThumbnailImagePath: item.orderThumbnailImagePath,
+      orderCategoryTitle: item.orderCategoryTitle,
+      orderCnt: item.orderCnt,
+      orderOptionTitle: item.orderOptionTitle,
+      discountAmount: item.discountAmount,
+      orderAmount: item.orderAmount,
+      orderTitle: item.orderTitle,
+      shippingCompany: item.shippingCompany,
+      shippingInvoice: item.shippingInvoice,
+      shippingMemo: item.shippingMemo,
+      orderCancelRequestDetail: '',
+    });
+  }, [item]);
+
   const onClickSelect = (type: string) => {
     if (type !== selectState) {
       if (
