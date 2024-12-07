@@ -19,6 +19,7 @@ import {
 } from '@/utils/_Palette';
 
 import LoadingModal from '../../common/Modal/LoadingModal';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   info: OrderDetailItemType;
@@ -29,9 +30,13 @@ function OrderInfo({ info }: Props) {
   const [memo, setMemo] = useState<string>(
     info.partnerMemo == null ? '' : info.partnerMemo,
   );
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const getOrderId = searchParams.get('orderId');
-  
+
+  useEffect(() => {
+    setMemo(info.partnerMemo);
+  }, [info.partnerMemo]);
 
   const { mutate: InputMemoMutate, isLoading: isLoading } =
     usePutOrderMemoMutation({
@@ -52,6 +57,10 @@ function OrderInfo({ info }: Props) {
                 </Box>
               ),
             });
+            queryClient.invalidateQueries([
+              'orderItem',
+              searchParams.get('orderId'),
+            ]);
           } else {
             toast({
               position: 'top',

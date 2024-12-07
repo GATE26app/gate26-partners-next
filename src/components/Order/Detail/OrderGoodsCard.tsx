@@ -117,6 +117,7 @@ function OrderGoodsCard({ header, item }: Props) {
     shippingInvoice: item.shippingInvoice,
     shippingMemo: item.shippingMemo,
     orderCancelRequestDetail: '',
+    partnerMemo: item.partnerMemo
   });
 
   useEffect(() => {
@@ -133,6 +134,7 @@ function OrderGoodsCard({ header, item }: Props) {
       shippingInvoice: item.shippingInvoice,
       shippingMemo: item.shippingMemo,
       orderCancelRequestDetail: '',
+      partnerMemo: item.partnerMemo
     });
   }, [item]);
 
