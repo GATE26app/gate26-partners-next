@@ -732,47 +732,50 @@ function OrderGoodsCard({ header, item }: Props) {
         ) : (
           <Text>{item.partnerCancelConfirm == 2 ? '승인' : '반려'}</Text>
         )} */}
-
-        <Flex
-          w={header[6]?.width}
-          alignItems={'center'}
-          justifyContent={'center'}
-          flexDirection={'column'}
-        >
-          {item.shippingCompany && (
-            <Text
-              color={ColorBlack}
-              fontSize={'14px'}
-              fontWeight={400}
-              mb={'5px'}
-            >
-              {item.shippingCompany}
-            </Text>
-          )}
-          {item.shippingInvoice && (
-            <Text
-              color={ColorBlack}
-              fontSize={'14px'}
-              fontWeight={400}
-              mb={'5px'}
-            >
-              {item.shippingInvoice}
-            </Text>
-          )}
+        {/* 주문 상품 유형, 1=>일반형, 2=>바우처형, 3=>예약형, 4=>이륙살롱 */}
+        {item.orderType === 1 && (
           <Flex
-            px={'11px'}
-            py={'7px'}
-            borderWidth={1}
-            borderColor={ColoLineGray}
-            borderRadius={'6px'}
-            onClick={onClickDelivery}
-            cursor={'pointer'}
+            w={header[6]?.width}
+            alignItems={'center'}
+            justifyContent={'center'}
+            flexDirection={'column'}
           >
-            <Text color={ColorGray700} fontWeight={500} fontSize={'12px'}>
-              배송정보입력
-            </Text>
+            {item.shippingCompany && (
+              <Text
+                color={ColorBlack}
+                fontSize={'14px'}
+                fontWeight={400}
+                mb={'5px'}
+              >
+                {item.shippingCompany}
+              </Text>
+            )}
+            {item.shippingInvoice && (
+              <Text
+                color={ColorBlack}
+                fontSize={'14px'}
+                fontWeight={400}
+                mb={'5px'}
+              >
+                {item.shippingInvoice}
+              </Text>
+            )}
+
+            <Flex
+              px={'11px'}
+              py={'7px'}
+              borderWidth={1}
+              borderColor={ColoLineGray}
+              borderRadius={'6px'}
+              onClick={onClickDelivery}
+              cursor={'pointer'}
+            >
+              <Text color={ColorGray700} fontWeight={500} fontSize={'12px'}>
+                배송정보입력
+              </Text>
+            </Flex>
           </Flex>
-        </Flex>
+        )}
       </Flex>
     </>
   );
