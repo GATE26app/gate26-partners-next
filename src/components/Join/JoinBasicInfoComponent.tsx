@@ -64,13 +64,13 @@ function JoinBasicInfoComponent({
   });
 
   const ToastComponent = (message: string) => {
-    const toast = useToast();
+    // const toast = useToast();
     return toast({
       position: 'top',
       duration: 2000,
       render: () => (
         <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-          {`${message}`}
+          {message}
         </Box>
       ),
     });
@@ -205,6 +205,7 @@ function JoinBasicInfoComponent({
               authId: merchantUid,
             });
           } else {
+            console.log(res.message)
             ToastComponent(res.message);
           }
         },
@@ -489,6 +490,9 @@ function JoinBasicInfoComponent({
               onClick={() => handlePhone(phoneNum)}
             />
           </Flex>
+          <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+            (- 없이 숫자로만 입력해주세요)
+          </Text>
 
           {error.phoneError && (
             <Text

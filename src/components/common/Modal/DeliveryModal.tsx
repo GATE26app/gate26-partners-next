@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -33,6 +33,8 @@ import {
   ColorWhite,
 } from '@/utils/_Palette';
 import ModalOrderInfo from './ModalOrderInfo';
+import { useSearchParams } from 'next/navigation';
+import { useQueryClient } from 'react-query';
 interface InfoProps {
   orderId: string;
   orderThumbnailImagePath: string;
@@ -81,6 +83,8 @@ function DeliveryModal({
       info?.shippingInvoice == undefined ? '' : info?.shippingInvoice,
     shippingMemo: info?.shippingMemo == undefined ? '' : info?.shippingMemo,
   });
+  const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
 
   const handleClickOK = () => {
     // if (onSubmit) {
@@ -139,6 +143,10 @@ function DeliveryModal({
                 </Box>
               ),
             });
+            queryClient.invalidateQueries([
+              'orderItem',
+              searchParams.get('orderId'),
+            ]);
             onClose();
           } else {
             ToastComponent(`${res.message}`);

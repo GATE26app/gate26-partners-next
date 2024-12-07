@@ -153,11 +153,11 @@ export const settlelistheader = [
     name: '결제금액',
     width: 9,
   },
-  {
-    id: 'code',
-    name: '결제수수료',
-    width: 9,
-  },
+  // {
+  //   id: 'code',
+  //   name: '결제수수료',
+  //   width: 9,
+  // },
   {
     id: 'country',
     name: `서비스이용\n수수료`,
@@ -221,11 +221,11 @@ export const settleDetailListHeader = [
     name: '결제수단',
     width: 12,
   },
-  {
-    id: 'req',
-    name: '결제수수료',
-    width: 12,
-  },
+  // {
+  //   id: 'req',
+  //   name: '결제수수료',
+  //   width: 12,
+  // },
   {
     id: 'country',
     name: `서비스이용\n수수료`,

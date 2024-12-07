@@ -14,6 +14,7 @@ import {
 import SendbirdProvider, {
   useSendbirdStateContext,
 } from '@sendbird/uikit-react/SendbirdProvider';
+import ChannelSettings from '@sendbird/uikit-react/ChannelSettings';
 import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
 import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
@@ -31,6 +32,8 @@ import CustomReMessage from './CustomReMessage';
 import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
 import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
 import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import useMenuList from '@sendbird/uikit-react/ChannelSettings/hooks/useMenuList';
+import { MenuListByRole } from '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingMenuList';
 import {
   CreateAdminMessage,
   CreateFileMessage,
@@ -312,14 +315,23 @@ function ChatComponent() {
   const [firstState, setFirstState] = useState(true);
   const [list, setList] = useState([]);
 
+  const [menu, setMenu] = useState(false);
+
+  const [first, setFirst] = useState(false);
+
   // context
   const [_context, setContext] = useState<any>();
 
   const handleSetCurrentChannel = (channel) => {
-    if (channel?.url) {
+    setFirst(true); // 첫 화면에서 상태 변경
+    if (channel?.url && first) {
       setCurrentChannelUrl(channel.url);
     }
   };
+
+  useEffect(() => {
+    setFirst(false);
+  }, []);
 
   //토큰 재발급
   const { data: SendBirdTokenData, error } = useQuery(
@@ -591,7 +603,7 @@ function ChatComponent() {
     >
       {isClient && (
         <SendbirdProvider
-          // breakpoint={true}
+          breakpoint={true}
           appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
           userId={getSendBirdToken().user_id}
           accessToken={getSendBirdToken().sendBird}
@@ -599,22 +611,12 @@ function ChatComponent() {
           dateLocale={kr}
           colorSet={myColorSet}
           stringSet={stringSet}
-          // key={Date.now()}
         >
           <CustomConnectionHandler />
-          <Flex
-            flexDirection={'row'}
-            h={'100%'}
-            alignItems={'stretch'}
-            // align-items: stretch
-            // maxH={'700px'}
-            // minH={'calc(100vh - 150px)'}
-          >
+          <Flex flexDirection={'row'} h={'100%'} alignItems={'stretch'}>
             <GroupChannelList
               channelListQueryParams={queryParmas}
-              // enableTypingIndicator={false}
               renderHeader={(props) => (
-                // <CustomGroupChannelListHeader />
                 <GroupChannelListHeader
                   renderMiddle={() => (
                     <Flex alignItems={'center'} gap={'10px'}>
@@ -641,7 +643,7 @@ function ChatComponent() {
                           alt="이미지 업로드"
                         />
                       </Box>
-                      {/* <Text>{props}</Text> */}
+
                       <Text
                         color={ColorBlack}
                         fontSize={'16px'}
@@ -653,22 +655,22 @@ function ChatComponent() {
                   )}
                 />
               )}
-              onChannelSelect={handleSetCurrentChannel}
+              onChannelSelect={(channel) => {
+                console.log('채널 선택 이벤트 발생:', channel?.url);
+                // 채널을 클릭한 경우에만 실행
+                handleSetCurrentChannel(channel);
+              }}
               onChannelCreated={() => {
                 // console.log('2222');
               }}
             />
+
             <GroupChannel
               // ref={scrollRef}
               // scr
               channelUrl={currentChannelUrl}
               onBackClick={() => setCurrentChannelUrl('')}
               renderMessage={(props) => {
-                // const context = useGroupChannelContext();
-                // console.log('context', context);
-                // console.log('props', props);
-                // 이미지 컴포넌트
-                // console.log('BackUpChatListData', BackUpChatListData);
                 const message = props.message;
                 // console.log('message', message);
                 if (message.isFileMessage()) {

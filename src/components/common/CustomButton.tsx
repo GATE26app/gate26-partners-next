@@ -12,6 +12,8 @@ export interface ButtonProps {
   borderRadius?: string;
   fontWeight?: number;
   disabled?: boolean;
+  w?: string;
+  textAlign?: string;
 }
 
 const CustomButton = ({
@@ -26,6 +28,8 @@ const CustomButton = ({
   bgColor,
   borderRadius = '10px',
   disabled = false,
+  w,
+  textAlign,
 }: ButtonProps) => {
   return (
     <Flex
@@ -40,12 +44,14 @@ const CustomButton = ({
       justifyContent="center"
       cursor={'pointer'}
       opacity={disabled ? 0.5 : 1}
+      w={w}
     >
       <Text
         fontSize={fontSize}
         lineHeight={fontSize}
         color={color}
         fontWeight={fontWeight}
+        textAlign={textAlign}
       >
         {text}
       </Text>

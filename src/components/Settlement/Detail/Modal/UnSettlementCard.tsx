@@ -53,7 +53,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
           {item.merchantUid}
         </Text>
       </Flex>
-      {/* 결제수수료 */}
+      {/* 주문/결제 금액 */}
       <Flex
         w={`${header[2]?.width}%`}
         alignItems={'center'}
@@ -74,7 +74,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
           {intComma(item.paymentAmount)}원
         </Text>
       </Flex>
-      {/* 서비스이용 수수료 */}
+      {/* 결제 수단 */}
       <Flex
         w={`${header[3]?.width}%`}
         alignItems={'center'}
@@ -85,8 +85,8 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
           {item.payMethodName}
         </Text>
       </Flex>
-      {/* 예약자정보 */}
-      <Flex
+      {/* 결제수수료  */}
+      {/* <Flex
         w={`${header[4]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
@@ -98,10 +98,10 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
         {intComma(item.paymentChargeAmount)}원
         </Text>
-      </Flex>
-
+      </Flex> */}
+      {/* 서비스 이용 수수료  */}
       <Flex
-        w={`${header[5]?.width}%`}
+        w={`${header[4]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -114,7 +114,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Text>
       </Flex>
       <Flex
-        w={`${header[7]?.width}%`}
+        w={`${header[6]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -132,7 +132,7 @@ function UnSettlementCard({ header, item, index, pageNo, totalCount }: Props) {
         </Flex>
       </Flex>
       <Flex
-        w={`${header[8]?.width}%`}
+        w={`${header[7]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}

@@ -127,7 +127,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         </Text>
       </Flex>
       {/* 결제수수료 */}
-      <Flex
+      {/* <Flex
         w={`${header[3]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
@@ -136,10 +136,10 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
         {intComma(item.paymentChargeAmount)}원
         </Text>
-      </Flex>
+      </Flex> */}
       {/* 서비스이용 수수료 */}
       <Flex
-        w={`${header[4]?.width}%`}
+        w={`${header[3]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -153,7 +153,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
       </Flex>
       {/* 예약자정보 */}
       <Flex
-        w={`${header[5]?.width}%`}
+        w={`${header[4]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -171,7 +171,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         </Flex>
       </Flex>
       <Flex
-        w={`${header[6]?.width}%`}
+        w={`${header[5]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         gap={'10px'}
@@ -181,7 +181,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         </Text>
       </Flex>
       <Flex
-        w={`${header[7]?.width}%`}
+        w={`${header[6]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -198,7 +198,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         </Text>
       </Flex>
       <Flex
-        w={`${header[9]?.width}%`}
+        w={`${header[8]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}
@@ -215,7 +215,7 @@ function SettleCard({ header, item, index, pageNo, totalCount, CheckList, setChe
         </Text>
       </Flex>
       <Flex
-        w={`${header[10]?.width}%`}
+        w={`${header[9]?.width}%`}
         alignItems={'center'}
         justifyContent={'center'}
         flexDirection={'column'}

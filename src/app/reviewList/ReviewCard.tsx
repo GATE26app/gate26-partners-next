@@ -134,7 +134,12 @@ function ReviewCard({ header, item, index, totalCount, pageNo }: Props) {
               >
                 {item.orderCategoryTitle}
               </Text>
-              <Text color={ColorBlack} fontSize={'14px'} fontWeight={400}>
+              <Text
+                color={ColorBlack}
+                fontSize={'14px'}
+                fontWeight={400}
+                noOfLines={4}
+              >
                 {item.orderTitle}
               </Text>
             </Flex>

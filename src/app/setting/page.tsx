@@ -20,6 +20,7 @@ import {
 } from '@/utils/_Palette';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import ServiceInfo from '@/components/Setting/ServiceInfo';
 
 function page() {
   const { settingStateInfo, setSettingStateInfo } = useSettingStateZuInfo(
@@ -171,6 +172,25 @@ function page() {
                     배송비 정책
                   </Text>
                 </Flex>
+                <Flex
+                  w={'143px'}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  bgColor={menu == 5 ? ColorRed50 : ''}
+                  borderRadius={'12px'}
+                  pt={'13px'}
+                  pb={'12px'}
+                  onClick={() => setMenu(5)}
+                  cursor={'pointer'}
+                >
+                  <Text
+                    color={menu == 5 ? ColorRed : ColorGray700}
+                    fontWeight={600}
+                    fontSize={'16px'}
+                  >
+                    서비스수수료
+                  </Text>
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
@@ -178,6 +198,7 @@ function page() {
           {menu == 2 && <ProfileInfo info={info} />}
           {menu == 3 && <BusinessInfo info={info} />}
           {menu == 4 && <DeliveryInfo info={info} />}
+          {menu == 5 && <ServiceInfo info={info} />}
         </>
       ) : (
         <Flex

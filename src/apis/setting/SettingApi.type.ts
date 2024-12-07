@@ -48,6 +48,7 @@ export type ProfileBodyType = {
   shippingTypeName: string;
   shippingFee: number;
   shippingMinAmount: number;
+  serviceChargePercent: number;
 };
 
 export type ProfileImageArray = {
