@@ -124,31 +124,18 @@ function OrderGoods({ info }: Props) {
           justifyContent={'center'}
         >
           {orderGoodheader.map((item: DataTableHeaderProps, index: number) => {
-            return (
-              <>
-                {item.id == 'requiredPartnerCancelConfirm' ? (
-                  <>
-                    {info.requiredPartnerCancelConfirm == 1 &&
-                      info.cancelStatus == 1 && (
-                        <Flex
-                          w={item.width}
-                          alignItems={'center'}
-                          justifyContent={'center'}
-                          h={'49px'}
-                        >
-                          <Text
-                            color={ColorBlack}
-                            fontSize={'15px'}
-                            fontWeight={700}
-                            whiteSpace={'pre-wrap'}
-                            textAlign={'center'}
-                          >
-                            {item.name}
-                          </Text>
-                        </Flex>
-                      )}
-                  </>
-                ) : (
+            // 주문 상품 유형, 1=>일반형, 2=>바우처형, 3=>예약형, 4=>이륙살롱
+            // 주문 상품 유형 일반형일때는 배송정보 헤더 보여주지 않는다.
+            if (info.orderType !== 1 && item.name === '배송정보') {
+              return null;
+            }
+
+            // 취소 상태, 1=>취소요청, 2=>취소거절, 3=>취소완료'
+            // 파트너 취소승인이 필요하고 취소요청상태일시 파트너취소승인해당여부 헤더를 보여준다.,
+            if (item.id == 'requiredPartnerCancelConfirm') {
+              return (
+                info.requiredPartnerCancelConfirm == 1 &&
+                info.cancelStatus == 1 && (
                   <Flex
                     w={item.width}
                     alignItems={'center'}
@@ -165,8 +152,28 @@ function OrderGoods({ info }: Props) {
                       {item.name}
                     </Text>
                   </Flex>
-                )}
-              </>
+                )
+              );
+            }
+
+            return (
+              <Flex
+                w={item.width}
+                alignItems={'center'}
+                justifyContent={'center'}
+                h={'49px'}
+                key={index}
+              >
+                <Text
+                  color={ColorBlack}
+                  fontSize={'15px'}
+                  fontWeight={700}
+                  whiteSpace={'pre-wrap'}
+                  textAlign={'center'}
+                >
+                  {item.name}
+                </Text>
+              </Flex>
             );
           })}
         </Flex>
