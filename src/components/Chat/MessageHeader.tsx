@@ -19,7 +19,7 @@ export default function MessageHeader({
   onMenu: any;
   channelUrl: string;
 }) {
-const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
   const [list, setList] = useState<Array<SendbirdUserMembers>>([]);
 
   //최고관리자 메세지 전송
@@ -110,6 +110,7 @@ const [count, setCount] = useState<number>(0);
         list.map((item: SendbirdUserMembers, index: number) => {
           return (
             <Flex
+              key={index}
               px={'15px'}
               pt={'15px'}
               justifyContent={'space-between'}
@@ -117,7 +118,11 @@ const [count, setCount] = useState<number>(0);
             >
               <Flex gap={'10px'} alignItems={'center'}>
                 <Image
-                  src={item.profile_url?.includes('https') ? item.profile_url : `${filePath()}${item.profile_url}`}
+                  src={
+                    item.profile_url?.includes('https')
+                      ? item.profile_url
+                      : `${filePath()}${item.profile_url}`
+                  }
                   width={'20px'}
                   height={'20px'}
                   borderRadius={'80px'}

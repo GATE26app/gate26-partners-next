@@ -317,14 +317,21 @@ function ChatComponent() {
 
   const [menu, setMenu] = useState(false);
 
+  const [first, setFirst] = useState(false);
+
   // context
   const [_context, setContext] = useState<any>();
 
   const handleSetCurrentChannel = (channel) => {
-    if (channel?.url) {
+    setFirst(true); // 첫 화면에서 상태 변경
+    if (channel?.url && first) {
       setCurrentChannelUrl(channel.url);
     }
   };
+
+  useEffect(() => {
+    setFirst(false);
+  }, []);
 
   //토큰 재발급
   const { data: SendBirdTokenData, error } = useQuery(
@@ -579,7 +586,6 @@ function ChatComponent() {
     includeEmpty: true,
   });
 
-
   return (
     <Box
       w={'80%'}
@@ -605,22 +611,12 @@ function ChatComponent() {
           dateLocale={kr}
           colorSet={myColorSet}
           stringSet={stringSet}
-          // key={Date.now()}
         >
           <CustomConnectionHandler />
-          <Flex
-            flexDirection={'row'}
-            h={'100%'}
-            alignItems={'stretch'}
-            // align-items: stretch
-            // maxH={'700px'}
-            // minH={'calc(100vh - 150px)'}
-          >
+          <Flex flexDirection={'row'} h={'100%'} alignItems={'stretch'}>
             <GroupChannelList
               channelListQueryParams={queryParmas}
-              // enableTypingIndicator={false}
               renderHeader={(props) => (
-                // <CustomGroupChannelListHeader />
                 <GroupChannelListHeader
                   renderMiddle={() => (
                     <Flex alignItems={'center'} gap={'10px'}>
@@ -647,7 +643,7 @@ function ChatComponent() {
                           alt="이미지 업로드"
                         />
                       </Box>
-                      {/* <Text>{props}</Text> */}
+
                       <Text
                         color={ColorBlack}
                         fontSize={'16px'}
@@ -659,22 +655,22 @@ function ChatComponent() {
                   )}
                 />
               )}
-              onChannelSelect={handleSetCurrentChannel}
+              onChannelSelect={(channel) => {
+                console.log('채널 선택 이벤트 발생:', channel?.url);
+                // 채널을 클릭한 경우에만 실행
+                handleSetCurrentChannel(channel);
+              }}
               onChannelCreated={() => {
                 // console.log('2222');
               }}
             />
+
             <GroupChannel
               // ref={scrollRef}
               // scr
               channelUrl={currentChannelUrl}
               onBackClick={() => setCurrentChannelUrl('')}
               renderMessage={(props) => {
-                // const context = useGroupChannelContext();
-                // console.log('context', context);
-                // console.log('props', props);
-                // 이미지 컴포넌트
-                // console.log('BackUpChatListData', BackUpChatListData);
                 const message = props.message;
                 // console.log('message', message);
                 if (message.isFileMessage()) {
