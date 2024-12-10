@@ -33,6 +33,7 @@ import DeliveryModal from '@/components/common/Modal/DeliveryModal';
 import ButtonModal from '@/components/common/ModalContainer/_fragments/ButtonModal';
 import RadioComponent from '@/components/common/CustomRadioButton/RadioComponent';
 import CancelDeniedModal from '@/components/common/Modal/CancelDeniedModal';
+import CancelApprovalModal from '../../common/Modal/CancelApprovalModal';
 interface headerProps {
   id: string;
   name: string;
@@ -50,6 +51,7 @@ function OrderGoodsCard({ header, item }: Props) {
 
   const [cancelModal, setCancelModal] = useState(false);
   const [deliveryModal, setDelieveryModal] = useState(false);
+  const [cancelApproModal, setCancelApproModal] = useState(false);
   const [cancelDeniedModal, setCancelDeniedModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({
     type: '',
@@ -117,7 +119,7 @@ function OrderGoodsCard({ header, item }: Props) {
     shippingInvoice: item.shippingInvoice,
     shippingMemo: item.shippingMemo,
     orderCancelRequestDetail: '',
-    partnerMemo: item.partnerMemo
+    partnerMemo: item.partnerMemo,
   });
 
   useEffect(() => {
@@ -134,7 +136,7 @@ function OrderGoodsCard({ header, item }: Props) {
       shippingInvoice: item.shippingInvoice,
       shippingMemo: item.shippingMemo,
       orderCancelRequestDetail: '',
-      partnerMemo: item.partnerMemo
+      partnerMemo: item.partnerMemo,
     });
   }, [item]);
 
@@ -501,6 +503,16 @@ function OrderGoodsCard({ header, item }: Props) {
     });
   return (
     <>
+      {cancelApproModal && (
+        <CancelApprovalModal
+          isOpen={cancelApproModal}
+          onClose={() => {
+            setCancelApproModal(false);
+          }}
+          onSubmit={onSubmitCancel}
+          info={item}
+        />
+      )}
       {cancelModal && (
         <CancelModal
           isOpen={cancelModal}
@@ -687,7 +699,9 @@ function OrderGoodsCard({ header, item }: Props) {
                     text="승인"
                     checked={CancelConfirmClick}
                     onClick={() => {
-                      CancelConfirmMutate(item.orderId);
+                      // setCancelApproModal(true);
+                      // CancelConfirmMutate(item.orderId);
+                      setCancelApproModal(true);
                       setCancelConfirmClick(true);
                       setCancelDeniedClick(false);
                     }}

@@ -103,3 +103,21 @@ export const useRequestCancelDeniedMutation = (
     ...params?.options,
   });
 };
+
+//주문 취소 수수료
+export const usePostOrderCancelMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCheckCancelFee>,
+) => {
+  return useMutation(orderApi.postOrderCheckCancelFee, {
+    ...params?.options,
+  });
+};
+
+//주문 취소 요청 - 에이전트 상품 취소 요청
+export const usePostOrderCancelRequestForAgentMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCancelRequestForAgent>,
+) => {
+  return useMutation(orderApi.postOrderCancelRequestForAgent, {
+    ...params?.options,
+  });
+};
