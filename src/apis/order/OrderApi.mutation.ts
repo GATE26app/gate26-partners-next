@@ -71,6 +71,14 @@ export const usePutOrderCancelMutation = (
     ...params?.options,
   });
 };
+//주문 취소
+export const usePutOrderCancelByPartnerMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCancelByPartner>,
+) => {
+  return useMutation(orderApi.postOrderCancelByPartner, {
+    ...params?.options,
+  });
+};
 //주문 접수
 export const usePostOrderContfrimMutation = (
   params?: MutationHookParams<typeof orderApi.postOrderConfrim>,

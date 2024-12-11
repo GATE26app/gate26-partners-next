@@ -174,6 +174,22 @@ export class OrderApi {
     return data;
   };
 
+  // 모든 주문형태에 대해서 취소가 가능 (파트너 선에서 최종 취소)
+  postOrderCancelByPartner = async (
+    req: OrderCancelRequestParamsType,
+  ): Promise<OrderDetailItemResType> => {
+    //type : code 또는 parentCode
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/partner/orders/${req.orderId}/cancel-confirm`,
+      headers: {
+        'X-AUTH-TOKEN': `${getToken().access}`,
+      },
+      data: req.body,
+    });
+    return data;
+  };
+
   //주문 접수
   postOrderConfrim = async (
     req: OrderConfrimParamsType,

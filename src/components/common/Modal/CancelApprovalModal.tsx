@@ -30,7 +30,7 @@ import styled from '@emotion/styled';
 import {
   usePostOrderCancelMutation,
   usePostOrderCancelRequestForAgentMutation,
-  usePutOrderCancelMutation,
+  usePutOrderCancelByPartnerMutation,
 } from '@/apis/order/OrderApi.mutation';
 import { formatDateMinTimeDash, intComma } from '@/utils/format';
 import RadioComponent from '../CustomRadioButton/RadioComponent';
@@ -176,7 +176,7 @@ function CancelApprovalModal({ onClose, onSubmit, info, ...props }: Props) {
 
   //주문 취소
   const { mutate: CancelMutate, isLoading: isCancelLoading } =
-    usePutOrderCancelMutation({
+    usePutOrderCancelByPartnerMutation({
       options: {
         onSuccess: (res, req) => {
           if (res.success) {
@@ -298,6 +298,7 @@ function CancelApprovalModal({ onClose, onSubmit, info, ...props }: Props) {
           },
         };
         RequestCancelForAgentMutate(obj);
+        // 일반형일때
       } else if (info?.orderType == 1) {
         // 전체취소
         let obj: OrderCancelParamsType = {
@@ -308,6 +309,7 @@ function CancelApprovalModal({ onClose, onSubmit, info, ...props }: Props) {
           },
         };
         CancelMutate(obj);
+        // 바우처형, 예약형일때
       } else {
         let obj: OrderCancelParamsType = {
           orderId: info?.orderId !== undefined ? info?.orderId : '',
