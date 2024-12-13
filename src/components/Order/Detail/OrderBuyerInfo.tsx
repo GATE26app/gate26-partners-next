@@ -74,6 +74,23 @@ function OrderBuyerInfo({ info }: Props) {
               : '-'}
           </Text>
         </Flex>
+        {info.cancelRequestDetail && (
+          <Flex mt={'15px'} alignItems={'center'}>
+            <Text
+              w={'160px'}
+              fontSize={'15px'}
+              fontWeight={700}
+              // flexShrink={0}
+              color={ColorBlack}
+              whiteSpace={'pre-wrap'}
+            >
+              {`취소요청 사유`}
+            </Text>
+            <Text color={ColorBlack} fontWeight={600} fontSize={'15px'}>
+              {info.cancelRequestDetail}
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </Box>
   );
