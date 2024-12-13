@@ -123,12 +123,26 @@ function DivisionComponent({ list, setList }: Props) {
           setTime(item.title);
         }
         if (item.code == 4) {
-          setLanguage(item.title);
+          setInputLanguage(item.title);
         }
       });
       // setTrans(list.)
     }
   }, [list]);
+
+  useEffect(() => {
+    if(inputLanguage == '') {
+      setInputLanguage(language);
+    } else if(language == '그외(직접입력)' || inputLanguage == '그외(직접입력)') {
+      setInputLanguage('');
+    } else {
+      setInputLanguage(inputLanguage+','+language)
+    } 
+  },[language]);
+
+  useEffect(() => {
+    handleOnChange(4, '언어', 1, inputLanguage);
+  }, [inputLanguage])
 
   return (
     <Flex w={'100%'} flexDirection={'column'} mb={'30px'}>
@@ -280,13 +294,14 @@ function DivisionComponent({ list, setList }: Props) {
                 select={language}
                 setSelect={setLanguage}
                 disable={goodsInfo.LogItemDisable}
-                onClick={(data: string) => {
-                  data !== '그외(직접입력)'
-                    ? handleOnChange(4, '언어', 1, data)
-                    : setInputLanguage('');
-                }}
+                // onClick={(data: string) => {
+                //   data !== '그외(직접입력)'
+                //     ? handleOnChange(4, '언어', 1, data)
+                //     : setInputLanguage('');
+                // }}
               />
-              {language == '그외(직접입력)' && (
+              {/* 언어 복수 입력으로 인한 주석 처리 */}
+              {/* {language == '그외(직접입력)' && (
                 <InputBox
                   placeholder="언어 직접입력"
                   value={inputLanguage}
@@ -297,7 +312,17 @@ function DivisionComponent({ list, setList }: Props) {
                   disabled={goodsInfo.LogItemDisable}
                   onBlur={(e) => handleOnChange(4, '언어', 1, e.target.value)}
                 />
-              )}
+              )} */}
+                <InputBox
+                  placeholder="선택된 언어"
+                  value={inputLanguage}
+                  onChange={(e) => {
+                    setInputLanguage(e.target.value);
+                    handleOnChange(4, '언어', 1, e.target.value);
+                  }}
+                  disabled={goodsInfo.LogItemDisable}
+                  onBlur={(e) => handleOnChange(4, '언어', 1, e.target.value)}
+                />
             </Flex>
           </Flex>
         </Flex>
