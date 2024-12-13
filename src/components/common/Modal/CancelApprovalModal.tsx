@@ -205,6 +205,7 @@ function CancelApprovalModal({ onClose, onSubmit, info, ...props }: Props) {
 
               memberDecideMutate(body);
             }
+            location.reload();
           } else {
             toast({
               position: 'top',
