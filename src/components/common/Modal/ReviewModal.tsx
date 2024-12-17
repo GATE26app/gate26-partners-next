@@ -116,6 +116,7 @@ function ReviewModal({
       onSuccess: (res) => {
         setReload(true);
         setComment('');
+        location.reload();
         // setList(res.data);
         // setGoodsInfo({
         //   reviewState: false,
@@ -130,6 +131,7 @@ function ReviewModal({
       onSuccess: (res) => {
         setReload(true);
         setComment('');
+        location.reload();
         // setList(res.data);
         // setGoodsInfo({
         //   reviewState: false,
