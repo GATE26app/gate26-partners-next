@@ -21,8 +21,17 @@ export const usePostReviewListMutation = (
 export const usePutReviewCommentMutation = (
   params?: MutationHookParams<typeof reviewApi.putReviewComment>,
 ) => {
+  const postReviewListMutation = usePostReviewListMutation();
   return useMutation(reviewApi.putReviewComment, {
     ...params?.options,
+    onSuccess: (data: any, variables: any, context: any) => {
+      // 기존 onSuccess 콜백 실행
+      if (params?.options?.onSuccess) {
+        params.options.onSuccess(data, variables, context);
+      }
+      // 리뷰 댓글 삭제 성공 시 리뷰 리스트 다시 호출
+      postReviewListMutation.mutate();
+    },
   });
 };
 
@@ -30,7 +39,16 @@ export const usePutReviewCommentMutation = (
 export const useDeleteReviewCommentMutation = (
   params?: MutationHookParams<typeof reviewApi.deleteReviewComment>,
 ) => {
+  const postReviewListMutation = usePostReviewListMutation();
   return useMutation(reviewApi.deleteReviewComment, {
     ...params?.options,
+    onSuccess: (data: any, variables: any, context: any) => {
+      // 기존 onSuccess 콜백 실행
+      if (params?.options?.onSuccess) {
+        params.options.onSuccess(data, variables, context);
+      }
+      // 리뷰 댓글 삭제 성공 시 리뷰 리스트 다시 호출
+      postReviewListMutation.mutate();
+    },
   });
 };
