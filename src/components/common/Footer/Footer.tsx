@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Link, Text } from '@chakra-ui/react';
 
 import { ColorFooterBack, ColorWhite } from '@/utils/_Palette';
 
@@ -96,9 +96,9 @@ function Footer() {
           </Flex>
         </Flex>
         <Flex>
-          <Text color={ColorWhite} fontSize={'15px'} fontWeight={200}>
+          <Link href="https://www.gate26.co.kr/PartnerService.html" color={ColorWhite} fontSize={'15px'} fontWeight={200}>
             서비스이용약관
-          </Text>
+          </Link>
           <Text
             color={ColorWhite}
             fontSize={'15px'}
@@ -107,9 +107,9 @@ function Footer() {
           >
             |
           </Text>
-          <Text color={ColorWhite} fontSize={'15px'} fontWeight={200}>
+          <Link href="https://www.gate26.co.kr/PartnerPrivacy.html" color={ColorWhite} fontSize={'15px'} fontWeight={200}>
             개인정보처리방침
-          </Text>
+          </Link>
         </Flex>
       </Flex>
     </Box>
