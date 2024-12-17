@@ -66,6 +66,7 @@ function JoinComponent() {
         thumbnailImagePath: '',
       },
     ],
+    kakaoId: '',
   });
 
   const ToastComponent = (message: string) => {
@@ -107,9 +108,9 @@ function JoinComponent() {
       ToastComponent('업태를 입력해주세요.');
     } else if (joinInfo.businessItem == '') {
       ToastComponent('업종을 입력해주세요.');
-    } else if (joinInfo.title == '') {
-      // api 없음
-      ToastComponent('통신판매업신고번호을 입력해주세요.');
+      // } else if (joinInfo.mailOrderSalesRegistrationNo == '') {
+      //   // api 없음
+      //   ToastComponent('통신판매업신고번호를 입력해주세요.');
     } else if (joinInfo.nameOfRepresentative == '') {
       ToastComponent('대표자명 입력해주세요.');
     } else if (joinInfo.businessTel == '') {
@@ -120,14 +121,14 @@ function JoinComponent() {
       ToastComponent('상세 주소를 입력해주세요.');
     } else if (joinInfo.files?.filter((prev) => prev.type == 1).length == 0) {
       ToastComponent('사업자등록증 파일첨부해주세요.');
-    } else if (joinInfo.files?.filter((prev) => prev.type == 2).length == 0) {
-      ToastComponent('통신판매업신고증 파일첨부해주세요.');
+      // } else if (joinInfo.files?.filter((prev) => prev.type == 2).length == 0) {
+      //   ToastComponent('통신판매업신고증 파일첨부해주세요.');
     } else if (joinInfo.bank == '') {
       ToastComponent('은행명을 입력해주세요.');
     } else if (joinInfo.accountNumber == '') {
       ToastComponent('계좌번호를 입력해주세요.');
     } else if (joinInfo.accountHolder == '') {
-      ToastComponent('계좌주를 입력해주세요.');
+      ToastComponent('예금주명을 입력해주세요.');
     } else if (joinInfo.files?.filter((prev) => prev.type == 3).length == 0) {
       ToastComponent('통장사본 파일첨부해주세요.');
     } else {

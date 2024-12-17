@@ -49,6 +49,7 @@ export type ProfileBodyType = {
   shippingFee: number;
   shippingMinAmount: number;
   serviceChargePercent: number;
+  kakaoId?: string;
 };
 
 export type ProfileImageArray = {
@@ -75,6 +76,7 @@ export type ProfileChangeReqType = {
       thumbnailImagePath: string;
     },
   ];
+  kakaoId?: string;
 };
 
 export type ProfileResignReqType = {

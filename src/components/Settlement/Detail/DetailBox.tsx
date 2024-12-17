@@ -24,7 +24,11 @@ import {
   SettleDetailDtoType,
   SettleDetailItemType,
 } from '@/apis/settlement/SettlementApi.type';
-import { useGetUnSettleListMutation, usePostSettleCompleteMutation, usePutSettleMemoMutation } from '@/apis/settlement/SettlementApi.mutation';
+import {
+  useGetUnSettleListMutation,
+  usePostSettleCompleteMutation,
+  usePutSettleMemoMutation,
+} from '@/apis/settlement/SettlementApi.mutation';
 import { useSearchParams } from '../../../../node_modules/next/navigation';
 import LoadingModal from '@/components/common/Modal/LoadingModal';
 
@@ -114,7 +118,7 @@ function DetailBox({ data }: Props) {
       },
     });
 
-    const { mutate: InputCompeleteMutate, isLoading: isLoadingCom } =
+  const { mutate: InputCompeleteMutate, isLoading: isLoadingCom } =
     usePostSettleCompleteMutation({
       options: {
         onSuccess: (res: any) => {
@@ -200,7 +204,7 @@ function DetailBox({ data }: Props) {
               정산계좌정보
             </Text>
             <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>
-              {/* 신한은행 012345678901 (계좌주) */}
+              {/* 신한은행 012345678901 (예금주) */}
               {data.bank != null
                 ? `${data.bank} ${data.accountNumber} (${data.accountHolder})`
                 : '-'}
@@ -257,7 +261,9 @@ function DetailBox({ data }: Props) {
             >
               정산상태
             </Text>
-            <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>{data.statusName}</Text>
+            <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>
+              {data.statusName}
+            </Text>
           </Flex>
           <Flex alignItems={'center'}>
             <Text

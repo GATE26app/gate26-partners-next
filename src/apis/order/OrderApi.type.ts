@@ -405,3 +405,52 @@ export type RequestCacnelDeniedType = {
     cancelDeniedDetail: string;
   };
 };
+
+//주문 취소 수수료
+export type OrderCacelFeeType = {
+  orderId: string;
+  body: {
+    cancelFaultType: number;
+    specificDate?: string;
+  };
+};
+
+export type CancelFeeType = {
+  atNow: {
+    cancelAmount: number;
+    cancelBaseDate: string;
+    cancelFee: number;
+    cancelFeePer: number;
+  };
+  atSpecificDate: {
+    cancelAmount: number;
+    cancelBaseDate: string;
+    cancelFee: number;
+    cancelFeePer: number;
+  };
+  cancelFaultType: number;
+  cancelFaultTypeName: string;
+  orderDateTimeUse: string;
+  paymentAmount: number;
+};
+
+//주문상세
+export type OrderCancelFeeItemResType = {
+  code: string;
+  count: number;
+  data: CancelFeeType;
+  success: boolean;
+  message?: string;
+};
+
+//주문 취소
+export type OrderCancelParamsType = {
+  orderId: string;
+  body: {
+    cancelRequestType?: number;
+    cancelRequestDetail?: string;
+    cancelFaultType: number;
+    cancelReason: string;
+    cancelAmount?: number;
+  };
+};

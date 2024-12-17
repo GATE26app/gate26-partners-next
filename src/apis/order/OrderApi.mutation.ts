@@ -71,6 +71,14 @@ export const usePutOrderCancelMutation = (
     ...params?.options,
   });
 };
+//주문 취소
+export const usePutOrderCancelByPartnerMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCancelByPartner>,
+) => {
+  return useMutation(orderApi.postOrderCancelByPartner, {
+    ...params?.options,
+  });
+};
 //주문 접수
 export const usePostOrderContfrimMutation = (
   params?: MutationHookParams<typeof orderApi.postOrderConfrim>,
@@ -100,6 +108,24 @@ export const useRequestCancelDeniedMutation = (
   params?: MutationHookParams<typeof orderApi.postRequestCancelDenied>,
 ) => {
   return useMutation(orderApi.postRequestCancelDenied, {
+    ...params?.options,
+  });
+};
+
+//주문 취소 수수료
+export const usePostOrderCancelMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCheckCancelFee>,
+) => {
+  return useMutation(orderApi.postOrderCheckCancelFee, {
+    ...params?.options,
+  });
+};
+
+//주문 취소 요청 - 에이전트 상품 취소 요청
+export const usePostOrderCancelRequestForAgentMutation = (
+  params?: MutationHookParams<typeof orderApi.postOrderCancelRequestForAgent>,
+) => {
+  return useMutation(orderApi.postOrderCancelRequestForAgent, {
     ...params?.options,
   });
 };

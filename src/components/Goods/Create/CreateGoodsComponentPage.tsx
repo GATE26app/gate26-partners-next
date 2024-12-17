@@ -57,6 +57,7 @@ export type { CategoryListProps, LocationListProps };
 
 function CreateGoodsComponentPage() {
   const dispatch = useDispatch();
+
   const { partnerInfo } = usePartnerZuInfo((state) => state);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -139,6 +140,20 @@ function CreateGoodsComponentPage() {
     [],
   );
   const [CatePreList, setCatePreList] = useState<CategoryResProps[]>([]);
+
+  useEffect(() => {
+    const preventGoBack = () => {
+      if (confirm('페이지를 나가시겠습니까?')) {
+        history.go(-1);
+      } else {
+        history.pushState(null, '', location.href);
+      }
+    };
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', preventGoBack);
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);
+
   const ToastComponent = (message: string) => {
     return toast({
       position: 'top',
@@ -259,7 +274,10 @@ function CreateGoodsComponentPage() {
       } else if (BasicInfo.price == 0) {
         setDiableBtn(false);
         ToastComponent('판매가를 입력해주세요.');
-      } else if (imageList.length == 0 || (imageList.length > 0 && imageList[0].sort > 1)) {
+      } else if (
+        imageList.length == 0 ||
+        (imageList.length > 0 && imageList[0].sort > 1)
+      ) {
         setDiableBtn(false);
         ToastComponent('대표 상품 이미지를 선택해주세요.');
       } else if (imageList.length == 1) {

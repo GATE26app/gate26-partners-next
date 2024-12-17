@@ -33,6 +33,7 @@ import DeliveryModal from '@/components/common/Modal/DeliveryModal';
 import ButtonModal from '@/components/common/ModalContainer/_fragments/ButtonModal';
 import RadioComponent from '@/components/common/CustomRadioButton/RadioComponent';
 import CancelDeniedModal from '@/components/common/Modal/CancelDeniedModal';
+import CancelApprovalModal from '../../common/Modal/CancelApprovalModal';
 interface headerProps {
   id: string;
   name: string;
@@ -50,6 +51,7 @@ function OrderGoodsCard({ header, item }: Props) {
 
   const [cancelModal, setCancelModal] = useState(false);
   const [deliveryModal, setDelieveryModal] = useState(false);
+  const [cancelApproModal, setCancelApproModal] = useState(false);
   const [cancelDeniedModal, setCancelDeniedModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({
     type: '',
@@ -73,6 +75,9 @@ function OrderGoodsCard({ header, item }: Props) {
   };
 
   useEffect(() => {
+    // 241211 사용자 취소요청없이 취소 가능한 코드
+    // const isPartnerCancel = item.requiredPartnerCancelConfirm === 1;
+
     if (item.cancelStatusName == '' || item.cancelStatusName == null) {
       if (
         (item.orderStatusName == '결제완료' && item.orderType == 1) ||
@@ -84,8 +89,12 @@ function OrderGoodsCard({ header, item }: Props) {
         setStateList(['결제완료', '예약확정', '취소']);
       } else if (item.orderStatusName == '이용일') {
         setStateList([item.orderStatusName, '취소요청']);
+        // 241211 사용자 취소요청없이 취소 가능한 코드
+        // setStateList([item.orderStatusName, isPartnerCancel ? '주문취소' : '취소요청']);
       } else if (item.orderStatusName == '예약확정') {
         setStateList([item.orderStatusName, '취소요청']);
+        // 241211 사용자 취소요청없이 취소 가능한 코드
+        // setStateList([item.orderStatusName, isPartnerCancel ? '주문취소' : '취소요청']);
       } else {
         setStateList([item.orderStatusName]);
       }
@@ -117,7 +126,7 @@ function OrderGoodsCard({ header, item }: Props) {
     shippingInvoice: item.shippingInvoice,
     shippingMemo: item.shippingMemo,
     orderCancelRequestDetail: '',
-    partnerMemo: item.partnerMemo
+    partnerMemo: item.partnerMemo,
   });
 
   useEffect(() => {
@@ -134,11 +143,12 @@ function OrderGoodsCard({ header, item }: Props) {
       shippingInvoice: item.shippingInvoice,
       shippingMemo: item.shippingMemo,
       orderCancelRequestDetail: '',
-      partnerMemo: item.partnerMemo
+      partnerMemo: item.partnerMemo,
     });
   }, [item]);
 
   const onClickSelect = (type: string) => {
+    console.log('onClickSelect', type)
     if (type !== selectState) {
       if (
         type == '접수거절' ||
@@ -182,6 +192,12 @@ function OrderGoodsCard({ header, item }: Props) {
           },
         });
       }
+
+      // 241211 사용자 취소요청없이 취소 가능한 코드
+      // else if (type == '주문취소') {
+      //   setCancelApproModal(true);
+      // }
+
       //  else if(type == '취소') {
       //   setOpenAlertModal(true);
       //   const obj = {
@@ -501,6 +517,16 @@ function OrderGoodsCard({ header, item }: Props) {
     });
   return (
     <>
+      {cancelApproModal && (
+        <CancelApprovalModal
+          isOpen={cancelApproModal}
+          onClose={() => {
+            setCancelApproModal(false);
+          }}
+          onSubmit={onSubmitCancel}
+          info={item}
+        />
+      )}
       {cancelModal && (
         <CancelModal
           isOpen={cancelModal}
@@ -673,53 +699,56 @@ function OrderGoodsCard({ header, item }: Props) {
             onClick={onClickSelect}
           />
         </Flex>
-        {item.cancelStatus == 1 && (
-          <>
-            {item.partnerCancelConfirm == 1 && cancelStateTxt == '' ? (
-              <Flex
-                w={header[5]?.width}
-                alignItems={'center'}
-                justifyContent={'center'}
-                flexDirection={'column'}
-              >
-                <Flex gap={'20px'}>
-                  <RadioComponent
-                    text="승인"
-                    checked={CancelConfirmClick}
-                    onClick={() => {
-                      CancelConfirmMutate(item.orderId);
-                      setCancelConfirmClick(true);
-                      setCancelDeniedClick(false);
-                    }}
-                  />
-                  <RadioComponent
-                    text="반려"
-                    checked={CancelDeniedClick}
-                    onClick={() => {
-                      setCancelDeniedModal(true);
-                      setCancelConfirmClick(false);
-                      setCancelDeniedClick(true);
-                      // console.log('vvvv');
-                    }}
-                  />
-                </Flex>
-              </Flex>
-            ) : (
-              <Flex
-                w={header[5]?.width}
-                alignItems={'center'}
-                justifyContent={'center'}
-                flexDirection={'column'}
-              >
-                <Text>
-                  {item.partnerCancelConfirm == 2 || cancelStateTxt == '반려'
-                    ? '반려'
-                    : '승인'}
-                </Text>
-              </Flex>
+        {(item.cancelStatus == 1 && item.requiredPartnerCancelConfirm == 1) &&(
+              <>
+                {item.partnerCancelConfirm == 1 && cancelStateTxt == '' ? (
+                  <Flex
+                    w={header[5]?.width}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    flexDirection={'column'}
+                  >
+                    <Flex gap={'20px'}>
+                      <RadioComponent
+                        text="승인"
+                        checked={CancelConfirmClick}
+                        onClick={() => {
+                          // setCancelApproModal(true);
+                          // CancelConfirmMutate(item.orderId);
+                          setCancelApproModal(true);
+                          setCancelConfirmClick(true);
+                          setCancelDeniedClick(false);
+                        }}
+                      />
+                      <RadioComponent
+                        text="반려"
+                        checked={CancelDeniedClick}
+                        onClick={() => {
+                          setCancelDeniedModal(true);
+                          setCancelConfirmClick(false);
+                          setCancelDeniedClick(true);
+                          // console.log('vvvv');
+                        }}
+                      />
+                    </Flex>
+                  </Flex>
+                ) : (
+                  <Flex
+                    w={header[5]?.width}
+                    alignItems={'center'}
+                    justifyContent={'center'}
+                    flexDirection={'column'}
+                  >
+                    <Text>
+                      {item.partnerCancelConfirm == 2 ||
+                      cancelStateTxt == '반려'
+                        ? '반려'
+                        : '승인'}
+                    </Text>
+                  </Flex>
+                )}
+              </>,
             )}
-          </>
-        )}
         {/* {item.partnerCancelConfirm == 1 && item.cancelStatus == 1 ? (
           <Flex
             w={header[5]?.width}

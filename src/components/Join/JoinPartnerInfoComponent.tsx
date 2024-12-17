@@ -175,6 +175,25 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
       <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
         (- 없이 숫자로만 입력해주세요)
       </Text>
+
+      <Flex pb={'6px'} pt={'30px'}>
+        <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
+          카카오톡 아이디
+        </Text>
+      </Flex>
+      <Flex flexDirection={'row'} justifyContent={'flex-end'}>
+        <InputBox
+          placeholder="카카오톡 아이디 입력"
+          value={joinInfo.kakaoId}
+          onChange={(e) =>
+            setJoinInfo({
+              ...joinInfo,
+              kakaoId: e.target.value,
+            })
+          }
+        />
+      </Flex>
+
       <Flex pb={'6px'} pt={'30px'}>
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           브랜드로고(프로필사진)
@@ -280,12 +299,12 @@ function JoinPartnerInfoComponent({ joinInfo, setJoinInfo }: Props) {
           style={{ display: 'none' }}
         ></input>
       </Flex>
-        <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
-          브랜드로고 및 소개글은 판매자 프로필을 통해 사용자에게 노출됩니다.
-        </Text>
-        <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
-          권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
-        </Text>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        브랜드로고 및 소개글은 판매자 프로필을 통해 사용자에게 노출됩니다.
+      </Text>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
+      </Text>
 
       <Flex pb={'6px'} pt={'30px'} justifyContent={'space-between'}>
         <Flex>

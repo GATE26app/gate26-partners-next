@@ -61,12 +61,28 @@ function BusinessInfo({ info }: Props) {
     const imageURL = window.URL.createObjectURL(res.data);
     document.getElementById('target-img-3').src = imageURL;
   };
+  // 체류증명서
+  const img3Axios = async () => {
+    const res = await axios.get(
+      filePath() +
+        info?.files.filter((item) => item.type == 4)[0].thumbnailImagePath,
+      {
+        responseType: 'blob',
+        headers: {
+          'X-AUTH-TOKEN': `${getToken().access}`,
+        },
+      },
+    );
+    const imageURL = window.URL.createObjectURL(res.data);
+    document.getElementById('target-img-4').src = imageURL;
+  };
 
   useEffect(() => {
     if (info) {
       imgAxios();
       img1Axios();
       img2Axios();
+      img3Axios();
     }
   }, [info]);
 
@@ -463,6 +479,34 @@ function BusinessInfo({ info }: Props) {
               src="/images/Page/ex_image_2.jpg"
               objectFit={'cover'}
             /> */}
+          </Box>
+        </Flex>
+        <Flex flexDirection={'column'}>
+          <Text
+            fontWeight={600}
+            fontSize={'15px'}
+            color={ColorBlack}
+            pb={'10px'}
+          >
+            체류증명서 파일첨부
+          </Text>
+          <Box
+            w={'182px'}
+            h={'182px'}
+            borderRadius={'10px'}
+            overflow={'hidden'}
+          >
+            {info?.files.filter((item) => item.type == 4)[0]?.filePath && (
+              <img
+                id="target-img-4"
+                style={{ width: '182px', height: '182px', objectFit: 'cover' }}
+                onClick={() =>
+                  downloadFile(
+                    info?.files.filter((item) => item.type == 4)[0].filePath,
+                  )
+                }
+              />
+            )}
           </Box>
         </Flex>
       </Flex>
