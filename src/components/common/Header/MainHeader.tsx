@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
-
+import SendBird from 'sendbird';
 import { useGetUserQuery } from '@/apis/user/UserApi.query';
 
 import {
@@ -24,7 +24,10 @@ import { useAlarmZuInfo } from '@/_store/AlarmInfo';
 import AlarmModal from '../Modal/AlarmModal';
 import { usePartnerZuInfo } from '@/_store/PartnerInfo';
 import ChatComponent from '@/components/Chat/ChatComponent';
-import { deleteSendBirdToken } from '@/utils/localStorage/token/index';
+import {
+  deleteSendBirdToken,
+  getSendBirdToken,
+} from '@/utils/localStorage/token/index';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
@@ -39,6 +42,61 @@ function MainHeader() {
   const [logout, setLogout] = useState(false);
   const [alramModal, setAlramModal] = useState(false);
   const [chatModal, setChatModal] = useState(false);
+
+  const appId = '78B8D84A-E617-493C-98CA-2D15F647923B';
+  const userId = getSendBirdToken().user_id;
+  const accessToken = getSendBirdToken().sendBird;
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const sb = new SendBird({ appId });
+
+    // 연결 및 초기화
+    sb.connect(userId, accessToken, (user: any, error: any) => {
+      if (error) {
+        console.error('SendBird 연결 오류:', error);
+        return;
+      }
+
+      // 초기 총 안 읽은 메시지 수 가져오기
+      updateUnreadCount();
+
+      // 채널 핸들러 추가
+      const ChannelHandler = new sb.ChannelHandler();
+
+      // 메시지 수신 이벤트 감지
+      ChannelHandler.onMessageReceived = (channel: any, message: any) => {
+        console.log('새 메시지 수신:', message);
+        updateUnreadCount(); // 메시지 수신 시 안 읽은 메시지 수 업데이트
+      };
+
+      ChannelHandler.onReadReceiptUpdated = () => {
+        console.log('읽음 확인 업데이트');
+        updateUnreadCount(); // 읽음 확인 업데이트 시 안 읽은 메시지 수 재조회
+      };
+
+      // 핸들러 등록
+      sb.addChannelHandler('unique_handler_id', ChannelHandler);
+
+      // 정리: 컴포넌트 언마운트 시 핸들러 제거
+      return () => {
+        sb.removeChannelHandler('unique_handler_id');
+      };
+    });
+
+    // 안 읽은 메시지 수 업데이트 함수
+    const updateUnreadCount = () => {
+      sb.getTotalUnreadMessageCount((count: number, err: any) => {
+        if (err) {
+          console.error('안 읽은 메시지 수 가져오기 실패:', err);
+          return;
+        }
+        console.log('총 안 읽은 메시지 수:', count);
+        setUnreadCount(count);
+      });
+    };
+  }, [appId, userId, accessToken]);
+
   const onLogout = () => {
     deleteUserInfo();
     deleteToken();
@@ -164,13 +222,33 @@ function MainHeader() {
               onClick={() => setChat(!chat)}
             />
           ) : (
-            <Image
-              src={'/images/header/icon_chatting_off.png'}
-              width={49}
-              height={49}
-              alt="로고"
-              onClick={() => setChat(!chat)}
-            />
+            <Flex position={'relative'}>
+              <Image
+                src={'/images/header/icon_chatting_off.png'}
+                width={49}
+                height={49}
+                alt="로고"
+                onClick={() => setChat(!chat)}
+              />
+              {unreadCount > 0 && (
+                <Flex
+                  borderRadius={50}
+                  bgColor={'#FF6060'}
+                  width={'16px'}
+                  height={'16px'}
+                  position={'absolute'}
+                  top={'-1px'}
+                  right={'-5px'}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                  p={'2px'}
+                >
+                  <Text color={'white'} fontSize={'10px'}>
+                    {unreadCount}
+                  </Text>
+                </Flex>
+              )}
+            </Flex>
           )}
         </Box>
         <Box cursor={'pointer'}>
