@@ -31,6 +31,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import CustomButton from '../common/CustomButton';
+import InputBox from '@/components/common/Input';
 interface Props {
   info: ProfileBodyType | undefined;
 }
@@ -44,6 +45,7 @@ function ProfileInfo({ info }: Props) {
         thumbnailImagePath: '',
       },
     ],
+    kakaoId: '',
   });
 
   useEffect(() => {
@@ -51,6 +53,7 @@ function ProfileInfo({ info }: Props) {
       setProfileInfo({
         images: info?.images,
         info: info?.info,
+        kakaoId: info?.kakaoId,
       });
     }
   }, [info]);
@@ -209,6 +212,7 @@ function ProfileInfo({ info }: Props) {
       let obj = {
         info: profileInfo.info,
         images: profileInfo.images,
+        kakaoId: profileInfo.kakaoId,
       };
       ProflieChangeMutate(obj);
     }
@@ -285,7 +289,7 @@ function ProfileInfo({ info }: Props) {
             ) : (
               <>
                 {profileInfo?.images[0]?.thumbnailImagePath !== '' &&
-                profileInfo?.images[0]?.thumbnailImagePath !== undefined ? (
+                  profileInfo?.images[0]?.thumbnailImagePath !== undefined ? (
                   <>
                     <Flex
                       w={'182px'}
@@ -393,6 +397,35 @@ function ProfileInfo({ info }: Props) {
                 ({profileInfo?.info?.length}/500)
               </Text>
             </Flex>
+          </Flex>
+          {/* 카카오톡 ID */}
+          <Flex
+            flexDirection={'row'}
+            pb={'20px'}
+            width={'50%'}
+            alignItems={'center'}
+          >
+            <Text
+              fontWeight={600}
+              fontSize={'15px'}
+              pb={'10px'}
+              color={ColorBlack}
+              w={'110px'}
+              flexShrink={0}
+            >
+              카카오톡 ID
+            </Text>
+            <InputBox
+              w={'100%'}
+              placeholder="카카오톡 ID 입력"
+              value={profileInfo.kakaoId}
+              onChange={(e) =>
+                setProfileInfo({
+                  ...profileInfo,
+                  kakaoId: e.target.value,
+                })
+              }
+            />
           </Flex>
         </Flex>
       </Box>

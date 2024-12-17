@@ -89,6 +89,7 @@ export type JoinBody = {
   mailOrderSalesRegistrationNo: string;
   images: Array<JoinImageArray>;
   files: Array<JoinFilesArray>;
+  kakaoId: string;
 };
 
 export type JoinImageArray = {

@@ -90,7 +90,7 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
             setJoinInfo({
               ...joinInfo,
               businessRegistrationNumber: e.target.value.replace(/[^0-9]/g, ''),
-            })
+            });
           }}
           maxLength={10}
         />
@@ -142,9 +142,9 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           통신판매업신고번호
         </Text>
-        <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
+        {/* <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
           *
-        </Text>
+        </Text> */}
       </Flex>
       <Flex flexDirection={'row'} justifyContent={'flex-end'}>
         <InputBox
@@ -249,8 +249,8 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
           py="13px"
           borderColor={ColorBlack}
           onClick={() => {
-            if(joinInfo.type == 2) setGoogleModal(true);
-            else setAddressModal(true)
+            if (joinInfo.type == 2) setGoogleModal(true);
+            else setAddressModal(true);
           }}
         />
       </Flex>

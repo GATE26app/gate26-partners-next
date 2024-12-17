@@ -293,9 +293,9 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           통신판매업신고증 파일첨부
         </Text>
-        <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
+        {/* <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
           *
-        </Text>
+        </Text> */}
       </Flex>
       <Flex flexDirection={'column'} position={'relative'} w={'100px'}>
         {joinInfo?.files.filter((item) => item.type == 2).length > 0 &&
@@ -452,7 +452,7 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
         />
       </Flex>
       <InputBox
-        placeholder="계좌주"
+        placeholder="예금주"
         value={joinInfo.accountHolder}
         onChange={(e) => {
           setJoinInfo({
@@ -579,6 +579,108 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
           style={{ display: 'none' }}
         ></input>
       </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
+      </Text>
+
+      <Flex pb={'6px'} pt={'30px'}>
+        <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
+          체류증명서 파일첨부
+        </Text>
+      </Flex>
+      <Flex flexDirection={'column'} position={'relative'} w={'100px'}>
+        {joinInfo?.files.filter((item) => item.type == 4).length > 0 &&
+          joinInfo?.files.filter((item) => item.type == 4)[0]
+            ?.thumbnailImagePath !== '' && (
+            <Flex position={'absolute'} top={'10px'} right={'10px'}>
+              <Image
+                src={'/images/Page/icon_delete_img.png'}
+                alt="이미지 삭제"
+                width={18}
+                height={18}
+                onClick={() => onDeleteImg(4)}
+              />
+            </Flex>
+          )}
+        {imgIndex == 4 && isLoading ? (
+          <Flex
+            w={100}
+            h={100}
+            justifyContent={'center'}
+            alignItems={'center'}
+            borderRadius={'10px'}
+            overflow={'hidden'}
+            borderWidth={1}
+            borderStyle={'dashed'}
+            borderColor={ColorInputBorder}
+          >
+            <CircularProgress isIndeterminate color={ColorBlue} />
+          </Flex>
+        ) : (
+          <>
+            {joinInfo?.files.filter((item) => item.type == 4).length > 0 &&
+            joinInfo?.files.filter((item) => item.type == 4)[0]
+              ?.thumbnailImagePath !== '' ? (
+              <>
+                <Flex
+                  w={100}
+                  h={100}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  borderRadius={'10px'}
+                  overflow={'hidden'}
+                  borderWidth={1}
+                  borderStyle={'dashed'}
+                  borderColor={ColorInputBorder}
+                >
+                  {joinInfo?.files
+                    .filter((item) => item.type == 4)[0]
+                    ?.filePath.includes('pdf') ? (
+                    <Text fontWeight={600} fontSize={'16px'} color={ColorBlack}>
+                      PDF
+                    </Text>
+                  ) : (
+                    <img
+                      src={`${filePathList?.filter((item) => item.type == 4)[0]?.img}`}
+                      alt="이미지 업로드"
+                    />
+                  )}
+                </Flex>
+              </>
+            ) : (
+              <label htmlFor="pdf3">
+                <Flex
+                  w={100}
+                  h={100}
+                  borderWidth={1}
+                  borderStyle={'dashed'}
+                  borderColor={ColorInputBorder}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  borderRadius={'10px'}
+                  onClick={() => setImgIndex(4)}
+                >
+                  <Image
+                    src={'/images/Page/ico_plus.png'}
+                    width={22}
+                    height={22}
+                    alt="이미지 추가"
+                  />
+                </Flex>
+              </label>
+            )}
+          </>
+        )}
+        <input
+          type="file"
+          id="pdf3"
+          onChange={handleUploadPdf}
+          style={{ display: 'none' }}
+        ></input>
+      </Flex>
+      <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
+        해외상품 판매 시 필요
+      </Text>
       <Text fontSize={'14px'} fontWeight={400} color={ColorRed}>
         권장크기(1000*1000) 및 용량(10MB) 이하, 파일형식 (JPG,PNG,GIF,BMP)
       </Text>
