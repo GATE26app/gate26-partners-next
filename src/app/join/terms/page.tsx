@@ -62,8 +62,8 @@ function page() {
   };
   return (
     <>
-      {serviceModal && <TermModal isOpen={serviceModal} onClose={() => setServiceModal(false)} contentSrc='https://gate26.co.kr/TermOfUse.html' title={'서비스 약관동의'}/>}
-      {privateModal && <TermModal isOpen={privateModal} onClose={() => setPrivateModal(false)} contentSrc='https://gate26.co.kr/PrivacyPolicy_new.html' title={'개인정보 처리방침'}/>}
+      {serviceModal && <TermModal isOpen={serviceModal} onClose={() => setServiceModal(false)} contentSrc='https://gate26.co.kr/PartnerService.html' title={'서비스 약관동의'}/>}
+      {privateModal && <TermModal isOpen={privateModal} onClose={() => setPrivateModal(false)} contentSrc='https://gate26.co.kr/PartnerPrivacy.html' title={'개인정보 처리방침'}/>}
       <Box width="100vw" backgroundColor={ColorGray50}>
         <Flex
           pt={'150px'}
