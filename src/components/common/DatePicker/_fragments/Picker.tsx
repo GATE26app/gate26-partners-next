@@ -83,11 +83,13 @@ const Picker = ({
             .fill(0)
             .map((n, i) => {
               // 오늘 => 주어진 주의 시작 => n + i일 만큼 더해서 각 주의 '일'을 표기한다.
-              const current = today
-                .clone()
+              const lastDayOfYear = today.clone().endOf('year');
+              const current = week <= 52 ?
+                today.clone()
                 .week(week)
                 .startOf('week')
-                .add(n + i, 'day');
+                .add(n + i, 'day') 
+                : lastDayOfYear.startOf('week').add(n + i, 'day') ;
               // 오늘이 current와 같다면 우선 '선택'으로 두자
               const isSelected =
                 daily.format('YYYYMMDD') === current.format('YYYYMMDD')
