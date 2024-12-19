@@ -40,7 +40,7 @@ function TermModal({
   return (
     <Modal onClose={onClose} isCentered variant={'alert'} {...props}>
       <ModalOverlay />
-      <Content maxW={536} h={'727px'} overflowX={'auto'}>
+      <Content maxW={736} overflowY={'hidden'}>
         <Header>
           <Flex
             alignItems={'center'}
@@ -74,7 +74,7 @@ function TermModal({
         >
           <CustomButton
             text="닫기"
-            px="213px"
+            px="183px"
             bgColor={ColorGray900}
             borderColor={ColorGray900}
             fontSize="16px"

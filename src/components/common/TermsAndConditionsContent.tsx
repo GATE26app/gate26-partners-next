@@ -31,7 +31,7 @@ function TermsAndConditionsContent(props: {contentSrc?: string}) {
   const { height } = useSize();
 
   return (
-    <Flex h={height} px="0px" mt="0px" direction="column">
+    <Flex px="0px" mt="0px" direction="column">
       <iframe width="100%" height={height} src={props.contentSrc} />
     </Flex>
   );
