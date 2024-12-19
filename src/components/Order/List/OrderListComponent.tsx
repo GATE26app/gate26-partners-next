@@ -464,7 +464,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
           </Text>
         </Flex>
         <Flex gap={'10px'}>
-          <SelectBox
+          {/* <SelectBox
             placeholder="상태값 변경처리"
             width={'168px'}
             list={stateSelectList}
@@ -480,7 +480,7 @@ function OrderListComponent({ list, request, setRequest }: Props) {
             color={ColorGray700}
             fontSize="14px"
             onClick={() => onChangeState()}
-          />
+          /> */}
           <ImageButton
             img="/images/Page/excel_icon.png"
             backgroundColor={ColorWhite}
