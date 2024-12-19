@@ -45,6 +45,7 @@ import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutati
 import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 import { useQuery } from 'react-query';
 import './style.css';
+import CarouselMessage from './CarouselMessage';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -678,6 +679,9 @@ function ChatComponent() {
                 }
                 if (message.isUserMessage() && message.parentMessageId > 0) {
                   return <CustomReMessage {...props} onReact={() => {}} />;
+                }
+                if (message.customType == 'carousel') {
+                  return <CarouselMessage {...props} />;
                 }
                 return <Message {...props} />;
               }}
