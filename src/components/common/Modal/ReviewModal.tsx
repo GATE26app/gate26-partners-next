@@ -68,8 +68,8 @@ function ReviewModal({
     message: '',
     type: 'confirm',
     okButtonName: '',
-    cbOk: () => {},
-    cbCancel: () => {},
+    cbOk: () => { },
+    cbCancel: () => { },
   });
   //리뷰 상세
   const {
@@ -253,14 +253,19 @@ function ReviewModal({
             )} */}
               {ReviewData?.data?.review?.images !== undefined &&
                 ReviewData?.data?.review?.images.length > 0 &&
-                ReviewData?.data?.review?.images.map((item) => {
+                ReviewData?.data?.review?.images.map((item, idx) => {
                   return (
-                    <SwiperSlide>
-                      <Box borderRadius={'12px'} overflow={'hidden'}>
-                        <Image
-                          width={'100%'}
-                          src={getImagePath(item.imagePath)}
-                        />
+                    <SwiperSlide key={idx}>
+                      <Box borderRadius={'12px'} overflow={'hidden'} placeItems={'center'} textAlign={'-webkit-center'}>
+                        <a href={getImagePath(item.imagePath)} target='_blank'>
+                          <Image
+                            alt={`review-image-${idx}`}
+                            // width={'400px'}
+                            height={'400px'}
+                            objectFit={'cover'}
+                            src={getImagePath(item.imagePath)}
+                          />
+                        </a>
                       </Box>
                     </SwiperSlide>
                   );
@@ -288,10 +293,10 @@ function ReviewModal({
                     placeholder="답글 내용을 입력해주세요."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    // value={data.shippingInvoice}
-                    // onChange={(e) =>
-                    //   setData({ ...data, shippingInvoice: e.target.value })
-                    // }
+                  // value={data.shippingInvoice}
+                  // onChange={(e) =>
+                  //   setData({ ...data, shippingInvoice: e.target.value })
+                  // }
                   />
                   <InputRightElement>
                     <Flex pr={'5px'} onClick={() => onCommentSubmit()}>
