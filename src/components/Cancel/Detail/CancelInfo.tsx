@@ -169,7 +169,7 @@ function CancelInfo({ info }: Props) {
             flexShrink={0}
             color={ColorBlack}
           >
-            취소승인
+            취소요청사유
           </Text>
           <Flex gap={'10px'}>
             {/* <Flex
