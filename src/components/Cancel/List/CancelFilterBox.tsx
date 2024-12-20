@@ -269,7 +269,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                 });
               }}
             />
-            <CustomButton
+            {/* <CustomButton
               px={'14px'}
               py={'11px'}
               borderColor={
@@ -287,7 +287,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                   orderStatus: 4,
                 });
               }}
-            />
+            /> */}
           </Flex>
         </Flex>
       </Flex>
