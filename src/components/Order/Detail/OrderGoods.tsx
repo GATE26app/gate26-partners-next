@@ -41,7 +41,7 @@ export const orderGoodheader = [
   },
   {
     id: 'requiredPartnerCancelConfirm',
-    name: '파트너취소승인해당여부',
+    name: '취소승인여부',
     width: '15%',
   },
   {
