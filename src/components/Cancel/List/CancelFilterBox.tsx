@@ -221,7 +221,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                   : ColorWhite
               }
               borderRadius={'10px'}
-              text="취소승인"
+              text="취소거절"
               fontSize={'15px'}
               color={
                 request.cancelStatus?.length == 1 &&
@@ -253,7 +253,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                   : ColorWhite
               }
               borderRadius={'10px'}
-              text="취소반려"
+              text="취소승인"
               fontSize={'15px'}
               color={
                 request.cancelStatus?.length == 1 &&
@@ -269,7 +269,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                 });
               }}
             />
-            <CustomButton
+            {/* <CustomButton
               px={'14px'}
               py={'11px'}
               borderColor={
@@ -287,7 +287,7 @@ function CancelFilterBox({ request, setRequest, search, setSearch }: Props) {
                   orderStatus: 4,
                 });
               }}
-            />
+            /> */}
           </Flex>
         </Flex>
       </Flex>
