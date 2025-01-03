@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 import { Box, Flex, Text } from '@chakra-ui/react';
@@ -32,6 +32,7 @@ import {
 
 function MainHeader() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const getSendBird = searchParams.get('sendBird');
   const getSendbirdUrl = searchParams.get('sendbirdUrl');
@@ -132,6 +133,11 @@ function MainHeader() {
       setChat(true);
     }
   }, []);
+
+  // 경로 변경 시 마다 채팅창 닫기
+  useEffect(() => {
+    setChat(false);
+  }, [pathname]);
 
   return (
     <>
