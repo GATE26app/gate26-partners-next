@@ -1,51 +1,44 @@
-import React, { useEffect, useRef, useState } from 'react';
-import '@sendbird/uikit-react/dist/index.css';
-import { Box, Flex, Image, Input, Text, useToast } from '@chakra-ui/react';
 import {
   ColorBackRed,
   ColorBlack,
-  ColorInputBorder,
   ColorRed,
   ColorRed50,
   ColorRedOpa,
-  ColorWhite,
+  ColorWhite
 } from '@/utils/_Palette';
+import { Box, Flex, Text, useToast } from '@chakra-ui/react';
+import '@sendbird/uikit-react/dist/index.css';
+import React, { useEffect, useState } from 'react';
 // import { Channel, ChannelList, SendBirdProvider } from 'sendbird-uikit';
+import { usePartnerZuInfo } from '@/_store/PartnerInfo';
+import {
+  CreateAdminMessage,
+  CreateFileYouMessage,
+  CreateUserMessage,
+  CreateUserYouMessage
+} from '@/apis/sendbird/chatUtils';
+import sendBirdApi from '@/apis/sendbird/SendBirdApi';
+import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
+import { getImagePath } from '@/utils/format';
+import {
+  getSendBirdToken,
+  getToken
+} from '@/utils/localStorage/token';
+import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
+import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
+import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
+import { useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
+import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
+import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
 import SendbirdProvider, {
   useSendbirdStateContext,
 } from '@sendbird/uikit-react/SendbirdProvider';
-import ChannelSettings from '@sendbird/uikit-react/ChannelSettings';
-import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
-import { useGroupChannelContext } from '@sendbird/uikit-react/GroupChannel/context';
-import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
-import { GroupChannelList } from '@sendbird/uikit-react/GroupChannelList';
 import kr from 'date-fns/locale/ko';
-import { usePartnerZuInfo } from '@/_store/PartnerInfo';
-import { getImagePath, imgPath } from '@/utils/format';
-import {
-  getSendBirdToken,
-  getToken,
-  setToken,
-} from '@/utils/localStorage/token';
+import { useQuery } from 'react-query';
+import CarouselMessage from './CarouselMessage';
 import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
-import { useGetBackUpChatListQuery } from '@/apis/sendbird/SendBirdApi.query';
-import GroupChannelListHeader from '@sendbird/uikit-react/GroupChannelList/components/GroupChannelListHeader';
-import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
-import useMenuList from '@sendbird/uikit-react/ChannelSettings/hooks/useMenuList';
-import { MenuListByRole } from '@sendbird/uikit-react/ChannelSettings/components/ChannelSettingMenuList';
-import {
-  CreateAdminMessage,
-  CreateFileMessage,
-  CreateFileYouMessage,
-  CreateUserMessage,
-  CreateUserYouMessage,
-} from '@/apis/sendbird/chatUtils';
-import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
-import sendBirdApi from '@/apis/sendbird/SendBirdApi';
-import { useQuery } from 'react-query';
 import './style.css';
-import CarouselMessage from './CarouselMessage';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -61,7 +54,7 @@ const CustomConnectionHandler = () => {
     if (sdk.currentUser) {
       sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
     }
-  } catch (error) {}
+  } catch (error) { }
   return null;
 };
 
@@ -130,7 +123,7 @@ function ChatComponent() {
     MENTION_COUNT__OVER_LIMIT: '한 번에 최대 %d번 멘션할 수 있습니다.',
     UI__FILE_VIEWER__UNSUPPORT: '지원되지 않는 메시지',
     // 기능 - 음성 메시지
-    VOICE_RECORDING_PERMISSION_DENIED: `음성 녹음이 불가능합니다. 
+    VOICE_RECORDING_PERMISSION_DENIED: `음성 녹음이 불가능합니다.
       장치 시스템 설정에서 음성 녹음이 허용되지 않았습니다.`,
     VOICE_MESSAGE: '음성 메시지',
     // 채널 미리보기 마지막 메시지 파일 유형 표시 문자열
@@ -330,6 +323,39 @@ function ChatComponent() {
     }
   };
 
+  /*
+    한글은 조합형 문자이기 때문에, 키를 입력할 때 초성, 중성, 종성이 결합하는 과정에서 여러 번의 입력 이벤트가 발생합니다.
+    keydown → compositionstart → 여러 번의 keydown 및 compositionupdate → compositionend → input 이벤트 순으로 동작합니다.
+
+    해결법: compositionstart, compositionupdate, compositionend 이벤트를 사용하여 조합 상태를 감지할 수 있습니다. 조합 중인 상태에서는 keydown 이벤트를 무시하면 됩니다.
+  */
+  let isComposing = false; // 한글 조합 상태를 추적
+
+  const handleKeyDown = (keyEvent: KeyboardEvent) => {
+    // 조합 중인 경우 이벤트 무시
+    if (isComposing) {
+      return;
+    }
+
+    if (keyEvent.code === 'Enter' && !keyEvent.shiftKey) {
+      // messageInputRef에 내용이 있는 경우 메시지 전송
+      if (_context.messageInputRef.current.innerHTML !== '') {
+        _context.sendUserMessage({ message: _context.messageInputRef.current.innerText });
+        setTimeout(() => {
+          _context.messageInputRef.current.innerHTML = '';
+        }, 10);
+      }
+    }
+  };
+
+  const handleCompositionStart = () => {
+    isComposing = true; // 한글 조합 시작
+  };
+
+  const handleCompositionEnd = () => {
+    isComposing = false; // 한글 조합 종료
+  };
+
   useEffect(() => {
     setFirst(false);
   }, []);
@@ -347,7 +373,7 @@ function ChatComponent() {
   useEffect(() => {
     // body 스크롤 안되게 막기
     document.body.style.cssText = `
-      position: fixed; 
+      position: fixed;
       top: -${window.scrollY}px;
       overflow-y: scroll;
       width: 100%;`;
@@ -546,7 +572,7 @@ function ChatComponent() {
         // 스크롤 이벤트 리스너 등록
         sc.addEventListener('scroll', handleScroll);
       }
-    } catch (error) {}
+    } catch (error) { }
     // 컴포넌트 언마운트 시 이벤트 리스너 해제
     return () => {
       if (sc) {
@@ -557,6 +583,7 @@ function ChatComponent() {
 
   const CustomMessageInput = () => {
     const { sendUserMessage, hasNext } = useGroupChannelContext();
+
     const context = useGroupChannelContext();
     if (context) {
       const isPrev = context.hasPrevious();
@@ -614,7 +641,11 @@ function ChatComponent() {
           stringSet={stringSet}
         >
           <CustomConnectionHandler />
-          <Flex flexDirection={'row'} h={'100%'} alignItems={'stretch'}>
+          <Flex flexDirection={'row'} h={'100%'} alignItems={'stretch'}
+            onKeyDown={handleKeyDown}
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+          >
             <GroupChannelList
               channelListQueryParams={queryParmas}
               renderHeader={(props) => (
@@ -635,10 +666,10 @@ function ChatComponent() {
                           }}
                           src={
                             partnerInfo.images !== undefined &&
-                            partnerInfo.images.length > 0
+                              partnerInfo.images.length > 0
                               ? getImagePath(
-                                  partnerInfo.images[0].thumbnailImagePath,
-                                )
+                                partnerInfo.images[0].thumbnailImagePath,
+                              )
                               : '/images/header/icon_header_user.png'
                           }
                           alt="이미지 업로드"
@@ -675,10 +706,10 @@ function ChatComponent() {
                 const message = props.message;
                 // console.log('message', message);
                 if (message.isFileMessage()) {
-                  return <CustomMessage {...props} onReact={() => {}} />;
+                  return <CustomMessage {...props} onReact={() => { }} />;
                 }
                 if (message.isUserMessage() && message.parentMessageId > 0) {
-                  return <CustomReMessage {...props} onReact={() => {}} />;
+                  return <CustomReMessage {...props} onReact={() => { }} />;
                 }
                 if (message.customType == 'carousel') {
                   return <CarouselMessage {...props} />;
