@@ -99,8 +99,8 @@ function UpdateGoodsComponentPage() {
     title: '',
     okButtonName: '',
     message: '',
-    cbOk: () => {},
-    cbCancel: () => {},
+    cbOk: () => { },
+    cbCancel: () => { },
   });
 
   const [attributeList, setAttributeList] = useState<GoodsAttributeListProps[]>(
@@ -162,6 +162,10 @@ function UpdateGoodsComponentPage() {
   >([]);
   const itemCode = getItemCode as string;
   const [logDisable, setLogDisable] = useState(false);
+
+  // 계속해서 refetch 되는 현상을 컨트롤하기 위한 변수
+  const [shouldFetch, setShouldFetch] = useState(true);
+
   const ToastComponent = (message: string) => {
     return toast({
       position: 'top',
@@ -180,7 +184,7 @@ function UpdateGoodsComponentPage() {
     {
       // staleTime: Infinity, // 데이터가 절대 오래되었다고 간주되지 않음
       // refetchInterval: false, // 자동 새로 고침 비활성화
-      enabled: !!itemCode,
+      enabled: shouldFetch && !!itemCode,
       onSuccess: ({ data }) => {
         if (data == undefined) {
           toast({
@@ -243,7 +247,7 @@ function UpdateGoodsComponentPage() {
         optionInputEndDate: detailData.data.optionInputEndDate, //상품 옵션입력 이용일시 생성구간 종료일
         autoConfirm: detailData.data.autoConfirm,
         requiredPartnerCancelConfirm:
-        detailData.data.requiredPartnerCancelConfirm, //0=>미해당, 1=>해당
+          detailData.data.requiredPartnerCancelConfirm, //0=>미해당, 1=>해당
       });
       setPlanList(detailData.data.schedules);
       setPolicyList(detailData.data.policies);
@@ -509,6 +513,7 @@ function UpdateGoodsComponentPage() {
   };
   useEffect(() => {
     setLoadingModal(isLoading);
+    setShouldFetch(false);
   }, [isLoading]);
 
   const previewData = {
@@ -707,9 +712,8 @@ function UpdateGoodsComponentPage() {
                     setModalState({
                       ...ModalState,
                       title: '상품 수정',
-                      message: `상품을 ${
-                        selectMenu == 1 ? '저장' : '업데이트'
-                      }하시겠습니까?`,
+                      message: `상품을 ${selectMenu == 1 ? '저장' : '업데이트'
+                        }하시겠습니까?`,
                       type: 'confirm',
                       okButtonName: '확인',
                       cbOk: () => {
@@ -807,7 +811,7 @@ function UpdateGoodsComponentPage() {
                 <Flex
                   alignItems={'center'}
                   justifyContent={'space-between'}
-                  // mt={'27px'}
+                // mt={'27px'}
                 >
                   <Flex>
                     <LogSelectBox
@@ -911,8 +915,8 @@ function UpdateGoodsComponentPage() {
                 setOptionList={setOptionList}
                 optionInputList={optionInputList}
                 setOptionInputList={setOptionInputList}
-                // goodsItemList={goodsItemList}
-                // setGoodsItemList={setGoodsItemList}
+              // goodsItemList={goodsItemList}
+              // setGoodsItemList={setGoodsItemList}
               />
             )}
             {selectMenu == 2 && (
