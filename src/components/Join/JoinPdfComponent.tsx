@@ -171,9 +171,12 @@ function JoinPdfComponent({ joinInfo, setJoinInfo }: Props) {
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           사업자등록증 파일첨부
         </Text>
-        <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
-          *
-        </Text>
+        {joinInfo.type == 1 && (
+          <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
+            *
+          </Text>
+        )}
+        
       </Flex>
       <Flex flexDirection={'column'} position={'relative'} w={'100px'}>
         {joinInfo?.files.filter((item) => item.type == 1).length > 0 &&
