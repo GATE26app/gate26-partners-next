@@ -70,7 +70,7 @@ function OptionPlus({
   const [optionType, setOptionType] = useState<number>(list.optionType); //옵션형, 날짜지정형
   const [optionInputType, setOptionInputType] = useState<number>(0); //상품 옵션유형 단독형, 조합형
   const [optionCnt, setOptionCnt] = useState<string>('1');
-  const [options, setOptions] = useState<Option[]>([]);
+
   const [optionNames, setOptionNames] = useState<string[]>([]);
   const [optionValues, setOptionValues] = useState<string[]>(
     Array(optionCnt).fill(''),
@@ -198,14 +198,7 @@ function OptionPlus({
     } else if (optionValues[0] == '') {
       ToastComponent('옵션값을 입력해주세요.');
     }
-    // else if (price.length == 0) {
-    //   ToastComponent('가격을 입력해주세요.');
-    // } else if (stock == 0) {
-    //   ToastComponent('재고를 입력해주세요.');
-    // }
     else {
-      // setOptionList([]);
-      // setOptions([])
       setList({ ...list, optionInputType: optionInputType });
       if (optionInputType == 0) {
         // 단독형
@@ -236,11 +229,10 @@ function OptionPlus({
               }
             });
           });
-          if (resultArray.length > 500) {
-            ToastComponent('500개 이하의 옵션을 선택해주세요.');
+          if (resultArray.length > 5000) {
+            ToastComponent('5000개 이하의 옵션을 선택해주세요.');
           } else {
             setOptionList(resultArray);
-            setOptions(resultArray);
           }
         } else {
           optionNames.forEach((name, index) => {
@@ -266,11 +258,10 @@ function OptionPlus({
               });
             }
           });
-          if (resultArray.length > 500) {
-            ToastComponent('500개 이하의 옵션을 선택해주세요.');
+          if (resultArray.length > 5000) {
+            ToastComponent('5000개 이하의 옵션을 선택해주세요.');
           } else {
             setOptionList(resultArray);
-            setOptions(resultArray);
           }
         }
       } else {
@@ -310,11 +301,10 @@ function OptionPlus({
           });
         }
       });
-      if (resultArray.length > 500) {
-        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      if (resultArray.length > 5000) {
+        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
       } else {
         setOptionList(resultArray);
-        setOptions(resultArray);
       }
     } else {
       if (firstOptions.includes('') || firstOptions.includes(' ')) {
@@ -337,11 +327,10 @@ function OptionPlus({
           });
         });
       }
-      if (resultArray.length > 500) {
-        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      if (resultArray.length > 5000) {
+        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
       } else {
         setOptionList(resultArray);
-        setOptions(resultArray);
       }
     }
   };
@@ -380,11 +369,11 @@ function OptionPlus({
           });
         }
       });
-      if (resultArray.length > 500) {
-        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      console.log('resultArray', resultArray)
+      if (resultArray.length > 5000) {
+        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
       } else {
         setOptionList(resultArray);
-        setOptions(resultArray);
       }
     } else {
       if (
@@ -414,11 +403,10 @@ function OptionPlus({
           });
         });
 
-        if (resultArray.length > 500) {
-          ToastComponent('500개 이하의 옵션을 선택해주세요.');
+        if (resultArray.length > 5000) {
+          ToastComponent('5000개 이하의 옵션을 선택해주세요.');
         } else {
           setOptionList(resultArray);
-          setOptions(resultArray);
         }
       }
     }
@@ -463,11 +451,10 @@ function OptionPlus({
           });
         }
       });
-      if (resultArray.length > 500) {
-        ToastComponent('500개 이하의 옵션을 선택해주세요.');
+      if (resultArray.length > 5000) {
+        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
       } else {
         setOptionList(resultArray);
-        setOptions(resultArray);
       }
     } else {
       if (
@@ -501,11 +488,10 @@ function OptionPlus({
           });
         });
       }
-      if (resultArray.length > 500) {
+      if (resultArray.length > 5000) {
         ToastComponent('500 이하의 옵션을 선택해주세요.');
       } else {
         setOptionList(resultArray);
-        setOptions(resultArray);
       }
     }
   };
@@ -513,13 +499,6 @@ function OptionPlus({
   const handleOptionCountChange = (num: number) => {
     const count: number = num;
     setOptionCnt(String(count));
-    // setOptionInputList(
-    //   Array(count).fill({
-    //     sort: count,
-    //     inputKey: '',
-    //     inputValue: '',
-    //   }),
-    // );
     const newItems = Array.from({ length: num }, (_, index) => ({
       sort: index + 1,
       inputKey: '',
@@ -703,7 +682,6 @@ function OptionPlus({
                 setOptionInputType(0);
                 // if (list.optionInputType == 1) {
                 setOptionList([]);
-                setOptions([]);
                 setOptionCnt('1');
                 setOptionInputList([
                   {
@@ -731,7 +709,6 @@ function OptionPlus({
                 setOptionInputType(1);
                 // if (list.optionInputType == 0) {
                 setOptionList([]);
-                setOptions([]);
                 setOptionCnt('1');
                 setOptionInputList([
                   {
@@ -841,8 +818,6 @@ function OptionPlus({
                   onChange={(e) =>
                     handleOptionNameChange(index, e.target.value)
                   }
-                  // value={item.optionName}
-                  // onChange={(e) => handleOptionValueChange(index, e.target.value)}
                 />
               </Flex>
               <Flex w={'300px'} flexDirection={'column'}>
@@ -861,7 +836,6 @@ function OptionPlus({
                   onChange={(e) =>
                     handleOptionValueChange(index, e.target.value)
                   }
-                  // onChange={(e) => onChangeData('value', index, e)}
                 />
               </Flex>
             </Flex>
@@ -897,7 +871,6 @@ function OptionPlus({
                 maxLength={15}
                 value={intComma(String(price))}
                 disabled={goodsInfo.LogItemDisable}
-                // onChange={handlePriceChange}
                 onChange={(e) => {
                   handlePriceChange(
                     Number(e.target.value.replace(/[^0-9]/g, '')),
