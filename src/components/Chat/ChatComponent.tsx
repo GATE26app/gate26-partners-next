@@ -383,6 +383,13 @@ function ChatComponent() {
       window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
     };
   }, []);
+  function replaceWords(text: string) {
+    // 'and'를 '와'로, 'joined'를 '입장하였습니다'로 교체
+    text = text.replaceAll(/\band\b/g, ','); // 'and'를 '와'로 변경 (단어로만 매칭)
+    text = text.replaceAll(/\bleft\b/g, '가 퇴장하였습니다'); // 'joined'를 '입장하였습니다'로 변경 (단어로만 매칭)
+    text = text.replaceAll(/\bjoined\b/g, '가 입장하였습니다'); // 'joined'를 '입장하였습니다'로 변경 (단어로만 매칭)
+    return text;
+  }
 
   // 백업 데이터 추가
   const add_list = async (list: any) => {
@@ -732,10 +739,48 @@ function ChatComponent() {
                 if (message.isUserMessage() && message.parentMessageId > 0) {
                   return <CustomReMessage {...props} onReact={() => {}} />;
                 }
+                if (message.messageType == 'admin') {
+                  return (
+                    <Flex justifyContent={'center'} my="8px">
+                      <Text
+                        textColor={'#757983'}
+                        fontSize="11px"
+                        fontWeight={400}
+                      >
+                        {replaceWords(message.message)}
+                      </Text>
+                    </Flex>
+                  );
+                }
                 if (message.customType == 'carousel') {
                   return <CarouselMessage {...props} />;
                 }
                 return <Message {...props} />;
+              }}
+              renderCustomSeparator={(props) => {
+                const messageDate = new Date(
+                  props.message.createdAt,
+                ).toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                });
+
+                return (
+                  <Flex justifyContent={'center'} my="8px">
+                    <Text
+                      textColor={'#757983'}
+                      fontSize="11px"
+                      backgroundColor={'#F2F3F4'}
+                      borderRadius="40px"
+                      py={'2px'}
+                      px={'10px'}
+                      fontWeight={400}
+                    >
+                      {messageDate}
+                    </Text>
+                  </Flex>
+                );
               }}
               renderMessageInput={() => (
                 <MessageInputWrapper
