@@ -28,6 +28,7 @@ import {
   deleteSendBirdToken,
   getSendBirdToken,
 } from '@/utils/localStorage/token/index';
+import { useChatZuInfo } from '@/_store/ChatInfo';
 // import { cookies } from 'next/headers';
 
 function MainHeader() {
@@ -38,8 +39,7 @@ function MainHeader() {
   const getSendbirdUrl = searchParams.get('sendbirdUrl');
   const { setPartnerZuInfo } = usePartnerZuInfo((state) => state);
   const { alarmInfo, setAlarmInfo } = useAlarmZuInfo((state) => state);
-  const [alram, setAlram] = useState(false);
-  const [chat, setChat] = useState(false);
+  const { chatStateInfo, setChatStateInfo } = useChatZuInfo((state) => state);
   const [logout, setLogout] = useState(false);
   const [alramModal, setAlramModal] = useState(false);
   const [chatModal, setChatModal] = useState(false);
@@ -48,6 +48,10 @@ function MainHeader() {
   const userId = getSendBirdToken().user_id;
   const accessToken = getSendBirdToken().sendBird;
   const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    setChatStateInfo({ openYn: false });
+  }, []);
 
   useEffect(() => {
     const sb = new SendBird({ appId });
@@ -127,16 +131,16 @@ function MainHeader() {
   });
   useEffect(() => {
     if (getSendBird == 'true') {
-      setChat(true);
+      setChatStateInfo({ openYn: true });
     }
     if (getSendbirdUrl) {
-      setChat(true);
+      setChatStateInfo({ openYn: true });
     }
   }, []);
 
   // 경로 변경 시 마다 채팅창 닫기
   useEffect(() => {
-    setChat(false);
+    setChatStateInfo({ openYn: false });
   }, [pathname]);
 
   return (
@@ -219,13 +223,15 @@ function MainHeader() {
           )}
         </Flex>
         <Box pr={'20px'} cursor={'pointer'}>
-          {chat ? (
+          {chatStateInfo.openYn ? (
             <Image
               src={'/images/header/ch_on.png'}
               width={49}
               height={49}
               alt="로고"
-              onClick={() => setChat(!chat)}
+              onClick={() =>
+                setChatStateInfo({ openYn: !chatStateInfo.openYn })
+              }
             />
           ) : (
             <Flex position={'relative'}>
@@ -234,7 +240,9 @@ function MainHeader() {
                 width={49}
                 height={49}
                 alt="로고"
-                onClick={() => setChat(!chat)}
+                onClick={() =>
+                  setChatStateInfo({ openYn: !chatStateInfo.openYn })
+                }
               />
               {unreadCount > 0 && (
                 <Flex
@@ -282,7 +290,7 @@ function MainHeader() {
             onClose={() => setAlramModal(false)}
           />
         )}
-        {chat && <ChatComponent />}
+        {chatStateInfo.openYn && <ChatComponent />}
       </Flex>
     </>
   );
