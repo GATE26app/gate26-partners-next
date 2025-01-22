@@ -4,9 +4,9 @@ import {
   ColorRed,
   ColorRed50,
   ColorRedOpa,
-  ColorWhite
+  ColorWhite,
 } from '@/utils/_Palette';
-import { Box, Flex, Text, useToast } from '@chakra-ui/react';
+import { Box, Flex, Text, useToast, Image } from '@chakra-ui/react';
 import '@sendbird/uikit-react/dist/index.css';
 import React, { useEffect, useState } from 'react';
 // import { Channel, ChannelList, SendBirdProvider } from 'sendbird-uikit';
@@ -15,15 +15,12 @@ import {
   CreateAdminMessage,
   CreateFileYouMessage,
   CreateUserMessage,
-  CreateUserYouMessage
+  CreateUserYouMessage,
 } from '@/apis/sendbird/chatUtils';
 import sendBirdApi from '@/apis/sendbird/SendBirdApi';
 import { useChatBackUpMessageMutation } from '@/apis/sendbird/SendBirdApi.mutation';
 import { getImagePath } from '@/utils/format';
-import {
-  getSendBirdToken,
-  getToken
-} from '@/utils/localStorage/token';
+import { getSendBirdToken, getToken } from '@/utils/localStorage/token';
 import { GroupChannel } from '@sendbird/uikit-react/GroupChannel';
 import { Message } from '@sendbird/uikit-react/GroupChannel/components/Message';
 import { MessageInputWrapper } from '@sendbird/uikit-react/GroupChannel/components/MessageInputWrapper';
@@ -39,6 +36,7 @@ import CarouselMessage from './CarouselMessage';
 import CustomMessage from './CustomMessage';
 import CustomReMessage from './CustomReMessage';
 import './style.css';
+import { useChatZuInfo } from '@/_store/ChatInfo';
 const myColorSet = {
   '--sendbird-light-primary-500': ColorRedOpa,
   '--sendbird-light-primary-400': ColorRed50,
@@ -54,7 +52,7 @@ const CustomConnectionHandler = () => {
     if (sdk.currentUser) {
       sdk.registerFCMPushTokenForCurrentUser(getToken().fcm);
     }
-  } catch (error) { }
+  } catch (error) {}
   return null;
 };
 
@@ -308,7 +306,7 @@ function ChatComponent() {
   const [lastListLength, setLastListLength] = useState(0);
   const [firstState, setFirstState] = useState(true);
   const [list, setList] = useState([]);
-
+  const { chatStateInfo, setChatStateInfo } = useChatZuInfo((state) => state);
   const [menu, setMenu] = useState(false);
 
   const [first, setFirst] = useState(false);
@@ -340,7 +338,9 @@ function ChatComponent() {
     if (keyEvent.code === 'Enter' && !keyEvent.shiftKey) {
       // messageInputRef에 내용이 있는 경우 메시지 전송
       if (_context.messageInputRef.current.innerHTML !== '') {
-        _context.sendUserMessage({ message: _context.messageInputRef.current.innerText });
+        _context.sendUserMessage({
+          message: _context.messageInputRef.current.innerText,
+        });
         setTimeout(() => {
           _context.messageInputRef.current.innerHTML = '';
         }, 10);
@@ -572,7 +572,7 @@ function ChatComponent() {
         // 스크롤 이벤트 리스너 등록
         sc.addEventListener('scroll', handleScroll);
       }
-    } catch (error) { }
+    } catch (error) {}
     // 컴포넌트 언마운트 시 이벤트 리스너 해제
     return () => {
       if (sc) {
@@ -640,8 +640,29 @@ function ChatComponent() {
           colorSet={myColorSet}
           stringSet={stringSet}
         >
+          <Flex
+            position={'fixed'}
+            zIndex={'9999'}
+            width={'60px'}
+            top={'90px'}
+            right={'60px'}
+            borderRadius={'100%'}
+            onClick={() => setChatStateInfo({ openYn: false })}
+          >
+            <Image
+              src={'/images/commerce/ico_close_opton.png'}
+              w={'30px'}
+              h={'30px'}
+              position={'absolute'}
+              left={'14px'}
+              top={'14px'}
+            />
+          </Flex>
           <CustomConnectionHandler />
-          <Flex flexDirection={'row'} h={'100%'} alignItems={'stretch'}
+          <Flex
+            flexDirection={'row'}
+            h={'100%'}
+            alignItems={'stretch'}
             onKeyDown={handleKeyDown}
             onCompositionStart={handleCompositionStart}
             onCompositionEnd={handleCompositionEnd}
@@ -666,10 +687,10 @@ function ChatComponent() {
                           }}
                           src={
                             partnerInfo.images !== undefined &&
-                              partnerInfo.images.length > 0
+                            partnerInfo.images.length > 0
                               ? getImagePath(
-                                partnerInfo.images[0].thumbnailImagePath,
-                              )
+                                  partnerInfo.images[0].thumbnailImagePath,
+                                )
                               : '/images/header/icon_header_user.png'
                           }
                           alt="이미지 업로드"
@@ -706,10 +727,10 @@ function ChatComponent() {
                 const message = props.message;
                 // console.log('message', message);
                 if (message.isFileMessage()) {
-                  return <CustomMessage {...props} onReact={() => { }} />;
+                  return <CustomMessage {...props} onReact={() => {}} />;
                 }
                 if (message.isUserMessage() && message.parentMessageId > 0) {
-                  return <CustomReMessage {...props} onReact={() => { }} />;
+                  return <CustomReMessage {...props} onReact={() => {}} />;
                 }
                 if (message.customType == 'carousel') {
                   return <CarouselMessage {...props} />;
