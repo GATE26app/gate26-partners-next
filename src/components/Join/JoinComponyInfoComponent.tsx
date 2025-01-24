@@ -78,9 +78,11 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           사업자등록번호
         </Text>
-        <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
-          *
-        </Text>
+        {joinInfo.type == 1 && (
+          <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
+            *
+          </Text>
+        )}
       </Flex>
       <Flex flexDirection={'row'} justifyContent={'flex-end'}>
         <InputBox
@@ -102,9 +104,11 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
         <Text fontSize={'16px'} fontWeight={600} color={ColorBlack}>
           업태/업종
         </Text>
-        <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
-          *
-        </Text>
+        {joinInfo.type == 1 && (
+          <Text fontSize={'16px'} fontWeight={600} color={ColorRed}>
+            *
+          </Text>
+        )}
       </Flex>
       <Flex
         flexDirection={'row'}
@@ -224,44 +228,52 @@ function JoinComponyInfoComponent({ joinInfo, setJoinInfo }: Props) {
           // mb={'10px'}
           w={'70%'}
         /> */}
-        <Box
-          w={'73%'}
-          borderRadius={'10px'}
-          borderWidth={1}
-          borderColor={ColorInputBorder}
-          px={'15px'}
-          py={'11px'}
-        >
-          <Text
-            fontSize={'15px'}
-            fontWeight={400}
-            color={joinInfo.address == '' ? ColorGray700 : ColorBlack}
-          >
-            {joinInfo.address == '' ? '주소 입력' : joinInfo.address}
-          </Text>
-        </Box>
-        <CustomButton
-          bgColor={ColorBlack}
-          color={ColorWhite}
-          fontSize="15px"
-          text="주소검색"
-          px="29px"
-          py="13px"
-          borderColor={ColorBlack}
-          onClick={() => {
-            if (joinInfo.type == 2) setGoogleModal(true);
-            else setAddressModal(true);
-          }}
-        />
+        {joinInfo.type == 1 && (
+          <>
+            <Box
+              w={'73%'}
+              borderRadius={'10px'}
+              borderWidth={1}
+              borderColor={ColorInputBorder}
+              px={'15px'}
+              py={'11px'}
+            >
+              <Text
+                fontSize={'15px'}
+                fontWeight={400}
+                color={joinInfo.address == '' ? ColorGray700 : ColorBlack}
+              >
+                {joinInfo.address == '' ? '주소 입력' : joinInfo.address}
+              </Text>
+            </Box>
+            <CustomButton
+              bgColor={ColorBlack}
+              color={ColorWhite}
+              fontSize="15px"
+              text="주소검색"
+              px="29px"
+              py="13px"
+              borderColor={ColorBlack}
+              onClick={() => {
+                setAddressModal(true);
+              }}
+            />
+          </>
+        )}
       </Flex>
       <Flex flexDirection={'row'} justifyContent={'flex-end'} mt={'10px'}>
         <InputBox
-          placeholder="상세주소"
-          value={joinInfo.addressDetail}
-          onChange={(e) =>
+          placeholder={joinInfo.type == 1 ? "상세주소" : "주소 입력"}
+          value={joinInfo.type == 1 ? joinInfo.addressDetail : joinInfo.address}
+          onChange={(e) => 
+            joinInfo.type == 1 ?
             setJoinInfo({
               ...joinInfo,
               addressDetail: e.target.value,
+            })
+            : setJoinInfo({
+              ...joinInfo,
+              address: e.target.value,
             })
           }
         />
