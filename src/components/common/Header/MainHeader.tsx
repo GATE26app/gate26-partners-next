@@ -100,7 +100,10 @@ function MainHeader() {
         setUnreadCount(count);
       });
     };
-  }, [appId, userId, accessToken]);
+    if (chatStateInfo.openYn) {
+      updateUnreadCount(); // 채팅창을 열었을 때, unreadCount 강제 갱신
+    }
+  }, [appId, userId, accessToken, chatStateInfo.openYn]);
 
   const onLogout = () => {
     deleteUserInfo();
