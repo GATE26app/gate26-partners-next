@@ -71,8 +71,8 @@ function CreateGoodsComponentPage() {
     message: '',
     type: 'alert',
     okButtonName: '',
-    cbOk: () => {},
-    cbCancel: () => {},
+    cbOk: () => { },
+    cbCancel: () => { },
   });
   const toast = useToast();
   const [BasicInfo, setBasicInfo] = useState<GoodsBasicProps>({
@@ -175,9 +175,8 @@ function CreateGoodsComponentPage() {
           setModalState({
             ...ModalState,
             title: `상품 ${BasicInfo.status == 0 ? '임시저장' : '승인요청'}`,
-            message: `상품 ${
-              BasicInfo.status == 0 ? '임시저장' : '승인요청'
-            } 되었습니다.`,
+            message: `상품 ${BasicInfo.status == 0 ? '임시저장' : '승인요청'
+              } 되었습니다.`,
             type: 'alert',
             okButtonName: '확인',
             cbOk: () => {
@@ -298,9 +297,9 @@ function CreateGoodsComponentPage() {
       } else if (optionList.length == 0) {
         setDiableBtn(false);
         ToastComponent('옵션을 선택해 입력해주세요.');
-      } else if (optionList.length >= 1000) {
+      } else if (optionList.length >= 10000) {
         setDiableBtn(false);
-        ToastComponent('옵션은 1000개까지 등록 가능합니다.');
+        ToastComponent('옵션은 10000개까지 등록 가능합니다.');
       } else {
         CreateItemMutate(PostData);
       }
