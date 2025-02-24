@@ -22,8 +22,9 @@ import {
 import { intComma } from '@/utils/format';
 
 import { useGoodsStateZuInfo } from '@/_store/StateZuInfo';
+import OptionPreview from '@/components/Goods/Option/OptionPreview';
 
-interface Option {
+export interface Option {
   sort: number;
   type: number;
   depth: number;
@@ -75,6 +76,7 @@ function OptionPlus({
   const [optionValues, setOptionValues] = useState<string[]>(
     Array(optionCnt).fill(''),
   );
+  const [optionPreviews, setOptionPreviews] = useState<Option[]>([]);
 
   useEffect(() => {
     if (optionList.length > 0) {
@@ -192,310 +194,6 @@ function OptionPlus({
   }, [optionList]);
 
   //옵션 선택
-  const handleOptionSubmit = () => {
-    if (optionNames[0] == '') {
-      ToastComponent('옵션명을 입력해주세요.');
-    } else if (optionValues[0] == '') {
-      ToastComponent('옵션값을 입력해주세요.');
-    }
-    else {
-      setList({ ...list, optionInputType: optionInputType });
-      if (optionInputType == 0) {
-        // 단독형
-        let resultArray: Option[] = [];
-        if (DateList.length > 0) {
-          DateList.forEach((date) => {
-            optionNames.forEach((name, index) => {
-              const values = optionValues[index].split(','); // 문자열을 배열로 변환
-              if (values.includes('') || values.includes(' ')) {
-                ToastComponent('옵션값을 다시 확인해주세요.');
-              } else {
-                values.forEach((value) => {
-                  resultArray.push({
-                    sort: index,
-                    type: optionType,
-                    depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                    useDateTime: `${date} 12:00:00`,
-                    firstKey: name,
-                    firstValue: value.trim(),
-                    secondKey: '',
-                    secondValue: '',
-                    thirdKey: '',
-                    thirdValue: '',
-                    stockCnt: stock == 0 ? 0 : stock,
-                    price: price == 0 ? 0 : price,
-                  });
-                });
-              }
-            });
-          });
-          if (resultArray.length > 5000) {
-            ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-          } else {
-            setOptionList(resultArray);
-          }
-        } else {
-          optionNames.forEach((name, index) => {
-            const values = optionValues[index].split(','); // 문자열을 배열로 변환
-            if (values.includes('') || values.includes(' ')) {
-              ToastComponent('옵션값을 다시 확인해주세요.');
-            } else {
-              values.forEach((value) => {
-                resultArray.push({
-                  sort: index,
-                  type: optionType,
-                  depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                  useDateTime: '',
-                  firstKey: name,
-                  firstValue: value.trim(),
-                  secondKey: '',
-                  secondValue: '',
-                  thirdKey: '',
-                  thirdValue: '',
-                  stockCnt: stock == 0 ? 0 : stock,
-                  price: price == 0 ? 0 : price,
-                });
-              });
-            }
-          });
-          if (resultArray.length > 5000) {
-            ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-          } else {
-            setOptionList(resultArray);
-          }
-        }
-      } else {
-        if (Number(optionCnt) == 1) {
-          handleFirstValueChange();
-        } else if (Number(optionCnt) == 2) {
-          handleSecondValueChange();
-        } else if (Number(optionCnt) == 3) {
-          handleThirdValueChange();
-        }
-      }
-    }
-  };
-  const handleFirstValueChange = () => {
-    let resultArray: Option[] = [];
-    const firstOptions = optionValues[0].split(',');
-    if (DateList.length > 0) {
-      DateList.forEach((date) => {
-        if (firstOptions.includes('') || firstOptions.includes(' ')) {
-          ToastComponent('옵션값을 다시 확인해주세요.');
-        } else {
-          firstOptions.forEach((firstValue) => {
-            resultArray.push({
-              sort: 1,
-              type: optionType,
-              depth: optionInputType == 0 ? 1 : Number(optionCnt),
-              useDateTime: `${date} 12:00:00`,
-              firstKey: optionNames[0],
-              firstValue: firstValue.trim(),
-              secondKey: '',
-              secondValue: '',
-              thirdKey: '',
-              thirdValue: '',
-              stockCnt: stock == 0 ? 0 : stock,
-              price: price == 0 ? 0 : price,
-            });
-          });
-        }
-      });
-      if (resultArray.length > 5000) {
-        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-      } else {
-        setOptionList(resultArray);
-      }
-    } else {
-      if (firstOptions.includes('') || firstOptions.includes(' ')) {
-        ToastComponent('옵션값을 다시 확인해주세요.');
-      } else {
-        firstOptions.forEach((firstValue) => {
-          resultArray.push({
-            type: optionType,
-            depth: optionInputType == 0 ? 1 : Number(optionCnt),
-            useDateTime: '',
-            firstKey: optionNames[0],
-            firstValue: firstValue.trim(),
-            secondKey: '',
-            secondValue: '',
-            thirdKey: '',
-            thirdValue: '',
-            sort: 1,
-            stockCnt: stock == 0 ? 0 : stock,
-            price: price == 0 ? 0 : price,
-          });
-        });
-      }
-      if (resultArray.length > 5000) {
-        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-      } else {
-        setOptionList(resultArray);
-      }
-    }
-  };
-
-  const handleSecondValueChange = () => {
-    let resultArray: Option[] = [];
-    const firstOptions = optionValues[0].split(',');
-    const secondOptions = optionValues[1].split(',');
-    if (DateList.length > 0) {
-      DateList.forEach((date) => {
-        if (
-          firstOptions.includes('') ||
-          secondOptions.includes('') ||
-          firstOptions.includes(' ') ||
-          secondOptions.includes(' ')
-        ) {
-          ToastComponent('옵션값을 다시 확인해주세요.');
-        } else {
-          firstOptions.forEach((firstValue) => {
-            secondOptions.forEach((secondValue) => {
-              resultArray.push({
-                type: optionType,
-                depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                useDateTime: `${date} 12:00:00`,
-                firstKey: optionNames[0],
-                firstValue: firstValue.trim(),
-                secondKey: optionNames[1],
-                secondValue: secondValue.trim(),
-                thirdKey: '',
-                thirdValue: '',
-                sort: 1,
-                stockCnt: stock == 0 ? 0 : stock,
-                price: price == 0 ? 0 : price,
-              });
-            });
-          });
-        }
-      });
-      console.log('resultArray', resultArray)
-      if (resultArray.length > 5000) {
-        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-      } else {
-        setOptionList(resultArray);
-      }
-    } else {
-      if (
-        firstOptions.includes('') ||
-        secondOptions.includes('') ||
-        firstOptions.includes(' ') ||
-        secondOptions.includes(' ')
-      ) {
-        ToastComponent('옵션값을 다시 확인해주세요.');
-      } else {
-        firstOptions.forEach((firstValue) => {
-          secondOptions.forEach((secondValue) => {
-            resultArray.push({
-              type: optionType,
-              depth: optionInputType == 0 ? 1 : Number(optionCnt),
-              useDateTime: '',
-              firstKey: optionNames[0],
-              firstValue: firstValue.trim(),
-              secondKey: optionNames[1],
-              secondValue: secondValue.trim(),
-              thirdKey: '',
-              thirdValue: '',
-              sort: 1,
-              stockCnt: stock == 0 ? 0 : stock,
-              price: price == 0 ? 0 : price,
-            });
-          });
-        });
-
-        if (resultArray.length > 5000) {
-          ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-        } else {
-          setOptionList(resultArray);
-        }
-      }
-    }
-  };
-
-  const handleThirdValueChange = () => {
-    let resultArray: Option[] = [];
-    const firstOptions = optionValues[0].split(',');
-    const secondOptions = optionValues[1].split(',');
-    const thirdOptions = optionValues[2].split(',');
-    if (DateList.length > 0) {
-      DateList.forEach((date) => {
-        if (
-          firstOptions.includes('') ||
-          secondOptions.includes('') ||
-          thirdOptions.includes('') ||
-          firstOptions.includes(' ') ||
-          secondOptions.includes(' ') ||
-          thirdOptions.includes(' ')
-        ) {
-          ToastComponent('옵션값을 다시 확인해주세요.');
-        } else {
-          firstOptions.forEach((firstValue) => {
-            secondOptions.forEach((secondValue) => {
-              thirdOptions.forEach((thirdValue) => {
-                resultArray.push({
-                  type: optionType,
-                  depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                  useDateTime: `${date} 12:00:00`,
-                  firstKey: optionNames[0],
-                  firstValue: firstValue.trim(),
-                  secondKey: optionNames[1],
-                  secondValue: secondValue.trim(),
-                  thirdKey: optionNames[2],
-                  thirdValue: thirdValue.trim(),
-                  sort: 1,
-                  stockCnt: stock == 0 ? 0 : stock,
-                  price: price == 0 ? 0 : price,
-                });
-              });
-            });
-          });
-        }
-      });
-      if (resultArray.length > 5000) {
-        ToastComponent('5000개 이하의 옵션을 선택해주세요.');
-      } else {
-        setOptionList(resultArray);
-      }
-    } else {
-      if (
-        firstOptions.includes('') ||
-        secondOptions.includes('') ||
-        thirdOptions.includes('') ||
-        firstOptions.includes(' ') ||
-        secondOptions.includes(' ') ||
-        thirdOptions.includes(' ')
-      ) {
-        ToastComponent('옵션값을 다시 확인해주세요.');
-      } else {
-        firstOptions.forEach((firstValue) => {
-          secondOptions.forEach((secondValue) => {
-            thirdOptions.forEach((thirdValue) => {
-              resultArray.push({
-                type: optionType,
-                depth: optionInputType == 0 ? 1 : Number(optionCnt),
-                useDateTime: '',
-                firstKey: optionNames[0],
-                firstValue: firstValue.trim(),
-                secondKey: optionNames[1],
-                secondValue: secondValue.trim(),
-                thirdKey: optionNames[2],
-                thirdValue: thirdValue.trim(),
-                sort: 1,
-                stockCnt: stock == 0 ? 0 : stock,
-                price: price == 0 ? 0 : price,
-              });
-            });
-          });
-        });
-      }
-      if (resultArray.length > 5000) {
-        ToastComponent('500 이하의 옵션을 선택해주세요.');
-      } else {
-        setOptionList(resultArray);
-      }
-    }
-  };
-
   const handleOptionCountChange = (num: number) => {
     const count: number = num;
     setOptionCnt(String(count));
@@ -527,6 +225,8 @@ function OptionPlus({
     setOptionValues(newValues);
     setOptionInputList(updateKey);
   };
+
+
   const handlePriceChange = (text: number) => {
     setPrice(text);
   };
@@ -534,6 +234,192 @@ function OptionPlus({
   const handleStockChange = (text: string) => {
     setStock(text == '' ? 0 : parseInt(text));
   };
+
+  // 옵션 일괄 수정 후 생성하기 위함
+  const handleOptionPreview = () => {
+    if (optionNames[0] == '') {
+      ToastComponent('옵션명을 입력해주세요.');
+    } else if (optionValues[0] == '') {
+      ToastComponent('옵션값을 입력해주세요.');
+    } else {
+      // 단독형
+      if (optionInputType == 0) {
+        let optionPreviews: Option[] = [];
+        optionNames.forEach((name, index) => {
+          const values = optionValues[index].split(','); // 문자열을 배열로 변환
+          if (values.includes('') || values.includes(' ')) {
+            ToastComponent('옵션값을 다시 확인해주세요.');
+          } else {
+            values.forEach((value) => {
+              optionPreviews.push({
+                sort: index,
+                type: optionType,
+                depth: optionInputType == 0 ? 1 : Number(optionCnt),
+                useDateTime: '',
+                firstKey: name,
+                firstValue: value.trim(),
+                secondKey: '',
+                secondValue: '',
+                thirdKey: '',
+                thirdValue: '',
+                stockCnt: stock == 0 ? 0 : stock,
+                price: price == 0 ? 0 : price,
+              });
+            });
+          }
+        });
+        setOptionPreviews(optionPreviews);
+        // 조합형
+      } else {
+        if (Number(optionCnt) == 1) {
+          handleFirstOptionPreview();
+        } else if (Number(optionCnt) == 2) {
+          handleSecondOptionPreview();
+        } else if (Number(optionCnt) == 3) {
+          handleThirdOptionPreview();
+        }
+      }
+    }
+  }
+
+  const handleFirstOptionPreview = () => {
+    let optionPreviews: Option[] = [];
+    const firstOptions = optionValues[0].split(',');
+    if (firstOptions.includes('') || firstOptions.includes(' ')) {
+      ToastComponent('옵션값을 다시 확인해주세요.');
+      return;
+    }
+
+    firstOptions.forEach((firstValue) => {
+      optionPreviews.push({
+        sort: 1,
+        type: optionType,
+        depth: optionInputType == 0 ? 1 : Number(optionCnt),
+        useDateTime: `${date} 12:00:00`,
+        firstKey: optionNames[0],
+        firstValue: firstValue.trim(),
+        secondKey: '',
+        secondValue: '',
+        thirdKey: '',
+        thirdValue: '',
+        stockCnt: stock == 0 ? 0 : stock,
+        price: price == 0 ? 0 : price,
+      });
+    });
+
+    setOptionPreviews(optionPreviews);
+  };
+
+  const handleSecondOptionPreview = () => {
+    let optionPreviews: Option[] = [];
+    const firstOptions = optionValues[0].split(',');
+    const secondOptions = optionValues[1].split(',');
+    if (
+      firstOptions.includes('') ||
+      secondOptions.includes('') ||
+      firstOptions.includes(' ') ||
+      secondOptions.includes(' ')
+    ) {
+      ToastComponent('옵션값을 다시 확인해주세요.');
+      return;
+    }
+
+    for (const firstValue of firstOptions) {
+      for (const secondValue of secondOptions) {
+        optionPreviews.push({
+          type: optionType,
+          depth: optionInputType == 0 ? 1 : Number(optionCnt),
+          useDateTime: `${DateList[0]} 12:00:00`,
+          firstKey: optionNames[0],
+          firstValue: firstValue.trim(),
+          secondKey: optionNames[1],
+          secondValue: secondValue.trim(),
+          thirdKey: '',
+          thirdValue: '',
+          sort: 1,
+          stockCnt: stock == 0 ? 0 : stock,
+          price: price == 0 ? 0 : price,
+        });
+      }
+    }
+    console.log('firstOptions', firstOptions);
+    console.log('secondOptions', secondOptions);
+
+    setOptionPreviews(optionPreviews);
+  };
+
+  const handleThirdOptionPreview = () => {
+    let optionPreviews: Option[] = [];
+    const firstOptions = optionValues[0].split(',');
+    const secondOptions = optionValues[1].split(',');
+    const thirdOptions = optionValues[2].split(',');
+    if (
+      firstOptions.includes('') ||
+      secondOptions.includes('') ||
+      thirdOptions.includes('') ||
+      firstOptions.includes(' ') ||
+      secondOptions.includes(' ') ||
+      thirdOptions.includes(' ')
+    ) {
+      ToastComponent('옵션값을 다시 확인해주세요.');
+      return;
+    }
+
+    for (const firstValue of firstOptions) {
+      for (const secondValue of secondOptions) {
+        for (const thirdValue of thirdOptions) {
+          optionPreviews.push({
+            type: optionType,
+            depth: optionInputType == 0 ? 1 : Number(optionCnt),
+            useDateTime: `${DateList[0]} 12:00:00`,
+            firstKey: optionNames[0],
+            firstValue: firstValue.trim(),
+            secondKey: optionNames[1],
+            secondValue: secondValue.trim(),
+            thirdKey: optionNames[2],
+            thirdValue: thirdValue.trim(),
+            sort: 1,
+            stockCnt: stock == 0 ? 0 : stock,
+            price: price == 0 ? 0 : price,
+          });
+        }
+      }
+    }
+
+    setOptionPreviews(optionPreviews);
+  };
+
+  const setOptionArray = (date?: string) => {
+    return optionPreviews.map((optionPreview, idx) => ({
+      sort: idx,
+      type: optionType,
+      depth: optionInputType == 0 ? 1 : Number(optionCnt),
+      useDateTime: date ? `${date} 12:00:00` : '',
+      firstKey: optionPreview.firstKey,
+      firstValue: optionPreview.firstValue,
+      secondKey: optionPreview.secondKey,
+      secondValue: optionPreview.secondValue,
+      thirdKey: optionPreview.thirdKey,
+      thirdValue: optionPreview.thirdValue,
+      stockCnt: optionPreview.stockCnt,
+      price: optionPreview.price,
+    }))
+  }
+
+  const handleApplyOptionPreviews = () => {
+    let resultArray: Option[] = [];
+
+    if (DateList.length > 0) {
+      DateList.forEach((date) => {
+        resultArray.push(...setOptionArray(date));
+      });
+    } else {
+      resultArray = setOptionArray();
+    }
+
+    setList({ ...list, optionInputType: optionInputType });
+    setOptionList(resultArray);
+  }
 
   return (
     <>
@@ -842,71 +728,26 @@ function OptionPlus({
           ))}
         </Flex>
       </Flex>
-      <Flex
-        flexDirection={'row'}
-        mb={'30px'}
-        alignItems={'center'}
-        flexWrap={'wrap'}
-        gap={'10px'}
-      >
-        <Flex w={'200px'}>
-          <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-            옵션가/재고
-          </Text>
-        </Flex>
-        <Flex gap={'10px'} flexDirection={'column'}>
-          <Flex flexDirection={'row'} gap={'10px'}>
-            <Flex w={'200px'} flexDirection={'column'}>
-              <Text
-                color={ColorBlack}
-                fontWeight={700}
-                fontSize={'16px'}
-                mb={'5px'}
-              >
-                옵션가
-              </Text>
-              <InputBox
-                placeholder="숫자입력"
-                type="text"
-                maxLength={15}
-                value={intComma(String(price))}
-                disabled={goodsInfo.LogItemDisable}
-                onChange={(e) => {
-                  handlePriceChange(
-                    Number(e.target.value.replace(/[^0-9]/g, '')),
-                  );
-                }}
-              />
-            </Flex>
 
-            <Flex w={'200px'} flexDirection={'column'}>
-              <Text
-                color={ColorBlack}
-                fontWeight={700}
-                fontSize={'16px'}
-                mb={'5px'}
-              >
-                재고
-              </Text>
-              <InputBox
-                maxLength={8}
-                placeholder="숫자 입력"
-                // type="number"
-                type="text"
-                value={intComma(stock) == 'NaN' ? 0 : intComma(stock)}
-                disabled={goodsInfo.LogItemDisable}
-                onChange={(e) => {
-                  handleStockChange(e.target.value.replace(/[^0-9]/g, ''));
-                }}
-              />
-            </Flex>
-          </Flex>
-          <Text fontSize={'14px'} fontWeight={300} color={ColorBlack}>
-            * 생성된 옵션항목에 일관적용됩니다. 아래 테이블에서
-            개별수정가능합니다.
-          </Text>
+      {!goodsInfo.LogItemDisable && (
+        <Flex justifyContent={'center'} mb={'30px'}>
+          <CustomButton
+            text="옵션 미리보기 및 옵션 가격조정"
+            fontSize={'15px'}
+            color={ColorWhite}
+            bgColor={ColorGray900}
+            borderColor={ColorGray900}
+            px="46px"
+            py="14px"
+            onClick={() => handleOptionPreview()}
+          />
         </Flex>
-      </Flex>
+      )}
+
+      {optionPreviews.length ?
+        <OptionPreview list={list} optionList={optionList} optionPreviews={optionPreviews} setOptionPreviews={setOptionPreviews}></OptionPreview>
+        : null}
+
       {!goodsInfo.LogItemDisable && (
         <Flex justifyContent={'center'}>
           <CustomButton
@@ -917,7 +758,7 @@ function OptionPlus({
             borderColor={ColorGray900}
             px="46px"
             py="14px"
-            onClick={() => handleOptionSubmit()}
+            onClick={() => handleApplyOptionPreviews()}
           />
         </Flex>
       )}
