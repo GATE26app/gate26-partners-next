@@ -328,10 +328,11 @@ export default function OptionPreview({ list, optionList, optionPreviews, setOpt
               borderRightColor={ColorGray400}
             >
               <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-                {optionList[0].firstKey}
+                {/* {optionList[0]?.firstKey} */}
+                {optionPreviews[0].firstKey}
               </Text>
             </Flex>
-            {optionList[0].secondKey && (
+            {optionPreviews[0]?.secondKey && (
               <Flex
                 w={'300px'}
                 alignItems={'center'}
@@ -340,11 +341,12 @@ export default function OptionPreview({ list, optionList, optionPreviews, setOpt
                 borderRightColor={ColorGray400}
               >
                 <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-                  {optionList[0].secondKey}
+                  {/* {optionList[0].secondKey} */}
+                  {optionPreviews[0].secondKey}
                 </Text>
               </Flex>
             )}
-            {optionList[0].thirdKey && (
+            {optionPreviews[0]?.thirdKey && (
               <Flex
                 w={'300px'}
                 alignItems={'center'}
@@ -353,7 +355,8 @@ export default function OptionPreview({ list, optionList, optionPreviews, setOpt
                 borderRightColor={ColorGray400}
               >
                 <Text fontSize={'16px'} fontWeight={700} color={ColorBlack}>
-                  {optionList[0].thirdKey}
+                  {/* {optionList[0].thirdKey} */}
+                  {optionPreviews[0].thirdKey}
                 </Text>
               </Flex>
             )}
@@ -440,7 +443,7 @@ export default function OptionPreview({ list, optionList, optionPreviews, setOpt
         </Flex>
       </Flex>
     );
-  }, [optionList, list.optionInputType]);
+  }, [optionList, list.optionInputType, optionPreviews]);
 
   return (
     <Flex
