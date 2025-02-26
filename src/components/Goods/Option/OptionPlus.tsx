@@ -295,7 +295,7 @@ function OptionPlus({
         sort: 1,
         type: optionType,
         depth: optionInputType == 0 ? 1 : Number(optionCnt),
-        useDateTime: `${date} 12:00:00`,
+        useDateTime: `${DateList[0]} 12:00:00`,
         firstKey: optionNames[0],
         firstValue: firstValue.trim(),
         secondKey: '',
@@ -342,8 +342,6 @@ function OptionPlus({
         });
       }
     }
-    console.log('firstOptions', firstOptions);
-    console.log('secondOptions', secondOptions);
 
     setOptionPreviews(optionPreviews);
   };
@@ -565,24 +563,27 @@ function OptionPlus({
               checked={optionInputType == 0 ? true : false}
               disabled={goodsInfo.LogItemDisable}
               onClick={() => {
-                setOptionInputType(0);
-                // if (list.optionInputType == 1) {
-                setOptionList([]);
-                setOptionCnt('1');
-                setOptionInputList([
-                  {
-                    sort: 1,
-                    inputKey: '',
-                    inputValue: '',
-                  },
-                ]);
-                setOptionNames(['']);
-                setOptionValues(['']);
-                setPrice(0);
-                setStock(0);
-                // }
 
-                // setList({ ...list, optionInputType: 0 });
+                setOptionInputType(0);
+
+                if (list.optionInputType == 1) {
+                  setOptionList([]);
+                  setOptionCnt('1');
+                  setOptionInputList([
+                    {
+                      sort: 1,
+                      inputKey: '',
+                      inputValue: '',
+                    },
+                  ]);
+                  setOptionNames(['']);
+                  setOptionValues(['']);
+                  setPrice(0);
+                  setStock(0);
+                  setOptionPreviews([]);
+                }
+
+                setList({ ...list, optionInputType: 0 });
               }}
             />
           </Flex>
@@ -593,23 +594,24 @@ function OptionPlus({
               checked={optionInputType == 1 ? true : false}
               onClick={() => {
                 setOptionInputType(1);
-                // if (list.optionInputType == 0) {
-                setOptionList([]);
-                setOptionCnt('1');
-                setOptionInputList([
-                  {
-                    sort: 1,
-                    inputKey: '',
-                    inputValue: '',
-                  },
-                ]);
-                setOptionNames(['']);
-                setOptionValues(['']);
-                setPrice(0);
-                setStock(0);
-                // }
+                if (list.optionInputType == 0) {
+                  setOptionList([]);
+                  setOptionCnt('1');
+                  setOptionInputList([
+                    {
+                      sort: 1,
+                      inputKey: '',
+                      inputValue: '',
+                    },
+                  ]);
+                  setOptionNames(['']);
+                  setOptionValues(['']);
+                  setPrice(0);
+                  setStock(0);
+                  setOptionPreviews([]);
+                }
 
-                // setList({ ...list, optionInputType: 1 });
+                setList({ ...list, optionInputType: 1 });
               }}
             />
           </Flex>
@@ -648,20 +650,6 @@ function OptionPlus({
                 handleOptionCountChange(Number(data));
               }}
             />
-            {/* <NumberInput
-            min={1}
-            defaultValue={optionCnt}
-            borderRadius={'10px'}
-            max={3}
-            onChange={(e) => handleOptionCountChange(Number(e))}
-            // borderColor={ColorInputBorder}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput> */}
           </Flex>
         </Flex>
       )}
@@ -748,7 +736,7 @@ function OptionPlus({
         <OptionPreview list={list} optionList={optionList} optionPreviews={optionPreviews} setOptionPreviews={setOptionPreviews}></OptionPreview>
         : null}
 
-      {!goodsInfo.LogItemDisable && (
+      {(!goodsInfo.LogItemDisable && optionPreviews.length) ? (
         <Flex justifyContent={'center'}>
           <CustomButton
             text="+ 목록에 적용"
@@ -761,7 +749,7 @@ function OptionPlus({
             onClick={() => handleApplyOptionPreviews()}
           />
         </Flex>
-      )}
+      ) : null}
     </>
   );
 }
