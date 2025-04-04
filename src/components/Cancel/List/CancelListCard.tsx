@@ -21,6 +21,7 @@ import {
   imgPath,
   intComma,
 } from '@/utils/format';
+import { crypto } from '@/utils/crypto';
 
 // import { ItemProps } from './OrderDataTable';
 
@@ -267,13 +268,13 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
       >
         <Flex flexDirection={'column'} alignItems={'center'}>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderEmail == null ? '-' : item.orderEmail}
+            {item.orderEmail == null ? '-' : crypto.decrypt(item.orderEmail)}
           </Text>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderName == null ? '-' : item.orderName}
+            {item.orderName == null ? '-' : crypto.decrypt(item.orderName)}
           </Text>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderHp == null ? '-' : item.orderHp}
+            {item.orderHp == null ? '-' : crypto.decrypt(item.orderHp)}
           </Text>
         </Flex>
       </Flex>
