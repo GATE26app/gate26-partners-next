@@ -26,6 +26,7 @@
     "@types/react-window": "^1.8.8",
     "axios": "^1.7.2",
     "chakra-react-select": "^4.9.0",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "eslint-config-prettier": "^9.1.0",
