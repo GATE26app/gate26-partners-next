@@ -147,6 +147,7 @@ import {
   setToken,
 } from '@/utils/localStorage/token';
 import { CONFIG } from '../../../config';
+import { sanitizeInput } from '@/utils/sanitizeInput';
 
 export type BasicListDTO<T> = {
   code?: string;
@@ -199,12 +200,40 @@ function refreshToken() {
   });
 }
 
+// 객체의 모든 문자열 값에 대해 sanitize를 수행하는 함수
+const sanitizeObject = (obj: any): any => {
+  if (typeof obj === 'string') {
+    return sanitizeInput(obj);
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeObject(item));
+  }
+
+  if (typeof obj === 'object' && obj !== null) {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      sanitized[key] = sanitizeObject(value);
+    }
+    return sanitized;
+  }
+
+  return obj;
+};
+
 instance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
-    // 만약 토큰이 없다면
     const isAccess = !!token;
-    //&& !!token.access;
+
+    // 요청 데이터 sanitize 처리
+    if (config.data) {
+      config.data = sanitizeObject(config.data);
+    }
+    if (config.params) {
+      config.params = sanitizeObject(config.params);
+    }
+
     if (isAccess) {
       // setAuthHeader(token.access as string);
       // return {
