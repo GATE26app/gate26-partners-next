@@ -26,7 +26,7 @@ function FindPwComponent() {
   const searchParams = useSearchParams();
   const getType = searchParams.get('type');
   const [loading, setLoading] = useState(false);
-  const [phoneNum, setPhoneNum] = useState(''); //핸드폰번호
+  const [phoneNum, setPhoneNum] = useState(''); //핸폰번호
   const [email, setEmail] = useState('');
   const [emailCode, setEmailCode] = useState('');
   const [userId, setUserId] = useState('');
@@ -439,7 +439,7 @@ function FindPwComponent() {
             borderColor={ColorRed}
             bgColor={ColorRed}
             borderRadius={'10px'}
-            onClick={() => router.push(`/findPw/change?authId=${merchantUid}`)}
+            onClick={() => router.push(`/findPw/change?authId=${merchantUid}&userId=${userId}`)}
           />
         </Box>
         {/* <Flex
@@ -451,7 +451,7 @@ function FindPwComponent() {
           alignItems={'center'}
           mt={'40px'}
           cursor={'pointer'}
-          
+
           // onClick={() => router.push('/findPw/change')}
         >
           <Text color={ColorWhite} fontWeight={800} fontSize={'16px'}>

@@ -21,6 +21,7 @@ function FindPwChangeComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const getAuthId = searchParams.get('authId');
+  const getUserId = searchParams.get('userId');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [error, setError] = useState({
@@ -30,7 +31,8 @@ function FindPwChangeComponent() {
   const [submitAble, setSubmitAble] = useState(false);
   //비밀번호 체크
   const handleCheckPw = (pw: string) => {
-    var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    // var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/; // 대문자 반드시 포함
     if (pw.length == 0) {
       setError({
         ...error,
@@ -118,6 +120,8 @@ function FindPwChangeComponent() {
     }
   }, [password, passwordCheck]);
   const handleSubmit = () => {
+    console.log('password error', error);
+
     if (password == '' && passwordCheck == '') {
       // setSubmitAble(false);
       // setError({
@@ -125,11 +129,29 @@ function FindPwChangeComponent() {
       //   passwordError:'비밀번호를 입력해주세요.'
       // })
     } else {
-      let body = {
-        authId: String(getAuthId),
-        password: password,
-      };
-      AuthFindPwResetPwMutate(body);
+      if (error.pwError == '' && error.checkPwError == '') {
+        let body = {
+          authId: String(getAuthId),
+          userId: String(getUserId),
+          password: password,
+        };
+        AuthFindPwResetPwMutate(body);
+      } else {
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => (
+            <Box
+              style={{ borderRadius: 8 }}
+              p={3}
+              color="white"
+              bg="#ff6955"
+            >
+              {'비밀번호 형식이 올바르지 않습니다.'}
+            </Box>
+          ),
+        });
+      }
     }
   };
   return (
