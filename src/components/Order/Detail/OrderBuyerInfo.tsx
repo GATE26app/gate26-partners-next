@@ -6,7 +6,6 @@ import { OrderDetailItemType } from '@/apis/order/OrderApi.type';
 
 import { ColorBlack, ColorDataTableBorderTop } from '@/utils/_Palette';
 import { formatPhone } from '@/utils/format';
-import { crypto } from '@/utils/crypto';
 
 interface Props {
   info: OrderDetailItemType;
@@ -35,8 +34,8 @@ function OrderBuyerInfo({ info }: Props) {
             주문자 이름
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.buyerName !== null && crypto.decrypt(info.buyerName) !== ''
-              ? crypto.decrypt(info.buyerName)
+            {info.buyerName !== null && info.buyerName !== ''
+              ? info.buyerName
               : '-'}
           </Text>
         </Flex>
@@ -53,8 +52,8 @@ function OrderBuyerInfo({ info }: Props) {
             {'주문자\n휴대폰번호'}
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.buyerHp !== null && crypto.decrypt(info.buyerHp) !== ''
-              ? formatPhone(crypto.decrypt(info.buyerHp))
+            {info.buyerHp !== null && info.buyerHp !== ''
+              ? formatPhone(info.buyerHp)
               : '-'}
           </Text>
         </Flex>

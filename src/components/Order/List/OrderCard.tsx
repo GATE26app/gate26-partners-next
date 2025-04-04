@@ -22,7 +22,6 @@ import {
   imgPath,
   intComma,
 } from '@/utils/format';
-import { crypto } from '@/utils/crypto';
 
 interface headerProps {
   id: string;
@@ -226,10 +225,10 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
             {item.orderEmail == null ? '-' : item.orderEmail}
           </Text>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderName == null ? '-' : crypto.decrypt(item.orderName)}
+            {item.orderName == null ? '-' : item.orderName}
           </Text>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderHp == null ? '-' : formatPhone(crypto.decrypt(item.orderHp))}
+            {item.orderHp == null ? '-' : formatPhone(item.orderHp)}
           </Text>
         </Flex>
       </Flex>
@@ -272,7 +271,7 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.address == null ? '-' : crypto.decrypt(item.address)}
+          {item.address == null ? '-' : item.address}
         </Text>
         <Text
           fontSize={'14px'}
@@ -280,7 +279,7 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.recieverName == null ? '-' : crypto.decrypt(item.recieverName)}
+          {item.recieverName == null ? '-' : item.recieverName}
         </Text>
         <Text
           fontSize={'14px'}
@@ -288,7 +287,7 @@ function OrderCard({ header, item, CheckList, setChekcList }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.recieverHp == null ? '-' : formatPhone(crypto.decrypt(item.recieverHp))}
+          {item.recieverHp == null ? '-' : formatPhone(item.recieverHp)}
         </Text>
       </Flex>
     </Flex>
