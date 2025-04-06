@@ -22,6 +22,7 @@ import JoinPartnerInfoComponent from '@/components/Join/JoinPartnerInfoComponent
 import JoinComponyInfoComponent from '@/components/Join/JoinComponyInfoComponent';
 import JoinPdfComponent from '@/components/Join/JoinPdfComponent';
 import { usePutJoinMutation } from '@/apis/join/JoinApi.mutation';
+import { safeEncrypt } from '@/utils/crypto';
 
 function JoinComponent() {
   const router = useRouter();
@@ -133,6 +134,16 @@ function JoinComponent() {
       ToastComponent('통장사본 파일첨부해주세요.');
     } else {
       setLoading(true);
+      setJoinInfo({
+        ...joinInfo,
+        bank: safeEncrypt(joinInfo.bank),
+        accountNumber: safeEncrypt(joinInfo.accountNumber),
+        accountHolder: safeEncrypt(joinInfo.accountHolder),
+        nameOfCompany: safeEncrypt(joinInfo.nameOfCompany),
+        businessRegistrationNumber: safeEncrypt(joinInfo.businessRegistrationNumber),
+        nameOfRepresentative: safeEncrypt(joinInfo.nameOfRepresentative),
+        registrationNumber: safeEncrypt(joinInfo.registrationNumber)
+      })
       joinMutate(joinInfo);
     }
   };

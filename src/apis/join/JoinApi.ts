@@ -11,10 +11,12 @@ import {
   JoinAuthKeyType,
   JoinBody,
   JoinDtoType,
+  JoinHpBody,
   JoinIdCheckType,
   JoinImageResType,
   JoinPdfResType,
 } from './JoinApi.type';
+import { crypto } from '@/utils/crypto';
 
 export class JoinApi {
   axios: AxiosInstance = instance;
@@ -33,10 +35,12 @@ export class JoinApi {
 
   //회원가입 - 본인인증키 발급
   postJoinAuthHpKey = async (phone: string): Promise<JoinAuthKeyType> => {
-    //type : code 또는 parentCode
+    let encryptedPhone = crypto.encrypt(phone);
+    const body : JoinHpBody = { hp : encryptedPhone };
     const { data } = await this.axios({
       method: 'POST',
-      url: `/partner/member/join/auth/hp/${phone}`,
+      url: `/partner/member/join/auth`,
+      data: body
     });
     return data;
   };
@@ -119,10 +123,13 @@ export class JoinApi {
   };
   //아이디 찾기 - 본인인증키 발급
   postFindIdAuthHpKey = async (phone: string): Promise<JoinAuthKeyType> => {
+    let encryptedPhone = crypto.encrypt(phone);
+    const body : JoinHpBody = { hp : encryptedPhone };
     //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'POST',
-      url: `/partner/member/find-id/auth/hp/${phone}`,
+      url: `/partner/member/find-id/auth/hp`,
+      data: body
     });
     return data;
   };
@@ -165,10 +172,13 @@ export class JoinApi {
 
   //비밀번호 찾기 - 본인인증키 발급
   postFindPWAuthHpKey = async (phone: string): Promise<JoinAuthKeyType> => {
+    let encryptedPhone = crypto.encrypt(phone);
+    const body : JoinHpBody = { hp : encryptedPhone };
     //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'POST',
       url: `/partner/member/find-pw/auth/hp/${phone}`,
+      data: body
     });
     return data;
   };
