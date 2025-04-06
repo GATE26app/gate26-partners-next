@@ -128,7 +128,7 @@ export class JoinApi {
     //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'POST',
-      url: `/partner/member/find-id/auth/hp`,
+      url: `/partner/member/find-id/auth`,
       data: body
     });
     return data;
@@ -177,7 +177,7 @@ export class JoinApi {
     //type : code 또는 parentCode
     const { data } = await this.axios({
       method: 'POST',
-      url: `/partner/member/find-pw/auth/hp/${phone}`,
+      url: `/partner/member/find-pw/auth`,
       data: body
     });
     return data;
