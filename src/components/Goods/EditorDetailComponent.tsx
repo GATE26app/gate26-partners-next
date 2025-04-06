@@ -3,6 +3,8 @@ import React, { useRef, useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 
 import { Flex, Image, Text } from '@chakra-ui/react';
+import he from 'he';
+import DOMPurify from 'dompurify';
 
 import { usePostImageMutation } from '@/apis/goods/GoodsApi.mutation';
 import { GoodsBasicProps } from '@/apis/goods/GoodsApi.type';
@@ -189,7 +191,8 @@ function EditorDetailComponent({ list, setList }: Props) {
               theme="snow"
               modules={modules}
               formats={formats}
-              value={list?.content}
+              // value={list?.content}
+              value={DOMPurify.sanitize(he.decode(list?.content))} // 디코딩 → XSS 제거 → 표시
               onChange={(e: any) =>
                 goodsInfo.LogItemDisable
                   ? undefined
