@@ -103,7 +103,10 @@ function JoinComponent() {
       ToastComponent('소개글을 입력해주세요.');
     } else if (joinInfo.nameOfCompany == '') {
       ToastComponent('상호명을 입력해주세요.');
-    } else if (joinInfo.businessRegistrationNumber == '' && joinInfo.type == 1) {
+    } else if (
+      joinInfo.businessRegistrationNumber == '' &&
+      joinInfo.type == 1
+    ) {
       ToastComponent('사업자 번호를 입력해주세요.');
     } else if (joinInfo.businessType == '' && joinInfo.type == 1) {
       ToastComponent('업태를 입력해주세요.');
@@ -120,7 +123,10 @@ function JoinComponent() {
       ToastComponent('주소를 입력해주세요.');
     } else if (joinInfo.addressDetail == '' && joinInfo.type == 1) {
       ToastComponent('상세 주소를 입력해주세요.');
-    } else if (joinInfo.files?.filter((prev) => prev.type == 1).length == 0 && joinInfo.type == 1) {
+    } else if (
+      joinInfo.files?.filter((prev) => prev.type == 1).length == 0 &&
+      joinInfo.type == 1
+    ) {
       ToastComponent('사업자등록증 파일첨부해주세요.');
       // } else if (joinInfo.files?.filter((prev) => prev.type == 2).length == 0) {
       //   ToastComponent('통신판매업신고증 파일첨부해주세요.');
@@ -140,10 +146,12 @@ function JoinComponent() {
         accountNumber: safeEncrypt(joinInfo.accountNumber),
         accountHolder: safeEncrypt(joinInfo.accountHolder),
         nameOfCompany: safeEncrypt(joinInfo.nameOfCompany),
-        businessRegistrationNumber: safeEncrypt(joinInfo.businessRegistrationNumber),
+        businessRegistrationNumber: safeEncrypt(
+          joinInfo.businessRegistrationNumber,
+        ),
         nameOfRepresentative: safeEncrypt(joinInfo.nameOfRepresentative),
-        registrationNumber: safeEncrypt(joinInfo.registrationNumber)
-      })
+        registrationNumber: safeEncrypt(joinInfo.registrationNumber),
+      });
       joinMutate(joinInfo);
     }
   };
