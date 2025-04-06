@@ -14,7 +14,7 @@ import {
   imgPath,
   intComma,
 } from '@/utils/format';
-import { crypto } from '@/utils/crypto';
+import { safeDecryptAndParse } from '@/utils/crypto';
 
 interface headerProps {
   id: string;
@@ -192,7 +192,7 @@ function GoodsInfoCard({ header, item }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.address == null ? '-' : crypto.decrypt(item.address)}
+          {item.address == null ? '-' : safeDecryptAndParse(item.address)}
         </Text>
         <Text
           fontSize={'14px'}
@@ -200,7 +200,7 @@ function GoodsInfoCard({ header, item }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.recieverName == null ? '-' : crypto.decrypt(item.recieverName)}
+          {item.recieverName == null ? '-' : safeDecryptAndParse(item.recieverName)}
         </Text>
         <Text
           fontSize={'14px'}
@@ -208,7 +208,7 @@ function GoodsInfoCard({ header, item }: Props) {
           color={ColorBlack}
           textAlign={'center'}
         >
-          {item.recieverHp == null ? '-' : formatPhone(crypto.decrypt(item.recieverHp))}
+          {item.recieverHp == null ? '-' : formatPhone(safeDecryptAndParse(item.recieverHp))}
         </Text>
       </Flex>
     </Flex>

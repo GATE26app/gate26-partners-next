@@ -18,7 +18,7 @@ import { useProfileChangePwMutation } from '@/apis/setting/SettingApi.mutation';
 import { deleteToken, deleteUserInfo } from '@/utils/localStorage/token';
 import { useRouter } from 'next/navigation';
 import ChangePasswordModal from '../common/Modal/ChangePasswordModal';
-import { crypto } from '@/utils/crypto';
+import { safeDecryptAndParse } from '@/utils/crypto';
 
 interface Props {
   info: ProfileBodyType | undefined;
@@ -196,7 +196,7 @@ function BasicInfo({ info }: Props) {
             w={'278px'}
           >
             <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>
-              {info?.type == 1 ? crypto.decrypt(info?.hp) : info?.authEmail}
+              {info?.type == 1 ? safeDecryptAndParse(info?.hp) : info?.authEmail}
             </Text>
           </Flex>
         </Flex>

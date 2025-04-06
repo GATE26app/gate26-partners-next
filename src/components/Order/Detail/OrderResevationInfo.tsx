@@ -6,7 +6,7 @@ import { OrderDetailItemType } from '@/apis/order/OrderApi.type';
 
 import { ColorBlack, ColorDataTableBorderTop } from '@/utils/_Palette';
 import { formatPhone } from '@/utils/format';
-import { crypto } from '@/utils/crypto';
+import { safeDecryptAndParse } from '@/utils/crypto';
 
 interface Props {
   info: OrderDetailItemType;
@@ -35,8 +35,8 @@ function OrderResevationInfo({ info }: Props) {
             예약자 이름
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.orderName !== null && crypto.decrypt(info.orderName) !== ''
-              ? crypto.decrypt(info.orderName)
+            {info.orderName !== null && safeDecryptAndParse(info.orderName) !== ''
+              ? safeDecryptAndParse(info.orderName)
               : '-'}
           </Text>
         </Flex>
@@ -53,8 +53,8 @@ function OrderResevationInfo({ info }: Props) {
             {'예약자\n휴대폰번호'}
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.orderHp !== null && crypto.decrypt(info.orderHp) !== ''
-              ? formatPhone(crypto.decrypt(info.orderHp))
+            {info.orderHp !== null && safeDecryptAndParse(info.orderHp) !== ''
+              ? formatPhone(safeDecryptAndParse(info.orderHp))
               : '-'}
           </Text>
         </Flex>
@@ -70,7 +70,7 @@ function OrderResevationInfo({ info }: Props) {
             {`예약/이용정보\n받을 이메일`}
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.orderHp !== null && crypto.decrypt(info.orderHp) !== ''
+            {info.orderHp !== null && safeDecryptAndParse(info.orderHp) !== ''
               ? info.orderEmail
               : '-'}
           </Text>
@@ -86,8 +86,8 @@ function OrderResevationInfo({ info }: Props) {
             기타
           </Text>
           <Text color={ColorBlack} fontWeight={400} fontSize={'15px'}>
-            {info.orderRequestDetail !== null && crypto.decrypt(info.orderRequestDetail) !== ''
-              ? crypto.decrypt(info.orderRequestDetail)
+            {info.orderRequestDetail !== null && safeDecryptAndParse(info.orderRequestDetail) !== ''
+              ? safeDecryptAndParse(info.orderRequestDetail)
               : '-'}
           </Text>
         </Flex>
