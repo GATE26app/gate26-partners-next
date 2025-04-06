@@ -69,6 +69,11 @@ function refreshToken() {
 
 // 객체의 모든 문자열 값에 대해 sanitize를 수행하는 함수
 const sanitizeObject = (obj: any): any => {
+  // FormData나 Blob 객체는 sanitize하지 않음
+  if (obj instanceof FormData || obj instanceof Blob) {
+    return obj;
+  }
+
   if (typeof obj === 'string') {
     return sanitizeInput(obj);
   }
@@ -180,7 +185,7 @@ instance.interceptors.response.use(
         // );
         if (getToken().refresh == null) {
           document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-          // window.location.href = '/login';
+          window.location.href = '/login';
         }
         // Sentry.captureMessage(
         //   `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
@@ -206,7 +211,7 @@ instance.interceptors.response.use(
       } catch (err) {
         document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
         console.log(`리프레쉬 토큰 에러 ${getUserId()}`);
-        // window.location.href = '/login';
+        window.location.href = '/login';
         // Sentry.captureMessage(`리프레쉬 토큰 에러 ${getUserId()}`);
         Logout();
         unsetAuthHeader();
