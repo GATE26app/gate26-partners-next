@@ -4,7 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import { Flex, Image, Text } from '@chakra-ui/react';
 import he from 'he';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 import { usePostImageMutation } from '@/apis/goods/GoodsApi.mutation';
 import { GoodsBasicProps } from '@/apis/goods/GoodsApi.type';
