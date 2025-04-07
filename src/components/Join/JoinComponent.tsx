@@ -69,6 +69,15 @@ function JoinComponent() {
     ],
     kakaoId: '',
   });
+  const [error, setError] = useState({
+    idError: '',
+    pwError: '',
+    checkPwError: '',
+    phoneError: '',
+    emailError: '',
+    emailCodeError: '',
+  });
+
 
   const ToastComponent = (message: string) => {
     return toast({
@@ -140,7 +149,8 @@ function JoinComponent() {
       ToastComponent('통장사본 파일첨부해주세요.');
     } else {
       setLoading(true);
-      const newJoinInfo = { ...joinInfo, 
+      const newJoinInfo = {
+        ...joinInfo,
         bank: safeEncrypt(joinInfo.bank),
         accountNumber: safeEncrypt(joinInfo.accountNumber),
         accountHolder: safeEncrypt(joinInfo.accountHolder),
@@ -151,7 +161,26 @@ function JoinComponent() {
         nameOfRepresentative: safeEncrypt(joinInfo.nameOfRepresentative),
         registrationNumber: safeEncrypt(joinInfo.registrationNumber),
       }
-      joinMutate(newJoinInfo);
+
+      if (error.pwError == '' && error.checkPwError == '') {
+        joinMutate(newJoinInfo);
+      } else {
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => (
+            <Box
+              style={{ borderRadius: 8 }}
+              p={3}
+              color="white"
+              bg="#ff6955"
+            >
+              {'비밀번호 형식이 올바르지 않습니다.'}
+            </Box>
+          ),
+        });
+      }
+
     }
   };
 
@@ -215,7 +244,7 @@ function JoinComponent() {
             fontSize={'40px'}
             color={ColorBlack}
             pb={'50px'}
-            // pt={'137px'}
+          // pt={'137px'}
           >
             회원가입
           </Text>
@@ -229,6 +258,7 @@ function JoinComponent() {
             borderWidth={1}
             boxShadow={'3px 6px 20px #3737370D'}
           >
+
             {/* 아이디, 비밀번호, 연락처 */}
             <JoinBasicInfoComponent
               joinInfo={joinInfo}
@@ -240,6 +270,8 @@ function JoinComponent() {
               setLoading={setLoading}
               authEmailCheckDisable={authEmailCheckDisable}
               setAuthEmailCheckDisable={setAuthEmailCheckDisable}
+              error={error}
+              setError={setError}
             />
 
             {/* 파트너사명, 프로필사진, 소개글 */}
