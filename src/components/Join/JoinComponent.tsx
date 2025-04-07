@@ -140,8 +140,7 @@ function JoinComponent() {
       ToastComponent('통장사본 파일첨부해주세요.');
     } else {
       setLoading(true);
-      setJoinInfo({
-        ...joinInfo,
+      const newJoinInfo = { ...joinInfo, 
         bank: safeEncrypt(joinInfo.bank),
         accountNumber: safeEncrypt(joinInfo.accountNumber),
         accountHolder: safeEncrypt(joinInfo.accountHolder),
@@ -151,8 +150,8 @@ function JoinComponent() {
         ),
         nameOfRepresentative: safeEncrypt(joinInfo.nameOfRepresentative),
         registrationNumber: safeEncrypt(joinInfo.registrationNumber),
-      });
-      joinMutate(joinInfo);
+      }
+      joinMutate(newJoinInfo);
     }
   };
 
