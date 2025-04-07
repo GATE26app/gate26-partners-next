@@ -268,7 +268,7 @@ function CancelListCard({ header, item, CheckList, setChekcList }: Props) {
       >
         <Flex flexDirection={'column'} alignItems={'center'}>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
-            {item.orderEmail == null ? '-' : safeDecryptAndParse(item.orderEmail)}
+            {item.orderEmail == null ? '-' : item.orderEmail}
           </Text>
           <Text fontSize={'14px'} fontWeight={400} color={ColorBlack}>
             {item.orderName == null ? '-' : safeDecryptAndParse(item.orderName)}
