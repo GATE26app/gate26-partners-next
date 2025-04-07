@@ -1,141 +1,6 @@
-// import axios, { AxiosError } from 'axios';
-// import { useStore } from 'zustand';
-// import { CONFIG } from '@config';
-// import { apiLogger } from '@utils/apiLogger';
-// import { getToken, setToken } from '@utils/localStorage/token';
-// import styledConsole from '@utils/styledConsole';
-// // import { refresh } from './refresh';
-// export type BasicListDTO<T> = {
-//   code?: string;
-//   data?: {
-//     content: T;
-//     totalElements?: number;
-//     totalPages?: number;
-//   };
-//   message?: string;
-//   count?: number;
-//   success: boolean;
-// };
-// export type AxiosResponseType<T> = {
-//   count: number;
-//   data: T;
-//   success: boolean;
-// };
-// const isDev = CONFIG.ENV === 'development';
-// const instance = axios.create({
-//   baseURL: isDev ? '/backoffice' : '/backoffice',
-//   timeout: 5000,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-// const setAuthHeader = (token: string) => {
-//   if (token) {
-//     instance.defaults.headers.common['X-AUTH-TOKEN'] = token;
-//   }
-// };
-// const unsetAuthHeader = () => {
-//   delete instance.defaults.headers.common['X-AUTH-TOKEN'];
-// };
-// // const userZuInfo = useStore(useUserZuInfo, (state) => state.userZuInfo);
-// // console.log('userZuInfo', userZuInfo.accessToken);
-// function refreshToken() {
-//   return axios({
-//     method: 'patch',
-//     url: '/partner/member/refresh-access-token',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-AUTH-TOKEN': `${getToken().refresh}`,
-//     },
-//   });
-// }
-// instance.interceptors.request.use(
-//   async (config) => {
-//     const token = await getToken();
-//     // 만약 토큰이 없다면
-//     const isAccess = !!token;
-//     //&& !!token.access;
-//     if (isAccess) {
-//       // setAuthHeader(token.access as string);
-//       // return {
-//       //   ...config,
-//       //   headers: { ...config.headers, Authorization: `Bearer ${token.access}` },
-//       // };
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     Promise.reject(error);
-//   },
-// );
-// instance.interceptors.response.use(
-//   (res) => {
-//     const { status, config: reqData, data: resData } = res;
-//     if (isDev) apiLogger({ status, reqData, resData });
-//     return res;
-//   },
-//   async (error: AxiosError) => {
-//     try {
-//       const { response: res, config: reqData } = error || {};
-//       const { status } = res || { status: 400 };
-//       const isUnAuthError = status === 401;
-//       const isExpiredToken = status === 444;
-//       const originalRequest = reqData;
-//       const isDev = CONFIG.ENV === 'development';
-//       if (isDev)
-//         apiLogger({ status, reqData, resData: error, method: 'error' });
-//       if (isExpiredToken) {
-//         // return refresh(reqData);
-//       }
-//       if (isUnAuthError) {
-//         console.log('status', status);
-//         console.log('isUnAuthError', isUnAuthError);
-//         if (getToken().refresh === null || getToken().refresh === '') {
-//           // Sentry.captureMessage(
-//           //   `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
-//           // );
-//           return;
-//         }
-//         try {
-//           const res = await refreshToken();
-//           console.log('리프래쉬 res', res);
-//           if (res.data.data.accessToken) {
-//             console.log('리프레쉬 토큰 재발행 완료');
-//             const param = {
-//               access: res.data.data.accessToken,
-//               refresh: getToken().refresh,
-//             };
-//             setToken(param);
-//             originalRequest.headers = {
-//               'X-AUTH-TOKEN': res.data.data.accessToken,
-//             };
-//             return axios(originalRequest);
-//           }
-//         } catch (err) {
-//           console.log('리프레쉬 토큰 에러');
-//           // Sentry.captureMessage(`리프레쉬 토큰 에러 ${getUserId()}`);
-//           // Logout();
-//           unsetAuthHeader();
-//           // return Promise.reject(err);
-//         }
-//       }
-//       return Promise.reject(error);
-//     } catch (e) {
-//       styledConsole({
-//         //
-//         method: 'error',
-//         topic: 'UN_HANDLED',
-//         title: 'axios-interceptor',
-//         data: e,
-//       });
-//     }
-//   },
-// );
-// export { setAuthHeader, unsetAuthHeader };
-// export default instance;
 import { useRouter } from 'next/navigation';
 
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 import { apiLogger } from '@/utils/apiLogger';
 import {
@@ -146,6 +11,7 @@ import {
   setErrorCode,
   setToken,
 } from '@/utils/localStorage/token';
+import { sanitizeInput } from '@/utils/sanitizeInput';
 import { CONFIG } from '../../../config';
 
 export type BasicListDTO<T> = {
@@ -189,22 +55,57 @@ const unsetAuthHeader = () => {
 
 // console.log('userZuInfo', userZuInfo.accessToken);
 function refreshToken() {
-  return axios({
+  const axiosOption = {
     method: 'patch',
-    url: '/partner/member/refresh-access-token',
+    url: '/api/backoffice/partner/member/refresh-access-token',
     headers: {
       'Content-Type': 'application/json',
       'X-AUTH-TOKEN': `${getToken().refresh}`,
     },
-  });
+  }
+  console.log('axiosOption', axiosOption);
+  return axios(axiosOption);
 }
+
+// 객체의 모든 문자열 값에 대해 sanitize를 수행하는 함수
+const sanitizeObject = (obj: any): any => {
+  // FormData나 Blob 객체는 sanitize하지 않음
+  if (obj instanceof FormData || obj instanceof Blob) {
+    return obj;
+  }
+
+  if (typeof obj === 'string') {
+    return sanitizeInput(obj);
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeObject(item));
+  }
+
+  if (typeof obj === 'object' && obj !== null) {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      sanitized[key] = sanitizeObject(value);
+    }
+    return sanitized;
+  }
+
+  return obj;
+};
 
 instance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
-    // 만약 토큰이 없다면
     const isAccess = !!token;
-    //&& !!token.access;
+
+    // 요청 데이터 sanitize 처리
+    if (config.data) {
+      config.data = sanitizeObject(config.data);
+    }
+    if (config.params) {
+      config.params = sanitizeObject(config.params);
+    }
+
     if (isAccess) {
       // setAuthHeader(token.access as string);
       // return {
@@ -237,10 +138,12 @@ const refreshExpiredTokenClosure = () => {
       isCalled = true;
       runningPromise = refreshToken().then(
         (response) => {
+          console.log('call refreshToken success', response)
           isCalled = false; // 토큰 갱신 성공 시 플래그 리셋
           return response;
         },
         (error) => {
+          console.log('call refreshToken error', error)
           isCalled = false; // 토큰 갱신 실패 시 플래그 리셋
           return Promise.reject(error);
         },
@@ -274,12 +177,12 @@ instance.interceptors.response.use(
     }
 
     if (isUnAuthError) {
-      // console.log(!getToken().refresh);
+      // console.log('getToken()', getToken());
       // console.log('getToken().refresh', getToken().refresh);
       if (!getToken().refresh) {
-        console.log(
-          `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
-        );
+        // console.log(
+        //   `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
+        // );
         if (getToken().refresh == null) {
           document.cookie = `auth=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
           window.location.href = '/login';
@@ -293,6 +196,8 @@ instance.interceptors.response.use(
 
       try {
         const res = await refreshExpiredToken();
+        // console.log('refreshExpiredToken', res);
+
         if (res.data.data.accessToken) {
           const param = {
             access: res.data.data.accessToken,
@@ -317,75 +222,6 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-// instance.interceptors.response.use(
-//   (res) => {
-//     const { status, config: reqData, data: resData } = res;
-//     if (isDev) apiLogger({ status, reqData, resData });
-//     return res;
-//   },
-//   async (error: AxiosError) => {
-//     try {
-//       const { response: res, config: reqData } = error || {};
-//       const { status } = res || { status: 400 };
-//       const isUnAuthError = status === 401;
-//       const isExpiredToken = status === 444;
-//       const originalRequest = reqData;
-//       const isDev = CONFIG.ENV === 'development';
-
-//       if (isDev)
-//         apiLogger({ status, reqData, resData: error, method: 'error' });
-
-//       if (isExpiredToken) {
-//         // return refresh(reqData);
-//       }
-
-//       if (isUnAuthError) {
-//         console.log('status', status);
-//         console.log('isUnAuthError', isUnAuthError);
-//         if (getToken().refresh === null || getToken().refresh === '') {
-//           // Sentry.captureMessage(
-//           //   `리프레쉬 토큰 발급 중 refresh Token ${getToken().refresh}`,
-//           // );
-//           return;
-//         }
-
-//         try {
-//           const res = await refreshToken();
-//           console.log('리프래쉬 res', res);
-//           console.log('res',res.data)
-//           if (res.data.data.accessToken) {
-//             console.log('리프레쉬 토큰 재발행 완료');
-//             const param = {
-//               access: res.data.data.accessToken,
-//               refresh: getToken().refresh,
-//             };
-//             setToken(param);
-//             originalRequest.headers = {
-//               'X-AUTH-TOKEN': res.data.data.accessToken,
-//             };
-//             return axios(originalRequest);
-//           }
-//         } catch (err) {
-//           console.log('리프레쉬 토큰 에러');
-//           // Sentry.captureMessage(`리프레쉬 토큰 에러 ${getUserId()}`);
-//           // Logout();
-//           unsetAuthHeader();
-//           // return Promise.reject(err);
-//         }
-//       }
-
-//       return Promise.reject(error);
-//     } catch (e) {
-//       styledConsole({
-//         //
-//         method: 'error',
-//         topic: 'UN_HANDLED',
-//         title: 'axios-interceptor',
-//         data: e,
-//       });
-//     }
-//   },
-// );
 
 export { setAuthHeader, unsetAuthHeader };
 export default instance;

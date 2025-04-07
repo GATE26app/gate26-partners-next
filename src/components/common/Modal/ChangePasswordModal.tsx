@@ -76,7 +76,8 @@ function ChangePasswordModal({ onClose, ...props }: AlertModalProps) {
   };
   //새비밀번호 체크
   const handleNewCheckPw = (pw: string) => {
-    var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    // var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/; // 대문자 반드시 포함
     if (pw.length == 0) {
       setError({
         ...error,
@@ -286,7 +287,7 @@ function ChangePasswordModal({ onClose, ...props }: AlertModalProps) {
               fontWeight={400}
               fontSize={'12px'}
               pt={'6px'}
-              // mb={changePw.chPw == '' ? '10px' : '20px'}
+            // mb={changePw.chPw == '' ? '10px' : '20px'}
             >
               {error.checkPwError}
             </Text>

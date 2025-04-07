@@ -22,6 +22,7 @@ import JoinPartnerInfoComponent from '@/components/Join/JoinPartnerInfoComponent
 import JoinComponyInfoComponent from '@/components/Join/JoinComponyInfoComponent';
 import JoinPdfComponent from '@/components/Join/JoinPdfComponent';
 import { usePutJoinMutation } from '@/apis/join/JoinApi.mutation';
+import { safeEncrypt } from '@/utils/crypto';
 
 function JoinComponent() {
   const router = useRouter();
@@ -68,6 +69,15 @@ function JoinComponent() {
     ],
     kakaoId: '',
   });
+  const [error, setError] = useState({
+    idError: '',
+    pwError: '',
+    checkPwError: '',
+    phoneError: '',
+    emailError: '',
+    emailCodeError: '',
+  });
+
 
   const ToastComponent = (message: string) => {
     return toast({
@@ -102,7 +112,10 @@ function JoinComponent() {
       ToastComponent('소개글을 입력해주세요.');
     } else if (joinInfo.nameOfCompany == '') {
       ToastComponent('상호명을 입력해주세요.');
-    } else if (joinInfo.businessRegistrationNumber == '' && joinInfo.type == 1) {
+    } else if (
+      joinInfo.businessRegistrationNumber == '' &&
+      joinInfo.type == 1
+    ) {
       ToastComponent('사업자 번호를 입력해주세요.');
     } else if (joinInfo.businessType == '' && joinInfo.type == 1) {
       ToastComponent('업태를 입력해주세요.');
@@ -119,7 +132,10 @@ function JoinComponent() {
       ToastComponent('주소를 입력해주세요.');
     } else if (joinInfo.addressDetail == '' && joinInfo.type == 1) {
       ToastComponent('상세 주소를 입력해주세요.');
-    } else if (joinInfo.files?.filter((prev) => prev.type == 1).length == 0 && joinInfo.type == 1) {
+    } else if (
+      joinInfo.files?.filter((prev) => prev.type == 1).length == 0 &&
+      joinInfo.type == 1
+    ) {
       ToastComponent('사업자등록증 파일첨부해주세요.');
       // } else if (joinInfo.files?.filter((prev) => prev.type == 2).length == 0) {
       //   ToastComponent('통신판매업신고증 파일첨부해주세요.');
@@ -133,7 +149,38 @@ function JoinComponent() {
       ToastComponent('통장사본 파일첨부해주세요.');
     } else {
       setLoading(true);
-      joinMutate(joinInfo);
+      const newJoinInfo = {
+        ...joinInfo,
+        bank: safeEncrypt(joinInfo.bank),
+        accountNumber: safeEncrypt(joinInfo.accountNumber),
+        accountHolder: safeEncrypt(joinInfo.accountHolder),
+        nameOfCompany: safeEncrypt(joinInfo.nameOfCompany),
+        businessRegistrationNumber: safeEncrypt(
+          joinInfo.businessRegistrationNumber,
+        ),
+        nameOfRepresentative: safeEncrypt(joinInfo.nameOfRepresentative),
+        registrationNumber: safeEncrypt(joinInfo.registrationNumber),
+      }
+
+      if (error.pwError == '' && error.checkPwError == '') {
+        joinMutate(newJoinInfo);
+      } else {
+        toast({
+          position: 'top',
+          duration: 2000,
+          render: () => (
+            <Box
+              style={{ borderRadius: 8 }}
+              p={3}
+              color="white"
+              bg="#ff6955"
+            >
+              {'비밀번호 형식이 올바르지 않습니다.'}
+            </Box>
+          ),
+        });
+      }
+
     }
   };
 
@@ -197,7 +244,7 @@ function JoinComponent() {
             fontSize={'40px'}
             color={ColorBlack}
             pb={'50px'}
-            // pt={'137px'}
+          // pt={'137px'}
           >
             회원가입
           </Text>
@@ -211,6 +258,7 @@ function JoinComponent() {
             borderWidth={1}
             boxShadow={'3px 6px 20px #3737370D'}
           >
+
             {/* 아이디, 비밀번호, 연락처 */}
             <JoinBasicInfoComponent
               joinInfo={joinInfo}
@@ -222,6 +270,8 @@ function JoinComponent() {
               setLoading={setLoading}
               authEmailCheckDisable={authEmailCheckDisable}
               setAuthEmailCheckDisable={setAuthEmailCheckDisable}
+              error={error}
+              setError={setError}
             />
 
             {/* 파트너사명, 프로필사진, 소개글 */}

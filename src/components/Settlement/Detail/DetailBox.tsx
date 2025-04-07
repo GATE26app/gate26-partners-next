@@ -31,6 +31,7 @@ import {
 } from '@/apis/settlement/SettlementApi.mutation';
 import { useSearchParams } from '../../../../node_modules/next/navigation';
 import LoadingModal from '@/components/common/Modal/LoadingModal';
+import { safeDecryptAndParse } from '@/utils/crypto';
 
 interface Props {
   data: SettleDetailItemType;
@@ -206,7 +207,7 @@ function DetailBox({ data }: Props) {
             <Text fontWeight={400} fontSize={'15px'} color={ColorBlack}>
               {/* 신한은행 012345678901 (예금주) */}
               {data.bank != null
-                ? `${data.bank} ${data.accountNumber} (${data.accountHolder})`
+                ? `${safeDecryptAndParse(data.bank)} ${safeDecryptAndParse(data.accountNumber)} (${safeDecryptAndParse(data.accountHolder)})`
                 : '-'}
             </Text>
           </Flex>

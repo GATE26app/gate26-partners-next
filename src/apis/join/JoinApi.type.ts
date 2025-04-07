@@ -118,3 +118,7 @@ export type FindPwResetBody = {
   authId: string;
   password: string;
 };
+
+export type JoinHpBody= {
+  hp: string;
+}

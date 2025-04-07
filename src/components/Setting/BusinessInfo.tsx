@@ -7,6 +7,7 @@ import {
   ColorRed,
   ColorRed50,
 } from '@/utils/_Palette';
+import { safeDecryptAndParse } from '@/utils/crypto';
 import { filePath, imgPath } from '@/utils/format';
 import { getToken } from '@/utils/localStorage/token';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
@@ -168,7 +169,7 @@ function BusinessInfo({ info }: Props) {
             w={'400px'}
           >
             <Text fontWeight={400} fontSize={'15px'} color={ColorGray700}>
-              {info?.type == 1 ? info?.hp : info?.authEmail}
+              {info?.type == 1 ? safeDecryptAndParse(info?.hp) : info?.authEmail}
             </Text>
           </Flex>
         </Flex>
@@ -231,7 +232,7 @@ function BusinessInfo({ info }: Props) {
             w={'400px'}
           >
             <Text fontWeight={400} fontSize={'15px'} color={ColorGray700}>
-              {info?.businessRegistrationNumber}
+              {info?.businessRegistrationNumber && safeDecryptAndParse(info.businessRegistrationNumber)}
             </Text>
           </Flex>
         </Flex>
@@ -275,7 +276,7 @@ function BusinessInfo({ info }: Props) {
             w={'400px'}
           >
             <Text fontWeight={400} fontSize={'15px'} color={ColorGray700}>
-              {info?.nameOfRepresentative}
+              {info?.nameOfRepresentative && safeDecryptAndParse(info.nameOfRepresentative)}
             </Text>
           </Flex>
         </Flex>

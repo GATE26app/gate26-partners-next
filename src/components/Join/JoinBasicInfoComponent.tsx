@@ -25,6 +25,8 @@ interface Props {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   authEmailCheckDisable: boolean;
   setAuthEmailCheckDisable: React.Dispatch<React.SetStateAction<boolean>>;
+  error: any;
+  setError: React.Dispatch<React.SetStateAction<any>>;
 }
 function JoinBasicInfoComponent({
   joinInfo,
@@ -36,6 +38,8 @@ function JoinBasicInfoComponent({
   setAuthCheckDisable,
   authEmailCheckDisable,
   setAuthEmailCheckDisable,
+  error,
+  setError
 }: Props) {
   const toast = useToast();
   const searchParams = useSearchParams();
@@ -49,14 +53,14 @@ function JoinBasicInfoComponent({
   const [emailCode, setEmailCode] = useState('');
   const [emailAuthId, setEmailAuthId] = useState('');
 
-  const [error, setError] = useState({
-    idError: '',
-    pwError: '',
-    checkPwError: '',
-    phoneError: '',
-    emailError: '',
-    emailCodeError: '',
-  });
+  // const [error, setError] = useState({
+  //   idError: '',
+  //   pwError: '',
+  //   checkPwError: '',
+  //   phoneError: '',
+  //   emailError: '',
+  //   emailCodeError: '',
+  // });
   const [data, setData] = useState({
     merchant_uid: '',
     phone: '',
@@ -104,7 +108,8 @@ function JoinBasicInfoComponent({
   };
   //비밀번호 체크
   const handleCheckPw = (pw: string) => {
-    var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    // var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,20}$/; // 대문자 반드시 포함
     if (pw.length == 0) {
       setError({
         ...error,
