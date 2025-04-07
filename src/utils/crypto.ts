@@ -1,5 +1,4 @@
-
-import cryptoJs from 'crypto-js'
+import cryptoJs from 'crypto-js';
 
 const key = btoa('IDT-ReGate26');
 
@@ -24,22 +23,18 @@ export const crypto: any = {
   },
 };
 
-export const safeDecryptAndParse = (data : any) => {
+export const safeDecryptAndParse = (data: any) => {
   try {
     if (!data) return null;
- 
+
     const decrypted = crypto.decrypt(data);
- 
-    // 숫자인지 체크 (정수 + 소수)
-    if (!isNaN(decrypted)) {
-      return Number(decrypted);
-    }
- 
-    try {
+
+    // 복호화된 값이 쌍따옴표로 감싸져 있으면 JSON.parse 시도
+    if (typeof decrypted === 'string' && /^".*"$/.test(decrypted.trim())) {
       return JSON.parse(decrypted);
-    } catch {
-      return decrypted;
     }
+
+    return decrypted;
   } catch (e) {
     console.error(e);
     return null;
