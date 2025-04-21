@@ -192,7 +192,7 @@ function EditorDetailComponent({ list, setList }: Props) {
               modules={modules}
               formats={formats}
               // value={list?.content}
-              value={DOMPurify.sanitize(he.decode(list?.content))} // 디코딩 → XSS 제거 → 표시
+              value={DOMPurify.sanitize(he.decode(list?.content || ""))} // 디코딩 → XSS 제거 → 표시
               onChange={(e: any) =>
                 goodsInfo.LogItemDisable
                   ? undefined
