@@ -20,6 +20,9 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: 'GATE26 | 파트너스 관리자',
   description: 'GATE26 | 파트너스 관리자',
+  other: {
+    'google-site-verification': 'caIU-xO1XabTJNbB7_r3wZ5vzVFe4LOIGafhbZVyiEs',
+  },
   icons: {
     icon: '/favicon.ico',
   },
