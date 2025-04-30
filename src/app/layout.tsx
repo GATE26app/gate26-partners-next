@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: 'GATE26 | 파트너스 관리자',
   description: 'GATE26 | 파트너스 관리자',
   other: {
-    'google-site-verification': 'caIU-xO1XabTJNbB7_r3wZ5vzVFe4LOIGafhbZVyiEs',
+    'google-site-verification': 'k0_FRmOg2qCZnKU1DkXD7_Wkur6Tps26iO7OfcQVPWc',
   },
   icons: {
     icon: '/favicon.ico',
