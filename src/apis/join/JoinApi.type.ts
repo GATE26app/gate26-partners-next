@@ -90,6 +90,8 @@ export type JoinBody = {
   images: Array<JoinImageArray>;
   files: Array<JoinFilesArray>;
   kakaoId: string;
+  isTermsAgreed: boolean;
+  isPrivacyPolicyAgreed: boolean;
 };
 
 export type JoinImageArray = {
