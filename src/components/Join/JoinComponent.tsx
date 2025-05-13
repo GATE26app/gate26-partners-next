@@ -4,7 +4,7 @@ import CustomButton from '@/components/common/CustomButton';
 import InputBox from '@/components/common/Input';
 import {
   ColorBlack,
-  ColorGray400,
+ColorGray400,
   ColorGray50,
   ColorGray700,
   ColorGrayBorder,
@@ -21,6 +21,7 @@ import JoinBasicInfoComponent from '@/components/Join/JoinBasicInfoComponent';
 import JoinPartnerInfoComponent from '@/components/Join/JoinPartnerInfoComponent';
 import JoinComponyInfoComponent from '@/components/Join/JoinComponyInfoComponent';
 import JoinPdfComponent from '@/components/Join/JoinPdfComponent';
+import JoinAgreeComponent from '@/components/Join/JoinAgreeComponent';
 import { usePutJoinMutation } from '@/apis/join/JoinApi.mutation';
 import { safeEncrypt } from '@/utils/crypto';
 
@@ -68,6 +69,8 @@ function JoinComponent() {
       },
     ],
     kakaoId: '',
+    isTermsAgreed: false, // 서비스 약관동의
+    isPrivacyPolicyAgreed: false, // 개인정보 처리방침
   });
   const [error, setError] = useState({
     idError: '',
@@ -93,7 +96,7 @@ function JoinComponent() {
 
   const handleClickNext = () => {
     if (joinInfo.loginId == '') {
-      ToastComponent('아이디를 입력해주세요');
+      ToastComponent('아이디를 입력해주세요.');
     } else if (!idDisable) {
       ToastComponent('아이디 중복확인 해주세요.');
     } else if (joinInfo.password == '') {
@@ -147,6 +150,8 @@ function JoinComponent() {
       ToastComponent('예금주명을 입력해주세요.');
     } else if (joinInfo.files?.filter((prev) => prev.type == 3).length == 0) {
       ToastComponent('통장사본 파일첨부해주세요.');
+    } else if (!joinInfo.isTermsAgreed || !joinInfo.isPrivacyPolicyAgreed) {
+      ToastComponent('필수 약관에 동의해주세요.');
     } else {
       setLoading(true);
       const newJoinInfo = {
@@ -286,6 +291,7 @@ function JoinComponent() {
             />
             {/* 사업자등록증, 통신판매업신고증, 계좌, 통장사본 */}
             <JoinPdfComponent joinInfo={joinInfo} setJoinInfo={setJoinInfo} />
+            <JoinAgreeComponent joinInfo={joinInfo} setJoinInfo={setJoinInfo} />
             <Flex
               w={'100%'}
               bgColor={ColorRed}
