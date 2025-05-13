@@ -287,7 +287,7 @@ function LoginPage() {
             </Text>
           </Flex>
           <Flex justifyContent={'space-between'}>
-            <Box cursor={'pointer'} onClick={() => router.push('/join/terms')}>
+            <Box cursor={'pointer'} onClick={() => router.push('/join/select')}>
               <Text color={ColorGray700} fontSize={'14px'} fontWeight={500}>
                 회원가입
               </Text>
