@@ -1,5 +1,6 @@
-25043 10:05
+250513 18:17
 # Next.js starter
+
 
 
 똑똑한개발자에서 진행하는 프로젝트의 스타터 프로젝트 next-init 2.0.6입니다.
@@ -54,9 +55,6 @@ Next.js can serve static files, like images, under a folder called public in the
     ├── public              #
     │   ├── favicons        #
     │   └── ...
-    └── ...
-
-### styles
 
 Css, Chakra-ui theme configuration files are placed into this folder.
 
