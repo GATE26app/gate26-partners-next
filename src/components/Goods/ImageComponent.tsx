@@ -58,18 +58,18 @@ function ImageComponent({ list, setList }: Props) {
     const sortedList = list.sort((itemA, itemB) => itemA.sort - itemB.sort);
     const imagePaths = [];
 
-    for(const image of sortedList){
-      if(image.imagePath) {
-        imagePaths.push(getImagePath(image.imagePath))
-      } else if(image.thumbnailImagePath){
-        imagePaths.push(image.thumbnailImagePath)
+    for (const image of sortedList) {
+      if (image.imagePath) {
+        imagePaths.push(getImagePath(image.imagePath));
+      } else if (image.thumbnailImagePath) {
+        imagePaths.push(image.thumbnailImagePath);
       } else {
-        imagePaths.push('/images/no_img.png')
+        imagePaths.push('/images/no_img.png');
       }
     }
 
     setImages(imagePaths);
-  }, [list])
+  }, [list]);
 
   const { mutate: ItemCodeMutate, isLoading } = usePostImageMutation({
     options: {
@@ -80,15 +80,37 @@ function ImageComponent({ list, setList }: Props) {
             resImg.data?.thumbnailImagePath,
           );
         } else {
-          toast({
-            position: 'top',
-            duration: 2000,
-            render: () => (
-              <Box style={{ borderRadius: 8 }} p={3} color="white" bg="#ff6955">
-                {'이미지 용량이 초과되어 업로드가 불가능합니다.'}
-              </Box>
-            ),
-          });
+          if (resImg?.code === 'IM001') {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'파일 형식을 확인해주세요. '}
+                </Box>
+              ),
+            });
+          } else {
+            toast({
+              position: 'top',
+              duration: 2000,
+              render: () => (
+                <Box
+                  style={{ borderRadius: 8 }}
+                  p={3}
+                  color="white"
+                  bg="#ff6955"
+                >
+                  {'이미지 용량이 초과되어 업로드가 불가능합니다.'}
+                </Box>
+              ),
+            });
+          }
           console.log('error 코드 생성 에러', resImg.code);
         }
       },
@@ -129,19 +151,21 @@ function ImageComponent({ list, setList }: Props) {
     };
   };
   const handleUploadImage = (e: any) => {
-    //이미지 미리보기 기능
+    const filename = e.target.files[0].name;
+    const extension = filename.split('.').pop().toLowerCase();
+
     const reader = new FileReader();
     if (
-      e.target.files[0].name.split('.')[1] !== 'jpg' &&
-      e.target.files[0].name.split('.')[1] !== 'JPG' &&
-      e.target.files[0].name.split('.')[1] !== 'jpeg' &&
-      e.target.files[0].name.split('.')[1] !== 'JPEG' &&
-      e.target.files[0].name.split('.')[1] !== 'png' &&
-      e.target.files[0].name.split('.')[1] !== 'PNG' &&
-      e.target.files[0].name.split('.')[1] !== 'gif' &&
-      e.target.files[0].name.split('.')[1] !== 'GIF' &&
-      e.target.files[0].name.split('.')[1] !== 'bmp' &&
-      e.target.files[0].name.split('.')[1] !== 'BMP'
+      extension !== 'jpg' &&
+      extension !== 'JPG' &&
+      extension !== 'jpeg' &&
+      extension !== 'JPEG' &&
+      extension !== 'png' &&
+      extension !== 'PNG' &&
+      extension !== 'gif' &&
+      extension !== 'GIF' &&
+      extension !== 'bmp' &&
+      extension !== 'BMP'
     ) {
       toast({
         position: 'top',
@@ -171,14 +195,14 @@ function ImageComponent({ list, setList }: Props) {
   const getImageFromImageObject = (index: number) => {
     const imageObject = list.filter((item) => item.sort === index)[0];
 
-    if(imageObject.imagePath) {
-      return getImagePath(imageObject.imagePath)
-    } else if(imageObject.thumbnailImagePath){
-      return imageObject.thumbnailImagePath
+    if (imageObject.imagePath) {
+      return getImagePath(imageObject.imagePath);
+    } else if (imageObject.thumbnailImagePath) {
+      return imageObject.thumbnailImagePath;
     }
 
-    return '/images/no_img.png'
-  }
+    return '/images/no_img.png';
+  };
 
   return (
     <>
@@ -495,7 +519,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 2)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[1]}
                                 src={getImageFromImageObject(2)}
                                 style={{
@@ -601,7 +625,6 @@ function ImageComponent({ list, setList }: Props) {
                               borderRadius={'10px'}
                               overflow={'hidden'}
                             >
-
                               <img
                                 // src={`${imgPath()}${list.filter((item) => item.sort == 3)[0].imagePath}`}
                                 // src={images[2]}
@@ -713,7 +736,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 4)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[3]}
                                 src={getImageFromImageObject(4)}
                                 style={{
@@ -828,7 +851,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 5)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[4]}
                                 src={getImageFromImageObject(5)}
                                 alt="이미지 업로드"
@@ -933,7 +956,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 6)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[5]}
                                 src={getImageFromImageObject(6)}
                                 style={{
@@ -1043,7 +1066,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 7)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[6]}
                                 src={getImageFromImageObject(7)}
                                 style={{
@@ -1153,7 +1176,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 8)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[7]}
                                 src={getImageFromImageObject(8)}
                                 style={{
@@ -1263,7 +1286,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 9)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[8]}
                                 src={getImageFromImageObject(9)}
                                 style={{
@@ -1373,7 +1396,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 10)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[9]}
                                 src={getImageFromImageObject(10)}
                                 style={{
@@ -1483,7 +1506,7 @@ function ImageComponent({ list, setList }: Props) {
                                 // src={`${imgPath()}${
                                 //   list.filter((item) => item.sort == 11)[0]
                                 //     .imagePath
-                              // }`}
+                                // }`}
                                 // src={images[10]}
                                 src={getImageFromImageObject(11)}
                                 style={{
