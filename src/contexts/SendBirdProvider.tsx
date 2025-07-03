@@ -95,7 +95,7 @@ export const SendBirdProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    const sb = new SendBird({ appId: '78B8D84A-E617-493C-98CA-2D15F647923B' });
+    const sb = new SendBird({ appId: process.env.NEXT_PUBLIC_SENDBIRD_APP_ID });
     setSendbird(sb);
 
     const { userId, accessToken } = loadUserSession();

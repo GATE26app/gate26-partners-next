@@ -44,7 +44,7 @@ function MainHeader() {
   const [alramModal, setAlramModal] = useState(false);
   const [chatModal, setChatModal] = useState(false);
 
-  const appId = '78B8D84A-E617-493C-98CA-2D15F647923B';
+  const appId = process.env.NEXT_PUBLIC_SENDBIRD_APP_ID;
   const userId = getSendBirdToken().user_id;
   const accessToken = getSendBirdToken().sendBird;
   const [unreadCount, setUnreadCount] = useState(0);

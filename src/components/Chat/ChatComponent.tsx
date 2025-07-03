@@ -639,7 +639,7 @@ function ChatComponent() {
       {isClient && (
         <SendbirdProvider
           breakpoint={true}
-          appId={'78B8D84A-E617-493C-98CA-2D15F647923B'}
+          appId={process.env.NEXT_PUBLIC_SENDBIRD_APP_ID}
           userId={getSendBirdToken().user_id}
           accessToken={getSendBirdToken().sendBird}
           theme="light"

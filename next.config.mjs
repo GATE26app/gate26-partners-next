@@ -14,6 +14,16 @@ const nextConfig = {
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'AIzaSyBLx620AeBQnveLI0c7kflx282CNVlJQU8',
     SECRET_KEY: 'IDT-ReGate26',
     URL_API: 'https://web.gate26.co.kr',
+    NEXT_PUBLIC_SENDBIRD_APP_ID:
+      process.env.NODE_ENV === "production"
+        ? '78B8D84A-E617-493C-98CA-2D15F647923B' // 운영 환경
+        : '66FCC048-72FA-40D7-BCE7-89F42D63600B', // 개발 환경
+
+    // vercel환경
+    NEXT_PUBLIC_SENDBIRD_APP_ID:
+      process.env.VERCEL_ENV === 'production'
+        ? '78B8D84A-E617-493C-98CA-2D15F647923B' // 운영
+        : '66FCC048-72FA-40D7-BCE7-89F42D63600B', // 개발 또는 preview
   },
   images: {
     domains: [
